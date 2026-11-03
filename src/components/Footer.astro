@@ -2,11 +2,11 @@
 // Third fold: typing heading, the two exits, the coffee-card deck, constellation socials and the hairline row.
 import moon from '../parts/dkmoon.html?raw';
 const closed = [-16, -8, 0, 8, 16];
-const LINKEDIN = 'https://linkedin.com/in/kritika-upadhyay-2001';
+const LINKEDIN = 'https://www.linkedin.com/in/kritika-upadhyay-2001/?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
 const RESUME = '/resume.pdf';
-const INSTAGRAM = 'https://www.instagram.com/verykritikal/';
-const TWITTER = 'https://x.com/verykritikal';
-const SUBSTACK = 'https://substack.com/@verykritikal/posts';
+const INSTAGRAM = 'https://www.instagram.com/verykritikal/?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
+const TWITTER = 'https://x.com/verykritikal?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
+const SUBSTACK = 'https://substack.com/@verykritikal/posts?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
 ---
 <footer style="position: relative; min-height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; background-color: #0B0A0F; color: #E8EBF0; font-family: 'Inter', system-ui, sans-serif; font-size: 16px; line-height: 1.6">
 
@@ -15,7 +15,7 @@ const SUBSTACK = 'https://substack.com/@verykritikal/posts';
 
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px">
 <a class="ft-primary" href={LINKEDIN} target="_blank" rel="noopener">Connect on LinkedIn<span aria-hidden="true">↗</span></a>
-<a class="ft-secondary" href={RESUME} download="">Download résumé<span aria-hidden="true">↓</span></a>
+<a class="ft-secondary" href={RESUME} download="kritika_upadhyay_resume.pdf">Download résumé<span aria-hidden="true">↓</span></a>
 </div>
 
 <div class="deck" id="deck">
@@ -34,8 +34,8 @@ const SUBSTACK = 'https://substack.com/@verykritikal/posts';
 <div style="display: flex; justify-content: center; padding: 0 24px 30px">
 <nav class="const" aria-label="Elsewhere">
 <svg class="lines" aria-hidden="true" width="260" height="64" viewBox="0 0 260 64"><path class="cline" d="M40 40 L130 18 L220 40" fill="none"></path><path class="cline" d="M40 40 L8 56 M220 40 L252 54 M130 18 L150 2" fill="none"></path><circle class="cdot" cx="8" cy="56" r="1.6"></circle><circle class="cdot" cx="252" cy="54" r="1.6"></circle><circle class="cdot" cx="150" cy="2" r="1.4"></circle></svg>
-<a class="ft-icon" href={INSTAGRAM} aria-label="Instagram" title="Instagram" style="left: 40px; top: 40px"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.2" cy="6.8" r="0.6"></circle></svg></a>
-<a class="ft-icon" href={TWITTER} aria-label="Twitter (X)" title="Twitter (X)" style="left: 130px; top: 18px"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4 L20 20 M20 4 L4 20"></path></svg></a>
+<a class="ft-icon" href={INSTAGRAM} target="_blank" rel="noopener" aria-label="Instagram" title="Instagram" style="left: 40px; top: 40px"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.2" cy="6.8" r="0.6"></circle></svg></a>
+<a class="ft-icon" href={TWITTER} target="_blank" rel="noopener" aria-label="Twitter (X)" title="Twitter (X)" style="left: 130px; top: 18px"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4 L20 20 M20 4 L4 20"></path></svg></a>
 <a class="ft-icon" href={SUBSTACK} target="_blank" rel="noopener" aria-label="Substack" title="Substack" style="left: 220px; top: 40px"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4 H19 M5 8 H19 M5 12 H19 V21 L12 17 L5 21 Z"></path></svg></a>
 </nav>
 </div>
