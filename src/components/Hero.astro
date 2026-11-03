@@ -27,7 +27,7 @@ const firstLetters = first.split('').map((ch, i) => ({ ch: ch === ' ' ? ' ' : c
 </span>
 </button>
 <template id="om-tpl">
-<svg class="om-svg" aria-hidden="true" width="160" height="160" viewBox="0 0 200 200" style="filter: drop-shadow(0 0 6px rgba(11,10,15,0.45))">
+<svg class="om-svg" aria-hidden="true" width="160" height="160" viewBox="0 0 200 200">
 <defs>
 <mask id="om-moon-mask"><circle cx="100" cy="100" r="30" fill="#fff"></circle><circle class="om-shadow" cx="100" cy="100" r="31" fill="#000"></circle></mask>
 <filter id="om-goo" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur in="SourceGraphic" stdDeviation="1.8" result="b"></feGaussianBlur><feColorMatrix in="b" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10"></feColorMatrix></filter>
