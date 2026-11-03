@@ -43,7 +43,7 @@ const stops = [
       'we shipped. installs started to trickle in: six one week, seven the next. three merchants were talking to us on Intercom. we got our first Shopify review, from a cake shop owner, and our first lead from the website.',
       'installs, yes. activation, not yet.'
     ],
-    chips: ['0', '0', '0', '0', '0', '0']
+    skills: ['funnel analytics', 'onboarding mapping', 'product copywriting', 'app store launch']
   },
   {
     num: '02', when: '1 – 5 jun', big: '6', title: 'the first milestone', tilt: 0.9,
@@ -54,7 +54,7 @@ const stops = [
       'six sounds small. for a product that had shown zero for five weeks, it was proof that onboarding worked end to end, and that a merchant could get from install to a live product.',
       'it was also the week i started to doubt the number itself. six merchants had activated their product. how many of them had actually sold anything through it?'
     ],
-    chips: ['6']
+    skills: ['merchant conversations', 'product demos', 'activation']
   },
   {
     num: '03', when: '8 jun – 31 jul', big: '0', title: 'zero, again', tilt: -0.7,
@@ -66,7 +66,7 @@ const stops = [
       'for seven weeks, my friday email reported zeroes and ones. the weekly goal went from two to five. the activated number didn’t move.',
       'the bar was right. but i’d picked a number that only moved after everything else was fixed, so it couldn’t tell me what to do on a monday.'
     ],
-    chips: ['0', '1', '1', '1', '0', '0']
+    skills: ['defining activation', 'prioritisation', 'help documentation']
   },
   {
     num: '04', when: '4 aug', big: '↺', title: 'the note', tilt: 1.1,
@@ -79,7 +79,7 @@ const stops = [
       'the reply came back in one line: this week, we hit 100%.',
       'it was the fourth time i’d changed the number at the top of the email. it was the first time the number and the work pointed the same way.'
     ],
-    chips: ['60%', '44%']
+    skills: ['taking feedback', 'metric design', 'session-recording analysis']
   },
   {
     num: '05', when: '5 aug – 18 sep', big: '100%', title: 'the climb', tilt: -1,
@@ -91,19 +91,15 @@ const stops = [
       'then came the slower work. help docs on orders. demo videos for the logistics integrations. hands-on onboarding for one small, very keen store that needed help setting up its seller sign-up form. we shipped billing, so merchants could subscribe from inside Nexus.',
       'installs grew from six or seven a week in may to thirty in the first week of september. and in the week of the 14th, every store that installed and added products went on to activate its sellers. ten out of ten.'
     ],
-    chips: ['44%', '50%', '38%', '67%', '54%', '58%', '100%']
+    skills: ['ux copy', 'docs and demo videos', 'hands-on onboarding', 'billing launch']
   }
 ];
 ---
 <Base title="Nexus · the metric that wouldn't move · Kritika Upadhyay" description={description}>
 <div class="cs">
 
-<header class="cs-top">
-<a class="cs-back" href="/">← home</a>
-<span class="cs-tag">case study 01 · draft, dummy layout</span>
-</header>
-
 <figure class="cs-cover" aria-label="Cover image placeholder">
+<a class="cs-back cs-home" href="/">← home</a>
 <div class="ph">
 <span class="ph-tag">cover image</span>
 <span class="ph-note">[a wide shot that sets the scene, e.g. the Nexus dashboard on a laptop, or the stack of weekly emails]</span>
@@ -112,24 +108,10 @@ const stops = [
 
 <section class="cs-head">
 <h1 class="cs-title">the metric that wouldn’t move</h1>
-<p class="cs-kicker">0 → 6 → 0 → <span class="cs-gold">100%</span></p>
-<ul class="cs-tags" aria-label="Disciplines">
-<li>product marketing</li><li>activation</li><li>onboarding</li><li>funnel analytics</li>
-</ul>
 <p class="cs-desc">{description}</p>
 </section>
 
 <section class="cs-board">
-<div class="stk land" style="--r:-0.6deg">
-<span class="tape" aria-hidden="true"></span>
-<dl class="cs-facts">
-<div><dt>role</dt><dd>[your title on Nexus]</dd></div>
-<div><dt>product</dt><dd>Nexus, a Shopify app for multi-vendor marketplaces</dd></div>
-<div><dt>stage</dt><dd>0 → 1, small team</dd></div>
-<div><dt>span</dt><dd>25 weeks, an email every monday and friday</dd></div>
-</dl>
-</div>
-
 <figure class="stk land cs-chart" style="--r:0.4deg">
 <span class="tape" aria-hidden="true"></span>
 <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="The number at the top of each weekly email: activated merchants from April to July, then seller activation rate from August to September, with four markers where the metric changed.">
@@ -154,21 +136,13 @@ const stops = [
 </figcaption>
 </figure>
 
-<p class="stk land cs-insight" style="--r:-0.8deg"><span class="tape" aria-hidden="true"></span>the number you track decides the work you do. <em>it took me four tries to find the right one.</em></p>
-
-<div class="cs-stats">
-<div class="stk land" style="--r:-1.4deg"><span class="tape" aria-hidden="true"></span><span class="cs-stat">44% → 100%</span><span class="cs-stat-l">seller sync, in six weeks</span></div>
-<div class="stk land" style="--r:0.8deg"><span class="tape" aria-hidden="true"></span><span class="cs-stat">6 → 30</span><span class="cs-stat-l">installs a week</span></div>
-<div class="stk land" style="--r:-0.5deg"><span class="tape" aria-hidden="true"></span><span class="cs-stat">10 / 10</span><span class="cs-stat-l">stores activating sellers, mid-september</span></div>
-</div>
-<p class="cs-follow">follow the line ↓</p>
 </section>
 
 <section class="cs-route" id="route">
 <svg class="cs-path" aria-hidden="true"><path id="route-path"></path></svg>
 {stops.map((s, k) => (
 <article class={`cs-stop ${k % 2 ? 'right' : 'left'}`}>
-<span class="cs-node" aria-hidden="true"></span>
+<span class="cs-node" aria-hidden="true">{s.num}</span>
 <div class="stk land cs-card" style={`--r:${s.tilt}deg`}>
 <span class="tape" aria-hidden="true"></span>
 <div class="ph cs-card-cover">
@@ -179,7 +153,7 @@ const stops = [
 <div class="cs-meta"><span>{s.num}</span><span>{s.when}</span></div>
 <h2 class="cs-h">{s.title}</h2>
 <div class="cs-text">{s.text.map((l) => <p>{l}</p>)}</div>
-{s.chips.length > 0 && <div class="cs-chips" aria-label="weekly numbers">{s.chips.map((c) => <span>{c}</span>)}</div>}
+<ul class="cs-skills" aria-label="skills used">{s.skills.map((c) => <li>{c}</li>)}</ul>
 </div>
 </article>
 ))}
@@ -192,6 +166,11 @@ const stops = [
 <a class="cs-back" href="/">← back to all work</a>
 </section>
 
+<button class="cs-sound" id="cs-sound" type="button" aria-pressed="false">
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path class="wave" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"></path></svg>
+<span id="cs-sound-label">sound off</span>
+</button>
+
 </div>
 </Base>
 
@@ -200,35 +179,26 @@ const stops = [
 </style>
 
 <style>
-.cs{position:relative;min-height:100vh;color:#EFEFEE;background-color:#141416;background-image:linear-gradient(rgba(169,175,185,.16) 1px,transparent 1px),linear-gradient(90deg,rgba(169,175,185,.16) 1px,transparent 1px);background-size:28px 28px;background-position:-1px -1px}
-.cs-top{display:flex;justify-content:space-between;align-items:center;gap:16px;max-width:1200px;margin:0 auto;padding:24px}
+.cs{position:relative;min-height:100vh;color:#EFEFEE;background-color:#141416;background-image:linear-gradient(rgba(169,175,185,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(169,175,185,.075) 1px,transparent 1px);background-size:18px 18px;background-position:-1px -1px}
 .cs-back{color:#A9AFB9;font-size:13px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none}
 .cs-back:hover{color:#EFEFEE}
-.cs-tag{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#8A8D96}
 
 .ph{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:24px;box-sizing:border-box;text-align:center;background-color:#0A0A0B;background-image:repeating-linear-gradient(135deg,rgba(169,175,185,.06) 0 1px,transparent 1px 14px)}
 .ph-tag{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#D8C9A3}
 .ph-note{max-width:520px;font-size:13px;line-height:1.5;color:#8A8D96}
 
-.cs-cover{margin:0;padding:0 24px}
-.cs-cover .ph{max-width:1200px;height:clamp(280px,52vh,560px);margin:0 auto;border:1px solid #2A2A2E}
+.cs-cover{position:relative;margin:0}
+.cs-cover .ph{width:100%;height:clamp(280px,52vh,560px)}
+.cs-home{position:absolute;top:24px;left:max(24px,calc((100% - 1200px) / 2 + 24px));z-index:2;padding:8px 0;color:#EFEFEE;text-shadow:0 1px 8px rgba(0,0,0,.6)}
 
 .cs-head{max-width:1200px;margin:0 auto;padding:56px 24px 24px}
-.cs-title{margin:0;font-weight:500;font-size:clamp(44px,7vw,104px);line-height:1;letter-spacing:-.03em}
-.cs-kicker{margin:14px 0 28px;font-family:'Newsreader',serif;font-style:italic;font-size:clamp(24px,3vw,36px);color:#A9AFB9}
-.cs-gold{color:#D8C9A3}
-.cs-tags{display:flex;flex-wrap:wrap;gap:8px 20px;margin:0 0 20px;padding:0;list-style:none;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A9AFB9}
+.cs-title{margin:0 0 20px;font-weight:500;font-size:clamp(44px,7vw,104px);line-height:1;letter-spacing:-.03em}
 .cs-desc{max-width:680px;margin:0;font-size:18px;line-height:1.6;color:#C9CDD5}
 
 .stk{position:relative;background-color:#060606;border:1px solid #232326;box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 14px 30px rgba(0,0,0,.55);transform:rotate(var(--r,0deg))}
 .tape{position:absolute;left:50%;top:-11px;width:88px;height:22px;margin-left:-44px;background-color:rgba(216,201,163,.22);border-left:1px dashed rgba(216,201,163,.25);border-right:1px dashed rgba(216,201,163,.25);transform:rotate(calc(var(--r,0deg) * -3))}
 
 .cs-board{max-width:1200px;margin:0 auto;padding:48px 24px 72px;display:flex;flex-direction:column;gap:44px}
-.cs-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin:0}
-.cs-facts div{padding:16px 18px;border-right:1px solid #1C1C1F}
-.cs-facts div:last-child{border-right:0}
-.cs-facts dt{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#8A8D96;margin-bottom:6px}
-.cs-facts dd{margin:0;font-size:15px;line-height:1.4}
 .cs-chart{margin:0;padding:24px}
 .cs-chart svg{display:block;width:100%;height:auto;overflow:visible}
 .ch-split{stroke:#3A3A3A;stroke-dasharray:4 4}
@@ -241,13 +211,6 @@ const stops = [
 .ch-week{fill:#8A8D96;font-size:11px;text-anchor:middle}
 .cs-legend{display:flex;flex-wrap:wrap;gap:8px 24px;margin-top:14px;font-size:13px;color:#A9AFB9}
 .cs-legend b{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;margin-right:8px;border:1px solid #D8C9A3;border-radius:50%;font-size:11px;font-weight:500;color:#D8C9A3}
-.cs-insight{align-self:flex-start;max-width:760px;margin:0;padding:28px 32px;font-size:clamp(22px,2.6vw,32px);line-height:1.3;letter-spacing:-.01em}
-.cs-insight em{font-family:'Newsreader',serif;color:#D8C9A3}
-.cs-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:28px}
-.cs-stats .stk{display:flex;flex-direction:column;gap:6px;padding:24px 22px}
-.cs-stat{font-size:clamp(28px,3.4vw,44px);font-weight:500;letter-spacing:-.02em}
-.cs-stat-l{font-size:13px;color:#8A8D96}
-.cs-follow{margin:20px 0 0;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#8A8D96;text-align:center}
 
 .cs-route{position:relative;max-width:1200px;margin:0 auto;padding:40px 24px 80px;display:flex;flex-direction:column;gap:140px}
 .cs-path{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
@@ -255,10 +218,13 @@ const stops = [
 .cs-stop{position:relative;display:flex}
 .cs-stop.left{justify-content:flex-start}
 .cs-stop.right{justify-content:flex-end}
-.cs-node{position:absolute;top:40px;z-index:1;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:#141416;border:1.5px solid #3A3A3E;transition:border-color .5s ease,background-color .5s ease,box-shadow .5s ease}
+.cs-node{position:absolute;top:40px;z-index:1;display:flex;align-items:center;justify-content:center;width:40px;height:40px;margin:-20px 0 0 -20px;box-sizing:border-box;border-radius:50%;background:#141416;border:1.5px solid #4A4A50;font-size:12px;font-weight:500;letter-spacing:.04em;color:#A9AFB9;transition:border-color .5s ease,background-color .5s ease,color .5s ease,box-shadow .5s ease}
+.cs-node::after{content:"";position:absolute;inset:-1.5px;border-radius:50%;border:1.5px solid #D8C9A3;opacity:0;pointer-events:none}
+.cs-node.on::after{animation:nodeping 1.4s cubic-bezier(.2,.7,.2,1) 1}
+@keyframes nodeping{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(2.6)}}
 .cs-stop.left .cs-node{left:calc(min(56%, 620px) + 48px)}
 .cs-stop.right .cs-node{left:calc(100% - min(56%, 620px) - 48px)}
-.cs-node.on{border-color:#D8C9A3;background:#D8C9A3;box-shadow:0 0 0 6px rgba(216,201,163,.12)}
+.cs-node.on{border-color:#D8C9A3;background:#D8C9A3;color:#141416;box-shadow:0 0 0 8px rgba(216,201,163,.12),0 0 28px rgba(216,201,163,.35)}
 
 .cs-card{width:min(56%,620px);box-sizing:border-box;padding:16px 16px 26px}
 .cs-card-cover{aspect-ratio:16/9;margin-bottom:22px;border:1px solid #1C1C1F}
@@ -267,25 +233,30 @@ const stops = [
 .cs-h{margin:10px 10px 14px;font-family:'Newsreader',serif;font-style:italic;font-weight:400;font-size:30px;color:#D8C9A3}
 .cs-text{padding:0 10px}
 .cs-text p{margin:0 0 12px;font-size:15px;line-height:1.7;color:#C9CDD5}
-.cs-chips{display:flex;flex-wrap:wrap;gap:6px;margin:18px 10px 0}
-.cs-chips span{min-width:36px;padding:4px 8px;border:1px solid #232326;font-size:12px;text-align:center;color:#A9AFB9}
+.cs-skills{display:flex;flex-wrap:wrap;gap:8px;margin:18px 10px 0;padding:0;list-style:none}
+.cs-skills li{padding:5px 12px;border:1px solid rgba(216,201,163,.35);border-radius:999px;font-size:12px;letter-spacing:.02em;color:#D8C9A3}
 
 /* Landing: each sticker drops onto the board, tilts into place and its shadow tightens as it lands. */
 .land{opacity:0;transform:translate3d(0,-36px,0) rotate(calc(var(--r,0deg) + 4deg)) scale(1.04);box-shadow:0 40px 70px rgba(0,0,0,.35);transition:opacity .5s ease,transform 1s cubic-bezier(.16,1,.3,1),box-shadow 1s cubic-bezier(.16,1,.3,1)}
 .land.on{opacity:1;transform:rotate(var(--r,0deg));box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 14px 30px rgba(0,0,0,.55)}
 
 .cs-end{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;padding:40px 24px 160px;text-align:center}
-.cs-node.end{position:relative;top:auto;left:auto;margin:0 0 24px}
+.cs-node.end{position:relative;top:auto;left:auto;width:18px;height:18px;margin:0 0 24px}
 .cs-then{margin:0;font-size:clamp(20px,2.4vw,28px);color:#A9AFB9}
 .cs-churn{margin:0 0 64px;font-family:'Newsreader',serif;font-style:italic;font-size:clamp(72px,12vw,160px);line-height:1;color:#EFEFEE}
 
+.cs-sound{position:fixed;left:20px;bottom:20px;z-index:30;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border:1px solid #2A2A2E;border-radius:999px;background:rgba(6,6,6,.85);backdrop-filter:blur(6px);color:#A9AFB9;font:inherit;font-size:12px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:color .25s ease,border-color .25s ease}
+.cs-sound:hover,.cs-sound[aria-pressed="true"]{color:#D8C9A3;border-color:rgba(216,201,163,.45)}
+.cs-sound:focus-visible{outline:2px solid #EFEFEE;outline-offset:3px}
+.cs-sound .wave{opacity:.25;transition:opacity .25s ease}
+.cs-sound[aria-pressed="true"] .wave{opacity:1}
 @media (max-width:760px){
 .cs-route{gap:88px}
 .cs-stop.left,.cs-stop.right{justify-content:flex-end}
-.cs-stop.left .cs-node,.cs-stop.right .cs-node{left:8px}
-.cs-card{width:calc(100% - 32px)}
+.cs-stop.left .cs-node,.cs-stop.right .cs-node{left:20px}
+.cs-card{width:calc(100% - 52px)}
 }
-@media (prefers-reduced-motion:reduce){.land,.cs-node{transition:none}.land{opacity:1;transform:rotate(var(--r,0deg))}}
+@media (prefers-reduced-motion:reduce){.cs-node.on::after{animation:none}.land,.cs-node{transition:none}.land{opacity:1;transform:rotate(var(--r,0deg))}}
 </style>
 
 <script>
@@ -296,6 +267,44 @@ const stops = [
   const endNode = document.querySelector<HTMLElement>('.cs-node.end');
   const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let len = 0;
+
+  // A soft chime as each step is reached. Browsers only allow sound after a tap or click,
+  // so it starts off and the reader turns it on with the button.
+  const soundBtn = document.getElementById('cs-sound') as HTMLButtonElement | null;
+  const soundLabel = document.getElementById('cs-sound-label');
+  const NOTES = [659.25, 783.99, 880, 1046.5, 1174.66, 1318.51];
+  let audio: AudioContext | null = null;
+  let soundOn = false;
+  const chime = (step: number) => {
+    if (!soundOn || !audio) return;
+    const t = audio.currentTime, f = NOTES[Math.min(step, NOTES.length - 1)];
+    const out = audio.createGain();
+    out.gain.setValueAtTime(0, t);
+    out.gain.linearRampToValueAtTime(0.07, t + 0.02);
+    out.gain.exponentialRampToValueAtTime(0.0001, t + 1.8);
+    out.connect(audio.destination);
+    [f, f * 2.01].forEach((hz, i) => {
+      const o = audio!.createOscillator();
+      const g = audio!.createGain();
+      o.type = 'sine';
+      o.frequency.value = hz;
+      g.gain.value = i ? 0.25 : 1;
+      o.connect(g).connect(out);
+      o.start(t);
+      o.stop(t + 1.9);
+    });
+  };
+  soundBtn?.addEventListener('click', () => {
+    soundOn = !soundOn;
+    if (soundOn) {
+      audio = audio || new AudioContext();
+      audio.resume();
+      chime(0);
+    }
+    soundBtn.setAttribute('aria-pressed', String(soundOn));
+    if (soundLabel) soundLabel.textContent = soundOn ? 'sound on' : 'sound off';
+  });
+  const reached = new Set<number>();
 
   const landing = new IntersectionObserver((entries) => {
     for (const e of entries) {
@@ -335,11 +344,16 @@ const stops = [
     const total = route.scrollHeight + (endNode ? 160 : 0);
     const p = calm ? 1 : Math.max(0, Math.min(1, reach / total));
     path.style.strokeDashoffset = `${len * (1 - p)}`;
-    stops.forEach((s) => {
+    stops.forEach((s, i) => {
       const on = calm || s.getBoundingClientRect().top < window.innerHeight * 0.65;
       s.querySelector('.cs-node')?.classList.toggle('on', on);
+      if (on && !reached.has(i)) { reached.add(i); chime(i); }
     });
-    if (endNode) endNode.classList.toggle('on', calm || endNode.getBoundingClientRect().top < window.innerHeight * 0.75);
+    if (endNode) {
+      const on = calm || endNode.getBoundingClientRect().top < window.innerHeight * 0.75;
+      endNode.classList.toggle('on', on);
+      if (on && !reached.has(stops.length)) { reached.add(stops.length); chime(stops.length); }
+    }
   };
 
   let queued = false;
