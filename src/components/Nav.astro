@@ -1,11 +1,12 @@
 ---
-// Top-right animated Seer that opens the full-screen menu.
+// Top-right floating ripple moon that opens the full-screen menu.
+import moon from '../parts/dkmoon.html?raw';
 ---
 <header class="topbar">
-<div style="position: relative; z-index: 21; display: flex; align-items: center; justify-content: flex-end; gap: 16px; padding: 6px 20px; background-color: rgba(11,10,15,0.82); backdrop-filter: blur(8px)">
+<div style="position: relative; z-index: 21; display: flex; align-items: center; justify-content: flex-end; gap: 16px; padding: 12px 20px">
 <button class="seerbtn" id="seerbtn" type="button" aria-expanded="false" aria-controls="deckmenu" aria-label="Open menu" style="display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 4px; border: 0; background-color: transparent; color: #A9AFB9; font: inherit; cursor: pointer">
 <span class="seerlabel" id="seerlabel" aria-hidden="true" style="font-family: 'Inter', system-ui, sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase">menu</span>
-<svg aria-hidden="true" width="36" height="36" viewBox="0 0 200 200" style="overflow: visible"><path class="seer-star" fill="#E8EBF0" d="M104 4 C114 66 142 88 196 104 C134 114 112 142 96 196 C86 134 58 112 4 96 C66 86 88 58 104 4 Z"></path><g class="seer-lid"><path fill="#0B0A0F" d="M58 100 C86 68 114 68 142 100 C114 132 86 132 58 100 Z"></path><circle cx="100" cy="100" r="15" fill="#E8EBF0"></circle><circle cx="106.5" cy="96.5" r="12.4" fill="#0B0A0F"></circle></g></svg>
+<span class="navmoon" set:html={moon}></span>
 </button>
 </div>
 <div id="deckmenu" class="navpanel">
