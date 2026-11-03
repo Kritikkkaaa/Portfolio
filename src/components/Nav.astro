@@ -1,12 +1,19 @@
 ---
-// Top-right floating ripple moon that opens the full-screen menu.
-import moon from '../parts/dkmoon.html?raw';
+// Top-right floating animated ripple moon that opens the full-screen menu.
+import rings from '../parts/rings.html?raw';
 ---
 <header class="topbar">
 <div style="position: relative; z-index: 21; display: flex; align-items: center; justify-content: flex-end; gap: 16px; padding: 12px 20px">
 <button class="seerbtn" id="seerbtn" type="button" aria-expanded="false" aria-controls="deckmenu" aria-label="Open menu" style="display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 4px; border: 0; background-color: transparent; color: #A9AFB9; font: inherit; cursor: pointer">
 <span class="seerlabel" id="seerlabel" aria-hidden="true" style="font-family: 'Inter', system-ui, sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase">menu</span>
-<span class="navmoon" set:html={moon}></span>
+<svg class="navmoon om-svg" aria-hidden="true" viewBox="0 0 200 200">
+<defs>
+<mask id="nav-moon-mask"><circle cx="100" cy="100" r="30" fill="#fff"></circle><circle class="om-shadow" cx="100" cy="100" r="31" fill="#000"></circle></mask>
+<filter id="nav-goo" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur in="SourceGraphic" stdDeviation="1.8" result="b"></feGaussianBlur><feColorMatrix in="b" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10"></feColorMatrix></filter>
+</defs>
+<g class="om-rings" fill="none" stroke="#C9CDD5" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round" set:html={rings}></g>
+<g class="om-moon"><g filter="url(#nav-goo)" fill="#C9CDD5"><circle cx="100" cy="100" r="30" mask="url(#nav-moon-mask)"></circle><circle class="om-drop" cx="100" cy="131" r="3.4"></circle><circle class="om-drop d2" cx="94" cy="130" r="2.6"></circle></g></g>
+</svg>
 </button>
 </div>
 <div id="deckmenu" class="navpanel">

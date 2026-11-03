@@ -1,8 +1,24 @@
 ---
-// Silver star cursor with star-dust trail. Hidden on touch devices and for reduced motion (via global CSS).
+// Silver star cursor, a pond-ripple wobble on the sky behind it, and a light wobble on text under it.
+// Hidden on touch devices and for reduced motion (via global CSS and the media checks below).
 ---
+<svg class="fx-defs" aria-hidden="true" width="0" height="0" focusable="false">
+<filter id="pond" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-color="rgb(128,128,128)" result="flat"></feFlood>
+<feImage class="pond-drop" x="-999" y="-999" width="1" height="1" preserveAspectRatio="none" result="r0"></feImage>
+<feImage class="pond-drop" x="-999" y="-999" width="1" height="1" preserveAspectRatio="none" result="r1"></feImage>
+<feImage class="pond-drop" x="-999" y="-999" width="1" height="1" preserveAspectRatio="none" result="r2"></feImage>
+<feImage class="pond-drop" x="-999" y="-999" width="1" height="1" preserveAspectRatio="none" result="r3"></feImage>
+<feMerge result="map"><feMergeNode in="flat"></feMergeNode><feMergeNode in="r0"></feMergeNode><feMergeNode in="r1"></feMergeNode><feMergeNode in="r2"></feMergeNode><feMergeNode in="r3"></feMergeNode></feMerge>
+<feDisplacementMap id="pond-amp" in="SourceGraphic" in2="map" scale="0" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap>
+</filter>
+<filter id="wob" x="-5%" y="-20%" width="110%" height="140%" color-interpolation-filters="sRGB">
+<feTurbulence id="wob-noise" type="fractalNoise" baseFrequency="0.015 0.05" numOctaves="1" seed="3" result="n"></feTurbulence>
+<feDisplacementMap id="wob-amp" in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap>
+</filter>
+</svg>
+
 <div class="comet-layer" aria-hidden="true">
-<div id="dust-layer"></div>
 <div class="cstar off" id="cstar">
 <svg width="32" height="32" viewBox="0 0 24 24" style="overflow: visible">
 <defs>
@@ -20,22 +36,55 @@
 
 <script>
   const star = document.getElementById('cstar') as HTMLElement | null;
-  const layer = document.getElementById('dust-layer') as HTMLElement | null;
-  if (star && layer && window.matchMedia('(hover: hover)').matches) {
-    const tones = ['#F2F0F5', '#D9DDE4', '#B9BEC8'];
+  const fine = window.matchMedia('(hover: hover)').matches;
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (star && fine) {
     const CONTENT = 'a, button, p, h1, h2, h3, nav, svg, img, label, input, .chip, .skill, .wcard, .tcard, .zcard, .sp-card, .dk-card';
     const m = { x: -100, y: -100 };
     const p = { x: -100, y: -100 };
     const st = { inside: false, rest: false, gone: false, hot: false, hide: false };
-    type Dust = { el: HTMLSpanElement; x: number; y: number; vx: number; vy: number; born: number; life: number; seed: number };
-    let dust: Dust[] = [];
     let raf = 0;
-    let lastMove = 0;
     let restT: number | undefined, idleT: number | undefined, hideT: number | undefined;
 
     const paint = () => {
       star.className = 'cstar' + (st.hot ? ' hot' : '') + (st.hide ? ' hide' : '') + (st.rest ? ' rest' : '') + ((!st.inside || st.gone) ? ' off' : '');
     };
+
+    // Pond: each drop is a ring-shaped displacement map that spreads out from where the cursor passed.
+    const sky = document.querySelector<HTMLElement>('.space');
+    const amp = document.getElementById('pond-amp');
+    const slots = Array.from(document.querySelectorAll<SVGFEImageElement>('.pond-drop'));
+    const drops: { x: number; y: number; born: number }[] = [];
+    let energy = 0;
+    let lastDrop = { x: -999, y: -999 };
+    const ripple = (() => {
+      const n = 128, c = document.createElement('canvas');
+      c.width = c.height = n;
+      const ctx = c.getContext('2d');
+      if (!ctx) return '';
+      const img = ctx.createImageData(n, n);
+      for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+        const x = (i + 0.5) / n * 2 - 1, y = (j + 0.5) / n * 2 - 1, r = Math.hypot(x, y) || 1e-6;
+        const w = r < 1 ? Math.sin(r * Math.PI * 5) * Math.sin(r * Math.PI) : 0;
+        const k = (j * n + i) * 4;
+        img.data[k] = Math.round(128 + 127 * w * x / r);
+        img.data[k + 1] = Math.round(128 + 127 * w * y / r);
+        img.data[k + 2] = 128;
+        img.data[k + 3] = 255;
+      }
+      ctx.putImageData(img, 0, 0);
+      return c.toDataURL();
+    })();
+    const pond = !calm && !!(sky && amp && ripple && slots.length);
+    if (pond) slots.forEach((s) => s.setAttribute('href', ripple));
+    const LIFE = 1400;
+
+    // Text under the cursor: a light, liquid wobble that eases in and out.
+    const noise = document.getElementById('wob-noise');
+    const wobAmp = document.getElementById('wob-amp');
+    const TEXT = 'h1, h2, h3, p, li, .skill';
+    let wobEl: HTMLElement | null = null;
+    let wob = 0;
 
     const loop = (now: number) => {
       const dx = m.x - p.x, dy = m.y - p.y;
@@ -44,33 +93,38 @@
       const lag = Math.hypot(dx, dy);
       star.style.left = p.x.toFixed(1) + 'px';
       star.style.top = p.y.toFixed(1) + 'px';
-      if (st.inside && !st.hide && now - lastMove < 80 && lag > 0.8) {
-        const n = lag > 10 ? 2 : 1;
-        for (let i = 0; i < n; i++) {
-          const s = 0.8 + Math.random() * 1.3;
-          const el = document.createElement('span');
-          el.className = 'dust';
-          el.style.width = el.style.height = s.toFixed(2) + 'px';
-          el.style.margin = (-s / 2).toFixed(2) + 'px 0 0 ' + (-s / 2).toFixed(2) + 'px';
-          el.style.backgroundColor = tones[Math.floor(Math.random() * tones.length)];
-          layer.appendChild(el);
-          dust.push({ el, x: p.x + (Math.random() - 0.5) * 6, y: p.y + (Math.random() - 0.5) * 6, vx: (Math.random() - 0.5) * 0.22, vy: 0.05 + Math.random() * 0.3, born: now, life: 650 + Math.random() * 650, seed: Math.random() * 6.28 });
-        }
+
+      let busy = lag > 0.3;
+      if (pond && sky && amp) {
+        while (drops.length && now - drops[0].born > LIFE) drops.shift();
+        energy *= 0.96;
+        slots.forEach((s, i) => {
+          const d = drops[i];
+          if (!d) { s.setAttribute('x', '-999'); s.setAttribute('y', '-999'); return; }
+          const t = (now - d.born) / LIFE;
+          const size = 40 + t * 320;
+          s.setAttribute('x', (d.x - size / 2).toFixed(1));
+          s.setAttribute('y', (d.y - size / 2).toFixed(1));
+          s.setAttribute('width', size.toFixed(1));
+          s.setAttribute('height', size.toFixed(1));
+        });
+        const live = drops.length > 0 && energy > 0.02;
+        amp.setAttribute('scale', live ? (energy * 26).toFixed(1) : '0');
+        sky.style.filter = live ? 'url(#pond)' : '';
+        busy = busy || live;
       }
-      const keep: Dust[] = [];
-      for (const d of dust) {
-        const age = (now - d.born) / d.life;
-        if (age >= 1) { d.el.remove(); continue; }
-        d.x += d.vx; d.y += d.vy;
-        const tw = 0.65 + 0.35 * Math.sin(age * 18 + d.seed);
-        d.el.style.left = d.x.toFixed(1) + 'px';
-        d.el.style.top = d.y.toFixed(1) + 'px';
-        d.el.style.opacity = Math.max(0, (1 - age) * tw).toFixed(2);
-        keep.push(d);
+      if (!calm && noise && wobAmp) {
+        const target = wobEl ? 1 : 0;
+        wob += (target - wob) * 0.12;
+        const t = now / 1000;
+        noise.setAttribute('baseFrequency', (0.015 + 0.004 * Math.sin(t * 1.7)).toFixed(4) + ' ' + (0.05 + 0.012 * Math.cos(t * 2.3)).toFixed(4));
+        wobAmp.setAttribute('scale', (wob * 3.5).toFixed(2));
+        if (!wobEl && wob < 0.02) {
+          document.querySelectorAll('.wob').forEach((el) => el.classList.remove('wob'));
+          wob = 0;
+        } else busy = true;
       }
-      while (keep.length > 70) { const d = keep.shift(); d && d.el.remove(); }
-      dust = keep;
-      raf = (lag > 0.3 || dust.length) ? requestAnimationFrame(loop) : 0;
+      raf = busy ? requestAnimationFrame(loop) : 0;
     };
 
     window.addEventListener('mousemove', (e) => {
@@ -85,20 +139,37 @@
       st.hot = !st.hide && !!(tg && tg.closest && tg.closest('a, button'));
       m.x = e.clientX; m.y = e.clientY;
       if (!st.inside || st.gone) { p.x = m.x; p.y = m.y; }
-      lastMove = performance.now();
       st.inside = true; st.rest = false; st.gone = false;
       paint();
       clearTimeout(restT); restT = window.setTimeout(() => { st.rest = true; paint(); }, 220);
       clearTimeout(idleT); idleT = window.setTimeout(() => { st.gone = true; paint(); }, 5000);
+
+      if (pond) {
+        const now = performance.now();
+        if (Math.hypot(m.x - lastDrop.x, m.y - lastDrop.y) > 60) {
+          drops.push({ x: m.x, y: m.y, born: now });
+          while (drops.length > slots.length) drops.shift();
+          lastDrop = { x: m.x, y: m.y };
+        }
+        energy = Math.min(1, energy + 0.08);
+      }
+      if (!calm) {
+        const txt = tg && tg.closest ? tg.closest<HTMLElement>(TEXT) : null;
+        if (txt !== wobEl) {
+          if (wobEl && txt) wobEl.classList.remove('wob');
+          wobEl = txt;
+          if (wobEl) wobEl.classList.add('wob');
+        }
+      }
       if (!raf) raf = requestAnimationFrame(loop);
     }, { passive: true });
 
     document.documentElement.addEventListener('mouseleave', () => {
-      for (const d of dust) d.el.remove();
-      dust = [];
       clearTimeout(restT); clearTimeout(idleT); clearTimeout(hideT); hideT = undefined;
       st.inside = false; st.rest = false;
+      wobEl = null;
       paint();
+      if (!raf) raf = requestAnimationFrame(loop);
     });
   }
 </script>

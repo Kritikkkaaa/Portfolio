@@ -35,7 +35,8 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .shoot{position:absolute;top:12%;left:70%;width:140px;height:1px;background:linear-gradient(to right,rgba(232,235,240,0),#E8EBF0);transform:rotate(-24deg);opacity:0;animation:shoot 17s ease-in 6s infinite}
 @keyframes shoot{0%,94%{opacity:0;transform:translate(0,0) rotate(-24deg)}95%{opacity:1}100%{opacity:0;transform:translate(-520px,230px) rotate(-24deg)}}
 .sky,.sky a,.sky button{cursor:none}
-.dust{position:fixed;z-index:60;pointer-events:none;border-radius:50%}
+.fx-defs{position:absolute;width:0;height:0;overflow:hidden}
+.wob{filter:url(#wob)}
 .cstar{position:fixed;z-index:61;pointer-events:none;transform:translate(-50%,-50%) scale(1);transition:opacity .7s ease,transform .45s cubic-bezier(.3,.7,.3,1);filter:drop-shadow(0 0 4px rgba(222,226,234,.35))}
 .cstar.hot{transform:translate(-50%,-50%) scale(1.35)}
 .cstar.off{opacity:0;transform:translate(-50%,-50%) scale(.5)}
@@ -109,7 +110,7 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .mlink:focus-visible{outline:2px solid #E8EBF0;outline-offset:6px}
 .navlink{transition:color .2s ease,transform .25s ease}
 .navlink:hover{color:#FFFFFF;transform:translateX(8px)}
-.navmoon{display:inline-flex}.navmoon svg{width:56px;height:56px}
+.navmoon{display:block;width:56px;height:56px}
 @keyframes sstar{0%,30%{transform:rotate(0deg)}70%,100%{transform:rotate(90deg)}}
 @keyframes slid{0%,4%,16%,100%{transform:scaleY(1)}10%{transform:scaleY(.06)}}
 .seerlabel{opacity:0;transform:translateX(6px);transition:opacity .25s ease,transform .25s ease}
