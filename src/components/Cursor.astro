@@ -44,7 +44,7 @@
     const p = { x: -100, y: -100 };
     const st = { inside: false, rest: false, gone: false, hot: false, hide: false };
     let raf = 0;
-    let restT: number | undefined, idleT: number | undefined, hideT: number | undefined;
+    let restT: number | undefined, idleT: number | undefined;
 
     const paint = () => {
       star.className = 'cstar' + (st.hot ? ' hot' : '') + (st.hide ? ' hide' : '') + (st.rest ? ' rest' : '') + ((!st.inside || st.gone) ? ' off' : '');
@@ -77,7 +77,7 @@
     })();
     const pond = !calm && !!(sky && amp && ripple && slots.length);
     if (pond) slots.forEach((s) => s.setAttribute('href', ripple));
-    const LIFE = 1400;
+    const LIFE = 1800;
 
     // Text under the cursor: a light, liquid wobble that eases in and out.
     const noise = document.getElementById('wob-noise');
@@ -97,19 +97,19 @@
       let busy = lag > 0.3;
       if (pond && sky && amp) {
         while (drops.length && now - drops[0].born > LIFE) drops.shift();
-        energy *= 0.96;
+        energy *= 0.975;
         slots.forEach((s, i) => {
           const d = drops[i];
           if (!d) { s.setAttribute('x', '-999'); s.setAttribute('y', '-999'); return; }
           const t = (now - d.born) / LIFE;
-          const size = 40 + t * 320;
+          const size = 60 + t * 460;
           s.setAttribute('x', (d.x - size / 2).toFixed(1));
           s.setAttribute('y', (d.y - size / 2).toFixed(1));
           s.setAttribute('width', size.toFixed(1));
           s.setAttribute('height', size.toFixed(1));
         });
         const live = drops.length > 0 && energy > 0.02;
-        amp.setAttribute('scale', live ? (energy * 26).toFixed(1) : '0');
+        amp.setAttribute('scale', live ? (energy * 64).toFixed(1) : '0');
         sky.style.filter = live ? 'url(#pond)' : '';
         busy = busy || live;
       }
@@ -118,7 +118,7 @@
         wob += (target - wob) * 0.12;
         const t = now / 1000;
         noise.setAttribute('baseFrequency', (0.015 + 0.004 * Math.sin(t * 1.7)).toFixed(4) + ' ' + (0.05 + 0.012 * Math.cos(t * 2.3)).toFixed(4));
-        wobAmp.setAttribute('scale', (wob * 3.5).toFixed(2));
+        wobAmp.setAttribute('scale', (wob * 9).toFixed(2));
         if (!wobEl && wob < 0.02) {
           document.querySelectorAll('.wob').forEach((el) => el.classList.remove('wob'));
           wob = 0;
@@ -130,12 +130,7 @@
     window.addEventListener('mousemove', (e) => {
       const tg = e.target as Element | null;
       const over = !!(tg && tg.closest && tg.closest(CONTENT));
-      if (over) {
-        if (!hideT && !st.hide) hideT = window.setTimeout(() => { hideT = undefined; st.hide = true; st.hot = false; paint(); }, 700);
-      } else {
-        clearTimeout(hideT); hideT = undefined;
-        st.hide = false;
-      }
+      st.hide = over;
       st.hot = !st.hide && !!(tg && tg.closest && tg.closest('a, button'));
       m.x = e.clientX; m.y = e.clientY;
       if (!st.inside || st.gone) { p.x = m.x; p.y = m.y; }
@@ -146,12 +141,12 @@
 
       if (pond) {
         const now = performance.now();
-        if (Math.hypot(m.x - lastDrop.x, m.y - lastDrop.y) > 60) {
+        if (Math.hypot(m.x - lastDrop.x, m.y - lastDrop.y) > 45) {
           drops.push({ x: m.x, y: m.y, born: now });
           while (drops.length > slots.length) drops.shift();
           lastDrop = { x: m.x, y: m.y };
         }
-        energy = Math.min(1, energy + 0.08);
+        energy = Math.min(1, energy + 0.16);
       }
       if (!calm) {
         const txt = tg && tg.closest ? tg.closest<HTMLElement>(TEXT) : null;
@@ -165,7 +160,7 @@
     }, { passive: true });
 
     document.documentElement.addEventListener('mouseleave', () => {
-      clearTimeout(restT); clearTimeout(idleT); clearTimeout(hideT); hideT = undefined;
+      clearTimeout(restT); clearTimeout(idleT);
       st.inside = false; st.rest = false;
       wobEl = null;
       paint();
