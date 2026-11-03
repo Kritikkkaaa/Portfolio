@@ -1,0 +1,45 @@
+---
+// Seeded star layers, computed once at build time (same seeds as the design).
+function makeStars(n: number, seed: number, tint: number) {
+  let a = seed;
+  const rnd = () => { a = (a * 16807) % 2147483647; return a / 2147483647; };
+  const out: string[] = [];
+  for (let i = 0; i < n; i++) {
+    const x = Math.round(rnd() * 2400);
+    const y = Math.round(rnd() * 2000);
+    const r = rnd();
+    const c = r < tint ? 'rgba(255,255,255,0.95)' : (r < tint * 2 ? 'rgba(190,196,208,0.85)' : 'rgba(232,235,240,' + (0.35 + rnd() * 0.55).toFixed(2) + ')');
+    out.push(x + 'px ' + y + 'px ' + c, x + 'px ' + (y + 2000) + 'px ' + c);
+  }
+  return out.join(',');
+}
+const far = makeStars(260, 7, 0.02);
+const mid = makeStars(110, 31, 0.05);
+const near = makeStars(40, 97, 0.1);
+---
+<div class="space" aria-hidden="true">
+<div class="nebula n1"></div><div class="nebula n2"></div><div class="nebula n3"></div>
+<div class="plx" data-depth="6"><div class="stars far" style={`box-shadow: ${far}`}></div></div>
+<div class="plx" data-depth="14"><div class="stars mid" style={`box-shadow: ${mid}`}></div></div>
+<div class="plx" data-depth="28"><div class="stars near" style={`box-shadow: ${near}`}></div></div>
+<span class="shoot"></span>
+</div>
+
+<script>
+  const layers = Array.from(document.querySelectorAll<HTMLElement>('.plx'));
+  let queued = false;
+  let dx = 0, dy = 0;
+  const apply = () => {
+    queued = false;
+    for (const l of layers) {
+      const d = Number(l.dataset.depth || 0);
+      l.style.transform = `translate(${(-dx * d).toFixed(1)}px, ${(-dy * d).toFixed(1)}px)`;
+    }
+  };
+  window.addEventListener('mousemove', (e) => {
+    dx = e.clientX / window.innerWidth - 0.5;
+    dy = e.clientY / window.innerHeight - 0.5;
+    if (!queued) { queued = true; requestAnimationFrame(apply); }
+  }, { passive: true });
+  document.documentElement.addEventListener('mouseleave', () => { dx = 0; dy = 0; requestAnimationFrame(apply); });
+</script>

@@ -1,0 +1,79 @@
+---
+// Top-right animated Seer that opens the full-screen menu.
+---
+<header class="topbar">
+<div style="position: relative; z-index: 21; display: flex; align-items: center; justify-content: flex-end; gap: 16px; padding: 6px 20px; background-color: rgba(11,10,15,0.82); backdrop-filter: blur(8px)">
+<button class="seerbtn" id="seerbtn" type="button" aria-expanded="false" aria-controls="deckmenu" aria-label="Open menu" style="display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 4px; border: 0; background-color: transparent; color: #A9AFB9; font: inherit; cursor: pointer">
+<span class="seerlabel" id="seerlabel" aria-hidden="true" style="font-family: 'Inter', system-ui, sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase">menu</span>
+<svg aria-hidden="true" width="36" height="36" viewBox="0 0 200 200" style="overflow: visible"><path class="seer-star" fill="#E8EBF0" d="M104 4 C114 66 142 88 196 104 C134 114 112 142 96 196 C86 134 58 112 4 96 C66 86 88 58 104 4 Z"></path><g class="seer-lid"><path fill="#0B0A0F" d="M58 100 C86 68 114 68 142 100 C114 132 86 132 58 100 Z"></path><circle cx="100" cy="100" r="15" fill="#E8EBF0"></circle><circle cx="106.5" cy="96.5" r="12.4" fill="#0B0A0F"></circle></g></svg>
+</button>
+</div>
+<div id="deckmenu" class="navpanel">
+<div style="height: 100%; max-width: 1040px; margin: 0 auto; padding: 120px 24px 48px; box-sizing: border-box; display: flex; align-items: center; gap: 32px">
+<nav aria-label="Main" style="flex: 7 1 0; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+<a class="mlink" id="mlink-home" href="#top" tabindex="-1" style="display: grid; grid-template-columns: 14px minmax(0, 1fr); column-gap: 22px; align-items: center; text-decoration: none; color: #E8EBF0">
+<span aria-hidden="true" style="grid-row: 2; width: 14px; height: 14px; border-radius: 999px; background-color: #E8EBF0"></span>
+<span style="grid-column: 2; font-family: 'Inter', system-ui, sans-serif; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #8A8D96">Currently viewing</span>
+<span style="grid-column: 2; grid-row: 2; font-family: 'Inter', system-ui, sans-serif; font-weight: 500; font-size: clamp(44px, 6.5vw, 88px); line-height: 1.05; letter-spacing: -0.02em">Home</span>
+</a>
+<a class="mlink" href="https://substack.com/@verykritikal/posts" target="_blank" rel="noopener" tabindex="-1" style="display: grid; grid-template-columns: 14px minmax(0, 1fr); column-gap: 22px; align-items: center; text-decoration: none; color: #6E717B">
+<span aria-hidden="true"></span>
+<span style="font-family: 'Newsreader', serif; font-style: italic; font-size: clamp(44px, 6.5vw, 88px); line-height: 1.05; letter-spacing: -0.02em">I write on Substack<span class="marrow" aria-hidden="true" style="font-style: normal; font-size: 0.4em; margin-left: 12px">↗</span></span>
+</a>
+</nav>
+<div class="zwrap" style="flex: 3 1 0; min-width: 0; display: flex; justify-content: center">
+<div class="zcard" aria-hidden="true" style="width: 100%; max-width: 280px; aspect-ratio: 5/8; box-sizing: border-box; padding: 10px; border-radius: 16px; background-color: #141319; border: 1px solid #2C2B33">
+<div style="width: 100%; height: 100%; box-sizing: border-box; border-radius: 10px; border: 1px solid #2C2B33; padding: 22px 16px 18px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px">
+<div id="z-num" style="font-family: 'Inter', system-ui, sans-serif; font-size: 10px; letter-spacing: 0.2em; color: #8A8D96">I / XII</div>
+<div class="zsym" id="z-sym" style="font-family: 'Segoe UI Symbol', 'Noto Sans Symbols 2', 'Noto Sans Symbols', 'Apple Symbols', serif; font-size: 80px; line-height: 1.1; color: #E8EBF0; text-shadow: 0 0 18px rgba(232,235,240,0.45)">&#x2648;&#xFE0E;</div>
+<div id="z-name" style="font-family: 'Inter', system-ui, sans-serif; font-size: 13px; letter-spacing: 0.24em; text-transform: uppercase; color: #A9AFB9">Aries</div>
+<p id="z-trait" style="margin: auto 0 0; font-family: 'Newsreader', serif; font-style: italic; font-size: 16px; line-height: 1.4; color: #E8EBF0">bold, impatient, first through the door.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+
+<script>
+  const btn = document.getElementById('seerbtn') as HTMLButtonElement;
+  const label = document.getElementById('seerlabel') as HTMLElement;
+  const panel = document.getElementById('deckmenu') as HTMLElement;
+  const links = Array.from(panel.querySelectorAll<HTMLAnchorElement>('.mlink'));
+  let open = false;
+  const set = (v: boolean) => {
+    open = v;
+    panel.classList.toggle('open', v);
+    btn.setAttribute('aria-expanded', String(v));
+    btn.setAttribute('aria-label', v ? 'Close menu' : 'Open menu');
+    label.textContent = v ? 'close' : 'menu';
+    links.forEach((a) => a.setAttribute('tabindex', v ? '0' : '-1'));
+  };
+  btn.addEventListener('click', () => set(!open));
+  document.getElementById('mlink-home')?.addEventListener('click', () => set(false));
+  document.addEventListener('keydown', (e) => { if (open && e.key === 'Escape') { set(false); btn.focus(); } });
+
+  const Z: [string, string, string][] = [
+    ['♈︎', 'Aries', 'bold, impatient, first through the door.'],
+    ['♉︎', 'Taurus', 'steady, loyal, slow to change its mind.'],
+    ['♊︎', 'Gemini', 'curious, quick, always two tabs open.'],
+    ['♋︎', 'Cancer', 'protective, intuitive, remembers everything.'],
+    ['♌︎', 'Leo', 'warm, dramatic, made for the spotlight.'],
+    ['♍︎', 'Virgo', 'precise, helpful, spots the typo first.'],
+    ['♎︎', 'Libra', 'fair, charming, cannot pick a restaurant.'],
+    ['♏︎', 'Scorpio', 'intense, private, reads between the lines.'],
+    ['♐︎', 'Sagittarius', 'free, honest, already planning the next trip.'],
+    ['♑︎', 'Capricorn', 'ambitious, disciplined, has a five-year plan.'],
+    ['♒︎', 'Aquarius', 'original, independent, a little ahead of time.'],
+    ['♓︎', 'Pisces', 'dreamy, empathetic, feels the room first.']
+  ];
+  const NUM = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
+  let z = 0;
+  setInterval(() => {
+    z = (z + 1) % 12;
+    (document.getElementById('z-num') as HTMLElement).textContent = NUM[z] + ' / XII';
+    (document.getElementById('z-sym') as HTMLElement).textContent = Z[z][0];
+    (document.getElementById('z-name') as HTMLElement).textContent = Z[z][1];
+    (document.getElementById('z-trait') as HTMLElement).textContent = Z[z][2];
+  }, 20000);
+</script>

@@ -1,0 +1,148 @@
+---
+// First fold: name, dropping role words, short intro, skill links and the crystal orb.
+import rings from '../parts/rings.html?raw';
+const first = 'content marketer';
+const firstLetters = first.split('').map((ch, i) => ({ ch: ch === ' ' ? ' ' : ch, d: (0.35 + i * 0.05).toFixed(3) }));
+---
+<section id="top" aria-labelledby="hello" style="display: flex; flex-wrap: wrap; gap: 48px 56px; align-items: center; box-sizing: border-box; min-height: calc(100vh - 100px); padding-bottom: 112px">
+<div style="flex: 7 1 0; min-width: min(100%, 420px); display: flex; flex-direction: column; gap: 20px">
+<h1 id="hello" class="rise" style="animation-delay: 0.3s; margin: 0; font-family: 'Inter', system-ui, sans-serif; font-weight: 500; font-size: clamp(44px, 6.2vw, 76px); line-height: 1; letter-spacing: -0.02em">Kritika Upadhyay<span class="roles" aria-hidden="true" style="font-family: 'Newsreader', serif; font-weight: 400; letter-spacing: 0; font-style: italic; font-size: 0.72em; color: #D8C9A3"><span class="wstack"><span class="wlayer" id="w-out"></span><span class="wlayer" id="w-in">{firstLetters.map((l) => <span class="lt ia" style={`animation-delay: ${l.d}s`}>{l.ch}</span>)}</span></span></span><span class="sr-only">, content marketer, storyteller, product manager and growth marketer</span></h1>
+<p class="rise" style="animation-delay: 0.42s; margin: 0; max-width: 560px; font-size: 20px; color: #C9CDD5; text-wrap: pretty">grew up in product startups. i've done marketing, product, content and support. i'm at my best where deep user empathy meets product teardowns, and then i tweet about it.</p>
+<nav class="skills rise" aria-label="What i do" style="animation-delay: 0.54s; margin-left: -6px">
+<a class="skill" href="#work">product management</a><span class="dot" aria-hidden="true">·</span>
+<a class="skill" href="#work">positioning and messaging</a><span class="dot" aria-hidden="true">·</span>
+<a class="skill" href="#work">GTM</a><span class="dot" aria-hidden="true">·</span>
+<a class="skill" href="#work">events</a><span class="dot" aria-hidden="true">·</span>
+<a class="skill" href="#work">growth</a>
+</nav>
+</div>
+
+<div class="fade" style="animation-delay: 0.4s; flex: 3 1 0; min-width: 240px; display: flex; flex-direction: column; align-items: center; gap: 14px">
+<button class="orb" id="orb" type="button" aria-label="Crystal ball. Touch it to know your future" aria-pressed="false">
+<span id="ripples"></span>
+<span class="orb-ball">
+<span class="mist m1"></span><span class="mist m2"></span>
+<span id="om-slot" style="display: contents"></span>
+<span class="gloss"></span>
+</span>
+</button>
+<template id="om-tpl">
+<svg class="om-svg" aria-hidden="true" width="160" height="160" viewBox="0 0 200 200" style="filter: drop-shadow(0 0 6px rgba(11,10,15,0.45))">
+<defs>
+<mask id="om-moon-mask"><circle cx="100" cy="100" r="30" fill="#fff"></circle><circle class="om-shadow" cx="100" cy="100" r="31" fill="#000"></circle></mask>
+<filter id="om-goo" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur in="SourceGraphic" stdDeviation="1.8" result="b"></feGaussianBlur><feColorMatrix in="b" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10"></feColorMatrix></filter>
+</defs>
+<g class="om-rings" fill="none" stroke="#FBF8F1" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round" set:html={rings}></g>
+<g class="om-moon"><g filter="url(#om-goo)" fill="#FBF8F1"><circle cx="100" cy="100" r="30" mask="url(#om-moon-mask)"></circle><circle class="om-drop" cx="100" cy="131" r="3.4"></circle><circle class="om-drop d2" cx="94" cy="130" r="2.6"></circle></g></g>
+</svg>
+</template>
+<div aria-live="polite" style="min-height: 64px; max-width: 300px; text-align: center; display: flex; flex-direction: column; gap: 6px">
+<p class="omen" id="omen" hidden style="margin: 0; font-family: 'Newsreader', serif; font-style: italic; font-size: 19px; line-height: 1.4; color: #E8EBF0">You have found the one you are looking for... <span style="color: #D8C9A3">Hire her!</span></p>
+<div id="orb-hint" style="font-family: 'Inter', system-ui, sans-serif; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #8A8D96">touch to know your future</div>
+</div>
+</div>
+</section>
+
+<script>
+  // Role words: letters drop in from a soft blur, the old word lifts away.
+  const words = ['content marketer', 'storyteller', 'product manager', 'growth marketer'];
+  const wIn = document.getElementById('w-in') as HTMLElement;
+  const wOut = document.getElementById('w-out') as HTMLElement;
+  const build = (host: HTMLElement, word: string, n: number, kind: 'i' | 'o') => {
+    host.textContent = '';
+    const cls = 'lt ' + kind + (n % 2 ? 'b' : 'a');
+    const step = kind === 'i' ? 0.05 : 0.025;
+    const lead = kind === 'i' ? 0.35 : 0;
+    word.split('').forEach((ch, i) => {
+      const s = document.createElement('span');
+      s.className = cls;
+      s.style.animationDelay = (lead + i * step).toFixed(3) + 's';
+      s.textContent = ch === ' ' ? ' ' : ch;
+      host.appendChild(s);
+    });
+  };
+  let ri = 0;
+  setInterval(() => {
+    const prev = words[ri];
+    ri = (ri + 1) % words.length;
+    build(wOut, prev, ri, 'o');
+    build(wIn, words[ri], ri, 'i');
+  }, 8000);
+
+  // The orb: gold bloom, ripple moon, fortune and a soft gust of wind.
+  const orb = document.getElementById('orb') as HTMLButtonElement;
+  const slot = document.getElementById('om-slot') as HTMLElement;
+  const tpl = document.getElementById('om-tpl') as HTMLTemplateElement;
+  const ripples = document.getElementById('ripples') as HTMLElement;
+  const omen = document.getElementById('omen') as HTMLElement;
+  const hint = document.getElementById('orb-hint') as HTMLElement;
+  let lit = false;
+  let ac: AudioContext | null = null;
+  let rippleT: number | undefined;
+
+  const wind = () => {
+    try {
+      const C = window.AudioContext || (window as any).webkitAudioContext;
+      if (!C) return;
+      ac = ac || new C();
+      const t = ac.currentTime;
+      const dur = 3.2;
+      const len = Math.floor(ac.sampleRate * dur);
+      const buf = ac.createBuffer(2, len, ac.sampleRate);
+      for (let c = 0; c < 2; c++) {
+        const data = buf.getChannelData(c);
+        let last = 0;
+        for (let i = 0; i < len; i++) { last = (last + 0.04 * (Math.random() * 2 - 1)) / 1.04; data[i] = last * 3.2; }
+      }
+      const src = ac.createBufferSource();
+      src.buffer = buf;
+      const bp = ac.createBiquadFilter();
+      bp.type = 'bandpass';
+      bp.Q.value = 0.9;
+      bp.frequency.setValueAtTime(220, t);
+      bp.frequency.exponentialRampToValueAtTime(1400, t + 1.3);
+      bp.frequency.exponentialRampToValueAtTime(320, t + dur);
+      const pan = ac.createStereoPanner ? ac.createStereoPanner() : null;
+      if (pan) { pan.pan.setValueAtTime(-0.6, t); pan.pan.linearRampToValueAtTime(0.6, t + dur); }
+      const g = ac.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.5, t + 1.1);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      src.connect(bp);
+      if (pan) { bp.connect(pan); pan.connect(g); } else { bp.connect(g); }
+      g.connect(ac.destination);
+      src.start(t);
+      src.stop(t + dur);
+      const o = ac.createOscillator();
+      const og = ac.createGain();
+      o.type = 'sine';
+      o.frequency.setValueAtTime(880, t + 0.6);
+      o.frequency.exponentialRampToValueAtTime(1320, t + 2.6);
+      og.gain.setValueAtTime(0.0001, t + 0.6);
+      og.gain.exponentialRampToValueAtTime(0.018, t + 1.4);
+      og.gain.exponentialRampToValueAtTime(0.0001, t + 3);
+      o.connect(og);
+      og.connect(ac.destination);
+      o.start(t + 0.6);
+      o.stop(t + 3.1);
+    } catch (e) { /* sound is optional */ }
+  };
+
+  orb.addEventListener('click', () => {
+    wind();
+    lit = !lit;
+    orb.classList.toggle('lit', lit);
+    orb.setAttribute('aria-pressed', String(lit));
+    orb.setAttribute('aria-label', lit ? 'Crystal ball, showing your future. Touch to clear it' : 'Crystal ball. Touch it to know your future');
+    slot.textContent = '';
+    if (lit) slot.appendChild(tpl.content.cloneNode(true));
+    omen.hidden = !lit;
+    hint.textContent = lit ? '' : 'touch to know your future';
+    ripples.textContent = '';
+    clearTimeout(rippleT);
+    requestAnimationFrame(() => {
+      ripples.innerHTML = '<span class="ripple"></span><span class="ripple r2"></span><span class="ripple r3"></span>';
+    });
+    rippleT = window.setTimeout(() => { ripples.textContent = ''; }, 2200);
+  });
+</script>

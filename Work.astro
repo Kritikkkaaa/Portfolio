@@ -1,0 +1,101 @@
+---
+// Second fold: the face-up spread. Click a card to bring it to the centre and turn it.
+const cards = [
+  { num: '0', card: 'The Fool', place: 'Plane', date: '[MON YY]', tilt: -4, title: 'GitHub stars from one debate',
+    hook: 'joined to write code. left owning the GitHub stars.',
+    metric: '82+', metricLine: 'GitHub stars in 24 hours from one Hacker News debate',
+    story: 'learned that developers can smell a pitch from a mile away, so i stopped pitching and started showing. a 4,000+ member Discord, a national FOSS event and 30+ hackathon teams followed.',
+    glyph: 'M22 18 L10 32 L22 46 M42 18 L54 32 L42 46 M36 12 L28 52' },
+  { num: 'I', card: 'The Magician', place: 'Marmeto', date: '[MON YY]', tilt: 3, title: 'What the Fork',
+    hook: 'ran closed-door developer events. a partner network showed up.',
+    metric: 'partners', metricLine: 'an agency partner network, from closed-door developer events',
+    story: 'closed-door developer events that conjured an agency partner network for demand gen.',
+    glyph: 'M12 32 C12 22 24 22 32 32 C40 42 52 42 52 32 C52 22 40 22 32 32 C24 42 12 42 12 32 Z M32 8 L32 14 M32 50 L32 56' },
+  { num: 'VII', card: 'The Chariot', place: 'Nexus', date: '[MON YY]', tilt: -2, title: 'building Nexus, then selling it',
+    hook: 'built it zero to one, then took it to market myself.',
+    metric: '250+', metricLine: 'organic installs in launch week',
+    story: 'zero to one: every demo became a requirement, every requirement a sprint. then i kept asking why it wasn’t reaching the right people, and went to find them.',
+    glyph: 'M8 42 L56 42 M16 42 L16 26 L48 26 L48 42 M32 26 L32 10 L46 14 L32 18 M20 50 L26 50 M38 50 L44 50' },
+  { num: 'X', card: 'Wheel of Fortune', place: 'Nexus', date: '[MON YY]', tilt: 4, title: 'activation',
+    hook: 'turned the wheel on activation in a single week.',
+    metric: '65.5%', metricLine: 'merchant activation, up from 32% in seven days',
+    story: 'merchant activation from 32% to 65.5% in one week.',
+    glyph: 'M32 10 A22 22 0 1 1 31.9 10 Z M32 10 L32 54 M10 32 L54 32 M16.4 16.4 L47.6 47.6 M47.6 16.4 L16.4 47.6' }
+];
+---
+<section id="work" aria-labelledby="reading" style="padding: 40px 0 120px; display: flex; flex-direction: column; gap: 56px; overflow-x: clip">
+<h2 id="reading" style="margin: 0; font-family: 'Inter', system-ui, sans-serif; font-weight: 500; font-size: clamp(30px, 3.7vw, 54px); line-height: 1.1; letter-spacing: -0.02em; text-wrap: balance">Work I owned, shipped and measured<span style="color: #A9AFB9">.</span></h2>
+
+<div class="sp-stage" id="sp-stage">
+{cards.map((c, i) => (
+<div class={`sp-slot p${i}`} data-i={i} style={`animation-delay: ${(0.1 + i * 0.12).toFixed(2)}s`}>
+<button class="sp-card" type="button" aria-pressed="false" data-card={c.card} data-title={c.title} data-summary={`${c.card}: ${c.metric} ${c.metricLine}`} aria-label={`${c.card}: ${c.metric} ${c.metricLine}. Bring to the centre and turn for the story`} tabindex={i === 3 ? '-1' : '0'} style={`animation-delay: ${(-i * 1.6).toFixed(1)}s`}>
+<span class="sp-inner" style={`transform: rotate(${c.tilt}deg)`}>
+
+<span class="sp-face">
+<span class="sp-frame">
+<span style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #8A8D96"><span>{c.num}</span><span>{c.date}</span></span>
+<span style="display: flex; justify-content: center; padding-top: 6px"><svg class="sp-glyph" aria-hidden="true" width="64" height="64" viewBox="0 0 64 64" fill="none" stroke="#E8EBF0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d={c.glyph}></path></svg></span>
+<span style="margin-top: -6px; text-align: center; font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #A9AFB9">{c.card}</span>
+<span style="font-family: 'Newsreader', serif; font-style: italic; font-size: 21px; line-height: 1.25; color: #E8EBF0; text-wrap: pretty">{c.hook}</span>
+<span style="margin-top: auto; display: flex; flex-direction: column; gap: 6px">
+<span class="sp-metric" style="font-size: 40px">{c.metric}</span>
+<span style="font-size: 13px; line-height: 1.4; color: #A9AFB9">{c.metricLine}</span>
+</span>
+<span class="sp-hint" style="font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #D8C9A3">turn for the story</span>
+</span>
+</span>
+
+<span class="sp-face sp-back">
+<span class="sp-frame" style="justify-content: space-between">
+<span style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #D8C9A3">{c.card} · {c.place}</span>
+<span style="font-size: 22px; font-weight: 600; line-height: 1.2; letter-spacing: -0.01em">{c.title}</span>
+<span style="font-size: 15px; line-height: 1.55; color: #C9CDD5">{c.story}</span>
+</span>
+<span style="font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #8A8D96">case study · soon</span>
+</span>
+</span>
+
+</span>
+</button>
+</div>
+))}
+<button class="sp-next" id="sp-next" type="button" aria-label="Show the next case study">→</button>
+</div>
+</section>
+
+<script>
+  const slots = Array.from(document.querySelectorAll<HTMLElement>('#sp-stage .sp-slot'));
+  let order = [0, 1, 2, 3];
+  let open = -1;
+  const render = () => {
+    slots.forEach((slot, i) => {
+      const pos = order.indexOf(i);
+      slot.className = 'sp-slot p' + pos;
+      const btn = slot.querySelector('.sp-card') as HTMLButtonElement;
+      const isOpen = open === i;
+      btn.classList.toggle('on', isOpen);
+      btn.setAttribute('aria-pressed', String(isOpen));
+      btn.setAttribute('tabindex', pos === 3 ? '-1' : '0');
+      btn.setAttribute('aria-label', isOpen
+        ? `${btn.dataset.card}, ${btn.dataset.title}. Turn back`
+        : `${btn.dataset.summary}. Bring to the centre and turn for the story`);
+    });
+  };
+  slots.forEach((slot, i) => {
+    (slot.querySelector('.sp-card') as HTMLButtonElement).addEventListener('click', () => {
+      const p = order.indexOf(i);
+      if (p === 3) return;
+      if (p === 1 && open === i) { open = -1; render(); return; }
+      if (p !== 1) { order[p] = order[1]; order[1] = i; }
+      open = i;
+      render();
+    });
+  });
+  document.getElementById('sp-next')?.addEventListener('click', () => {
+    order = [order[1], order[2], order[3], order[0]];
+    open = -1;
+    render();
+  });
+</script>
