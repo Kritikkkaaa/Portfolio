@@ -46,7 +46,10 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .orb{position:relative;display:block;width:260px;height:250px;animation:levitate 6s ease-in-out infinite;padding:0;margin:0;border:0;background:none;font:inherit;color:inherit}
 .orb:focus-visible{outline:2px solid #E8EBF0;outline-offset:8px;border-radius:24px}
 .orb-ball{position:absolute;left:20px;top:10px;width:220px;height:220px;border-radius:48% 52% 55% 45% / 50% 46% 54% 50%;animation:blob 9s ease-in-out infinite;overflow:hidden;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 50%,#1C1C1F 0%,#141416 100%);box-shadow:inset 0 0 30px rgba(222,226,234,.18);transition:box-shadow .5s ease,transform .5s ease}
-.orb:hover .orb-ball{transform:scale(1.03);box-shadow:0 0 30px rgba(216,201,163,.22),inset 0 0 42px rgba(216,201,163,.4)}
+.orb:hover .orb-ball{transform:scale(1.1);box-shadow:0 0 70px rgba(232,206,140,.55),0 0 140px rgba(232,206,140,.22),inset 0 0 70px rgba(240,214,150,.7)}
+.orb:hover .m1{background-color:#E9D49A;opacity:.75}
+.orb:hover .m2{background-color:#9C8550;opacity:.65}
+.orb:hover .om-svg{filter:drop-shadow(0 0 10px rgba(240,214,150,.8))}
 .orb.lit .orb-ball{box-shadow:0 0 60px rgba(216,201,163,.45),0 0 120px rgba(216,201,163,.18),inset 0 0 60px rgba(216,201,163,.6)}
 .orb.lit .m1{background-color:#D8C9A3;opacity:.7}
 .orb.lit .m2{background-color:#8C7A4E;opacity:.6}
@@ -69,7 +72,7 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 @keyframes om-drip{0%{opacity:1;transform:translateY(-6px) scale(.3)}35%{opacity:1;transform:translateY(-2px) scale(1.05,1.25)}70%{opacity:1;transform:translateY(8px) scale(.85)}100%{opacity:0;transform:translateY(14px) scale(.3)}}
 @keyframes levitate{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
 @keyframes blob{0%,100%{border-radius:48% 52% 55% 45% / 50% 46% 54% 50%}33%{border-radius:55% 45% 48% 52% / 46% 54% 50% 50%}66%{border-radius:45% 55% 52% 48% / 54% 48% 52% 46%}}
-.mist{position:absolute;width:150px;height:150px;border-radius:50%;filter:blur(30px);opacity:.5}
+.mist{position:absolute;width:150px;height:150px;border-radius:50%;filter:blur(30px);opacity:.5;transition:background-color .5s ease,opacity .5s ease}
 .m1{background-color:#C7CCD6;left:0;top:20px;animation:swirl 9s ease-in-out infinite}
 .m2{background-color:#5E6475;right:-10px;bottom:0;animation:swirl 11s ease-in-out infinite reverse}
 .orb:hover .mist{animation-duration:3s}
@@ -152,7 +155,7 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .skill:hover,.skill:focus-visible{color:#FFFFFF;transform:scale(1.08);text-decoration-color:#E8EBF0}
 .skill:focus-visible{outline:2px solid #E8EBF0;outline-offset:2px;border-radius:4px}
 .skills .dot{color:#6E717B}
-.cstar.hide{opacity:0}
+.cstar.hide{opacity:0;transition:opacity .08s linear,transform .45s cubic-bezier(.3,.7,.3,1)}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @keyframes sp-deal{from{opacity:0;translate:0 80px}to{opacity:1;translate:0 0}}
 @keyframes sp-float{0%,100%{translate:0 0}50%{translate:0 -8px}}
