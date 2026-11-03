@@ -166,10 +166,6 @@ const stops = [
 <a class="cs-back" href="/">← back to all work</a>
 </section>
 
-<button class="cs-sound" id="cs-sound" type="button" aria-pressed="false">
-<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path class="wave" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"></path></svg>
-<span id="cs-sound-label">sound off</span>
-</button>
 
 </div>
 </Base>
@@ -245,11 +241,6 @@ const stops = [
 .cs-then{margin:0;font-size:clamp(20px,2.4vw,28px);color:#A9AFB9}
 .cs-churn{margin:0 0 64px;font-family:'Newsreader',serif;font-style:italic;font-size:clamp(72px,12vw,160px);line-height:1;color:#EFEFEE}
 
-.cs-sound{position:fixed;left:20px;bottom:20px;z-index:30;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border:1px solid #2A2A2E;border-radius:999px;background:rgba(6,6,6,.85);backdrop-filter:blur(6px);color:#A9AFB9;font:inherit;font-size:12px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:color .25s ease,border-color .25s ease}
-.cs-sound:hover,.cs-sound[aria-pressed="true"]{color:#D8C9A3;border-color:rgba(216,201,163,.45)}
-.cs-sound:focus-visible{outline:2px solid #EFEFEE;outline-offset:3px}
-.cs-sound .wave{opacity:.25;transition:opacity .25s ease}
-.cs-sound[aria-pressed="true"] .wave{opacity:1}
 @media (max-width:760px){
 .cs-route{gap:88px}
 .cs-stop.left,.cs-stop.right{justify-content:flex-end}
@@ -268,15 +259,20 @@ const stops = [
   const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let len = 0;
 
-  // A soft chime as each step is reached. Browsers only allow sound after a tap or click,
-  // so it starts off and the reader turns it on with the button.
-  const soundBtn = document.getElementById('cs-sound') as HTMLButtonElement | null;
-  const soundLabel = document.getElementById('cs-sound-label');
-  const NOTES = [659.25, 783.99, 880, 1046.5, 1174.66, 1318.51];
+  // A rising sa re ga ma pa, then high sa at the end: one soft note each time the line reaches a step.
+  // Browsers hold sound back until the reader's first tap, click or key press, so it starts from then.
+  const NOTES = [523.25, 587.33, 659.25, 698.46, 783.99, 1046.5];
   let audio: AudioContext | null = null;
-  let soundOn = false;
+  const wake = () => {
+    try {
+      audio = audio || new AudioContext();
+      if (audio.state !== 'running') audio.resume();
+    } catch {}
+  };
+  wake();
+  ['pointerdown', 'keydown', 'touchend'].forEach((ev) => window.addEventListener(ev, wake, { passive: true }));
   const chime = (step: number) => {
-    if (!soundOn || !audio) return;
+    if (calm || !audio || audio.state !== 'running') return;
     const t = audio.currentTime, f = NOTES[Math.min(step, NOTES.length - 1)];
     const out = audio.createGain();
     out.gain.setValueAtTime(0, t);
@@ -294,17 +290,7 @@ const stops = [
       o.stop(t + 1.9);
     });
   };
-  soundBtn?.addEventListener('click', () => {
-    soundOn = !soundOn;
-    if (soundOn) {
-      audio = audio || new AudioContext();
-      audio.resume();
-      chime(0);
-    }
-    soundBtn.setAttribute('aria-pressed', String(soundOn));
-    if (soundLabel) soundLabel.textContent = soundOn ? 'sound on' : 'sound off';
-  });
-  const reached = new Set<number>();
+  const lit = new Set<number>();
 
   const landing = new IntersectionObserver((entries) => {
     for (const e of entries) {
@@ -347,12 +333,14 @@ const stops = [
     stops.forEach((s, i) => {
       const on = calm || s.getBoundingClientRect().top < window.innerHeight * 0.65;
       s.querySelector('.cs-node')?.classList.toggle('on', on);
-      if (on && !reached.has(i)) { reached.add(i); chime(i); }
+      if (on && !lit.has(i)) chime(i);
+      if (on) lit.add(i); else lit.delete(i);
     });
     if (endNode) {
       const on = calm || endNode.getBoundingClientRect().top < window.innerHeight * 0.75;
       endNode.classList.toggle('on', on);
-      if (on && !reached.has(stops.length)) { reached.add(stops.length); chime(stops.length); }
+      if (on && !lit.has(stops.length)) chime(stops.length);
+      if (on) lit.add(stops.length); else lit.delete(stops.length);
     }
   };
 
