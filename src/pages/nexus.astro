@@ -100,13 +100,14 @@ const stops = [
 
 <figure class="cs-cover" aria-label="Cover image placeholder">
 <a class="cs-back cs-home" href="/">← home</a>
+<button class="cs-begin" id="cs-begin" type="button">begin <span class="cs-begin-arrow" aria-hidden="true">↓</span></button>
 <div class="ph">
 <span class="ph-tag">cover image</span>
 <span class="ph-note">[a wide shot that sets the scene, e.g. the Nexus dashboard on a laptop, or the stack of weekly emails]</span>
 </div>
 </figure>
 
-<section class="cs-head">
+<section class="cs-head" id="cs-head">
 <h1 class="cs-title">the metric that wouldn’t move</h1>
 <p class="cs-desc">{description}</p>
 </section>
@@ -185,6 +186,11 @@ const stops = [
 
 .cs-cover{position:relative;margin:0}
 .cs-cover .ph{width:100%;height:clamp(280px,52vh,560px)}
+.cs-begin{position:absolute;left:50%;bottom:28px;z-index:2;display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:0 26px;transform:translateX(-50%);border:1px solid rgba(216,201,163,.45);border-radius:999px;background:rgba(6,6,6,.7);backdrop-filter:blur(6px);color:#EFEFEE;font:inherit;font-size:13px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:border-color .25s ease,color .25s ease,background-color .25s ease}
+.cs-begin:hover,.cs-begin:focus-visible{border-color:#D8C9A3;color:#D8C9A3;background:rgba(6,6,6,.85)}
+.cs-begin:focus-visible{outline:2px solid #EFEFEE;outline-offset:4px}
+.cs-begin-arrow{display:inline-block;animation:beginbob 2.4s ease-in-out infinite}
+@keyframes beginbob{0%,100%{transform:translateY(-2px)}50%{transform:translateY(3px)}}
 .cs-home{position:absolute;top:24px;left:max(24px,calc((100% - 1200px) / 2 + 24px));z-index:2;padding:8px 0;color:#EFEFEE;text-shadow:0 1px 8px rgba(0,0,0,.6)}
 
 .cs-head{max-width:1200px;margin:0 auto;padding:56px 24px 24px}
@@ -247,7 +253,7 @@ const stops = [
 .cs-stop.left .cs-node,.cs-stop.right .cs-node{left:20px}
 .cs-card{width:calc(100% - 52px)}
 }
-@media (prefers-reduced-motion:reduce){.cs-node.on::after{animation:none}.land,.cs-node{transition:none}.land{opacity:1;transform:rotate(var(--r,0deg))}}
+@media (prefers-reduced-motion:reduce){.cs-begin-arrow,.cs-node.on::after{animation:none}.land,.cs-node{transition:none}.land{opacity:1;transform:rotate(var(--r,0deg))}}
 </style>
 
 <script>
@@ -271,6 +277,11 @@ const stops = [
   };
   wake();
   ['pointerdown', 'mousedown', 'click', 'keydown', 'touchstart', 'touchend'].forEach((ev) => window.addEventListener(ev, wake, { passive: true }));
+  // The begin button is the reader's one click: it turns the sound on (via wake above) and starts the story.
+  document.getElementById('cs-begin')?.addEventListener('click', () => {
+    wake();
+    document.getElementById('cs-head')?.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' });
+  });
   const chime = (step: number) => {
     if (calm || !audio || audio.state !== 'running') return;
     const t = audio.currentTime, f = NOTES[Math.min(step, NOTES.length - 1)];
