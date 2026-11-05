@@ -80,11 +80,12 @@ story.forEach((_, i) => ORDER.forEach((slot) => frames.push({ cam: i, show: [`s$
 // travelling through the gutters so it never crosses a piece.
 const pins = sections.map((s) => [s.x + 40, s.y + 44]);
 const askPin = (i: number) => [sections[i].x + slots.ask.x + slots.ask.w - 22, sections[i].y + slots.ask.y + 10];
-const [a1, a2, a3] = [askPin(0), askPin(1), askPin(2)];
+const [a1, a2, a3, a4] = [askPin(0), askPin(1), askPin(2), askPin(3)];
 const stringPath = `M ${a1[0]} ${a1[1]} C ${a1[0] + 240} ${a1[1]}, ${pins[1][0] - 180} ${pins[1][1]}, ${pins[1][0]} ${pins[1][1]}`
   + ` M ${a2[0]} ${a2[1]} C ${a2[0] + 120} 1200, ${pins[2][0]} 1150, ${pins[2][0]} ${pins[2][1]}`
-  + ` M ${a3[0]} ${a3[1]} C ${a3[0] + 180} 2620, 1750 2620, 1750 2000 C 1750 1300, 200 1290, ${pins[3][0]} ${pins[3][1]}`;
-const knots = [a1, a2, a3];
+  + ` M ${a3[0]} ${a3[1]} C ${a3[0] + 180} 2620, 1750 2620, 1750 2000 C 1750 1300, 200 1290, ${pins[3][0]} ${pins[3][1]}`
+  + ` M ${a4[0]} ${a4[1]} L ${a4[0]} ${WORLD_H + 4000}`;
+const knots = [a1, a2, a3, a4];
 
 const rects = Object.fromEntries(pieces.map((p) => [p.id, { x: p.ax, y: p.ay, w: p.w, h: p.h }]));
 const secRects = sections.map((s) => ({ x: s.x, y: s.y, w: SEC_W, h: SEC_H }));
@@ -164,7 +165,7 @@ const checkTitle: Record<string, string> = { did: 'what i did', next: 'what i di
 </ul>
 </section>
 
-<section class="ic-board" id="board" data-frames={JSON.stringify(frames)} data-rects={JSON.stringify(rects)} data-secs={JSON.stringify(secRects)} data-world={JSON.stringify({ w: WORLD_W, h: WORLD_H })}>
+<section class="ic-board" id="board" data-frames={JSON.stringify(frames)} data-rects={JSON.stringify(rects)} data-secs={JSON.stringify(secRects)} data-world={JSON.stringify({ w: WORLD_W, h: WORLD_H })} data-endpin={JSON.stringify(a4)}>
 <div class="ic-view" id="view">
 <div class="ic-world" id="world" style={`width:${WORLD_W}px;height:${WORLD_H}px`}>
 <svg class="ic-lines" width={WORLD_W} height={WORLD_H} aria-hidden="true">
@@ -254,8 +255,12 @@ const checkTitle: Record<string, string> = { did: 'what i did', next: 'what i di
 </section>
 
 <section class="ic-end" id="end">
-<p>that’s where the numbers stand today.</p>
-<a class="ic-return" href="/">← return</a>
+<span class="end-line" id="end-line" aria-hidden="true"></span>
+<div class="end-body">
+<span class="end-dot" aria-hidden="true"></span>
+<p class="end-t">on to a new problem.</p>
+<button type="button" class="end-cta" id="restart">start over <span aria-hidden="true">↑</span></button>
+</div>
 </section>
 
 </div>
@@ -364,8 +369,16 @@ const checkTitle: Record<string, string> = { did: 'what i did', next: 'what i di
 .ic-chip[hidden]{display:none}
 .ic-hint{position:absolute;left:50%;bottom:100px;z-index:5;margin:0;transform:translateX(-50%);font-size:12px;letter-spacing:.08em;color:#8A8D96;white-space:nowrap}
 
-.ic-end{display:flex;flex-direction:column;align-items:center;gap:20px;padding:120px 24px 160px;text-align:center}
-.ic-end p{margin:0;font-size:clamp(20px,2.4vw,28px);color:#C9CDD5}
+/* The end: the red string from the last question carries on down the page to one red dot. */
+.ic-end{--x:50%;position:relative;padding:0 24px 160px}
+.end-line{position:absolute;left:clamp(200px,var(--x),calc(100% - 200px));top:0;width:3px;height:170px;margin-left:-1.5px;background:#B33A35;opacity:.75;transition:background-color .4s ease,opacity .4s ease,box-shadow .4s ease}
+.end-line.glow{background:#FF5A4E;opacity:1;box-shadow:0 0 6px rgba(255,90,78,.85),0 0 16px rgba(255,90,78,.45)}
+.end-body{position:relative;left:clamp(200px,var(--x),calc(100% - 200px));display:flex;flex-direction:column;align-items:center;gap:22px;width:360px;margin-left:-180px;padding-top:160px;text-align:center}
+.end-dot{width:22px;height:22px;border-radius:50%;background:#D2453F;box-shadow:0 0 0 6px rgba(210,69,63,.18)}
+.end-t{margin:0;font-family:'Caveat',cursive;font-size:clamp(40px,4.4vw,56px);font-weight:600;line-height:1.05;color:#EFEFEE}
+.end-cta{display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:0 26px;border:1px solid #3A3842;border-radius:999px;background:none;color:#EFEFEE;font:inherit;font-size:14px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:border-color .25s ease,color .25s ease}
+.end-cta:hover,.end-cta:focus-visible{border-color:#D2453F;color:#FF8A80}
+.end-cta:focus-visible{outline:2px solid #EFEFEE;outline-offset:4px}
 
 /* Phones and touch screens: the board is one screen tall, opens zoomed out, and the reader explores it directly. */
 .ic.touch .ic-board{height:auto}
@@ -400,6 +413,9 @@ const checkTitle: Record<string, string> = { did: 'what i did', next: 'what i di
   const rects: Record<string, { x: number; y: number; w: number; h: number }> = JSON.parse(board.dataset.rects!);
   const secs: { x: number; y: number; w: number; h: number }[] = JSON.parse(board.dataset.secs!);
   const W = JSON.parse(board.dataset.world!);
+  const endPin: [number, number] = JSON.parse(board.dataset.endpin!);
+  const endSec = document.getElementById('end')!;
+  const endLine = document.getElementById('end-line');
   const pieces = Array.from(world.querySelectorAll<HTMLElement>('.pc'));
   const touch = window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
   const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -519,6 +535,18 @@ const checkTitle: Record<string, string> = { did: 'what i did', next: 'what i di
     document.getElementById('end')?.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' });
   });
 
+  // The end section's string sits exactly under where the last question's string leaves the screen.
+  const alignEnd = () => {
+    const c = fit(secs[3]);
+    endSec.style.setProperty('--x', `${(c.tx + endPin[0] * c.s).toFixed(0)}px`);
+  };
+  // Start over: back to the top of the case study.
+  document.getElementById('restart')?.addEventListener('click', () => {
+    filter('');
+    if (!touch) explore(false); else touchGo(-1);
+    window.scrollTo({ top: 0, behavior: calm ? 'auto' : 'smooth' });
+  });
+
   // The control bar stays fixed to the bottom of the screen while the board is on screen.
   const bar = () => {
     const r = board.getBoundingClientRect();
@@ -580,8 +608,9 @@ const checkTitle: Record<string, string> = { did: 'what i did', next: 'what i di
   let glowT: number | undefined;
   window.addEventListener('mousemove', () => {
     string?.classList.add('glow');
+    endLine?.classList.add('glow');
     clearTimeout(glowT);
-    glowT = window.setTimeout(() => string?.classList.remove('glow'), 650);
+    glowT = window.setTimeout(() => { string?.classList.remove('glow'); endLine?.classList.remove('glow'); }, 650);
   }, { passive: true });
 
   // Skill tags: light up every piece that shows the skill, and take the reader to the first one.
@@ -618,9 +647,10 @@ const checkTitle: Record<string, string> = { did: 'what i did', next: 'what i di
     queued = true;
     requestAnimationFrame(() => { queued = false; draw(); bar(); });
   }, { passive: true });
-  window.addEventListener('resize', () => { size(); if (touch) touchGo(current); else draw(); bar(); });
+  window.addEventListener('resize', () => { size(); if (touch) touchGo(current); else draw(); bar(); alignEnd(); });
 
   size();
   if (touch) { show(0); touchGo(-1); } else draw();
   bar();
+  alignEnd();
 </script>
