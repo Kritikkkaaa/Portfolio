@@ -17,9 +17,9 @@ const skills = [
 // The three sections are stacked down the board, and the ending sits at the bottom, so zoomed out the whole case fits on one screen.
 const SEC_W = 1600, GAP = 300, S2Y = 1040 + GAP, S3Y = S2Y + 920 + GAP, END_Y = S3Y + 820 + 140, WORLD_W = SEC_W, WORLD_H = END_Y + 380;
 const sections = [
-  { n: '01', title: 'users, but no clear audience', short: 'unclear', x: 0, y: 0, h: 1040 },
-  { n: '02', title: 'choosing who to target', short: 'learned', x: 0, y: S2Y, h: 920 },
-  { n: '03', title: 'turning customer value into messaging', short: 'changed', x: 0, y: S3Y, h: 820 }
+  { n: '01', title: 'users, but no clear audience', short: 'unclear', slug: 'no-clear-audience', x: 0, y: 0, h: 1040 },
+  { n: '02', title: 'choosing who to target', short: 'learned', slug: 'choosing-who-to-target', x: 0, y: S2Y, h: 920 },
+  { n: '03', title: 'turning customer value into messaging', short: 'changed', slug: 'turning-value-into-messaging', x: 0, y: S3Y, h: 820 }
 ];
 
 // The same five slots in every section, in reading order. Section-local positions:
@@ -273,7 +273,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 </div>
 </section>
 
-<section class="ic-board" id="board" data-frames={JSON.stringify(frames)} data-rects={JSON.stringify(rects)} data-secs={JSON.stringify(secRects)} data-world={JSON.stringify({ w: WORLD_W, h: WORLD_H })}>
+<section class="ic-board" id="board" data-frames={JSON.stringify(frames)} data-rects={JSON.stringify(rects)} data-secs={JSON.stringify(secRects)} data-world={JSON.stringify({ w: WORLD_W, h: WORLD_H })} data-slugs={JSON.stringify(sections.map((s) => s.slug))}>
 <div class="ic-view" id="view">
 <div class="ic-world" id="world" style={`width:${WORLD_W}px;height:${WORLD_H}px`}>
 <svg class="ic-lines" width={WORLD_W} height={WORLD_H} aria-hidden="true">
@@ -825,5 +825,12 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 
   size();
   if (touch) { show(0); touchGo(-1); fillThread(null); } else draw();
+  // Deep links (from /work): #no-clear-audience, #choosing-who-to-target or #turning-value-into-messaging opens that section.
+  const slugs: string[] = JSON.parse(board.dataset.slugs!);
+  const deep = slugs.indexOf(location.hash.slice(1));
+  if (deep >= 0) {
+    if (touch) { view.scrollIntoView(); touchGo(deep); }
+    else window.scrollTo({ top: boardTop() + frameAt(firstFrameOf(deep)) + 2, behavior: 'auto' });
+  }
   bar();
 </script>
