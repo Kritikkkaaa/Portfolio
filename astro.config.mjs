@@ -5,5 +5,7 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   site: 'https://www.kritikal.work',
   output: 'static',
-  redirects: {}
+  redirects: {
+    '/icp-nexus': '/work/icp-positioning-messaging-nexus'
+  }
 });
