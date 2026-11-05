@@ -14,13 +14,12 @@ const skills = [
   { id: 'collab', label: 'cross-functional collaboration' }
 ];
 
-// Section 02 is taller: it carries a cluster of three documents under its cards. Section 03, the conclusion,
-// sits on its own in the second row.
-const SEC_W = 1600, ROW2 = 1500, WORLD_W = 3500, WORLD_H = ROW2 + 1260;
+// The three sections are stacked down the board, and the ending sits at the bottom, so zoomed out the whole case fits on one screen.
+const SEC_W = 1600, GAP = 300, S2Y = 1000 + GAP, S3Y = S2Y + 1100 + GAP, END_Y = S3Y + 1360 + 140, WORLD_W = SEC_W, WORLD_H = END_Y + 380;
 const sections = [
-  { n: '01', title: 'what was unclear', short: 'unclear', x: 0, y: 0, h: 1000 },
-  { n: '02', title: 'what i learned', short: 'learned', x: 1900, y: 0, h: 1100 },
-  { n: '03', title: 'how the message changed', short: 'changed', x: 0, y: ROW2, h: 1260 }
+  { n: '01', title: 'users, but no clear audience', short: 'unclear', x: 0, y: 0, h: 1000 },
+  { n: '02', title: 'choosing who to target', short: 'learned', x: 0, y: S2Y, h: 1100 },
+  { n: '03', title: 'turning customer value into messaging', short: 'changed', x: 0, y: S3Y, h: 1360 }
 ];
 
 // The same five slots in every section, in reading order. Section-local positions:
@@ -39,14 +38,16 @@ const ORDER: Slot[] = ['ctx', 'did', 'data', 'next', 'ask'];
 // It can also carry a circled handwritten aim written on the board just above it.
 // A note can be tinted green instead of its usual colour.
 // A section can skip a slot, and move a slot with `at`. A note can add a smaller handwritten line under its text.
-type Step = { text?: string; sub?: string; items?: string[]; title?: string; mark?: 'q'; aim?: string; tint?: 'green'; at?: { x?: number; y?: number; h?: number }; skills: string[] };
+// Note text can hold paragraphs (separated by a blank line). A checklist can open with an intro line.
+// A slot can be a pinned screenshot instead of a card.
+type Step = { text?: string; intro?: string; img?: { src: string; iw: number; ih: number; alt: string; caption: string }; sub?: string; items?: string[]; title?: string; mark?: 'q'; aim?: string; tint?: 'green'; at?: { x?: number; y?: number; h?: number }; skills: string[] };
 const story: Partial<Record<Slot, Step>>[] = [
   {
-    ctx: { skills: ['research', 'collab'], text: 'the co-founder asked me for a nexus marketing one-pager: who we were targeting, what problem we solved, and why someone should choose us. i knew the product and had watched people use it. now i needed to decide which customers our message should speak to.' },
+    ctx: { skills: ['research', 'collab'], at: { h: 220 }, text: 'the co-founder asked for a nexus marketing one-pager. i knew how people used the product.\n\ni needed to decide who to target and what to say.' },
     did: { skills: ['research'], title: 'open questions', mark: 'q', items: ['who installs nexus today, and who pays?', 'who did the founders originally build it for?', 'what do those customers need nexus to handle?', 'which customers should our messaging target first?'] },
-    data: { skills: ['research'] },
-    next: { skills: ['research', 'collab'], items: ['review the one-pager with the co-founder'] },
-    ask: { skills: ['research'], text: 'what did our paying customers have in common?' }
+    data: { skills: ['research'], at: { h: 340 } },
+    next: { skills: ['research', 'collab'], at: { x: 760, y: 420 }, items: ['collated all existing user information', 'reviewed the one-pager with the co-founder'] },
+    ask: { skills: ['research'], at: { x: 1200, y: 540 }, text: 'who should nexus be for?' }
   },
   {
     did: { skills: ['research', 'collab'], at: { x: 760, y: 110 }, aim: 'the aim: find who gets the most value from nexus.', items: ['defined who to target with the co-founder', 'checked why merchants uninstalled', 'checked what merchants needed in intercom'] },
@@ -55,11 +56,11 @@ const story: Partial<Record<Slot, Step>>[] = [
     ask: { skills: ['positioning'], at: { x: 1200, y: 110 }, text: 'what value does our primary ICP get?', sub: 'aka positioning' }
   },
   {
-    ctx: { skills: ['positioning', 'collab'], text: 'i had an audience to write for. next, i needed to understand what nexus should mean to them. i spoke with shashwat, the co-founder, to keep the messaging aligned with his vision. i asked what he wanted merchants to say about nexus, who it wasn’t for, and what we should show as proof.' },
-    did: { skills: ['positioning', 'collab'], items: ['asked how merchants should describe nexus', 'clarified which customers fell outside our focus', 'asked what would demonstrate its value'] },
-    data: { skills: ['positioning', 'collab'] },
-    next: { skills: ['positioning'], items: ['translated “simple” into specific merchant benefits', 'organized the message around starting, operating and growing', 'documented the direction in the marketing one-pager'] },
-    ask: { skills: ['positioning'], tint: 'green', text: 'simple to start, operate and grow a marketplace.' }
+    ctx: { skills: ['positioning', 'collab'], at: { h: 220 }, text: 'i knew who to target.\n\ni spoke with shashwat to align the message with his vision for nexus.' },
+    did: { skills: ['research', 'collab'], mark: 'q', intro: 'interviewed the co-founder using the mom test.', items: ['what should merchants say about nexus after a year?', 'which merchants would you turn away?', 'if we showed one thing, what would it be?'] },
+    data: { skills: ['positioning'], at: { h: 360 } },
+    next: { skills: ['positioning'], at: { x: 60, y: 540, w: 560 }, img: { src: '/case/icp-nexus/value-prop.png', iw: 734, ih: 972, caption: 'messaging from the one-pager', alt: 'Value Proposition section of the Nexus marketing one-pager: positioning, the old way, and with Nexus. Simple to use: sellers sign up through your branded link and land on their own dashboard. Simple to grow with: sellers manage their own products, and Nexus calculates each commission. Simple to migrate: install from the Shopify App Store, try it for 14 days and start on your existing store.' } },
+    ask: { skills: ['positioning'], tint: 'green', at: { x: 760, y: 420 }, text: 'nexus is simple.\n\nsimple to start, manage and grow!' }
   }
 ];
 
@@ -72,9 +73,9 @@ const pieces = story.flatMap((sec, i) => ORDER.filter((slot) => sec[slot]).map((
 // An attachment is either an image, or (until its screenshot arrives) a typed excerpt with its lines listed.
 type Attachment = { id: string; sec: number; with: string; x: number; y: number; w: number; r: number; src?: string; iw: number; ih: number; lines?: [string, string][]; alt: string; caption: string; skills: string[]; from: [number, number]; color: string };
 const attachments: Attachment[] = [
-  { id: 's1-shot', sec: 0, with: 's1-ctx', x: 60, y: 600, w: 600, r: -1.2, src: '/case/icp-nexus/one-pager.png', iw: 1732, ih: 720,
+  { id: 's1-shot', sec: 0, with: 's1-next', x: 60, y: 540, w: 600, r: -1.2, src: '/case/icp-nexus/one-pager.png', iw: 1732, ih: 720,
     alt: 'Part of the Nexus marketing one-pager: the minimum data needed, from business goal to desired action, and how to get each.',
-    caption: 'part of the one-pager', skills: ['research', 'collab'], from: [790, 470], color: '#8FB3DA' },
+    caption: 'part of the one-pager', skills: ['research', 'collab'], from: [770, 480], color: '#8FB3DA' },
   { id: 's2-icp', sec: 1, with: 's2-next', x: 40, y: 600, w: 640, r: -1, src: '/case/icp-nexus/icp-table.png', iw: 1084, ih: 660,
     alt: 'The Nexus ideal customer profile: business, Shopify plan, region, trigger moment and job to be done, each with its evidence.',
     caption: 'final ICP!', skills: ['research', 'positioning'], from: [790, 815], color: '#BCE5CF' },
@@ -83,10 +84,7 @@ const attachments: Attachment[] = [
     caption: 'guardrails aka, who we do not serve', skills: ['positioning'], from: [1150, 650], color: '#BCE5CF' },
   { id: 's2-where', sec: 1, with: 's2-next', x: 1180, y: 745, w: 400, r: -1, src: '/case/icp-nexus/where-they-gather.png', iw: 896, ih: 252,
     alt: 'Where they gather: Shopify App Store search, about 48% of discovery; Google, about 11%; AI assistants and the listicles they cite; other platforms such as Product Hunt and G2.',
-    caption: 'where they hang out', skills: ['research', 'positioning'], from: [1370, 712], color: '#BCE5CF' },
-  { id: 's3-vp', sec: 2, with: 's3-next', x: 60, y: 570, w: 440, r: 1, src: '/case/icp-nexus/value-prop.png', iw: 734, ih: 972,
-    alt: 'Value proposition from the marketing one-pager, the old way against with Nexus. Simple to use: sellers sign up through your branded link and land on their own dashboard. Simple to grow with: sellers manage their own products, and Nexus calculates each commission. Simple to migrate: install from the Shopify App Store, try it for 14 days and start on your existing store.',
-    caption: 'value proposition, from the one-pager', skills: ['positioning'], from: [790, 880], color: '#BCE5CF' }
+    caption: 'where they hang out', skills: ['research', 'positioning'], from: [1370, 712], color: '#BCE5CF' }
 ];
 const attachAt = (a: Attachment) => ({ x: sections[a.sec].x + a.x, y: sections[a.sec].y + a.y, w: a.w, h: Math.round(a.w * a.ih / a.iw) + 60 });
 const ties = attachments.map((a) => {
@@ -99,26 +97,32 @@ const ties = attachments.map((a) => {
 // or an exact area. Section 02 is read in two halves: its cards first, then its document cluster.
 // The first frame is the snapshot: every piece on the board at once.
 type Area = { x: number; y: number; w: number; h: number };
-const s2View: Area = { x: sections[1].x, y: -80, w: SEC_W, h: 1180 };
+const s2View: Area = { x: sections[1].x, y: sections[1].y - 80, w: SEC_W, h: 1180 };
 // Section 03 is read the same way: cards first, then the value proposition pinned under its chart.
-const s3Top: Area = { x: sections[2].x, y: ROW2 - 40, w: SEC_W, h: 1040 };
-const s3Low: Area = { x: sections[2].x, y: ROW2 + 300, w: SEC_W, h: 1000 };
+const s3Top: Area = { x: sections[2].x, y: sections[2].y - 40, w: SEC_W, h: 1040 };
+const s3Low: Area = { x: sections[2].x, y: sections[2].y + 380, w: SEC_W, h: 1000 };
+const s3Shot: Area = { x: sections[2].x + 40, y: sections[2].y + 510, w: 600, h: 830 };
+// The last stop: section 03's closing note, the string running down, and the ending under it.
+const endView: Area = { x: 0, y: sections[2].y + 380, w: SEC_W, h: END_Y + 380 - (sections[2].y + 380) };
 const frames: { cam: number | Area; sec: number; show: string[] }[] = [{ cam: -1, sec: -1, show: [...pieces.map((p) => p.id), ...attachments.map((a) => a.id)] }];
 story.forEach((sec, i) => ORDER.filter((slot) => sec[slot]).forEach((slot) => {
   const id = `s${i + 1}-${slot}`;
   const low = slot === 'next' || slot === 'ask';
-  const cam = i === 1 ? s2View : i === 2 ? (low ? s3Low : s3Top) : i;
+  const cam = i === 1 ? s2View : i === 2 ? (slot === 'next' ? s3Shot : low ? s3Low : s3Top) : i;
   frames.push({ cam, sec: i, show: [id, ...attachments.filter((a) => a.with === id).map((a) => a.id)] });
 }));
+frames.push({ cam: endView, sec: 2, show: [] });
 
 // A pin beside each heading; the string leaves from each section's question and lands on the next heading pin,
 // travelling through the gutters so it never crosses a piece.
 const pins = sections.map((s) => [s.x + 40, s.y + 44]);
 const askPin = (i: number) => { const q = pieces.find((p) => p.id === `s${i + 1}-ask`)!; return [q.ax + q.w - 22, q.ay + 10]; };
 const [a1, a2, a3] = [askPin(0), askPin(1), askPin(2)];
-const stringPath = `M ${a1[0]} ${a1[1]} C ${a1[0] + 240} ${a1[1]}, ${pins[1][0] - 180} ${pins[1][1]}, ${pins[1][0]} ${pins[1][1]}`
-  + ` M ${a2[0]} ${a2[1]} C ${a2[0] + 182} ${a2[1]}, ${a2[0] + 182} ${a2[1] + 180}, ${a2[0] + 182} 700 C ${a2[0] + 182} ${ROW2 - 250}, 2300 ${ROW2 - 200}, 1750 ${ROW2 - 200} C 1200 ${ROW2 - 200}, ${pins[2][0]} ${ROW2 - 160}, ${pins[2][0]} ${pins[2][1]}`
-  + ` M ${a3[0]} ${a3[1]} L ${a3[0]} ${WORLD_H + 4000}`;
+// Each question's string runs out to the right of its section, down past it, and back across the gap to the next heading.
+const bridge = ([x, y]: number[], bottom: number, [tx, ty]: number[]) =>
+  ` M ${x} ${y} C 1700 ${y}, 1700 ${y + 130}, 1700 ${bottom} C 1700 ${bottom + 200}, ${tx} ${ty - 220}, ${tx} ${ty}`;
+const bottomOf = (i: number) => sections[i].y + sections[i].h;
+const stringPath = bridge(a1, bottomOf(0), pins[1]) + bridge(a2, bottomOf(1), pins[2]) + bridge(a3, bottomOf(2), [SEC_W / 2, END_Y]);
 const knots = [a1, a2, a3];
 
 const rects = { ...Object.fromEntries(pieces.map((p) => [p.id, { x: p.ax, y: p.ay, w: p.w, h: p.h }])), ...Object.fromEntries(attachments.map((a) => [a.id, attachAt(a)])) };
@@ -150,7 +154,7 @@ const pieRest = `M ${PIE.cx} ${PIE.cy} L ${pt(pieEnd)} A ${PIE.r} ${PIE.r} 0 1 1
 let donutAt = 0;
 const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; const seg = { ...d, len: Math.max(len - 3, 1), off: donutAt }; donutAt += len; return seg; });
 ---
-<Base title="ICP-Nexus · from user personas to an ideal customer profile · Kritika Upadhyay" description={description}>
+<Base title="ICP-Nexus · from user stories to identifying ICP, positioning and messaging · Kritika Upadhyay" description={description}>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap">
 <div class="ic">
 
@@ -203,19 +207,22 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 </figure>
 
 <section class="ic-fold">
+<h1 class="ic-title">from user stories to identifying ICP, positioning and messaging</h1>
 <div class="ic-intro">
-<h1 class="ic-title">from user personas to an ideal customer profile</h1>
 <p class="ic-desc">{description}</p>
 <p class="ic-date">published {published}</p>
 </div>
+<div class="ic-skillbox">
+<p class="ic-skills-h">skills</p>
 <ul class="ic-skills" aria-label="Skills shown in this case study. Choose one to see it on the board.">
 {skills.map((sk, i) => (
 <li><button class="ic-skill" type="button" data-skill={sk.id} aria-pressed="false"><span class="sk-n">0{i + 1}</span><span class="sk-l">{sk.label}</span><span class="sk-more">{skillCount(sk.id)} on the board →</span></button></li>
 ))}
 </ul>
+</div>
 </section>
 
-<section class="ic-board" id="board" data-frames={JSON.stringify(frames)} data-rects={JSON.stringify(rects)} data-secs={JSON.stringify(secRects)} data-world={JSON.stringify({ w: WORLD_W, h: WORLD_H })} data-endpin={JSON.stringify(a3)}>
+<section class="ic-board" id="board" data-frames={JSON.stringify(frames)} data-rects={JSON.stringify(rects)} data-secs={JSON.stringify(secRects)} data-world={JSON.stringify({ w: WORLD_W, h: WORLD_H })}>
 <div class="ic-view" id="view">
 <div class="ic-world" id="world" style={`width:${WORLD_W}px;height:${WORLD_H}px`}>
 <svg class="ic-lines" width={WORLD_W} height={WORLD_H} aria-hidden="true">
@@ -230,14 +237,16 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 ))}
 
 {pieces.map((p) => (
-<div class={`pc pc-${p.slot === 'did' || p.slot === 'next' ? 'check' : p.slot === 'data' ? 'page' : 'note'} slot-${p.slot}${p.tint ? ' tint-' + p.tint : ''}`} id={p.id} data-skills={p.skills.join(' ')}
-  style={`left:${p.ax}px;top:${p.ay}px;width:${p.w}px;${p.slot === 'data' ? `height:${p.h}px;` : `min-height:${p.h - 40}px;`}--r:${p.r}deg`}>
+<div class={`pc pc-${p.img ? 'shot' : p.slot === 'did' || p.slot === 'next' ? 'check' : p.slot === 'data' ? 'page' : 'note'} slot-${p.slot}${p.tint ? ' tint-' + p.tint : ''}`} id={p.id} data-skills={p.skills.join(' ')}
+  style={`left:${p.ax}px;top:${p.ay}px;width:${p.w}px;${p.slot === 'data' ? `height:${p.h}px;` : p.img ? '' : `min-height:${p.h - 40}px;`}--r:${p.r}deg`}>
 <span class="pc-step" aria-hidden="true">{p.step}</span>
 {p.slot === 'ask' && <span class="pin" aria-hidden="true"></span>}
-{(p.slot === 'ctx' || p.slot === 'ask') && <div class="note-b"><p class="note-t">{p.text}</p>{p.sub && <p class="note-sub">{p.sub}</p>}</div>}
-{(p.slot === 'did' || p.slot === 'next') && <>
+{(p.slot === 'ctx' || p.slot === 'ask') && <div class="note-b">{p.text!.split('\n\n').map((t) => <p class="note-t">{t}</p>)}{p.sub && <p class="note-sub">{p.sub}</p>}</div>}
+{p.img && <><span class="pin" aria-hidden="true"></span><img src={p.img.src} alt={p.img.alt} width={p.img.iw} height={p.img.ih}><p class="shot-cap-h">{p.img.caption}</p></>}
+{(p.slot === 'did' || p.slot === 'next') && !p.img && <>
 {p.aim && <p class="ck-aim"><svg class="ck-aim-ring" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true"><path d="M30 64 C 30 18, 180 6, 290 14 C 380 22, 392 74, 340 98 C 270 124, 80 120, 36 92 C 8 74, 30 40, 96 26"></path></svg><span>{p.aim}</span></p>}
 <p class="ck-t">{p.title ?? checkTitle[p.slot]}</p>
+{p.intro && <p class="ck-intro">{p.intro}</p>}
 <ul class="ck-list">
 {p.items!.map((it) => <li>{p.mark === 'q'
   ? <span class="ck-q" aria-hidden="true">?</span>
@@ -246,18 +255,17 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 </>}
 
 {p.id === 's1-data' && <>
-<p class="pg-k">who was paying?</p>
+<p class="pg-k">current segmentation of users</p>
 <div class="dn">
-<svg class="dn-chart" viewBox="0 0 220 220" role="img" aria-label="Store status: 211 trial expired, 19 paying, 10 on trial.">
+<svg class="dn-chart" viewBox="0 0 220 220" role="img" aria-label="Current segmentation of users: trial expired 87.9%, paying 7.9%, on trial 4.2%.">
 {donut.map((d) => <circle cx="110" cy="110" r="84" class="dn-seg" stroke={d.color} stroke-dasharray={`${d.len} ${DONUT_C - d.len}`} stroke-dashoffset={-d.off}></circle>)}
-<text x="110" y="106" class="dn-n">19</text>
-<text x="110" y="132" class="dn-l">paying stores</text>
+<text x="110" y="108" class="dn-n">7.9%</text>
+<text x="110" y="134" class="dn-l">paying</text>
 </svg>
 <ul class="dn-legend">
-{donut.map((d) => <li><i style={`background:${d.color}`}></i><span>{d.label}</span><b>{d.stores}</b><em>{d.share}</em></li>)}
+{donut.map((d) => <li><i style={`background:${d.color}`}></i><span>{d.label}</span><b>{d.share}</b></li>)}
 </ul>
 </div>
-<p class="pg-foot">2 nov snapshot; test and internal stores excluded.</p>
 </>}
 
 {p.id === 's2-data' && <>
@@ -275,16 +283,13 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 </>}
 
 {p.id === 's3-data' && <>
-<p class="pg-k">from vision to message</p>
-<table class="vm">
-<thead><tr><th>founder direction, paraphrased</th><th></th><th>how i expressed it</th></tr></thead>
-<tbody>
-<tr><td>simple to decide and configure</td><td class="vm-ar">→</td><td><b>simple to start</b></td></tr>
-<tr><td>powerful, yet easy to use</td><td class="vm-ar">→</td><td><b>simple to operate</b></td></tr>
-<tr><td>less operational work as the marketplace expands<sup>*</sup></td><td class="vm-ar">→</td><td><b>simple to grow</b></td></tr>
-</tbody>
-</table>
-<p class="pg-foot"><sup>*</sup> my synthesis of the product’s value, from the one-pager, not something shashwat said.</p>
+<div class="pos">
+<p class="pos-k">previous positioning</p>
+<p class="pos-old">pricing and free trials</p>
+<p class="pos-ar" aria-hidden="true">↓</p>
+<p class="pos-k">current positioning</p>
+<p class="pos-new">simple to start, manage and grow a marketplace</p>
+</div>
 </>}
 </div>
 ))}
@@ -297,6 +302,11 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 <figcaption>{a.caption}</figcaption>
 </figure>
 ))}
+<div class="ic-finale" style={`top:${END_Y - 18}px;width:${SEC_W}px`}>
+<span class="end-dot" aria-hidden="true"></span>
+<p class="end-t">next challenge, to figure out distribution.</p>
+<button type="button" class="end-cta" id="restart">start over</button>
+</div>
 </div>
 <p class="ic-hint" id="hint" hidden>exploring · scroll to pick the story back up</p>
 </div>
@@ -317,14 +327,6 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 </div>
 </section>
 
-<section class="ic-end" id="end">
-<svg class="end-string" aria-hidden="true"><path id="end-line"></path></svg>
-<div class="end-body">
-<span class="end-dot" aria-hidden="true"></span>
-<p class="end-t">next challenge, to figure out distribution.</p>
-<button type="button" class="end-cta" id="restart">start over</button>
-</div>
-</section>
 
 </div>
 </Base>
@@ -346,8 +348,9 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 .cv-cut:nth-child(2){margin-bottom:28px}
 .cv-cut svg{display:block;width:100%;height:auto;filter:grayscale(1) contrast(1.05)}
 .cv-cap{margin:0;padding:10px 4px 12px;font-family:'Caveat',cursive;font-size:24px;line-height:1.1;color:#1E1E24}
-.ic-fold{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,340px);gap:32px 64px;align-items:end;max-width:1200px;margin:0 auto;padding:48px 24px 56px}
-.ic-title{margin:0 0 16px;font-weight:500;font-size:clamp(38px,5.6vw,80px);line-height:1;letter-spacing:-.03em}
+.ic-fold{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,340px);gap:28px 64px;align-items:start;max-width:1200px;margin:0 auto;padding:48px 24px 56px}
+.ic-skills-h{margin:0 0 10px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#8A8D96}
+.ic-title{grid-column:1/-1;margin:0;font-weight:500;font-size:clamp(38px,6vw,92px);line-height:1;letter-spacing:-.03em}
 .ic-desc{max-width:640px;margin:0 0 18px;font-size:18px;line-height:1.6;color:#C9CDD5}
 .ic-date{margin:0;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8A8D96}
 .ic-skills{margin:0;padding:0;list-style:none;border-top:1px solid #2E2E34}
@@ -392,6 +395,15 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 .vp p{display:grid;grid-template-columns:96px 1fr;gap:14px;margin:0;font-size:18px;line-height:1.35}
 .vp b{font-weight:600;color:#E08A4C}
 .note-t{margin:0;font-family:'Caveat',cursive;font-weight:500;font-size:28px;line-height:1.22}
+.note-t + .note-t{margin-top:12px}
+.ck-intro{margin:-4px 0 16px;font-family:'Caveat',cursive;font-size:27px;line-height:1.15}
+.shot-cap-h{margin:0;padding:8px 4px 10px;font-family:'Caveat',cursive;font-size:24px;color:#5A5A62}
+.pc-shot > img{display:block;width:100%;height:auto;border:1px solid #DADAD4}
+.pos{display:flex;flex-direction:column;align-items:flex-start;gap:6px;height:100%;justify-content:center}
+.pos-k{margin:0;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#5A5A62}
+.pos-old{margin:0 0 4px;font-size:26px;color:#8A8A92;text-decoration:line-through;text-decoration-color:#D2453F;text-decoration-thickness:2px}
+.pos-ar{margin:2px 0 6px;font-size:34px;line-height:1;color:#E08A4C}
+.pos-new{margin:0;font-size:34px;font-weight:600;line-height:1.15;letter-spacing:-.01em;color:#1E1E24}
 .note-sub{margin:10px 0 0;font-family:'Caveat',cursive;font-size:26px;font-weight:500;color:rgba(30,30,36,.7)}
 .slot-ask .note-t{font-size:38px;font-weight:600;line-height:1.1}
 .pin{position:absolute;right:10px;top:-2px;width:24px;height:24px;border-radius:50%;background:#D2453F;box-shadow:0 4px 8px rgba(0,0,0,.45),inset -3px -3px 0 rgba(0,0,0,.18)}
@@ -420,10 +432,10 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 .dn-chart{flex:none;width:220px;height:220px;transform:rotate(-90deg)}
 .dn-seg{fill:none;stroke-width:34}
 .dn-n,.dn-l{transform:rotate(90deg);transform-origin:110px 110px;text-anchor:middle;fill:#1E1E24}
-.dn-n{font-size:40px;font-weight:600}
+.dn-n{font-size:36px;font-weight:600}
 .dn-l{font-size:15px;fill:#5A5A62}
 .dn-legend{flex:1;display:flex;flex-direction:column;gap:16px;margin:0;padding:0;list-style:none;font-size:17px}
-.dn-legend li{display:grid;grid-template-columns:14px 1fr auto auto;align-items:center;gap:12px}
+.dn-legend li{display:grid;grid-template-columns:14px 1fr auto;align-items:center;gap:12px}
 .dn-legend i{width:14px;height:14px;border-radius:3px}
 .dn-legend b{font-size:20px}
 .dn-legend em{font-style:normal;text-align:right;color:#5A5A62}
@@ -469,18 +481,13 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 .ic-chip[hidden]{display:none}
 .ic-hint{position:absolute;left:50%;bottom:100px;z-index:5;margin:0;transform:translateX(-50%);font-size:12px;letter-spacing:.08em;color:#8A8D96;white-space:nowrap}
 
-/* The end: the red string from the last question curves down to one red dot in the middle of the page. */
-.ic-end{position:relative;padding:0 24px 180px;text-align:center}
-.end-string{position:absolute;left:0;top:0;width:100%;height:260px;overflow:visible;pointer-events:none}
-.end-string path{fill:none;stroke:#B33A35;stroke-width:3;stroke-linecap:round;opacity:.75;transition:stroke .4s ease,opacity .4s ease,filter .4s ease}
-.end-string path.glow{stroke:#FF5A4E;opacity:1;filter:drop-shadow(0 0 6px rgba(255,90,78,.85)) drop-shadow(0 0 16px rgba(255,90,78,.45))}
-.end-body{display:flex;flex-direction:column;align-items:center;gap:28px;padding-top:249px}
-.end-dot{width:22px;height:22px;border-radius:50%;background:#D2453F;box-shadow:0 0 0 6px rgba(210,69,63,.18)}
-.end-t{max-width:880px;margin:0;font-family:'Caveat',cursive;font-size:clamp(48px,6.4vw,92px);font-weight:600;line-height:1;color:#EFEFEE}
-.end-cta{padding:8px 4px;border:0;background:none;color:#A9AFB9;font:inherit;font-size:13px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:color .2s ease}
+/* The end sits on the board, under the last question: one red dot, the next challenge, and a way back to the top. */
+.ic-finale{position:absolute;left:0;display:flex;flex-direction:column;align-items:center;gap:44px;text-align:center}
+.end-dot{width:36px;height:36px;border-radius:50%;background:#D2453F;box-shadow:0 0 0 10px rgba(210,69,63,.18)}
+.end-t{max-width:1300px;margin:0;font-family:'Caveat',cursive;font-size:120px;font-weight:600;line-height:1;color:#EFEFEE}
+.end-cta{padding:10px 8px;border:0;background:none;color:#A9AFB9;font:inherit;font-size:30px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:color .2s ease}
 .end-cta:hover,.end-cta:focus-visible{color:#EFEFEE}
-.end-cta:focus-visible{outline:2px solid #EFEFEE;outline-offset:4px}
-.end-cta:focus-visible{outline:2px solid #EFEFEE;outline-offset:4px}
+.end-cta:focus-visible{outline:4px solid #EFEFEE;outline-offset:6px}
 
 /* Phones and touch screens: the board is one screen tall, opens zoomed out, and the reader explores it directly. */
 .ic.touch .ic-board{height:auto}
@@ -516,9 +523,6 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
   const rects: Record<string, { x: number; y: number; w: number; h: number }> = JSON.parse(board.dataset.rects!);
   const secs: { x: number; y: number; w: number; h: number }[] = JSON.parse(board.dataset.secs!);
   const W = JSON.parse(board.dataset.world!);
-  const endPin: [number, number] = JSON.parse(board.dataset.endpin!);
-  const endSec = document.getElementById('end')!;
-  const endLine = document.getElementById('end-line');
   const pieces = Array.from(world.querySelectorAll<HTMLElement>('.pc'));
   const ties = Array.from(world.querySelectorAll<SVGPathElement>('.ic-tie'));
   const touch = window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
@@ -527,7 +531,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 
   type Cam = { tx: number; ty: number; s: number };
   const BAR = 96;
-  const all = { x: -60, y: -60, w: W.w + 200, h: W.h + 300 };
+  const all = { x: -60, y: -60, w: W.w + 240, h: W.h + 100 };
   const rectFor = (cam: number | Area) => typeof cam === 'object' ? cam : cam < 0 ? all : secs[cam];
   const fit = (r: { x: number; y: number; w: number; h: number }): Cam => {
     const vw = view.clientWidth, vh = view.clientHeight - BAR;
@@ -637,14 +641,6 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
   // Close: back to the home page.
   closeBtn.addEventListener('click', () => { window.location.href = '/'; });
 
-  // The end section's string starts exactly under where the last question's string leaves the screen.
-  const alignEnd = () => {
-    const c = fit(rectFor(frames[frames.length - 1].cam));
-    const cx = endSec.clientWidth / 2;
-    // On phones the board isn't pinned to the screen, so the string simply drops straight down the middle.
-    const x = touch ? cx : view.getBoundingClientRect().left - endSec.getBoundingClientRect().left + c.tx + endPin[0] * c.s;
-    endLine?.setAttribute('d', `M ${x.toFixed(1)} 0 C ${x.toFixed(1)} 160, ${cx} 90, ${cx} 260`);
-  };
   // Start over: back to the top of the case study.
   document.getElementById('restart')?.addEventListener('click', () => {
     filter('');
@@ -713,9 +709,8 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
   let glowT: number | undefined;
   window.addEventListener('mousemove', () => {
     string?.classList.add('glow');
-    endLine?.classList.add('glow');
     clearTimeout(glowT);
-    glowT = window.setTimeout(() => { string?.classList.remove('glow'); endLine?.classList.remove('glow'); }, 650);
+    glowT = window.setTimeout(() => string?.classList.remove('glow'), 650);
   }, { passive: true });
 
   // Skill tags: light up every piece that shows the skill, and take the reader to the first one.
@@ -752,10 +747,9 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
     queued = true;
     requestAnimationFrame(() => { queued = false; draw(); bar(); });
   }, { passive: true });
-  window.addEventListener('resize', () => { size(); if (touch) touchGo(current); else draw(); bar(); alignEnd(); });
+  window.addEventListener('resize', () => { size(); if (touch) touchGo(current); else draw(); bar(); });
 
   size();
   if (touch) { show(0); touchGo(-1); } else draw();
   bar();
-  alignEnd();
 </script>
