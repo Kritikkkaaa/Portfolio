@@ -1,6 +1,8 @@
 ---
 // ICP-Nexus case study (draft, dummy content): a first fold with the whole picture, then one board the reader is guided across.
-// Desktop: scrolling moves a camera across the board and pins each piece up in reading order; readers can also drag and zoom freely.
+// Every section follows the same five steps: context, what i did, the number i found, what i did next, and the question
+// that leads to the next section. The red string runs from each question to the next section.
+// Desktop: scrolling moves a camera across the board and pins each piece up in order; readers can also drag and zoom.
 // Phones: the board opens zoomed out; tap a section to zoom in, then pinch and drag.
 import Base from '../layouts/Base.astro';
 
@@ -20,79 +22,71 @@ const sections = [
   { n: '04', title: 'how the message changed', short: 'changed', x: 0, y: 1400 }
 ];
 
-type Piece = { id: string; sec: number; kind: 'page' | 'shot' | 'note'; tone?: 'story' | 'quote' | 'insight' | 'decision' | 'small'; x: number; y: number; w: number; h: number; r: number; skills: string[]; text?: string; who?: string; pick?: boolean };
-const pieces: Piece[] = [
-  { id: 's1-data', sec: 0, kind: 'page', x: 60, y: 150, w: 600, h: 400, r: -0.6, skills: ['research'] },
-  { id: 's1-story', sec: 0, kind: 'note', tone: 'story', x: 800, y: 120, w: 460, h: 420, r: -1.4, skills: ['research'],
-    text: 'we had nothing to position. a steady trickle of organic installs, a couple of active users nobody had segmented yet, and an ICP that existed only as a blank line in a doc. every conversation about messaging stalled on the same question: messaging to whom? before i could write a single headline, i had to admit we didn’t know who we were talking to.' },
-  { id: 's1-q', sec: 0, kind: 'note', tone: 'small', x: 1180, y: 600, w: 340, h: 230, r: 2.2, skills: ['research'],
-    text: 'who installs? who stays? who would pay? we couldn’t answer any of the three.' },
+// The same five slots in every section, in reading order. Section-local positions:
+// the number sits top-left on a white page, everything in my words runs down the right.
+const slots = {
+  ctx: { x: 760, y: 110, w: 390, h: 330, r: -1.2 },
+  did: { x: 1190, y: 100, w: 370, h: 360, r: 1.2 },
+  data: { x: 60, y: 140, w: 600, h: 400, r: -0.5 },
+  next: { x: 760, y: 500, w: 390, h: 360, r: 0.8 },
+  ask: { x: 1200, y: 560, w: 340, h: 240, r: -1.6 }
+} as const;
+type Slot = keyof typeof slots;
+const ORDER: Slot[] = ['ctx', 'did', 'data', 'next', 'ask'];
 
-  { id: 's2-data', sec: 1, kind: 'page', x: 60, y: 150, w: 600, h: 400, r: 0.5, skills: ['positioning'] },
-  { id: 's2-story', sec: 1, kind: 'note', tone: 'story', x: 770, y: 110, w: 430, h: 380, r: -1, skills: ['research', 'collab'],
-    text: 'so i stopped writing and started listening. i went back through founder calls and support chats with the team, looking for the merchants who were already living the problem Nexus solves, not the ones who installed out of curiosity.' },
-  { id: 's2-q1', sec: 1, kind: 'note', tone: 'quote', x: 1240, y: 120, w: 330, h: 300, r: 2.2, skills: ['research'],
-    text: '“we already run our marketplace on spreadsheets. i don’t need cheaper, i need fewer tabs.”', who: 'founder, home décor marketplace' },
-  { id: 's2-q2', sec: 1, kind: 'note', tone: 'quote', x: 1230, y: 500, w: 330, h: 300, r: -2, skills: ['research'],
-    text: '“the free trial didn’t matter. i needed to know it won’t break my vendor payouts.”', who: 'founder, fashion marketplace' },
-  { id: 's2-insight', sec: 1, kind: 'note', tone: 'insight', x: 770, y: 560, w: 420, h: 340, r: 1.2, skills: ['research', 'positioning'],
-    text: 'positioning has nothing to do with the product’s feature list. it starts a step earlier, in discovery: finding the people you’re looking for. that’s what an ICP is for.' },
-
-  { id: 's3-data', sec: 2, kind: 'page', x: 60, y: 150, w: 600, h: 400, r: -0.4, skills: ['research'] },
-  { id: 's3-story', sec: 2, kind: 'note', tone: 'story', x: 1170, y: 100, w: 390, h: 420, r: 1.6, skills: ['positioning', 'collab'],
-    text: 'with the founders, i picked one identifier and started there. we weren’t out to chase competitors, but we did want to own the word marketplace. so i took that one sentence and pulled it in every direction i could think of, until one version sounded like what founders had been telling us all along.' },
-  { id: 's3-decision', sec: 2, kind: 'note', tone: 'decision', x: 760, y: 130, w: 360, h: 280, r: -2, skills: ['positioning', 'collab'],
-    text: 'start with one identifier: merchants who are already running a marketplace.' },
-  { id: 's3-v1', sec: 2, kind: 'note', tone: 'small', x: 720, y: 520, w: 250, h: 130, r: -2, skills: ['positioning'], text: 'for marketplaces that outgrew spreadsheets' },
-  { id: 's3-v2', sec: 2, kind: 'note', tone: 'small', x: 1000, y: 470, w: 250, h: 130, r: 1.5, skills: ['positioning'], text: 'run your vendors like you run your store' },
-  { id: 's3-v3', sec: 2, kind: 'note', tone: 'small', x: 1280, y: 580, w: 250, h: 130, r: -1, skills: ['positioning'], text: 'many vendors, one dashboard' },
-  { id: 's3-v4', sec: 2, kind: 'note', tone: 'small', x: 760, y: 740, w: 250, h: 130, r: 2, skills: ['positioning'], text: 'your marketplace on Shopify, minus the duct tape' },
-  { id: 's3-v5', sec: 2, kind: 'note', tone: 'small', x: 1080, y: 760, w: 300, h: 140, r: -1.2, skills: ['positioning'], text: 'simple to start, operate and grow a marketplace', pick: true },
-
-  { id: 's4-data', sec: 3, kind: 'page', x: 60, y: 140, w: 600, h: 400, r: 0.6, skills: ['positioning'] },
-  { id: 's4-shot', sec: 3, kind: 'shot', x: 60, y: 600, w: 600, h: 330, r: -0.8, skills: ['positioning'] },
-  { id: 's4-story', sec: 3, kind: 'note', tone: 'story', x: 780, y: 110, w: 450, h: 430, r: -1, skills: ['positioning'],
-    text: 'until then i’d leaned on pricing and free trials, because that’s what our early traction seemed to reward. but the founders we wanted weren’t shopping on price. they wanted it to be simple to start a marketplace, to operate one, and to grow it. the message moved from what Nexus costs to what it makes easy.' },
-  { id: 's4-insight', sec: 3, kind: 'note', tone: 'insight', x: 1270, y: 190, w: 300, h: 260, r: 2, skills: ['positioning'],
-    text: 'traction tells you who found you. it doesn’t tell you who you’re for.' }
+type Step = { text?: string; items?: string[]; skills: string[] };
+const story: Record<Slot, Step>[] = [
+  {
+    ctx: { skills: ['research'], text: 'we had nothing to position. a trickle of organic installs, a couple of active users nobody had segmented, and an ICP that was a blank line in a doc. every messaging conversation stalled on the same question: messaging to whom?' },
+    did: { skills: ['research'], items: ['pulled every install from the partner dashboard', 'tagged active stores by business type', 'split what we knew from what we assumed'] },
+    data: { skills: ['research'] },
+    next: { skills: ['research', 'collab'], items: ['opened an ICP doc with honest blanks', 'booked calls with every active founder', 'paused all messaging work'] },
+    ask: { skills: ['research'], text: 'who is Nexus actually for?' }
+  },
+  {
+    ctx: { skills: ['research', 'positioning'], text: 'i assumed positioning starts with the product. the calls showed me it starts a step earlier, in discovery: finding the people you’re looking for. that’s what an ICP is for.' },
+    did: { skills: ['research', 'collab'], items: ['ran 18 founder calls with the team', 'read two months of support chats', 'wrote down their exact words'] },
+    data: { skills: ['research'] },
+    next: { skills: ['research', 'collab'], items: ['rebuilt the ICP around running a marketplace', 'walked the founders through the findings', 'parked d2c brands and agencies, for now'] },
+    ask: { skills: ['positioning'], text: 'of everyone we spoke to, who do we start with?' }
+  },
+  {
+    ctx: { skills: ['positioning'], text: 'we weren’t out to chase competitors, but we did want to own the word marketplace. so i started with one identifier: merchants who are already running a marketplace.' },
+    did: { skills: ['positioning'], items: ['wrote the identifier as one plain sentence', 'pulled it in twelve directions', 'tested five versions with founders'] },
+    data: { skills: ['positioning'] },
+    next: { skills: ['positioning', 'collab'], items: ['picked “simple to start, operate and grow”', 'agreed the line with the founders', 'briefed design on the listing and homepage'] },
+    ask: { skills: ['positioning'], text: 'will the new message bring in the right merchants?' }
+  },
+  {
+    ctx: { skills: ['positioning'], text: 'until then i’d leaned on pricing and free trials, because early traction seemed to reward them. the founders we wanted weren’t shopping on price. they wanted it simple to start, run and grow a marketplace.' },
+    did: { skills: ['positioning'], items: ['rewrote the app listing headline', 'changed the homepage first fold', 'moved price below the fold'] },
+    data: { skills: ['positioning'] },
+    next: { skills: ['positioning', 'collab'], items: ['tracked installs by segment every week', 'booked demos with marketplace operators first', 'shared the numbers with the founders monthly'] },
+    ask: { skills: ['positioning'], text: 'they’re arriving. now, will they stay?' }
+  }
 ];
 
-// Accent arrows inside a section, revealed with the piece they point to. Section-local coordinates.
-const arrows = [
-  { sec: 1, from: [1240, 300], to: [1150, 600], color: '#C9E77A', reveal: 's2-insight' },
-  { sec: 1, from: [1230, 650], to: [1190, 720], color: '#C9E77A', reveal: 's2-insight' },
-  { sec: 2, from: [880, 410], to: [850, 520], color: '#F2C8A2', reveal: 's3-v1' },
-  { sec: 2, from: [990, 410], to: [1100, 470], color: '#F2C8A2', reveal: 's3-v1' },
-  { sec: 2, from: [1080, 400], to: [1330, 580], color: '#F2C8A2', reveal: 's3-v1' },
-  { sec: 2, from: [860, 410], to: [880, 740], color: '#F2C8A2', reveal: 's3-v1' },
-  { sec: 2, from: [960, 410], to: [1200, 760], color: '#F2C8A2', reveal: 's3-v1' }
-];
-const arrowPath = (a: typeof arrows[number]) => {
-  const s = sections[a.sec];
-  const [x1, y1] = [s.x + a.from[0], s.y + a.from[1]], [x2, y2] = [s.x + a.to[0], s.y + a.to[1]];
-  const mx = (x1 + x2) / 2 + (y2 - y1) * 0.15, my = (y1 + y2) / 2 - (x2 - x1) * 0.15;
-  return `M ${x1} ${y1} Q ${mx} ${my} ${x2} ${y2}`;
-};
+const pieces = story.flatMap((sec, i) => ORDER.map((slot, k) => ({
+  id: `s${i + 1}-${slot}`, sec: i, slot, step: k + 1, ...slots[slot], ...sec[slot],
+  ax: sections[i].x + slots[slot].x, ay: sections[i].y + slots[slot].y
+})));
 
-// The order the reader is walked through: where the camera looks, and which pieces get pinned up.
-// cam: -1 = whole board, 0–3 = a section, a piece id = that piece close up.
-const frames: { cam: number | string; show: string[] }[] = [
-  { cam: -1, show: [] },
-  { cam: 0, show: ['s1-data'] }, { cam: 0, show: ['s1-story'] }, { cam: 0, show: ['s1-q'] },
-  { cam: 1, show: ['s2-data'] }, { cam: 1, show: ['s2-story'] }, { cam: 1, show: ['s2-q1'] }, { cam: 1, show: ['s2-q2'] }, { cam: 1, show: ['s2-insight'] },
-  { cam: 2, show: ['s3-data'] }, { cam: 2, show: ['s3-decision'] }, { cam: 2, show: ['s3-v1', 's3-v2', 's3-v3', 's3-v4', 's3-v5'] }, { cam: 2, show: ['s3-story'] },
-  { cam: 3, show: ['s4-story'] }, { cam: 3, show: ['s4-shot'] }, { cam: 3, show: ['s4-insight'] }, { cam: 's4-data', show: ['s4-data'] }
-];
+// Where the camera looks, and which pieces get pinned up. -1 = the whole board, 0–3 = a section.
+// The first frame is the snapshot: every piece on the board at once.
+const frames: { cam: number; show: string[] }[] = [{ cam: -1, show: pieces.map((p) => p.id) }];
+story.forEach((_, i) => ORDER.forEach((slot) => frames.push({ cam: i, show: [`s${i + 1}-${slot}`] })));
 
-// One pin per section, beside its heading. The string arcs over the top row, curves down the gutter
-// between the columns, then swings back through the gap between the rows, so it never crosses a piece.
+// A pin beside each heading; the string leaves from each section's question and lands on the next heading pin,
+// travelling through the gutters so it never crosses a piece.
 const pins = sections.map((s) => [s.x + 40, s.y + 44]);
-const [p1, p2, p3, p4] = pins;
-const stringPath = `M ${p1[0]} ${p1[1]} C ${p1[0]} -320, ${p2[0]} -320, ${p2[0]} ${p2[1]}`
-  + ` C ${p2[0] - 260} 380, ${p3[0] - 260} 1060, ${p3[0]} ${p3[1]}`
-  + ` C ${p3[0] - 140} 1180, ${p4[0] + 140} 1180, ${p4[0]} ${p4[1]}`;
+const askPin = (i: number) => [sections[i].x + slots.ask.x + slots.ask.w - 22, sections[i].y + slots.ask.y + 10];
+const [a1, a2, a3] = [askPin(0), askPin(1), askPin(2)];
+const stringPath = `M ${a1[0]} ${a1[1]} C ${a1[0] + 240} ${a1[1]}, ${pins[1][0] - 180} ${pins[1][1]}, ${pins[1][0]} ${pins[1][1]}`
+  + ` M ${a2[0]} ${a2[1]} C ${a2[0] + 120} 1200, ${pins[2][0]} 1150, ${pins[2][0]} ${pins[2][1]}`
+  + ` M ${a3[0]} ${a3[1]} C ${a3[0] + 180} 2620, 1750 2620, 1750 2000 C 1750 1300, 200 1290, ${pins[3][0]} ${pins[3][1]}`;
+const knots = [a1, a2, a3];
 
-const rects = Object.fromEntries(pieces.map((p) => [p.id, { x: sections[p.sec].x + p.x, y: sections[p.sec].y + p.y, w: p.w, h: p.h }]));
+const rects = Object.fromEntries(pieces.map((p) => [p.id, { x: p.ax, y: p.ay, w: p.w, h: p.h }]));
 const secRects = sections.map((s) => ({ x: s.x, y: s.y, w: SEC_W, h: SEC_H }));
 const skillCount = (id: string) => pieces.filter((p) => p.skills.includes(id)).length;
 // Stamped when the site is built, i.e. when a change to this page is pushed and deployed.
@@ -103,6 +97,7 @@ const personas = [
   { id: 'chart', caption: 'reports growth on monday', r: 2 },
   { id: 'bank', caption: 'settles every vendor payout', r: -1.5 }
 ];
+const checkTitle: Record<string, string> = { did: 'what i did', next: 'what i did next' };
 ---
 <Base title="ICP-Nexus · finding who Nexus was for · Kritika Upadhyay" description={description}>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap">
@@ -173,26 +168,26 @@ const personas = [
 <div class="ic-view" id="view">
 <div class="ic-world" id="world" style={`width:${WORLD_W}px;height:${WORLD_H}px`}>
 <svg class="ic-lines" width={WORLD_W} height={WORLD_H} aria-hidden="true">
-<defs>
-{['#C9E77A', '#F2C8A2'].map((c, i) => <marker id={`ah${i}`} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill={c}></path></marker>)}
-</defs>
-{arrows.map((a) => <path d={arrowPath(a)} class="ic-arrow" data-reveal={a.reveal} stroke={a.color} marker-end={`url(#ah${a.color === '#C9E77A' ? 0 : 1})`}></path>)}
 <path d={stringPath} class="ic-string" id="string"></path>
 {pins.map(([x, y]) => <circle cx={x} cy={y} r="11" class="ic-pin"></circle>)}
+{knots.map(([x, y]) => <circle cx={x} cy={y} r="7" class="ic-pin"></circle>)}
 </svg>
 
 {sections.map((s, i) => (
-<div class="ic-zone" style={`left:${s.x}px;top:${s.y}px;width:${SEC_W}px;height:${SEC_H}px`} data-sec={i}><span class="ic-zone-tip">click to zoom in</span></div>
 <h2 class="ic-sec-h" style={`left:${s.x + 80}px;top:${s.y + 8}px`} data-sec={i}><span>{s.n}</span>{s.title}</h2>
 ))}
 
 {pieces.map((p) => (
-<div class={`pc pc-${p.kind} ${p.tone ? 'tone-' + p.tone : ''} ${p.pick ? 'pick' : ''}`} id={p.id} data-skills={p.skills.join(' ')}
-  style={`left:${rects[p.id].x}px;top:${rects[p.id].y}px;width:${p.w}px;${p.kind !== 'note' ? `height:${p.h}px;` : `min-height:${p.tone === 'small' ? 0 : p.h - 60}px;`}--r:${p.r}deg`}>
-{p.kind === 'note' && <>
-{p.tone === 'decision' && <span class="pin" aria-hidden="true"></span>}
-<p class="note-t">{p.text}</p>
-{p.who && <p class="note-who">{p.who}</p>}
+<div class={`pc pc-${p.slot === 'did' || p.slot === 'next' ? 'check' : p.slot === 'data' ? 'page' : 'note'} slot-${p.slot}`} id={p.id} data-skills={p.skills.join(' ')}
+  style={`left:${p.ax}px;top:${p.ay}px;width:${p.w}px;${p.slot === 'data' ? `height:${p.h}px;` : `min-height:${p.h - 40}px;`}--r:${p.r}deg`}>
+<span class="pc-step" aria-hidden="true">{p.step}</span>
+{p.slot === 'ask' && <span class="pin" aria-hidden="true"></span>}
+{(p.slot === 'ctx' || p.slot === 'ask') && <p class="note-t">{p.text}</p>}
+{(p.slot === 'did' || p.slot === 'next') && <>
+<p class="ck-t">{checkTitle[p.slot]}</p>
+<ul class="ck-list">
+{p.items!.map((it) => <li><svg class="ck-box" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="3"></rect><path d="M6 12.5 L10.5 17 L19 6.5"></path></svg><span>{it}</span></li>)}
+</ul>
 </>}
 
 {p.id === 's1-data' && <>
@@ -207,24 +202,24 @@ const personas = [
 </>}
 
 {p.id === 's2-data' && <>
-<p class="pg-k">the order of work</p>
-<ol class="pg-order" id="order">
-<li class="o-pos"><span class="o-n"></span>positioning</li>
-<li class="o-icp"><span class="o-n"></span>discovery: who is this for? (ICP)</li>
-<li class="o-msg"><span class="o-n"></span>messaging</li>
-</ol>
-<p class="pg-foot">positioning comes after discovery, not before it</p>
-</>}
-
-{p.id === 's3-data' && <>
 <p class="pg-k">18 founder conversations</p>
 <div class="pg-bars">
 <div class="pg-row"><span>spoken to</span><i style="width:100%" class="grey"></i><b>18</b></div>
 <div class="pg-row"><span>sell on Shopify</span><i style="width:61%" class="grey"></i><b>11</b></div>
 <div class="pg-row"><span>already run a marketplace</span><i style="width:39%" class="peach"></i><b>7</b></div>
-<div class="pg-row"><span>identifier chosen</span><i style="width:6%" class="peach"></i><b>1</b></div>
+<div class="pg-row"><span>same problem, same words</span><i style="width:33%" class="peach"></i><b>6</b></div>
 </div>
-<p class="pg-foot">the seven had the same problem, said the same way</p>
+<p class="pg-foot">six of the seven described it almost word for word</p>
+</>}
+
+{p.id === 's3-data' && <>
+<p class="pg-k">one sentence, twelve ways</p>
+<div class="pg-bars">
+<div class="pg-row"><span>versions written</span><i style="width:100%" class="grey"></i><b>12</b></div>
+<div class="pg-row"><span>shared with founders</span><i style="width:42%" class="grey"></i><b>5</b></div>
+<div class="pg-row"><span>picked</span><i style="width:8%" class="peach"></i><b>1</b></div>
+</div>
+<p class="pg-foot">“simple to start, operate and grow a marketplace”</p>
 </>}
 
 {p.id === 's4-data' && <>
@@ -236,20 +231,15 @@ const personas = [
 </div>
 <p class="pg-foot">first 6 weeks after the listing and homepage changed</p>
 </>}
-
-{p.id === 's4-shot' && <>
-<div class="shot-in">
-<p class="shot-before">multi-vendor marketplace app. 14-day free trial, plans from $19.</p>
-<p class="shot-after">start, run and grow your marketplace. simply.</p>
-</div>
-<p class="shot-cap">app listing headline, before and after</p>
-</>}
 </div>
 ))}
 </div>
+<p class="ic-hint" id="hint" hidden>exploring · scroll to pick the story back up</p>
+</div>
 
-<button type="button" class="ic-round ic-zoom" id="zoom" aria-label="Zoom in">
-<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5 L20.5 20.5 M10.5 7.5 V13.5 M7.5 10.5 H13.5"></path></svg>
+<div class="ic-ctrls" id="ctrls">
+<button type="button" class="ic-round" id="zoom" aria-label="Zoom in to read a section">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5 L20.5 20.5 M7.5 10.5 H13.5"></path><path class="zoom-plus" d="M10.5 7.5 V13.5"></path></svg>
 </button>
 <nav class="ic-progress" aria-label="Sections of the case study">
 <ol>
@@ -257,10 +247,9 @@ const personas = [
 </ol>
 <button type="button" class="ic-chip" id="chip" hidden></button>
 </nav>
-<button type="button" class="ic-round ic-close" id="close" aria-label="Back to the whole board">
+<button type="button" class="ic-round" id="close" aria-label="Back to the whole board">
 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6 L18 18 M18 6 L6 18"></path></svg>
 </button>
-<p class="ic-hint" id="hint" hidden>exploring · scroll to pick the story back up</p>
 </div>
 </section>
 
@@ -304,79 +293,66 @@ const personas = [
 .ic-skill:focus-visible,.ic-step:focus-visible{outline:2px solid #EFEFEE;outline-offset:3px}
 @media (max-width:760px){.ic-fold{grid-template-columns:1fr}.cv-row{gap:10px}.cv-cap{font-size:17px}.ic-cover{padding:64px 16px 28px}}
 
-.ic-board{position:relative;height:1000vh}
+.ic-board{position:relative;height:1200vh}
 .ic-view{position:sticky;top:0;height:100vh;overflow:hidden;touch-action:pan-y}
 .ic-world{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
 .ic-world.anim{transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+.ic-world:not(.inside){cursor:zoom-in}
 .ic-lines{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
 .ic-string{fill:none;stroke:#B33A35;stroke-width:3.5;stroke-linecap:round;opacity:.75;transition:stroke .4s ease,opacity .4s ease,filter .4s ease}
 .ic-string.glow{stroke:#FF5A4E;opacity:1;filter:drop-shadow(0 0 6px rgba(255,90,78,.85)) drop-shadow(0 0 16px rgba(255,90,78,.45))}
 .ic-pin{fill:#D2453F;stroke:#141416;stroke-width:3}
-.ic-arrow{fill:none;stroke-width:3;stroke-linecap:round;stroke-dasharray:8 7;opacity:0;transition:opacity .6s ease}
-.ic-arrow.on{opacity:.9}
 .ic-sec-h{position:absolute;margin:0;font-size:60px;font-weight:500;line-height:1.1;letter-spacing:-.02em;color:#EFEFEE;white-space:nowrap}
 .ic-sec-h span{margin-right:18px;font-size:22px;letter-spacing:.2em;color:#D2453F;vertical-align:middle}
 
-.ic-zone{position:absolute;box-sizing:border-box;border:2px dashed rgba(169,175,185,.14);border-radius:18px;cursor:zoom-in;transition:border-color .3s ease,background-color .3s ease}
-.ic-zone:hover{border-color:rgba(210,69,63,.55);background-color:rgba(210,69,63,.035)}
-.ic-zone-tip{position:absolute;left:50%;bottom:36px;transform:translateX(-50%);font-size:34px;letter-spacing:.14em;text-transform:uppercase;color:#D2453F;opacity:0;transition:opacity .3s ease;pointer-events:none}
-.ic-zone:hover .ic-zone-tip{opacity:.85}
-.ic-world.inside .ic-zone{border-color:transparent;background:none;cursor:auto}
-.ic-world.inside .ic-zone-tip{display:none}
 .pc{position:absolute;box-sizing:border-box;pointer-events:none;transform:translateY(28px) rotate(calc(var(--r) + 2deg)) scale(.96);opacity:0;visibility:hidden;transition:opacity .55s ease,transform .7s cubic-bezier(.2,.7,.2,1),visibility 0s linear .7s,box-shadow .3s ease,filter .3s ease}
 .pc.on{opacity:1;visibility:visible;transform:rotate(var(--r));transition:opacity .55s ease,transform .7s cubic-bezier(.2,.7,.2,1),visibility 0s,box-shadow .3s ease,filter .3s ease}
-.pc-note{padding:28px 30px 26px;color:#1E1E24;box-shadow:0 2px 0 rgba(0,0,0,.08),0 14px 28px rgba(0,0,0,.45);background-image:linear-gradient(to bottom,rgba(255,255,255,.18),transparent 40%)}
-.tone-story{background-color:#BFD4EA}
-.tone-quote{background-color:#D4EC8E}
-.tone-insight{background-color:#BCE5CF}
-.tone-decision{background-color:#F2C8A2}
-.tone-small{background-color:#BFD4EA;padding:18px 20px}
-.tone-small .note-t{font-size:24px}
-.pick{background-color:#F2C8A2;outline:3px solid #E08A4C;outline-offset:4px}
-.note-t{margin:0;font-family:'Caveat',cursive;font-weight:500;font-size:28px;line-height:1.22}
-.tone-decision .note-t{font-size:34px;font-weight:600}
-.note-who{margin:14px 0 0;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:rgba(30,30,36,.65)}
-.pin{position:absolute;left:50%;top:-12px;width:24px;height:24px;margin-left:-12px;border-radius:50%;background:#D2453F;box-shadow:0 4px 8px rgba(0,0,0,.45),inset -3px -3px 0 rgba(0,0,0,.18)}
+.pc-step{position:absolute;left:-14px;top:-14px;display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:#141416;border:2px solid #4A4A50;color:#C9CDD5;font-size:15px;font-weight:500}
 
-.pc-page{padding:30px 34px;background:#F4F3EF;color:#1E1E24;box-shadow:0 14px 28px rgba(0,0,0,.45)}
+.pc-note{padding:30px 30px 26px;color:#1E1E24;box-shadow:0 2px 0 rgba(0,0,0,.08),0 14px 28px rgba(0,0,0,.45);background-image:linear-gradient(to bottom,rgba(255,255,255,.18),transparent 40%)}
+.slot-ctx{background-color:#BFD4EA}
+.slot-ask{background-color:#F4B9B2;display:flex;align-items:center}
+.note-t{margin:0;font-family:'Caveat',cursive;font-weight:500;font-size:28px;line-height:1.22}
+.slot-ask .note-t{font-size:38px;font-weight:600;line-height:1.1}
+.pin{position:absolute;right:10px;top:-2px;width:24px;height:24px;border-radius:50%;background:#D2453F;box-shadow:0 4px 8px rgba(0,0,0,.45),inset -3px -3px 0 rgba(0,0,0,.18)}
+
+.pc-check{padding:28px 28px 22px;background:#F4F3EF;color:#1E1E24;box-shadow:0 14px 28px rgba(0,0,0,.45)}
+.pc-check::before{content:"";position:absolute;left:50%;top:-12px;width:96px;height:24px;margin-left:-48px;background:rgba(188,229,207,.75);transform:rotate(-2deg)}
+.ck-t{margin:0 0 16px;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#5A5A62}
+.ck-list{display:flex;flex-direction:column;gap:14px;margin:0;padding:0;list-style:none}
+.ck-list li{display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:start;font-family:'Caveat',cursive;font-size:27px;line-height:1.15}
+.ck-box{width:28px;height:28px;margin-top:2px}
+.ck-box rect{fill:none;stroke:#1E1E24;stroke-width:2}
+.ck-box path{fill:none;stroke:#2F8F5B;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+
+.pc-page{padding:30px 34px;background:#FFFFFF;color:#1E1E24;box-shadow:0 14px 28px rgba(0,0,0,.45)}
 .pc-page::before,.pc-page::after{content:"";position:absolute;top:10px;width:14px;height:14px;border-radius:50%;background:#9A9AA2;box-shadow:inset -2px -2px 0 rgba(0,0,0,.2)}
 .pc-page::before{left:10px}.pc-page::after{right:10px}
 .pg-k{margin:0 0 24px;font-size:30px;font-weight:600;letter-spacing:-.01em}
 .pg-bars{display:flex;flex-direction:column;gap:16px}
-.pg-row{display:grid;grid-template-columns:200px 1fr 50px;align-items:center;gap:14px;font-size:17px}
+.pg-row{display:grid;grid-template-columns:220px 1fr 50px;align-items:center;gap:14px;font-size:17px}
 .pg-row i{display:block;height:22px}
 .pg-row i.grey{background:#B9B9C0}
 .pg-row i.peach{background:#E08A4C}
 .pg-row i.empty{border:2px dashed #B9B9C0;box-sizing:border-box}
 .pg-row b{font-size:20px;text-align:right}
 .pg-foot{position:absolute;left:34px;right:34px;bottom:26px;margin:0;font-size:15px;color:#5A5A62}
-.pg-order{position:relative;height:210px;margin:0;padding:0;list-style:none;counter-reset:o}
-.pg-order li{position:absolute;left:0;right:0;display:flex;align-items:center;gap:16px;height:58px;padding:0 18px;border:2px solid #1E1E24;font-size:20px;background:#FFFFFF;transition:top .9s cubic-bezier(.2,.7,.2,1),background-color .6s ease}
-.o-n{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:#1E1E24;color:#F4F3EF;font-size:15px}
-.o-pos{top:0}.o-icp{top:74px}.o-msg{top:148px}
-.o-pos .o-n::before{content:"1"}.o-icp .o-n::before{content:"2"}.o-msg .o-n::before{content:"3"}
-.swapped .o-icp{top:0;background:#BCE5CF}.swapped .o-pos{top:74px}
-.swapped .o-icp .o-n::before{content:"1"}.swapped .o-pos .o-n::before{content:"2"}
 .pg-res{display:flex;flex-direction:column;gap:18px}
 .pg-res div{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding-bottom:14px;border-bottom:1px solid #DADAD4;font-size:17px}
 .pg-res b{font-size:30px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
 
-.pc-shot{padding:12px 12px 0;background:#F4F3EF;box-shadow:0 14px 28px rgba(0,0,0,.45)}
-.shot-in{height:250px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;gap:18px;padding:26px;background:#FFFFFF;color:#1E1E24;border:1px solid #DADAD4}
-.shot-before{margin:0;font-size:20px;color:#8A8A92;text-decoration:line-through;text-decoration-color:#D2453F;text-decoration-thickness:2px}
-.shot-after{margin:0;font-size:30px;font-weight:600;letter-spacing:-.01em}
-.shot-cap{margin:0;padding:12px 4px;font-size:14px;color:#5A5A62}
-
 .ic-world.filtering .pc{filter:saturate(.3) brightness(.55)}
 .ic-world.filtering .pc.hl{filter:none;box-shadow:0 0 0 4px #D8C9A3,0 0 40px rgba(216,201,163,.55),0 14px 28px rgba(0,0,0,.45)}
 
-.ic-round,.ic-progress{position:absolute;bottom:18px;z-index:5;border:1px solid #2A2A2E;background:rgba(10,10,12,.86);backdrop-filter:blur(8px)}
-.ic-round{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;padding:0;border-radius:50%;color:#A9AFB9;cursor:pointer;transition:color .2s ease,border-color .2s ease}
+/* One control bar, fixed to the bottom of the screen from the moment the board starts. */
+.ic-ctrls{position:fixed;left:50%;bottom:18px;z-index:40;display:flex;align-items:center;gap:10px;transform:translate(-50%,16px);opacity:0;pointer-events:none;transition:opacity .35s ease,transform .35s ease}
+.ic-ctrls.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.ic-round,.ic-progress{border:1px solid #2A2A2E;background:rgba(10,10,12,.88);backdrop-filter:blur(8px)}
+.ic-round{display:inline-flex;align-items:center;justify-content:center;flex:none;width:48px;height:48px;padding:0;border-radius:50%;color:#A9AFB9;cursor:pointer;transition:color .2s ease,border-color .2s ease}
 .ic-round:hover,.ic-round:focus-visible{color:#EFEFEE;border-color:#4A4A50}
-.ic-round:focus-visible{outline:2px solid #EFEFEE;outline-offset:3px}
-.ic-zoom{left:20px}
-.ic-close{right:20px}
-.ic-progress{left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 18px 12px;border-radius:16px}
+.ic-round:focus-visible,.ic-step:focus-visible{outline:2px solid #EFEFEE;outline-offset:3px}
+.ic-round.in .zoom-plus{display:none}
+.ic-progress{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 18px 12px;border-radius:16px}
 .ic-progress ol{display:flex;gap:14px;margin:0;padding:0;list-style:none}
 .ic-step{display:flex;flex-direction:column;gap:7px;min-width:84px;padding:0;border:0;background:none;color:#8A8D96;font:inherit;font-size:12px;letter-spacing:.06em;text-align:left;cursor:pointer;transition:color .2s ease}
 .st-l b{font-weight:500;color:#5E5E66}
@@ -386,7 +362,7 @@ const personas = [
 .ic-step.on b{color:#D2453F}
 .ic-chip{padding:2px 0 0;border:0;background:none;color:#D8C9A3;font:inherit;font-size:12px;cursor:pointer}
 .ic-chip[hidden]{display:none}
-.ic-hint{position:absolute;left:50%;bottom:96px;z-index:5;margin:0;transform:translateX(-50%);font-size:12px;letter-spacing:.08em;color:#8A8D96;white-space:nowrap}
+.ic-hint{position:absolute;left:50%;bottom:100px;z-index:5;margin:0;transform:translateX(-50%);font-size:12px;letter-spacing:.08em;color:#8A8D96;white-space:nowrap}
 
 .ic-end{display:flex;flex-direction:column;align-items:center;gap:20px;padding:120px 24px 160px;text-align:center}
 .ic-end p{margin:0;font-size:clamp(20px,2.4vw,28px);color:#C9CDD5}
@@ -396,13 +372,15 @@ const personas = [
 .ic.touch .ic-view{position:relative;height:100svh}
 .ic.touch .ic-view.zoomed{touch-action:none}
 @media (max-width:760px){
-.ic-step{min-width:38px}
+.ic-step{min-width:34px}
 .st-l{font-size:0}
 .st-l b{font-size:12px}
-.ic-progress ol{gap:10px}
-.ic-zone-tip{display:none}
+.ic-progress{padding:10px 12px 12px}
+.ic-progress ol{gap:8px}
+.ic-ctrls{gap:6px}
+.ic-round{width:44px;height:44px}
 }
-@media (prefers-reduced-motion:reduce){.pc,.ic-world.anim,.pg-order li,.ic-arrow,.ic-string{transition:none}}
+@media (prefers-reduced-motion:reduce){.pc,.ic-world.anim,.ic-string,.ic-ctrls{transition:none}}
 </style>
 
 <script>
@@ -412,26 +390,25 @@ const personas = [
   const world = document.getElementById('world')!;
   const string = document.getElementById('string');
   const hint = document.getElementById('hint')!;
+  const ctrls = document.getElementById('ctrls')!;
   const zoomBtn = document.getElementById('zoom') as HTMLButtonElement;
   const closeBtn = document.getElementById('close') as HTMLButtonElement;
   const chip = document.getElementById('chip') as HTMLButtonElement;
   const steps = Array.from(document.querySelectorAll<HTMLButtonElement>('.ic-step'));
   const fills = steps.map((b) => b.querySelector<HTMLElement>('.st-fill')!);
-  const frames: { cam: number | string; show: string[] }[] = JSON.parse(board.dataset.frames!);
+  const frames: { cam: number; show: string[] }[] = JSON.parse(board.dataset.frames!);
   const rects: Record<string, { x: number; y: number; w: number; h: number }> = JSON.parse(board.dataset.rects!);
   const secs: { x: number; y: number; w: number; h: number }[] = JSON.parse(board.dataset.secs!);
   const W = JSON.parse(board.dataset.world!);
   const pieces = Array.from(world.querySelectorAll<HTMLElement>('.pc'));
-  const arrows = Array.from(world.querySelectorAll<SVGPathElement>('.ic-arrow'));
-  const order = document.getElementById('order')?.parentElement;
   const touch = window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
   const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (touch) root.classList.add('touch');
 
   type Cam = { tx: number; ty: number; s: number };
   const BAR = 96;
-  const all = { x: -60, y: -380, w: W.w + 120, h: W.h + 440 };
-  const rectFor = (cam: number | string) => typeof cam === 'string' ? rects[cam] : cam < 0 ? all : secs[cam];
+  const all = { x: -60, y: -60, w: W.w + 200, h: W.h + 300 };
+  const rectFor = (cam: number) => cam < 0 ? all : secs[cam];
   const fit = (r: { x: number; y: number; w: number; h: number }): Cam => {
     const vw = view.clientWidth, vh = view.clientHeight - BAR;
     const s = Math.min(vw / (r.w * 1.08), vh / (r.h * 1.08));
@@ -442,21 +419,15 @@ const personas = [
     world.style.transform = `translate(${c.tx.toFixed(1)}px, ${c.ty.toFixed(1)}px) scale(${c.s.toFixed(4)})`;
   };
   const ease = (t: number) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  const frameSec = (k: number) => {
-    const c = frames[k].cam;
-    if (typeof c === 'number') return c;
-    return secs.findIndex((r) => rects[c].x >= r.x && rects[c].x < r.x + r.w && rects[c].y >= r.y && rects[c].y < r.y + r.h);
-  };
-  const firstFrameOf = (sec: number) => frames.findIndex((f, k) => frameSec(k) === sec);
-  const lastFrameOf = (sec: number) => frames.length - 1 - [...frames].reverse().findIndex((f, k) => frameSec(frames.length - 1 - k) === sec);
+  const firstFrameOf = (sec: number) => frames.findIndex((f) => f.cam === sec);
+  const lastFrameOf = (sec: number) => frames.length - 1 - [...frames].reverse().findIndex((f) => f.cam === sec);
 
-  // Pieces stay off the board until the story reaches them; while exploring freely, everything is up.
+  // Frame 0 is the snapshot with every piece up. After that, pieces go up one by one as the story reaches them.
   const show = (upTo: number) => {
     const on = new Set<string>();
-    frames.forEach((f, k) => { if (k <= upTo) f.show.forEach((id) => on.add(id)); });
+    if (upTo <= 0) frames[0].show.forEach((id) => on.add(id));
+    else frames.forEach((f, k) => { if (k > 0 && k <= upTo) f.show.forEach((id) => on.add(id)); });
     pieces.forEach((p) => p.classList.toggle('on', on.has(p.id)));
-    arrows.forEach((a) => a.classList.toggle('on', on.has(a.dataset.reveal!)));
-    order?.classList.toggle('swapped', on.has('s2-insight'));
   };
   // The progress bar: the current section is marked, and each track fills as its pieces go up.
   const progress = (sec: number, reach: number) => {
@@ -466,15 +437,20 @@ const personas = [
       f.style.width = `${Math.max(0, Math.min(1, (reach - a + 1) / (z - a + 1))) * 100}%`;
     });
   };
-  // Section outlines invite a click only when the reader is looking at the whole board.
-  const overviewMode = (on: boolean) => world.classList.toggle('inside', !on);
+  // Zoom has two states: reading a section, or seeing all four. The icon shows the one it will switch to.
+  const setOut = (out: boolean) => {
+    world.classList.toggle('inside', !out);
+    zoomBtn.classList.toggle('in', !out);
+    zoomBtn.setAttribute('aria-label', out ? 'Zoom in to read a section' : 'Zoom out to see all four sections');
+  };
 
   let exploring = touch;
   let cam: Cam = fit(all);
   let current = -1;
+  let out = true;
 
   // Guided mode (desktop): the scroll position inside the tall board section drives the camera.
-  const frameLen = () => window.innerHeight * 0.6;
+  const frameLen = () => window.innerHeight * 0.55;
   const boardTop = () => board.getBoundingClientRect().top + window.scrollY;
   const size = () => { if (!touch) board.style.height = `${(frames.length - 1) * frameLen() + window.innerHeight}px`; };
   const guided = () => {
@@ -486,9 +462,10 @@ const personas = [
     put(cam);
     const reach = Math.floor(s + 0.45);
     show(reach);
-    current = frameSec(Math.round(s));
+    current = frames[Math.round(s)].cam;
     progress(current, reach);
-    overviewMode(s < 0.5);
+    out = s < 0.5;
+    setOut(out);
   };
   const draw = () => { if (!exploring) guided(); };
 
@@ -496,56 +473,59 @@ const personas = [
     if (touch) return;
     exploring = on;
     hint.hidden = !on;
-    if (on) { show(frames.length - 1); progress(current, frames.length); } else draw();
+    if (on) { show(0); progress(current, frames.length); } else draw();
   };
 
-  // Go to a section: on desktop, by scrolling the story there; on touch, by zooming the camera.
+  // Moving between sections: on desktop, by scrolling the story there; on touch, by zooming the camera.
   const touchGo = (sec: number) => {
     current = sec;
     view.classList.toggle('zoomed', sec >= 0);
     cam = fit(sec >= 0 ? secs[sec] : all);
     put(cam, true);
     progress(sec, frames.length);
-    overviewMode(sec < 0);
+    out = sec < 0;
+    setOut(out);
   };
   const goSection = (sec: number) => {
     if (touch) return touchGo(sec);
     explore(false);
     window.scrollTo({ top: boardTop() + firstFrameOf(sec) * frameLen() + 2, behavior: calm ? 'auto' : 'smooth' });
   };
+  const zoomOut = () => {
+    if (touch) return touchGo(-1);
+    explore(true);
+    out = true;
+    setOut(true);
+    cam = fit(all);
+    put(cam, true);
+  };
+  const zoomIn = () => {
+    if (touch) return touchGo(Math.max(0, current));
+    const s = (window.scrollY - boardTop()) / frameLen();
+    if (exploring && s >= 0.5) return explore(false);
+    goSection(Math.max(0, current));
+  };
   const zoomAt = (px: number, py: number, k: number) => {
     const s = Math.max(fit(all).s * 0.8, Math.min(1.6, cam.s * k));
     cam = { tx: px - (px - cam.tx) * (s / cam.s), ty: py - (py - cam.ty) * (s / cam.s), s };
     put(cam);
   };
-  const zoomCentre = (k: number) => {
-    zoomAt(view.clientWidth / 2, (view.clientHeight - BAR) / 2, k);
-    world.classList.add('anim');
-  };
 
   steps.forEach((b) => b.addEventListener('click', () => goSection(Number(b.dataset.sec))));
-  // Zoom: from the whole board it starts the story; inside a section it moves in closer.
-  zoomBtn.addEventListener('click', () => {
-    const atOverview = touch ? current < 0 : !world.classList.contains('inside');
-    if (atOverview) return goSection(Math.max(0, current));
-    if (!touch && !exploring) explore(true);
-    zoomCentre(1.4);
-  });
-  // Close: back out to the whole board, with every piece pinned up to look around freely.
-  closeBtn.addEventListener('click', () => {
-    if (touch) return touchGo(-1);
-    explore(true);
-    overviewMode(true);
-    cam = fit(all);
-    put(cam, true);
-  });
+  zoomBtn.addEventListener('click', () => out ? zoomIn() : zoomOut());
+  closeBtn.addEventListener('click', zoomOut);
+
+  // The control bar stays fixed to the bottom of the screen while the board is on screen.
+  const bar = () => {
+    const r = board.getBoundingClientRect();
+    ctrls.classList.toggle('show', r.top < window.innerHeight * 0.75 && r.bottom > window.innerHeight * 0.3);
+  };
 
   // Dragging pans the board; pinching (or ctrl + wheel on a trackpad) zooms around the fingers or pointer.
-  // A click or tap on a section zooms into it.
+  // A click or tap on a section from the whole board zooms into it.
   const ptrs = new Map<number, { x: number; y: number }>();
   let moved = 0, pinch = 0;
   view.addEventListener('pointerdown', (e) => {
-    if ((e.target as Element).closest('.ic-round, .ic-progress')) return;
     ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
     moved = 0;
     if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch = Math.hypot(a.x - b.x, a.y - b.y); }
@@ -574,12 +554,11 @@ const personas = [
     const wasTap = ptrs.has(e.pointerId) && ptrs.size === 1 && moved < 6;
     ptrs.delete(e.pointerId);
     if (ptrs.size < 2) pinch = 0;
-    if (!wasTap) return;
+    if (!wasTap || !out) return;
     const box = view.getBoundingClientRect();
     const wx = (e.clientX - box.left - cam.tx) / cam.s, wy = (e.clientY - box.top - cam.ty) / cam.s;
     const hit = secs.findIndex((r) => wx >= r.x && wx <= r.x + r.w && wy >= r.y && wy <= r.y + r.h);
-    const atOverview = !world.classList.contains('inside');
-    if (hit >= 0 && (atOverview || hit !== current)) goSection(hit);
+    if (hit >= 0) goSection(hit);
   });
   view.addEventListener('pointercancel', (e) => { ptrs.delete(e.pointerId); pinch = 0; });
   view.addEventListener('wheel', (e) => {
@@ -617,10 +596,10 @@ const personas = [
     const skill = t.dataset.skill!;
     if (active === skill) return filter('');
     filter(skill);
-    const first = frames.findIndex((f) => f.show.some((id) => document.getElementById(id)?.classList.contains('hl')));
+    const first = frames.findIndex((f, k) => k > 0 && f.show.some((id) => document.getElementById(id)?.classList.contains('hl')));
     if (touch) {
       view.scrollIntoView({ behavior: calm ? 'auto' : 'smooth' });
-      touchGo(frameSec(first));
+      touchGo(frames[first].cam);
     } else {
       explore(false);
       window.scrollTo({ top: boardTop() + first * frameLen() + 2, behavior: calm ? 'auto' : 'smooth' });
@@ -633,10 +612,11 @@ const personas = [
   window.addEventListener('scroll', () => {
     if (queued) return;
     queued = true;
-    requestAnimationFrame(() => { queued = false; draw(); });
+    requestAnimationFrame(() => { queued = false; draw(); bar(); });
   }, { passive: true });
-  window.addEventListener('resize', () => { size(); if (touch) touchGo(current); else draw(); });
+  window.addEventListener('resize', () => { size(); if (touch) touchGo(current); else draw(); bar(); });
 
   size();
-  if (touch) { show(frames.length - 1); touchGo(-1); } else draw();
+  if (touch) { show(0); touchGo(-1); } else draw();
+  bar();
 </script>
