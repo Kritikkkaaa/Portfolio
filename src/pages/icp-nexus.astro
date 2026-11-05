@@ -255,11 +255,11 @@ const checkTitle: Record<string, string> = { did: 'what i did', next: 'what i di
 </section>
 
 <section class="ic-end" id="end">
-<span class="end-line" id="end-line" aria-hidden="true"></span>
+<svg class="end-string" aria-hidden="true"><path id="end-line"></path></svg>
 <div class="end-body">
 <span class="end-dot" aria-hidden="true"></span>
 <p class="end-t">on to a new problem.</p>
-<button type="button" class="end-cta" id="restart">start over <span aria-hidden="true">↑</span></button>
+<button type="button" class="end-cta" id="restart">start over</button>
 </div>
 </section>
 
@@ -369,15 +369,17 @@ const checkTitle: Record<string, string> = { did: 'what i did', next: 'what i di
 .ic-chip[hidden]{display:none}
 .ic-hint{position:absolute;left:50%;bottom:100px;z-index:5;margin:0;transform:translateX(-50%);font-size:12px;letter-spacing:.08em;color:#8A8D96;white-space:nowrap}
 
-/* The end: the red string from the last question carries on down the page to one red dot. */
-.ic-end{--x:50%;position:relative;padding:0 24px 160px}
-.end-line{position:absolute;left:clamp(200px,var(--x),calc(100% - 200px));top:0;width:3px;height:170px;margin-left:-1.5px;background:#B33A35;opacity:.75;transition:background-color .4s ease,opacity .4s ease,box-shadow .4s ease}
-.end-line.glow{background:#FF5A4E;opacity:1;box-shadow:0 0 6px rgba(255,90,78,.85),0 0 16px rgba(255,90,78,.45)}
-.end-body{position:relative;left:clamp(200px,var(--x),calc(100% - 200px));display:flex;flex-direction:column;align-items:center;gap:22px;width:360px;margin-left:-180px;padding-top:160px;text-align:center}
+/* The end: the red string from the last question curves down to one red dot in the middle of the page. */
+.ic-end{position:relative;padding:0 24px 180px;text-align:center}
+.end-string{position:absolute;left:0;top:0;width:100%;height:260px;overflow:visible;pointer-events:none}
+.end-string path{fill:none;stroke:#B33A35;stroke-width:3;stroke-linecap:round;opacity:.75;transition:stroke .4s ease,opacity .4s ease,filter .4s ease}
+.end-string path.glow{stroke:#FF5A4E;opacity:1;filter:drop-shadow(0 0 6px rgba(255,90,78,.85)) drop-shadow(0 0 16px rgba(255,90,78,.45))}
+.end-body{display:flex;flex-direction:column;align-items:center;gap:28px;padding-top:249px}
 .end-dot{width:22px;height:22px;border-radius:50%;background:#D2453F;box-shadow:0 0 0 6px rgba(210,69,63,.18)}
-.end-t{margin:0;font-family:'Caveat',cursive;font-size:clamp(40px,4.4vw,56px);font-weight:600;line-height:1.05;color:#EFEFEE}
-.end-cta{display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:0 26px;border:1px solid #3A3842;border-radius:999px;background:none;color:#EFEFEE;font:inherit;font-size:14px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:border-color .25s ease,color .25s ease}
-.end-cta:hover,.end-cta:focus-visible{border-color:#D2453F;color:#FF8A80}
+.end-t{margin:0;font-family:'Caveat',cursive;font-size:clamp(56px,8vw,112px);font-weight:600;line-height:1;color:#EFEFEE}
+.end-cta{padding:8px 4px;border:0;background:none;color:#A9AFB9;font:inherit;font-size:13px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:color .2s ease}
+.end-cta:hover,.end-cta:focus-visible{color:#EFEFEE}
+.end-cta:focus-visible{outline:2px solid #EFEFEE;outline-offset:4px}
 .end-cta:focus-visible{outline:2px solid #EFEFEE;outline-offset:4px}
 
 /* Phones and touch screens: the board is one screen tall, opens zoomed out, and the reader explores it directly. */
@@ -532,10 +534,12 @@ const checkTitle: Record<string, string> = { did: 'what i did', next: 'what i di
   // Close: back to the home page.
   closeBtn.addEventListener('click', () => { window.location.href = '/'; });
 
-  // The end section's string sits exactly under where the last question's string leaves the screen.
+  // The end section's string starts exactly under where the last question's string leaves the screen.
   const alignEnd = () => {
     const c = fit(secs[3]);
-    endSec.style.setProperty('--x', `${(c.tx + endPin[0] * c.s).toFixed(0)}px`);
+    const x = view.getBoundingClientRect().left - endSec.getBoundingClientRect().left + c.tx + endPin[0] * c.s;
+    const cx = endSec.clientWidth / 2;
+    endLine?.setAttribute('d', `M ${x.toFixed(1)} 0 C ${x.toFixed(1)} 160, ${cx} 90, ${cx} 260`);
   };
   // Start over: back to the top of the case study.
   document.getElementById('restart')?.addEventListener('click', () => {
