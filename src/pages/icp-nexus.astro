@@ -14,12 +14,13 @@ const skills = [
   { id: 'collab', label: 'cross-functional collaboration' }
 ];
 
-const SEC_W = 1600, SEC_H = 1000, WORLD_W = 3500, WORLD_H = 2400;
+// Section 02 is taller: it carries a cluster of three documents under its cards. The second row starts below it.
+const SEC_W = 1600, ROW2 = 2000, WORLD_W = 3500, WORLD_H = ROW2 + 1000;
 const sections = [
-  { n: '01', title: 'what was unclear', short: 'unclear', x: 0, y: 0 },
-  { n: '02', title: 'what i learned', short: 'learned', x: 1900, y: 0 },
-  { n: '03', title: 'what i chose', short: 'chose', x: 1900, y: 1400 },
-  { n: '04', title: 'how the message changed', short: 'changed', x: 0, y: 1400 }
+  { n: '01', title: 'what was unclear', short: 'unclear', x: 0, y: 0, h: 1000 },
+  { n: '02', title: 'what i learned', short: 'learned', x: 1900, y: 0, h: 1600 },
+  { n: '03', title: 'what i chose', short: 'chose', x: 1900, y: ROW2, h: 1000 },
+  { n: '04', title: 'how the message changed', short: 'changed', x: 0, y: ROW2, h: 1000 }
 ];
 
 // The same five slots in every section, in reading order. Section-local positions:
@@ -35,7 +36,8 @@ type Slot = keyof typeof slots;
 const ORDER: Slot[] = ['ctx', 'did', 'data', 'next', 'ask'];
 
 // A checklist can carry its own title, and mark its items as open questions (?) instead of done (✓).
-type Step = { text?: string; items?: string[]; title?: string; mark?: 'q'; skills: string[] };
+// It can also carry a circled handwritten aim written on the board just above it.
+type Step = { text?: string; items?: string[]; title?: string; mark?: 'q'; aim?: string; skills: string[] };
 const story: Record<Slot, Step>[] = [
   {
     ctx: { skills: ['research', 'collab'], text: 'the co-founder asked me for a nexus marketing one-pager: who we were targeting, what problem we solved, and why someone should choose us. i knew the product and had watched people use it. now i needed to decide which customers our message should speak to.' },
@@ -45,11 +47,11 @@ const story: Record<Slot, Step>[] = [
     ask: { skills: ['research'], text: 'what did our paying customers have in common?' }
   },
   {
-    ctx: { skills: ['research', 'positioning'], text: 'i assumed positioning starts with the product. the calls showed me it starts a step earlier, in discovery: finding the people you’re looking for. that’s what an ICP is for.' },
-    did: { skills: ['research', 'collab'], items: ['ran 18 founder calls with the team', 'read two months of support chats', 'wrote down their exact words'] },
+    ctx: { skills: ['research', 'collab'], text: 'reviewing the one-pager with the co-founder exposed three gaps. our current users weren’t necessarily the customers we wanted to target. beyond pricing, we hadn’t settled what nexus should stand for. and without that decision, we couldn’t decide what our messaging should emphasize.' },
+    did: { skills: ['research', 'collab'], aim: 'the aim: identify which businesses would get the most value from nexus.', items: ['defined a working ICP with the co-founder', 'checked uninstall feedback for signs of poor fit', 'compared the profile with needs raised in intercom chats'] },
     data: { skills: ['research'] },
-    next: { skills: ['research', 'collab'], items: ['rebuilt the ICP around running a marketplace', 'walked the founders through the findings', 'parked d2c brands and agencies, for now'] },
-    ask: { skills: ['positioning'], text: 'of everyone we spoke to, who do we start with?' }
+    next: { skills: ['research', 'positioning'], items: ['documented the primary customer profile', 'clarified who nexus wasn’t for', 'mapped where to reach those customers'] },
+    ask: { skills: ['positioning'], text: 'who to target was clearer. what should nexus mean to them?' }
   },
   {
     ctx: { skills: ['positioning'], text: 'we weren’t out to chase competitors, but we did want to own the word marketplace. so i started with one identifier: merchants who are already running a marketplace.' },
@@ -72,14 +74,41 @@ const pieces = story.flatMap((sec, i) => ORDER.map((slot, k) => ({
   ax: sections[i].x + slots[slot].x, ay: sections[i].y + slots[slot].y
 })));
 
-// Where the camera looks, and which pieces get pinned up. -1 = the whole board, 0–3 = a section.
+// Documents pinned to a card, revealed with it and joined to it by a dotted thread. Section-local positions.
+type Attachment = { id: string; sec: number; with: string; x: number; y: number; w: number; r: number; src: string; iw: number; ih: number; alt: string; caption: string; skills: string[]; from: [number, number]; color: string };
+const attachments: Attachment[] = [
+  { id: 's1-shot', sec: 0, with: 's1-ctx', x: 60, y: 600, w: 600, r: -1.2, src: '/case/icp-nexus/one-pager.png', iw: 1732, ih: 720,
+    alt: 'Part of the Nexus marketing one-pager: the minimum data needed, from business goal to desired action, and how to get each.',
+    caption: 'part of the one-pager', skills: ['research', 'collab'], from: [790, 470], color: '#8FB3DA' },
+  { id: 's2-icp', sec: 1, with: 's2-next', x: 40, y: 960, w: 640, r: -1, src: '/case/icp-nexus/icp-table.png', iw: 1084, ih: 660,
+    alt: 'The Nexus ideal customer profile: business, Shopify plan, region, trigger moment and job to be done, each with its evidence.',
+    caption: 'the ideal customer profile', skills: ['research', 'positioning'], from: [955, 905], color: '#BCE5CF' },
+  { id: 's2-notfor', sec: 1, with: 's2-next', x: 740, y: 975, w: 560, r: 1.4, src: '/case/icp-nexus/not-for.png', iw: 1106, ih: 488,
+    alt: 'Who Nexus is not for: stores syncing to Etsy, Amazon or Walmart, vendors looking to join a marketplace, agencies testing on dev stores, and large enterprises needing a custom build.',
+    caption: 'who nexus isn’t for', skills: ['positioning'], from: [955, 905], color: '#BCE5CF' },
+  { id: 's2-where', sec: 1, with: 's2-next', x: 1010, y: 1255, w: 540, r: -1.2, src: '/case/icp-nexus/where-they-gather.png', iw: 896, ih: 252,
+    alt: 'Where they gather: Shopify App Store search, about 48% of discovery; Google, about 11%; AI assistants and the listicles they cite; other platforms such as Product Hunt and G2.',
+    caption: 'where to reach them', skills: ['research', 'positioning'], from: [955, 905], color: '#BCE5CF' }
+];
+const attachAt = (a: Attachment) => ({ x: sections[a.sec].x + a.x, y: sections[a.sec].y + a.y, w: a.w, h: Math.round(a.w * a.ih / a.iw) + 60 });
+const ties = attachments.map((a) => {
+  const s = sections[a.sec], [fx, fy] = [s.x + a.from[0], s.y + a.from[1]];
+  const tx = s.x + a.x + a.w / 2, ty = s.y + a.y + 4, my = (fy + ty) / 2;
+  return { for: a.id, color: a.color, d: `M ${fx} ${fy} C ${fx} ${my}, ${tx} ${my}, ${tx} ${ty}` };
+});
+
+// Where the camera looks, and which pieces get pinned up. cam: -1 = the whole board, 0–3 = a section,
+// or an exact area. Section 02 is read in two halves: its cards first, then its document cluster.
 // The first frame is the snapshot: every piece on the board at once.
-const frames: { cam: number; show: string[] }[] = [{ cam: -1, show: pieces.map((p) => p.id) }];
-story.forEach((_, i) => ORDER.forEach((slot) => frames.push({ cam: i, show: i === 0 && slot === 'ctx' ? ['s1-ctx', 's1-shot'] : [`s${i + 1}-${slot}`] })));
-frames[0].show.push('s1-shot');
-// Section 1's context note has part of the one-pager pinned to it, in the free space under the chart.
-const shot = { x: 60, y: 600, w: 600, h: 250 };
-const tie = `M ${sections[0].x + slots.ctx.x + 30} ${sections[0].y + slots.ctx.y + 360} C ${sections[0].x + 700} ${sections[0].y + 520}, ${sections[0].x + 640} ${sections[0].y + 560}, ${sections[0].x + shot.x + shot.w - 40} ${sections[0].y + shot.y + 14}`;
+type Area = { x: number; y: number; w: number; h: number };
+const s2Top: Area = { x: sections[1].x, y: -80, w: SEC_W, h: 1080 };
+const s2Low: Area = { x: sections[1].x, y: 540, w: SEC_W, h: 1000 };
+const frames: { cam: number | Area; sec: number; show: string[] }[] = [{ cam: -1, sec: -1, show: [...pieces.map((p) => p.id), ...attachments.map((a) => a.id)] }];
+story.forEach((_, i) => ORDER.forEach((slot) => {
+  const id = `s${i + 1}-${slot}`;
+  const cam = i === 1 ? (slot === 'next' || slot === 'ask' ? s2Low : s2Top) : i;
+  frames.push({ cam, sec: i, show: [id, ...attachments.filter((a) => a.with === id).map((a) => a.id)] });
+}));
 
 // A pin beside each heading; the string leaves from each section's question and lands on the next heading pin,
 // travelling through the gutters so it never crosses a piece.
@@ -87,13 +116,13 @@ const pins = sections.map((s) => [s.x + 40, s.y + 44]);
 const askPin = (i: number) => [sections[i].x + slots.ask.x + slots.ask.w - 22, sections[i].y + slots.ask.y + 10];
 const [a1, a2, a3, a4] = [askPin(0), askPin(1), askPin(2), askPin(3)];
 const stringPath = `M ${a1[0]} ${a1[1]} C ${a1[0] + 240} ${a1[1]}, ${pins[1][0] - 180} ${pins[1][1]}, ${pins[1][0]} ${pins[1][1]}`
-  + ` M ${a2[0]} ${a2[1]} C ${a2[0] + 120} 1200, ${pins[2][0]} 1150, ${pins[2][0]} ${pins[2][1]}`
-  + ` M ${a3[0]} ${a3[1]} C ${a3[0] + 180} 2620, 1750 2620, 1750 2000 C 1750 1300, 200 1290, ${pins[3][0]} ${pins[3][1]}`
+  + ` M ${a2[0]} ${a2[1]} C ${a2[0] + 90} ${ROW2 - 250}, ${pins[2][0] + 160} ${ROW2 - 180}, ${pins[2][0]} ${pins[2][1]}`
+  + ` M ${a3[0]} ${a3[1]} C ${a3[0] + 180} ${ROW2 + 1220}, 1750 ${ROW2 + 1220}, 1750 ${ROW2 + 600} C 1750 ${ROW2 - 100}, 200 ${ROW2 - 110}, ${pins[3][0]} ${pins[3][1]}`
   + ` M ${a4[0]} ${a4[1]} L ${a4[0]} ${WORLD_H + 4000}`;
 const knots = [a1, a2, a3, a4];
 
-const rects = { ...Object.fromEntries(pieces.map((p) => [p.id, { x: p.ax, y: p.ay, w: p.w, h: p.h }])), 's1-shot': shot };
-const secRects = sections.map((s) => ({ x: s.x, y: s.y, w: SEC_W, h: SEC_H }));
+const rects = { ...Object.fromEntries(pieces.map((p) => [p.id, { x: p.ax, y: p.ay, w: p.w, h: p.h }])), ...Object.fromEntries(attachments.map((a) => [a.id, attachAt(a)])) };
+const secRects = sections.map((s) => ({ x: s.x, y: s.y, w: SEC_W, h: s.h }));
 const skillCount = (id: string) => pieces.filter((p) => p.skills.includes(id)).length;
 // Stamped when the site is built, i.e. when a change to this page is pushed and deployed.
 const published = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Kolkata' }).format(new Date()).toLowerCase().replace(',', ' ·') + ' ist';
@@ -111,6 +140,13 @@ const donutRaw = [
   { label: 'paying', stores: 19, share: '7.9%', color: '#E08A4C' },
   { label: 'on trial', stores: 10, share: '4.2%', color: '#8FB3DA' }
 ];
+// Section 2's number: the share of current installs that match the primary ICP, as a pie with that slice pulled out.
+const PIE = { cx: 110, cy: 110, r: 100, share: 0.18 };
+const pieStart = -Math.PI / 2, pieEnd = pieStart + PIE.share * 2 * Math.PI, pieMid = (pieStart + pieEnd) / 2;
+const pieOff = [Math.cos(pieMid) * 10, Math.sin(pieMid) * 10];
+const pt = (a: number, dx = 0, dy = 0) => `${(PIE.cx + dx + PIE.r * Math.cos(a)).toFixed(2)} ${(PIE.cy + dy + PIE.r * Math.sin(a)).toFixed(2)}`;
+const pieSlice = `M ${PIE.cx + pieOff[0]} ${PIE.cy + pieOff[1]} L ${pt(pieStart, pieOff[0], pieOff[1])} A ${PIE.r} ${PIE.r} 0 0 1 ${pt(pieEnd, pieOff[0], pieOff[1])} Z`;
+const pieRest = `M ${PIE.cx} ${PIE.cy} L ${pt(pieEnd)} A ${PIE.r} ${PIE.r} 0 1 1 ${pt(pieStart)} Z`;
 let donutAt = 0;
 const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; const seg = { ...d, len: Math.max(len - 3, 1), off: donutAt }; donutAt += len; return seg; });
 ---
@@ -186,7 +222,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 <path d={stringPath} class="ic-string" id="string"></path>
 {pins.map(([x, y]) => <circle cx={x} cy={y} r="11" class="ic-pin"></circle>)}
 {knots.map(([x, y]) => <circle cx={x} cy={y} r="7" class="ic-pin"></circle>)}
-<path d={tie} class="ic-tie" id="tie"></path>
+{ties.map((t) => <path d={t.d} class="ic-tie" data-for={t.for} stroke={t.color}></path>)}
 </svg>
 
 {sections.map((s, i) => (
@@ -200,6 +236,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 {p.slot === 'ask' && <span class="pin" aria-hidden="true"></span>}
 {(p.slot === 'ctx' || p.slot === 'ask') && <p class="note-t">{p.text}</p>}
 {(p.slot === 'did' || p.slot === 'next') && <>
+{p.aim && <p class="ck-aim"><svg class="ck-aim-ring" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true"><path d="M30 64 C 30 18, 180 6, 290 14 C 380 22, 392 74, 340 98 C 270 124, 80 120, 36 92 C 8 74, 30 40, 96 26"></path></svg><span>{p.aim}</span></p>}
 <p class="ck-t">{p.title ?? checkTitle[p.slot]}</p>
 <ul class="ck-list">
 {p.items!.map((it) => <li>{p.mark === 'q'
@@ -224,14 +261,18 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 </>}
 
 {p.id === 's2-data' && <>
-<p class="pg-k">18 founder conversations</p>
-<div class="pg-bars">
-<div class="pg-row"><span>spoken to</span><i style="width:100%" class="grey"></i><b>18</b></div>
-<div class="pg-row"><span>sell on Shopify</span><i style="width:61%" class="grey"></i><b>11</b></div>
-<div class="pg-row"><span>already run a marketplace</span><i style="width:39%" class="peach"></i><b>7</b></div>
-<div class="pg-row"><span>same problem, same words</span><i style="width:33%" class="peach"></i><b>6</b></div>
+<p class="pg-k">who we attracted</p>
+<div class="dn">
+<svg class="pie" viewBox="-10 -10 240 240" role="img" aria-label="18% of current installs match the primary ICP; 82% are other installs.">
+<path d={pieRest} fill="#C9C9CF"></path>
+<path d={pieSlice} fill="#E08A4C"></path>
+</svg>
+<ul class="dn-legend">
+<li><i style="background:#E08A4C"></i><span>primary ICP</span><b>18%</b></li>
+<li class="muted"><i style="background:#C9C9CF"></i><span>other installs</span><b>82%</b></li>
+</ul>
 </div>
-<p class="pg-foot">six of the seven described it almost word for word</p>
+<p class="pg-foot">current status of users as per our primary ICP.</p>
 </>}
 
 {p.id === 's3-data' && <>
@@ -255,11 +296,13 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 </>}
 </div>
 ))}
-<figure class="pc pc-shot" id="s1-shot" data-skills="research collab" style={`left:${sections[0].x + shot.x}px;top:${sections[0].y + shot.y}px;width:${shot.w}px;--r:-1.2deg`}>
+{attachments.map((a, k) => (
+<figure class="pc pc-shot" id={a.id} data-skills={a.skills.join(' ')} style={`left:${sections[a.sec].x + a.x}px;top:${sections[a.sec].y + a.y}px;width:${a.w}px;--r:${a.r}deg;--delay:${(k % 3) * 0.12}s`}>
 <span class="pin" aria-hidden="true"></span>
-<img src="/case/icp-nexus/one-pager.png" alt="Part of the Nexus marketing one-pager: the minimum data needed, from business goal to desired action, and how to get each." width="1732" height="720">
-<figcaption>part of the one-pager</figcaption>
+<img src={a.src} alt={a.alt} width={a.iw} height={a.ih}>
+<figcaption>{a.caption}</figcaption>
 </figure>
+))}
 </div>
 <p class="ic-hint" id="hint" hidden>exploring · scroll to pick the story back up</p>
 </div>
@@ -353,12 +396,19 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 .ck-list{display:flex;flex-direction:column;gap:14px;margin:0;padding:0;list-style:none}
 .ck-list li{display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:start;font-family:'Caveat',cursive;font-size:27px;line-height:1.15}
 .ck-box{width:28px;height:28px;margin-top:2px}
+.ck-aim{position:absolute;left:-6px;right:-6px;bottom:calc(100% + 26px);margin:0;padding:22px 34px;text-align:center;font-family:'Caveat',cursive;font-size:28px;font-weight:600;line-height:1.15;color:#EFEFEE}
+.ck-aim span{position:relative}
+.ck-aim-ring{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.ck-aim-ring path{fill:none;stroke:#D2453F;stroke-width:3;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.pie{flex:none;width:220px;height:220px}
+.dn-legend li.muted{color:#5A5A62}
 .ck-q{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;margin-top:2px;border:2px solid #1E1E24;border-radius:50%;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif;font-size:15px;font-weight:600;color:#D2453F}
+.pc.pc-shot.on{transition-delay:var(--delay,0s)}
 .pc-shot{margin:0;padding:10px 10px 0;background:#FFFFFF;box-shadow:0 14px 28px rgba(0,0,0,.45)}
 .pc-shot img{display:block;width:100%;height:auto;border:1px solid #DADAD4}
 .pc-shot figcaption{padding:8px 4px 10px;font-family:'Caveat',cursive;font-size:24px;color:#5A5A62}
 .pc-shot .pin{right:auto;left:50%;margin-left:-12px;top:-12px}
-.ic-tie{fill:none;stroke:#8FB3DA;stroke-width:3;stroke-linecap:round;stroke-dasharray:8 7;opacity:0;transition:opacity .6s ease}
+.ic-tie{fill:none;stroke-width:3;stroke-linecap:round;stroke-dasharray:8 7;opacity:0;transition:opacity .6s ease}
 .ic-tie.on{opacity:.9}
 .dn{display:flex;align-items:center;gap:28px}
 .dn-chart{flex:none;width:220px;height:220px;transform:rotate(-90deg)}
@@ -367,7 +417,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 .dn-n{font-size:40px;font-weight:600}
 .dn-l{font-size:15px;fill:#5A5A62}
 .dn-legend{flex:1;display:flex;flex-direction:column;gap:16px;margin:0;padding:0;list-style:none;font-size:17px}
-.dn-legend li{display:grid;grid-template-columns:14px 1fr auto 64px;align-items:center;gap:12px}
+.dn-legend li{display:grid;grid-template-columns:14px 1fr auto auto;align-items:center;gap:12px}
 .dn-legend i{width:14px;height:14px;border-radius:3px}
 .dn-legend b{font-size:20px}
 .dn-legend em{font-style:normal;text-align:right;color:#5A5A62}
@@ -455,7 +505,8 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
   const chip = document.getElementById('chip') as HTMLButtonElement;
   const steps = Array.from(document.querySelectorAll<HTMLButtonElement>('.ic-step'));
   const fills = steps.map((b) => b.querySelector<HTMLElement>('.st-fill')!);
-  const frames: { cam: number; show: string[] }[] = JSON.parse(board.dataset.frames!);
+  type Area = { x: number; y: number; w: number; h: number };
+  const frames: { cam: number | Area; sec: number; show: string[] }[] = JSON.parse(board.dataset.frames!);
   const rects: Record<string, { x: number; y: number; w: number; h: number }> = JSON.parse(board.dataset.rects!);
   const secs: { x: number; y: number; w: number; h: number }[] = JSON.parse(board.dataset.secs!);
   const W = JSON.parse(board.dataset.world!);
@@ -463,7 +514,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
   const endSec = document.getElementById('end')!;
   const endLine = document.getElementById('end-line');
   const pieces = Array.from(world.querySelectorAll<HTMLElement>('.pc'));
-  const tie = document.getElementById('tie');
+  const ties = Array.from(world.querySelectorAll<SVGPathElement>('.ic-tie'));
   const touch = window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
   const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (touch) root.classList.add('touch');
@@ -471,7 +522,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
   type Cam = { tx: number; ty: number; s: number };
   const BAR = 96;
   const all = { x: -60, y: -60, w: W.w + 200, h: W.h + 300 };
-  const rectFor = (cam: number) => cam < 0 ? all : secs[cam];
+  const rectFor = (cam: number | Area) => typeof cam === 'object' ? cam : cam < 0 ? all : secs[cam];
   const fit = (r: { x: number; y: number; w: number; h: number }): Cam => {
     const vw = view.clientWidth, vh = view.clientHeight - BAR;
     const s = Math.min(vw / (r.w * 1.08), vh / (r.h * 1.08));
@@ -482,8 +533,8 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
     world.style.transform = `translate(${c.tx.toFixed(1)}px, ${c.ty.toFixed(1)}px) scale(${c.s.toFixed(4)})`;
   };
   const ease = (t: number) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  const firstFrameOf = (sec: number) => frames.findIndex((f) => f.cam === sec);
-  const lastFrameOf = (sec: number) => frames.length - 1 - [...frames].reverse().findIndex((f) => f.cam === sec);
+  const firstFrameOf = (sec: number) => frames.findIndex((f) => f.sec === sec);
+  const lastFrameOf = (sec: number) => frames.length - 1 - [...frames].reverse().findIndex((f) => f.sec === sec);
 
   // Frame 0 is the snapshot with every piece up. After that, pieces go up one by one as the story reaches them.
   const show = (upTo: number) => {
@@ -491,7 +542,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
     if (upTo <= 0) frames[0].show.forEach((id) => on.add(id));
     else frames.forEach((f, k) => { if (k > 0 && k <= upTo) f.show.forEach((id) => on.add(id)); });
     pieces.forEach((p) => p.classList.toggle('on', on.has(p.id)));
-    tie?.classList.toggle('on', on.has('s1-shot'));
+    ties.forEach((t) => t.classList.toggle('on', on.has(t.dataset.for!)));
   };
   // The progress bar: the current section is marked, and each track fills as its pieces go up.
   const progress = (sec: number, reach: number) => {
@@ -526,7 +577,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
     put(cam);
     const reach = Math.floor(s + 0.45);
     show(reach);
-    current = frames[Math.round(s)].cam;
+    current = frames[Math.round(s)].sec;
     progress(current, reach);
     out = s < 0.5;
     setOut(out);
@@ -680,7 +731,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
     const first = frames.findIndex((f, k) => k > 0 && f.show.some((id) => document.getElementById(id)?.classList.contains('hl')));
     if (touch) {
       view.scrollIntoView({ behavior: calm ? 'auto' : 'smooth' });
-      touchGo(frames[first].cam);
+      touchGo(frames[first].sec);
     } else {
       explore(false);
       window.scrollTo({ top: boardTop() + first * frameLen() + 2, behavior: calm ? 'auto' : 'smooth' });
