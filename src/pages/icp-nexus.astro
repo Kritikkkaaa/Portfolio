@@ -1,0 +1,552 @@
+---
+// ICP-Nexus case study (draft, dummy content): a first fold with the whole picture, then one board the reader is guided across.
+// Desktop: scrolling moves a camera across the board and pins each piece up in reading order; readers can also drag and zoom freely.
+// Phones: the board opens zoomed out; tap a section to zoom in, then pinch and drag.
+import Base from '../layouts/Base.astro';
+
+const description = 'how a trickle of unsegmented installs became one sentence about marketplace operators, and how the message moved from price to purpose.';
+
+const skills = [
+  { id: 'research', label: 'customer and audience research' },
+  { id: 'positioning', label: 'positioning and messaging' },
+  { id: 'collab', label: 'cross-functional collaboration' }
+];
+
+const SEC_W = 1600, SEC_H = 1000, WORLD_W = 3500, WORLD_H = 2820;
+const sections = [
+  { n: '01', title: 'what was unclear', x: 0, y: 0 },
+  { n: '02', title: 'what i learned', x: 1900, y: 260 },
+  { n: '03', title: 'what i chose', x: 1900, y: 1560 },
+  { n: '04', title: 'how the message changed', x: 0, y: 1820 }
+];
+
+type Piece = { id: string; sec: number; kind: 'page' | 'shot' | 'note'; tone?: 'story' | 'quote' | 'insight' | 'decision' | 'small'; x: number; y: number; w: number; h: number; r: number; skills: string[]; text?: string; who?: string; pick?: boolean };
+const pieces: Piece[] = [
+  { id: 's1-data', sec: 0, kind: 'page', x: 60, y: 150, w: 600, h: 400, r: -0.6, skills: ['research'] },
+  { id: 's1-story', sec: 0, kind: 'note', tone: 'story', x: 800, y: 120, w: 460, h: 420, r: -1.4, skills: ['research'],
+    text: 'we had nothing to position. a steady trickle of organic installs, a couple of active users nobody had segmented yet, and an ICP that existed only as a blank line in a doc. every conversation about messaging stalled on the same question: messaging to whom? before i could write a single headline, i had to admit we didn’t know who we were talking to.' },
+  { id: 's1-q', sec: 0, kind: 'note', tone: 'small', x: 1180, y: 600, w: 340, h: 230, r: 2.2, skills: ['research'],
+    text: 'who installs? who stays? who would pay? we couldn’t answer any of the three.' },
+
+  { id: 's2-data', sec: 1, kind: 'page', x: 60, y: 150, w: 600, h: 400, r: 0.5, skills: ['positioning'] },
+  { id: 's2-story', sec: 1, kind: 'note', tone: 'story', x: 770, y: 110, w: 430, h: 380, r: -1, skills: ['research', 'collab'],
+    text: 'so i stopped writing and started listening. i went back through founder calls and support chats with the team, looking for the merchants who were already living the problem Nexus solves, not the ones who installed out of curiosity.' },
+  { id: 's2-q1', sec: 1, kind: 'note', tone: 'quote', x: 1240, y: 120, w: 330, h: 300, r: 2.2, skills: ['research'],
+    text: '“we already run our marketplace on spreadsheets. i don’t need cheaper, i need fewer tabs.”', who: 'founder, home décor marketplace' },
+  { id: 's2-q2', sec: 1, kind: 'note', tone: 'quote', x: 1230, y: 500, w: 330, h: 300, r: -2, skills: ['research'],
+    text: '“the free trial didn’t matter. i needed to know it won’t break my vendor payouts.”', who: 'founder, fashion marketplace' },
+  { id: 's2-insight', sec: 1, kind: 'note', tone: 'insight', x: 770, y: 560, w: 420, h: 340, r: 1.2, skills: ['research', 'positioning'],
+    text: 'positioning has nothing to do with the product’s feature list. it starts a step earlier, in discovery: finding the people you’re looking for. that’s what an ICP is for.' },
+
+  { id: 's3-data', sec: 2, kind: 'page', x: 60, y: 150, w: 600, h: 400, r: -0.4, skills: ['research'] },
+  { id: 's3-story', sec: 2, kind: 'note', tone: 'story', x: 1170, y: 100, w: 390, h: 420, r: 1.6, skills: ['positioning', 'collab'],
+    text: 'with the founders, i picked one identifier and started there. we weren’t out to chase competitors, but we did want to own the word marketplace. so i took that one sentence and pulled it in every direction i could think of, until one version sounded like what founders had been telling us all along.' },
+  { id: 's3-decision', sec: 2, kind: 'note', tone: 'decision', x: 760, y: 130, w: 360, h: 280, r: -2, skills: ['positioning', 'collab'],
+    text: 'start with one identifier: merchants who are already running a marketplace.' },
+  { id: 's3-v1', sec: 2, kind: 'note', tone: 'small', x: 720, y: 520, w: 250, h: 130, r: -2, skills: ['positioning'], text: 'for marketplaces that outgrew spreadsheets' },
+  { id: 's3-v2', sec: 2, kind: 'note', tone: 'small', x: 1000, y: 470, w: 250, h: 130, r: 1.5, skills: ['positioning'], text: 'run your vendors like you run your store' },
+  { id: 's3-v3', sec: 2, kind: 'note', tone: 'small', x: 1280, y: 580, w: 250, h: 130, r: -1, skills: ['positioning'], text: 'many vendors, one dashboard' },
+  { id: 's3-v4', sec: 2, kind: 'note', tone: 'small', x: 760, y: 740, w: 250, h: 130, r: 2, skills: ['positioning'], text: 'your marketplace on Shopify, minus the duct tape' },
+  { id: 's3-v5', sec: 2, kind: 'note', tone: 'small', x: 1080, y: 760, w: 300, h: 140, r: -1.2, skills: ['positioning'], text: 'simple to start, operate and grow a marketplace', pick: true },
+
+  { id: 's4-data', sec: 3, kind: 'page', x: 60, y: 140, w: 600, h: 400, r: 0.6, skills: ['positioning'] },
+  { id: 's4-shot', sec: 3, kind: 'shot', x: 60, y: 600, w: 600, h: 330, r: -0.8, skills: ['positioning'] },
+  { id: 's4-story', sec: 3, kind: 'note', tone: 'story', x: 780, y: 110, w: 450, h: 430, r: -1, skills: ['positioning'],
+    text: 'until then i’d leaned on pricing and free trials, because that’s what our early traction seemed to reward. but the founders we wanted weren’t shopping on price. they wanted it to be simple to start a marketplace, to operate one, and to grow it. the message moved from what Nexus costs to what it makes easy.' },
+  { id: 's4-insight', sec: 3, kind: 'note', tone: 'insight', x: 1270, y: 190, w: 300, h: 260, r: 2, skills: ['positioning'],
+    text: 'traction tells you who found you. it doesn’t tell you who you’re for.' }
+];
+
+// Accent arrows inside a section, revealed with the piece they point to. Section-local coordinates.
+const arrows = [
+  { sec: 1, from: [1240, 300], to: [1150, 600], color: '#C9E77A', reveal: 's2-insight' },
+  { sec: 1, from: [1230, 650], to: [1190, 720], color: '#C9E77A', reveal: 's2-insight' },
+  { sec: 2, from: [880, 410], to: [850, 520], color: '#F2C8A2', reveal: 's3-v1' },
+  { sec: 2, from: [990, 410], to: [1100, 470], color: '#F2C8A2', reveal: 's3-v1' },
+  { sec: 2, from: [1080, 400], to: [1330, 580], color: '#F2C8A2', reveal: 's3-v1' },
+  { sec: 2, from: [860, 410], to: [880, 740], color: '#F2C8A2', reveal: 's3-v1' },
+  { sec: 2, from: [960, 410], to: [1200, 760], color: '#F2C8A2', reveal: 's3-v1' }
+];
+const arrowPath = (a: typeof arrows[number]) => {
+  const s = sections[a.sec];
+  const [x1, y1] = [s.x + a.from[0], s.y + a.from[1]], [x2, y2] = [s.x + a.to[0], s.y + a.to[1]];
+  const mx = (x1 + x2) / 2 + (y2 - y1) * 0.15, my = (y1 + y2) / 2 - (x2 - x1) * 0.15;
+  return `M ${x1} ${y1} Q ${mx} ${my} ${x2} ${y2}`;
+};
+
+// The order the reader is walked through: where the camera looks, and which pieces get pinned up.
+// cam: -1 = whole board, 0–3 = a section, a piece id = that piece close up.
+const frames: { cam: number | string; show: string[] }[] = [
+  { cam: -1, show: [] },
+  { cam: 0, show: ['s1-data'] }, { cam: 0, show: ['s1-story'] }, { cam: 0, show: ['s1-q'] },
+  { cam: 1, show: ['s2-data'] }, { cam: 1, show: ['s2-story'] }, { cam: 1, show: ['s2-q1'] }, { cam: 1, show: ['s2-q2'] }, { cam: 1, show: ['s2-insight'] },
+  { cam: 2, show: ['s3-data'] }, { cam: 2, show: ['s3-decision'] }, { cam: 2, show: ['s3-v1', 's3-v2', 's3-v3', 's3-v4', 's3-v5'] }, { cam: 2, show: ['s3-story'] },
+  { cam: 3, show: ['s4-story'] }, { cam: 3, show: ['s4-shot'] }, { cam: 3, show: ['s4-insight'] }, { cam: 's4-data', show: ['s4-data'] }
+];
+
+const pins = sections.map((s) => [s.x + 46, s.y + 52]);
+let stringPath = `M ${pins[0][0]} ${pins[0][1]}`;
+for (let i = 1; i < pins.length; i++) {
+  const [x1, y1] = pins[i - 1], [x2, y2] = pins[i];
+  stringPath += ` Q ${(x1 + x2) / 2} ${Math.max(y1, y2) + 260} ${x2} ${y2}`;
+}
+
+const rects = Object.fromEntries(pieces.map((p) => [p.id, { x: sections[p.sec].x + p.x, y: sections[p.sec].y + p.y, w: p.w, h: p.h }]));
+const secRects = sections.map((s) => ({ x: s.x, y: s.y, w: SEC_W, h: SEC_H }));
+const skillCount = (id: string) => pieces.filter((p) => p.skills.includes(id)).length;
+const toneFill: Record<string, string> = { story: '#BFD4EA', quote: '#D4EC8E', insight: '#BCE5CF', decision: '#F2C8A2', small: '#BFD4EA' };
+---
+<Base title="ICP-Nexus · finding who Nexus was for · Kritika Upadhyay" description={description}>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap">
+<div class="ic">
+
+<section class="ic-fold">
+<a class="ic-return" href="/">← return</a>
+<h1 class="ic-title">finding who Nexus was for</h1>
+<p class="ic-desc">{description} <span class="ic-dummy">draft · dummy content</span></p>
+<ul class="ic-skills" aria-label="Skills shown in this case study">
+{skills.map((s) => (
+<li><button class="ic-skill" type="button" data-skill={s.id} aria-pressed="false">{s.label}<span class="ic-skill-n" aria-label={`${skillCount(s.id)} places on the board`}>{skillCount(s.id)}</span></button></li>
+))}
+</ul>
+<figure class="ic-cover">
+<svg viewBox={`-60 -60 ${WORLD_W + 120} ${WORLD_H + 120}`} role="img" aria-label="The whole board at a glance: four sections, from what was unclear to how the message changed, joined by a red string.">
+{sections.map((s) => <rect x={s.x} y={s.y} width={SEC_W} height={SEC_H} class="cv-sec"></rect>)}
+{pieces.map((p) => (
+<rect x={rects[p.id].x} y={rects[p.id].y} width={p.w} height={p.kind === 'note' ? p.h : p.h} rx="4"
+  fill={p.kind === 'note' ? toneFill[p.tone as string] : '#F4F3EF'} opacity={p.kind === 'note' ? 0.9 : 0.8}
+  transform={`rotate(${p.r} ${rects[p.id].x + p.w / 2} ${rects[p.id].y + p.h / 2})`}></rect>
+))}
+{sections.map((s) => <text x={s.x + 100} y={s.y + 80} class="cv-h">{s.n} {s.title}</text>)}
+<path d={stringPath} class="cv-string"></path>
+{pins.map(([x, y]) => <circle cx={x} cy={y} r="16" class="cv-pin"></circle>)}
+</svg>
+<figcaption>the whole case on one board. scroll to walk through it.</figcaption>
+</figure>
+</section>
+
+<section class="ic-board" id="board" data-frames={JSON.stringify(frames)} data-rects={JSON.stringify(rects)} data-secs={JSON.stringify(secRects)} data-world={JSON.stringify({ w: WORLD_W, h: WORLD_H })}>
+<div class="ic-view" id="view">
+<div class="ic-world" id="world" style={`width:${WORLD_W}px;height:${WORLD_H}px`}>
+<svg class="ic-lines" width={WORLD_W} height={WORLD_H} aria-hidden="true">
+<defs>
+{['#C9E77A', '#F2C8A2'].map((c, i) => <marker id={`ah${i}`} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill={c}></path></marker>)}
+</defs>
+{arrows.map((a) => <path d={arrowPath(a)} class="ic-arrow" data-reveal={a.reveal} stroke={a.color} marker-end={`url(#ah${a.color === '#C9E77A' ? 0 : 1})`}></path>)}
+<path d={stringPath} class="ic-string" id="string"></path>
+{pins.map(([x, y]) => <circle cx={x} cy={y} r="11" class="ic-pin"></circle>)}
+</svg>
+
+{sections.map((s, i) => (
+<h2 class="ic-sec-h" style={`left:${s.x + 84}px;top:${s.y + 18}px`} data-sec={i}><span>{s.n}</span>{s.title}</h2>
+))}
+
+{pieces.map((p) => (
+<div class={`pc pc-${p.kind} ${p.tone ? 'tone-' + p.tone : ''} ${p.pick ? 'pick' : ''}`} id={p.id} data-skills={p.skills.join(' ')}
+  style={`left:${rects[p.id].x}px;top:${rects[p.id].y}px;width:${p.w}px;${p.kind !== 'note' ? `height:${p.h}px;` : `min-height:${p.tone === 'small' ? 0 : p.h - 60}px;`}--r:${p.r}deg`}>
+{p.kind === 'note' && <>
+{p.tone === 'decision' && <span class="pin" aria-hidden="true"></span>}
+<p class="note-t">{p.text}</p>
+{p.who && <p class="note-who">{p.who}</p>}
+</>}
+
+{p.id === 's1-data' && <>
+<p class="pg-k">who installed?</p>
+<div class="pg-bars">
+<div class="pg-row"><span>unsegmented</span><i style="width:100%" class="grey"></i><b>142</b></div>
+<div class="pg-row"><span>marketplace operators</span><i style="width:100%" class="empty"></i><b>?</b></div>
+<div class="pg-row"><span>d2c brands</span><i style="width:100%" class="empty"></i><b>?</b></div>
+<div class="pg-row"><span>agencies</span><i style="width:100%" class="empty"></i><b>?</b></div>
+</div>
+<p class="pg-foot">142 organic installs · 3 active users · 0 segments</p>
+</>}
+
+{p.id === 's2-data' && <>
+<p class="pg-k">the order of work</p>
+<ol class="pg-order" id="order">
+<li class="o-pos"><span class="o-n"></span>positioning</li>
+<li class="o-icp"><span class="o-n"></span>discovery: who is this for? (ICP)</li>
+<li class="o-msg"><span class="o-n"></span>messaging</li>
+</ol>
+<p class="pg-foot">positioning comes after discovery, not before it</p>
+</>}
+
+{p.id === 's3-data' && <>
+<p class="pg-k">18 founder conversations</p>
+<div class="pg-bars">
+<div class="pg-row"><span>spoken to</span><i style="width:100%" class="grey"></i><b>18</b></div>
+<div class="pg-row"><span>sell on Shopify</span><i style="width:61%" class="grey"></i><b>11</b></div>
+<div class="pg-row"><span>already run a marketplace</span><i style="width:39%" class="peach"></i><b>7</b></div>
+<div class="pg-row"><span>identifier chosen</span><i style="width:6%" class="peach"></i><b>1</b></div>
+</div>
+<p class="pg-foot">the seven had the same problem, said the same way</p>
+</>}
+
+{p.id === 's4-data' && <>
+<p class="pg-k">after the new message</p>
+<div class="pg-res">
+<div><span>listing → install</span><b>2.1% → 3.4%</b></div>
+<div><span>installs from marketplace operators</span><b>18% → 41%</b></div>
+<div><span>demo calls a month</span><b>2 → 9</b></div>
+</div>
+<p class="pg-foot">first 6 weeks after the listing and homepage changed</p>
+</>}
+
+{p.id === 's4-shot' && <>
+<div class="shot-in">
+<p class="shot-before">multi-vendor marketplace app. 14-day free trial, plans from $19.</p>
+<p class="shot-after">start, run and grow your marketplace. simply.</p>
+</div>
+<p class="shot-cap">app listing headline, before and after</p>
+</>}
+</div>
+))}
+</div>
+
+<nav class="ic-bar" aria-label="Case study navigation">
+<ol class="ic-steps">
+{sections.map((s, i) => <li><button type="button" class="ic-step" data-sec={i}><span>{s.n}</span> {s.title.replace('how the message ', '').replace('what ', '').replace('i ', '')}</button></li>)}
+</ol>
+<button type="button" class="ic-ctl" id="whole">see whole board</button>
+<button type="button" class="ic-ctl ic-next" id="next">next →</button>
+<button type="button" class="ic-ctl ic-chip" id="chip" hidden></button>
+<a class="ic-ctl" href="/">return</a>
+</nav>
+<p class="ic-hint" id="hint" hidden>exploring · scroll to pick the story back up</p>
+</div>
+</section>
+
+<section class="ic-end">
+<p>that’s where the numbers stand today.</p>
+<a class="ic-return" href="/">← return</a>
+</section>
+
+</div>
+</Base>
+
+<style is:global>
+.sky,.sky a,.sky button{cursor:auto}
+</style>
+
+<style>
+.ic{position:relative;color:#EFEFEE;background-color:#141416;background-image:linear-gradient(rgba(169,175,185,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(169,175,185,.075) 1px,transparent 1px);background-size:18px 18px;background-position:-1px -1px}
+.ic-return{color:#A9AFB9;font-size:13px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none}
+.ic-return:hover,.ic-return:focus-visible{color:#EFEFEE}
+
+.ic-fold{max-width:1200px;margin:0 auto;padding:28px 24px 72px}
+.ic-fold .ic-return{display:inline-block;margin-bottom:56px}
+.ic-title{margin:0 0 18px;font-weight:500;font-size:clamp(40px,6.4vw,92px);line-height:1;letter-spacing:-.03em}
+.ic-desc{max-width:700px;margin:0 0 28px;font-size:18px;line-height:1.6;color:#C9CDD5}
+.ic-dummy{display:inline-block;margin-left:6px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8A8D96}
+.ic-skills{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 40px;padding:0;list-style:none}
+.ic-skill{display:inline-flex;align-items:center;gap:10px;min-height:40px;padding:0 8px 0 16px;border:1px solid #34343A;border-radius:999px;background:rgba(6,6,6,.6);color:#C9CDD5;font:inherit;font-size:12px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:border-color .2s ease,color .2s ease,background-color .2s ease}
+.ic-skill-n{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;border-radius:999px;background:#232328;color:#A9AFB9;font-size:11px;letter-spacing:0}
+.ic-skill:hover,.ic-skill:focus-visible{border-color:#D8C9A3;color:#EFEFEE}
+.ic-skill[aria-pressed="true"]{border-color:#D8C9A3;background:#D8C9A3;color:#141416}
+.ic-skill[aria-pressed="true"] .ic-skill-n{background:#141416;color:#D8C9A3}
+.ic-skill:focus-visible,.ic-ctl:focus-visible,.ic-step:focus-visible{outline:2px solid #EFEFEE;outline-offset:3px}
+.ic-cover{margin:0}
+.ic-cover svg{display:block;width:100%;height:auto;background:rgba(6,6,6,.55);border:1px solid #232326}
+.cv-sec{fill:none;stroke:rgba(169,175,185,.18);stroke-width:3;stroke-dasharray:14 14}
+.cv-h{fill:#EFEFEE;font-size:72px;font-weight:500;letter-spacing:-1px}
+.cv-string{fill:none;stroke:#D2453F;stroke-width:9;stroke-linecap:round}
+.cv-pin{fill:#D2453F}
+.ic-cover figcaption{margin-top:12px;font-size:13px;color:#8A8D96}
+
+.ic-board{position:relative;height:1000vh}
+.ic-view{position:sticky;top:0;height:100vh;overflow:hidden;touch-action:pan-y}
+.ic-world{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
+.ic-world.anim{transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+.ic-lines{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
+.ic-string{fill:none;stroke:#B33A35;stroke-width:3.5;stroke-linecap:round;opacity:.75;transition:stroke .4s ease,opacity .4s ease,filter .4s ease}
+.ic-string.glow{stroke:#FF5A4E;opacity:1;filter:drop-shadow(0 0 6px rgba(255,90,78,.85)) drop-shadow(0 0 16px rgba(255,90,78,.45))}
+.ic-pin{fill:#D2453F;stroke:#141416;stroke-width:3}
+.ic-arrow{fill:none;stroke-width:3;stroke-linecap:round;stroke-dasharray:8 7;opacity:0;transition:opacity .6s ease}
+.ic-arrow.on{opacity:.9}
+.ic-sec-h{position:absolute;margin:0;font-size:60px;font-weight:500;line-height:1.1;letter-spacing:-.02em;color:#EFEFEE;white-space:nowrap}
+.ic-sec-h span{margin-right:18px;font-size:22px;letter-spacing:.2em;color:#D2453F;vertical-align:middle}
+
+.pc{position:absolute;box-sizing:border-box;transform:rotate(var(--r)) scale(.97);opacity:.12;transition:opacity .55s ease,transform .55s cubic-bezier(.2,.7,.2,1),box-shadow .3s ease,filter .3s ease}
+.pc.on{opacity:1;transform:rotate(var(--r))}
+.pc-note{padding:28px 30px 26px;color:#1E1E24;box-shadow:0 2px 0 rgba(0,0,0,.08),0 14px 28px rgba(0,0,0,.45);background-image:linear-gradient(to bottom,rgba(255,255,255,.18),transparent 40%)}
+.tone-story{background-color:#BFD4EA}
+.tone-quote{background-color:#D4EC8E}
+.tone-insight{background-color:#BCE5CF}
+.tone-decision{background-color:#F2C8A2}
+.tone-small{background-color:#BFD4EA;padding:18px 20px}
+.tone-small .note-t{font-size:24px}
+.pick{background-color:#F2C8A2;outline:3px solid #E08A4C;outline-offset:4px}
+.note-t{margin:0;font-family:'Caveat',cursive;font-weight:500;font-size:28px;line-height:1.22}
+.tone-decision .note-t{font-size:34px;font-weight:600}
+.note-who{margin:14px 0 0;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:rgba(30,30,36,.65)}
+.pin{position:absolute;left:50%;top:-12px;width:24px;height:24px;margin-left:-12px;border-radius:50%;background:#D2453F;box-shadow:0 4px 8px rgba(0,0,0,.45),inset -3px -3px 0 rgba(0,0,0,.18)}
+
+.pc-page{padding:30px 34px;background:#F4F3EF;color:#1E1E24;box-shadow:0 14px 28px rgba(0,0,0,.45)}
+.pc-page::before,.pc-page::after{content:"";position:absolute;top:10px;width:14px;height:14px;border-radius:50%;background:#9A9AA2;box-shadow:inset -2px -2px 0 rgba(0,0,0,.2)}
+.pc-page::before{left:10px}.pc-page::after{right:10px}
+.pg-k{margin:0 0 24px;font-size:30px;font-weight:600;letter-spacing:-.01em}
+.pg-bars{display:flex;flex-direction:column;gap:16px}
+.pg-row{display:grid;grid-template-columns:200px 1fr 50px;align-items:center;gap:14px;font-size:17px}
+.pg-row i{display:block;height:22px}
+.pg-row i.grey{background:#B9B9C0}
+.pg-row i.peach{background:#E08A4C}
+.pg-row i.empty{border:2px dashed #B9B9C0;box-sizing:border-box}
+.pg-row b{font-size:20px;text-align:right}
+.pg-foot{position:absolute;left:34px;right:34px;bottom:26px;margin:0;font-size:15px;color:#5A5A62}
+.pg-order{position:relative;height:210px;margin:0;padding:0;list-style:none;counter-reset:o}
+.pg-order li{position:absolute;left:0;right:0;display:flex;align-items:center;gap:16px;height:58px;padding:0 18px;border:2px solid #1E1E24;font-size:20px;background:#FFFFFF;transition:top .9s cubic-bezier(.2,.7,.2,1),background-color .6s ease}
+.o-n{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:#1E1E24;color:#F4F3EF;font-size:15px}
+.o-pos{top:0}.o-icp{top:74px}.o-msg{top:148px}
+.o-pos .o-n::before{content:"1"}.o-icp .o-n::before{content:"2"}.o-msg .o-n::before{content:"3"}
+.swapped .o-icp{top:0;background:#BCE5CF}.swapped .o-pos{top:74px}
+.swapped .o-icp .o-n::before{content:"1"}.swapped .o-pos .o-n::before{content:"2"}
+.pg-res{display:flex;flex-direction:column;gap:18px}
+.pg-res div{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding-bottom:14px;border-bottom:1px solid #DADAD4;font-size:17px}
+.pg-res b{font-size:30px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+
+.pc-shot{padding:12px 12px 0;background:#F4F3EF;box-shadow:0 14px 28px rgba(0,0,0,.45)}
+.shot-in{height:250px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;gap:18px;padding:26px;background:#FFFFFF;color:#1E1E24;border:1px solid #DADAD4}
+.shot-before{margin:0;font-size:20px;color:#8A8A92;text-decoration:line-through;text-decoration-color:#D2453F;text-decoration-thickness:2px}
+.shot-after{margin:0;font-size:30px;font-weight:600;letter-spacing:-.01em}
+.shot-cap{margin:0;padding:12px 4px;font-size:14px;color:#5A5A62}
+
+.ic-world.filtering .pc{filter:saturate(.3) brightness(.55)}
+.ic-world.filtering .pc.hl{filter:none;box-shadow:0 0 0 4px #D8C9A3,0 0 40px rgba(216,201,163,.55),0 14px 28px rgba(0,0,0,.45)}
+
+.ic-bar{position:absolute;left:50%;bottom:16px;z-index:5;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px;max-width:calc(100% - 24px);padding:6px;transform:translateX(-50%);border:1px solid #2A2A2E;border-radius:999px;background:rgba(10,10,12,.82);backdrop-filter:blur(8px)}
+.ic-steps{display:flex;gap:2px;margin:0;padding:0;list-style:none}
+.ic-step,.ic-ctl{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;border:0;border-radius:999px;background:transparent;color:#8A8D96;font:inherit;font-size:12px;letter-spacing:.08em;text-decoration:none;cursor:pointer;transition:color .2s ease,background-color .2s ease}
+.ic-step span{color:#5E5E66}
+.ic-step:hover,.ic-ctl:hover{color:#EFEFEE}
+.ic-step.on{background:#26262B;color:#EFEFEE}
+.ic-step.on span{color:#D2453F}
+.ic-ctl{border-left:1px solid #2A2A2E;border-radius:0 999px 999px 0}
+.ic-chip{color:#D8C9A3}
+.ic-next{display:none}
+.ic-hint{position:absolute;left:50%;bottom:72px;z-index:5;margin:0;transform:translateX(-50%);font-size:12px;letter-spacing:.08em;color:#8A8D96;white-space:nowrap}
+
+.ic-end{display:flex;flex-direction:column;align-items:center;gap:20px;padding:120px 24px 160px;text-align:center}
+.ic-end p{margin:0;font-size:clamp(20px,2.4vw,28px);color:#C9CDD5}
+
+/* Phones and touch screens: the board is one screen tall, opens zoomed out, and the reader explores it directly. */
+.ic.touch .ic-board{height:auto}
+.ic.touch .ic-view{position:relative;height:100svh}
+.ic.touch .ic-view.zoomed{touch-action:none}
+.ic.touch .ic-next{display:inline-flex}
+.ic.touch .ic-step{padding:0 9px}
+@media (max-width:760px){
+.ic-step{font-size:0;gap:0}
+.ic-step span{font-size:12px}
+}
+@media (prefers-reduced-motion:reduce){.pc,.ic-world.anim,.pg-order li,.ic-arrow,.ic-string{transition:none}}
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('.ic')!;
+  const board = document.getElementById('board')!;
+  const view = document.getElementById('view')!;
+  const world = document.getElementById('world')!;
+  const string = document.getElementById('string');
+  const hint = document.getElementById('hint')!;
+  const wholeBtn = document.getElementById('whole') as HTMLButtonElement;
+  const nextBtn = document.getElementById('next') as HTMLButtonElement;
+  const chip = document.getElementById('chip') as HTMLButtonElement;
+  const steps = Array.from(document.querySelectorAll<HTMLButtonElement>('.ic-step'));
+  const frames: { cam: number | string; show: string[] }[] = JSON.parse(board.dataset.frames!);
+  const rects: Record<string, { x: number; y: number; w: number; h: number }> = JSON.parse(board.dataset.rects!);
+  const secs: { x: number; y: number; w: number; h: number }[] = JSON.parse(board.dataset.secs!);
+  const W = JSON.parse(board.dataset.world!);
+  const pieces = Array.from(world.querySelectorAll<HTMLElement>('.pc'));
+  const arrows = Array.from(world.querySelectorAll<SVGPathElement>('.ic-arrow'));
+  const order = document.getElementById('order')?.parentElement;
+  const touch = window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (touch) root.classList.add('touch');
+
+  type Cam = { tx: number; ty: number; s: number };
+  const BAR = 76;
+  const all = { x: -60, y: -60, w: W.w + 120, h: W.h + 120 };
+  const rectFor = (cam: number | string) => typeof cam === 'string' ? rects[cam] : cam < 0 ? all : secs[cam];
+  const fit = (r: { x: number; y: number; w: number; h: number }): Cam => {
+    const vw = view.clientWidth, vh = view.clientHeight - BAR;
+    const s = Math.min(vw / (r.w * 1.08), vh / (r.h * 1.08));
+    return { tx: vw / 2 - (r.x + r.w / 2) * s, ty: vh / 2 - (r.y + r.h / 2) * s, s };
+  };
+  const put = (c: Cam, animate = false) => {
+    world.classList.toggle('anim', animate && !calm);
+    world.style.transform = `translate(${c.tx.toFixed(1)}px, ${c.ty.toFixed(1)}px) scale(${c.s.toFixed(4)})`;
+  };
+  const ease = (t: number) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const frameSec = (k: number) => {
+    const c = frames[k].cam;
+    if (typeof c === 'number') return c;
+    return secs.findIndex((r) => rects[c].x >= r.x && rects[c].x < r.x + r.w && rects[c].y >= r.y && rects[c].y < r.y + r.h);
+  };
+  const firstFrameOf = (sec: number) => frames.findIndex((f, k) => frameSec(k) === sec);
+
+  // What is pinned up: everything while exploring, otherwise only what the story has reached.
+  const show = (upTo: number) => {
+    const on = new Set<string>();
+    frames.forEach((f, k) => { if (k <= upTo) f.show.forEach((id) => on.add(id)); });
+    pieces.forEach((p) => p.classList.toggle('on', on.has(p.id)));
+    arrows.forEach((a) => a.classList.toggle('on', on.has(a.dataset.reveal!)));
+    order?.classList.toggle('swapped', on.has('s2-insight'));
+  };
+  const mark = (sec: number) => steps.forEach((b, i) => b.classList.toggle('on', i === sec));
+
+  let exploring = touch;
+  let cam: Cam = fit(all);
+  let zoomedSec = -1;
+
+  // Guided mode (desktop): the scroll position inside the tall board section drives the camera.
+  const frameLen = () => window.innerHeight * 0.6;
+  const boardTop = () => board.getBoundingClientRect().top + window.scrollY;
+  const size = () => { if (!touch) board.style.height = `${(frames.length - 1) * frameLen() + window.innerHeight}px`; };
+  const guided = () => {
+    const s = Math.max(0, Math.min(frames.length - 1, (window.scrollY - boardTop()) / frameLen()));
+    const i = Math.floor(s), f = s - i;
+    const a = fit(rectFor(frames[i].cam)), b = fit(rectFor(frames[Math.min(i + 1, frames.length - 1)].cam));
+    const t = ease(Math.min(1, f / 0.55));
+    cam = { tx: a.tx + (b.tx - a.tx) * t, ty: a.ty + (b.ty - a.ty) * t, s: a.s + (b.s - a.s) * t };
+    put(cam);
+    show(Math.floor(s + 0.45));
+    mark(frameSec(Math.round(s)));
+  };
+  const draw = () => { if (!exploring) guided(); };
+
+  const explore = (on: boolean) => {
+    if (touch) return;
+    exploring = on;
+    hint.hidden = !on;
+    wholeBtn.textContent = on ? 'back to the story' : 'see whole board';
+    if (on) show(frames.length - 1); else draw();
+  };
+
+  // Touch mode: zoomed out to start, every piece readable, tap a section to zoom in.
+  const touchGo = (sec: number) => {
+    zoomedSec = sec;
+    view.classList.toggle('zoomed', sec >= 0);
+    cam = fit(sec >= 0 ? secs[sec] : all);
+    put(cam, true);
+    mark(sec);
+  };
+
+  steps.forEach((b) => b.addEventListener('click', () => {
+    const sec = Number(b.dataset.sec);
+    if (touch) return touchGo(sec);
+    explore(false);
+    window.scrollTo({ top: boardTop() + firstFrameOf(sec) * frameLen() + 2, behavior: calm ? 'auto' : 'smooth' });
+  }));
+  wholeBtn.addEventListener('click', () => {
+    if (touch) return touchGo(-1);
+    if (exploring) return explore(false);
+    explore(true);
+    cam = fit(all);
+    put(cam, true);
+  });
+  nextBtn.addEventListener('click', () => touchGo((zoomedSec + 1) % secs.length));
+
+  // Dragging pans the board; pinching (or ctrl + wheel on a trackpad) zooms around the fingers or pointer.
+  const ptrs = new Map<number, { x: number; y: number }>();
+  let moved = 0, pinch = 0;
+  const zoomAt = (px: number, py: number, k: number) => {
+    const s = Math.max(fit(all).s * 0.8, Math.min(1.6, cam.s * k));
+    cam = { tx: px - (px - cam.tx) * (s / cam.s), ty: py - (py - cam.ty) * (s / cam.s), s };
+    put(cam);
+  };
+  view.addEventListener('pointerdown', (e) => {
+    if ((e.target as Element).closest('.ic-bar')) return;
+    ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    moved = 0;
+    if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch = Math.hypot(a.x - b.x, a.y - b.y); }
+  });
+  view.addEventListener('pointermove', (e) => {
+    const p = ptrs.get(e.pointerId);
+    if (!p) return;
+    if (touch && !view.classList.contains('zoomed')) return;
+    const dx = e.clientX - p.x, dy = e.clientY - p.y;
+    ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    moved += Math.abs(dx) + Math.abs(dy);
+    if (ptrs.size === 2) {
+      const [a, b] = [...ptrs.values()];
+      const d = Math.hypot(a.x - b.x, a.y - b.y), box = view.getBoundingClientRect();
+      if (pinch) zoomAt((a.x + b.x) / 2 - box.left, (a.y + b.y) / 2 - box.top, d / pinch);
+      pinch = d;
+      return;
+    }
+    if (moved < 6) return;
+    if (!exploring) explore(true);
+    view.setPointerCapture(e.pointerId);
+    cam = { ...cam, tx: cam.tx + dx, ty: cam.ty + dy };
+    put(cam);
+  });
+  const lift = (e: PointerEvent) => {
+    const wasTap = ptrs.size === 1 && moved < 6;
+    ptrs.delete(e.pointerId);
+    if (ptrs.size < 2) pinch = 0;
+    if (!touch || !wasTap || view.classList.contains('zoomed')) return;
+    const box = view.getBoundingClientRect();
+    const wx = (e.clientX - box.left - cam.tx) / cam.s, wy = (e.clientY - box.top - cam.ty) / cam.s;
+    const hit = secs.findIndex((r) => wx >= r.x && wx <= r.x + r.w && wy >= r.y && wy <= r.y + r.h);
+    if (hit >= 0) touchGo(hit);
+  };
+  view.addEventListener('pointerup', lift);
+  view.addEventListener('pointercancel', (e) => { ptrs.delete(e.pointerId); pinch = 0; });
+  view.addEventListener('wheel', (e) => {
+    if (e.ctrlKey) {
+      e.preventDefault();
+      if (!exploring) explore(true);
+      const box = view.getBoundingClientRect();
+      zoomAt(e.clientX - box.left, e.clientY - box.top, Math.exp(-e.deltaY * 0.01));
+    } else if (exploring && !touch) {
+      explore(false);
+    }
+  }, { passive: false });
+
+  // The red string is always there; it glows along its whole length while the cursor moves.
+  let glowT: number | undefined;
+  window.addEventListener('mousemove', () => {
+    string?.classList.add('glow');
+    clearTimeout(glowT);
+    glowT = window.setTimeout(() => string?.classList.remove('glow'), 650);
+  }, { passive: true });
+
+  // Skill tags: light up every piece that shows the skill, and take the reader to the first one.
+  const tags = Array.from(document.querySelectorAll<HTMLButtonElement>('.ic-skill'));
+  let active = '';
+  const filter = (skill: string) => {
+    active = skill;
+    tags.forEach((t) => t.setAttribute('aria-pressed', String(t.dataset.skill === skill)));
+    world.classList.toggle('filtering', !!skill);
+    pieces.forEach((p) => p.classList.toggle('hl', !!skill && p.dataset.skills!.split(' ').includes(skill)));
+    const tag = tags.find((t) => t.dataset.skill === skill);
+    chip.hidden = !skill;
+    chip.textContent = skill ? `showing: ${tag?.firstChild?.textContent} ×` : '';
+  };
+  tags.forEach((t) => t.addEventListener('click', () => {
+    const skill = t.dataset.skill!;
+    if (active === skill) return filter('');
+    filter(skill);
+    const first = frames.findIndex((f) => f.show.some((id) => document.getElementById(id)?.classList.contains('hl')));
+    if (touch) {
+      view.scrollIntoView({ behavior: calm ? 'auto' : 'smooth' });
+      touchGo(frameSec(first));
+    } else {
+      explore(false);
+      window.scrollTo({ top: boardTop() + first * frameLen() + 2, behavior: calm ? 'auto' : 'smooth' });
+    }
+  }));
+  chip.addEventListener('click', () => filter(''));
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && active) filter(''); });
+
+  let queued = false;
+  window.addEventListener('scroll', () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => { queued = false; draw(); });
+  }, { passive: true });
+  window.addEventListener('resize', () => { size(); if (touch) touchGo(zoomedSec); else draw(); });
+
+  size();
+  if (touch) { show(frames.length - 1); touchGo(-1); } else draw();
+</script>
