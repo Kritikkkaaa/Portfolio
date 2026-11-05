@@ -14,13 +14,13 @@ const skills = [
   { id: 'collab', label: 'cross-functional collaboration' }
 ];
 
-// Section 02 is taller: it carries a cluster of three documents under its cards. The second row starts below it.
+// Section 02 is taller: it carries a cluster of three documents under its cards. Section 03, the conclusion,
+// sits on its own in the second row.
 const SEC_W = 1600, ROW2 = 2000, WORLD_W = 3500, WORLD_H = ROW2 + 1000;
 const sections = [
   { n: '01', title: 'what was unclear', short: 'unclear', x: 0, y: 0, h: 1000 },
   { n: '02', title: 'what i learned', short: 'learned', x: 1900, y: 0, h: 1600 },
-  { n: '03', title: 'what i chose', short: 'chose', x: 1900, y: ROW2, h: 1000 },
-  { n: '04', title: 'how the message changed', short: 'changed', x: 0, y: ROW2, h: 1000 }
+  { n: '03', title: 'how the message changed', short: 'changed', x: 0, y: ROW2, h: 1000 }
 ];
 
 // The same five slots in every section, in reading order. Section-local positions:
@@ -37,7 +37,8 @@ const ORDER: Slot[] = ['ctx', 'did', 'data', 'next', 'ask'];
 
 // A checklist can carry its own title, and mark its items as open questions (?) instead of done (✓).
 // It can also carry a circled handwritten aim written on the board just above it.
-type Step = { text?: string; items?: string[]; title?: string; mark?: 'q'; aim?: string; skills: string[] };
+// A note can be tinted green instead of its usual colour.
+type Step = { text?: string; items?: string[]; title?: string; mark?: 'q'; aim?: string; tint?: 'green'; skills: string[] };
 const story: Record<Slot, Step>[] = [
   {
     ctx: { skills: ['research', 'collab'], text: 'the co-founder asked me for a nexus marketing one-pager: who we were targeting, what problem we solved, and why someone should choose us. i knew the product and had watched people use it. now i needed to decide which customers our message should speak to.' },
@@ -54,18 +55,11 @@ const story: Record<Slot, Step>[] = [
     ask: { skills: ['positioning'], text: 'who to target was clearer. what should nexus mean to them?' }
   },
   {
-    ctx: { skills: ['positioning'], text: 'we weren’t out to chase competitors, but we did want to own the word marketplace. so i started with one identifier: merchants who are already running a marketplace.' },
-    did: { skills: ['positioning'], items: ['wrote the identifier as one plain sentence', 'pulled it in twelve directions', 'tested five versions with founders'] },
-    data: { skills: ['positioning'] },
-    next: { skills: ['positioning', 'collab'], items: ['picked “simple to start, operate and grow”', 'agreed the line with the founders', 'briefed design on the listing and homepage'] },
-    ask: { skills: ['positioning'], text: 'will the new message bring in the right merchants?' }
-  },
-  {
-    ctx: { skills: ['positioning'], text: 'until then i’d leaned on pricing and free trials, because early traction seemed to reward them. the founders we wanted weren’t shopping on price. they wanted it simple to start, run and grow a marketplace.' },
-    did: { skills: ['positioning'], items: ['rewrote the app listing headline', 'changed the homepage first fold', 'moved price below the fold'] },
-    data: { skills: ['positioning'] },
-    next: { skills: ['positioning', 'collab'], items: ['tracked installs by segment every week', 'booked demos with marketplace operators first', 'shared the numbers with the founders monthly'] },
-    ask: { skills: ['positioning'], text: 'they’re arriving. now, will they stay?' }
+    ctx: { skills: ['positioning', 'collab'], text: 'i had an audience to write for. next, i needed to understand what nexus should mean to them. i spoke with shashwat, the co-founder, to keep the messaging aligned with his vision. i asked what he wanted merchants to say about nexus, who it wasn’t for, and what we should show as proof.' },
+    did: { skills: ['positioning', 'collab'], items: ['asked how merchants should describe nexus', 'clarified which customers fell outside our focus', 'asked what would demonstrate its value'] },
+    data: { skills: ['positioning', 'collab'] },
+    next: { skills: ['positioning'], items: ['translated “simple” into specific merchant benefits', 'organized the message around starting, operating and growing', 'documented the direction in the marketing one-pager'] },
+    ask: { skills: ['positioning'], tint: 'green', text: 'simple to start, operate and grow a marketplace.' }
   }
 ];
 
@@ -75,7 +69,8 @@ const pieces = story.flatMap((sec, i) => ORDER.map((slot, k) => ({
 })));
 
 // Documents pinned to a card, revealed with it and joined to it by a dotted thread. Section-local positions.
-type Attachment = { id: string; sec: number; with: string; x: number; y: number; w: number; r: number; src: string; iw: number; ih: number; alt: string; caption: string; skills: string[]; from: [number, number]; color: string };
+// An attachment is either an image, or (until its screenshot arrives) a typed excerpt with its lines listed.
+type Attachment = { id: string; sec: number; with: string; x: number; y: number; w: number; r: number; src?: string; iw: number; ih: number; lines?: [string, string][]; alt: string; caption: string; skills: string[]; from: [number, number]; color: string };
 const attachments: Attachment[] = [
   { id: 's1-shot', sec: 0, with: 's1-ctx', x: 60, y: 600, w: 600, r: -1.2, src: '/case/icp-nexus/one-pager.png', iw: 1732, ih: 720,
     alt: 'Part of the Nexus marketing one-pager: the minimum data needed, from business goal to desired action, and how to get each.',
@@ -88,7 +83,11 @@ const attachments: Attachment[] = [
     caption: 'who nexus isn’t for', skills: ['positioning'], from: [955, 905], color: '#BCE5CF' },
   { id: 's2-where', sec: 1, with: 's2-next', x: 1010, y: 1255, w: 540, r: -1.2, src: '/case/icp-nexus/where-they-gather.png', iw: 896, ih: 252,
     alt: 'Where they gather: Shopify App Store search, about 48% of discovery; Google, about 11%; AI assistants and the listicles they cite; other platforms such as Product Hunt and G2.',
-    caption: 'where to reach them', skills: ['research', 'positioning'], from: [955, 905], color: '#BCE5CF' }
+    caption: 'where to reach them', skills: ['research', 'positioning'], from: [955, 905], color: '#BCE5CF' },
+  { id: 's3-vp', sec: 2, with: 's3-next', x: 60, y: 600, w: 600, r: 1, iw: 600, ih: 250,
+    lines: [['start', 'use the existing Shopify store'], ['operate', 'give sellers their own dashboard'], ['grow', 'let sellers manage listings while the brand retains control']],
+    alt: 'Value proposition excerpt from the marketing one-pager: start, use the existing Shopify store; operate, give sellers their own dashboard; grow, let sellers manage listings while the brand retains control.',
+    caption: 'value proposition, from the one-pager', skills: ['positioning'], from: [790, 880], color: '#BCE5CF' }
 ];
 const attachAt = (a: Attachment) => ({ x: sections[a.sec].x + a.x, y: sections[a.sec].y + a.y, w: a.w, h: Math.round(a.w * a.ih / a.iw) + 60 });
 const ties = attachments.map((a) => {
@@ -114,12 +113,11 @@ story.forEach((_, i) => ORDER.forEach((slot) => {
 // travelling through the gutters so it never crosses a piece.
 const pins = sections.map((s) => [s.x + 40, s.y + 44]);
 const askPin = (i: number) => [sections[i].x + slots.ask.x + slots.ask.w - 22, sections[i].y + slots.ask.y + 10];
-const [a1, a2, a3, a4] = [askPin(0), askPin(1), askPin(2), askPin(3)];
+const [a1, a2, a3] = [askPin(0), askPin(1), askPin(2)];
 const stringPath = `M ${a1[0]} ${a1[1]} C ${a1[0] + 240} ${a1[1]}, ${pins[1][0] - 180} ${pins[1][1]}, ${pins[1][0]} ${pins[1][1]}`
-  + ` M ${a2[0]} ${a2[1]} C ${a2[0] + 90} ${ROW2 - 250}, ${pins[2][0] + 160} ${ROW2 - 180}, ${pins[2][0]} ${pins[2][1]}`
-  + ` M ${a3[0]} ${a3[1]} C ${a3[0] + 180} ${ROW2 + 1220}, 1750 ${ROW2 + 1220}, 1750 ${ROW2 + 600} C 1750 ${ROW2 - 100}, 200 ${ROW2 - 110}, ${pins[3][0]} ${pins[3][1]}`
-  + ` M ${a4[0]} ${a4[1]} L ${a4[0]} ${WORLD_H + 4000}`;
-const knots = [a1, a2, a3, a4];
+  + ` M ${a2[0]} ${a2[1]} C ${a2[0] + 90} ${ROW2 - 300}, 2300 ${ROW2 - 200}, 1750 ${ROW2 - 200} C 1200 ${ROW2 - 200}, ${pins[2][0]} ${ROW2 - 160}, ${pins[2][0]} ${pins[2][1]}`
+  + ` M ${a3[0]} ${a3[1]} L ${a3[0]} ${WORLD_H + 4000}`;
+const knots = [a1, a2, a3];
 
 const rects = { ...Object.fromEntries(pieces.map((p) => [p.id, { x: p.ax, y: p.ay, w: p.w, h: p.h }])), ...Object.fromEntries(attachments.map((a) => [a.id, attachAt(a)])) };
 const secRects = sections.map((s) => ({ x: s.x, y: s.y, w: SEC_W, h: s.h }));
@@ -215,7 +213,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 </ul>
 </section>
 
-<section class="ic-board" id="board" data-frames={JSON.stringify(frames)} data-rects={JSON.stringify(rects)} data-secs={JSON.stringify(secRects)} data-world={JSON.stringify({ w: WORLD_W, h: WORLD_H })} data-endpin={JSON.stringify(a4)}>
+<section class="ic-board" id="board" data-frames={JSON.stringify(frames)} data-rects={JSON.stringify(rects)} data-secs={JSON.stringify(secRects)} data-world={JSON.stringify({ w: WORLD_W, h: WORLD_H })} data-endpin={JSON.stringify(a3)}>
 <div class="ic-view" id="view">
 <div class="ic-world" id="world" style={`width:${WORLD_W}px;height:${WORLD_H}px`}>
 <svg class="ic-lines" width={WORLD_W} height={WORLD_H} aria-hidden="true">
@@ -230,7 +228,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 ))}
 
 {pieces.map((p) => (
-<div class={`pc pc-${p.slot === 'did' || p.slot === 'next' ? 'check' : p.slot === 'data' ? 'page' : 'note'} slot-${p.slot}`} id={p.id} data-skills={p.skills.join(' ')}
+<div class={`pc pc-${p.slot === 'did' || p.slot === 'next' ? 'check' : p.slot === 'data' ? 'page' : 'note'} slot-${p.slot}${p.tint ? ' tint-' + p.tint : ''}`} id={p.id} data-skills={p.skills.join(' ')}
   style={`left:${p.ax}px;top:${p.ay}px;width:${p.w}px;${p.slot === 'data' ? `height:${p.h}px;` : `min-height:${p.h - 40}px;`}--r:${p.r}deg`}>
 <span class="pc-step" aria-hidden="true">{p.step}</span>
 {p.slot === 'ask' && <span class="pin" aria-hidden="true"></span>}
@@ -276,30 +274,25 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 </>}
 
 {p.id === 's3-data' && <>
-<p class="pg-k">one sentence, twelve ways</p>
-<div class="pg-bars">
-<div class="pg-row"><span>versions written</span><i style="width:100%" class="grey"></i><b>12</b></div>
-<div class="pg-row"><span>shared with founders</span><i style="width:42%" class="grey"></i><b>5</b></div>
-<div class="pg-row"><span>picked</span><i style="width:8%" class="peach"></i><b>1</b></div>
-</div>
-<p class="pg-foot">“simple to start, operate and grow a marketplace”</p>
-</>}
-
-{p.id === 's4-data' && <>
-<p class="pg-k">after the new message</p>
-<div class="pg-res">
-<div><span>listing → install</span><b>2.1% → 3.4%</b></div>
-<div><span>installs from marketplace operators</span><b>18% → 41%</b></div>
-<div><span>demo calls a month</span><b>2 → 9</b></div>
-</div>
-<p class="pg-foot">first 6 weeks after the listing and homepage changed</p>
+<p class="pg-k">from vision to message</p>
+<table class="vm">
+<thead><tr><th>founder direction, paraphrased</th><th></th><th>how i expressed it</th></tr></thead>
+<tbody>
+<tr><td>simple to decide and configure</td><td class="vm-ar">→</td><td><b>simple to start</b></td></tr>
+<tr><td>powerful, yet easy to use</td><td class="vm-ar">→</td><td><b>simple to operate</b></td></tr>
+<tr><td>less operational work as the marketplace expands<sup>*</sup></td><td class="vm-ar">→</td><td><b>simple to grow</b></td></tr>
+</tbody>
+</table>
+<p class="pg-foot"><sup>*</sup> my synthesis of the product’s value, from the one-pager, not something shashwat said.</p>
 </>}
 </div>
 ))}
 {attachments.map((a, k) => (
 <figure class="pc pc-shot" id={a.id} data-skills={a.skills.join(' ')} style={`left:${sections[a.sec].x + a.x}px;top:${sections[a.sec].y + a.y}px;width:${a.w}px;--r:${a.r}deg;--delay:${(k % 3) * 0.12}s`}>
 <span class="pin" aria-hidden="true"></span>
-<img src={a.src} alt={a.alt} width={a.iw} height={a.ih}>
+{a.src
+  ? <img src={a.src} alt={a.alt} width={a.iw} height={a.ih}>
+  : <div class="vp" role="img" aria-label={a.alt}>{a.lines!.map(([k, v]) => <p><b>{k}</b><span>{v}</span></p>)}</div>}
 <figcaption>{a.caption}</figcaption>
 </figure>
 ))}
@@ -327,7 +320,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 <svg class="end-string" aria-hidden="true"><path id="end-line"></path></svg>
 <div class="end-body">
 <span class="end-dot" aria-hidden="true"></span>
-<p class="end-t">on to a new problem.</p>
+<p class="end-t">next challenge, to figure out distribution.</p>
 <button type="button" class="end-cta" id="restart">start over</button>
 </div>
 </section>
@@ -386,6 +379,17 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 .pc-note{padding:30px 30px 26px;color:#1E1E24;box-shadow:0 2px 0 rgba(0,0,0,.08),0 14px 28px rgba(0,0,0,.45);background-image:linear-gradient(to bottom,rgba(255,255,255,.18),transparent 40%)}
 .slot-ctx{background-color:#BFD4EA}
 .slot-ask{background-color:#F4B9B2;display:flex;align-items:center}
+.slot-ask.tint-green{background-color:#B8E2C2}
+.vm{width:100%;margin-top:-6px;border-collapse:collapse;font-size:15px;line-height:1.3}
+.vm th{padding:0 0 8px;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;text-align:left;color:#5A5A62;border-bottom:2px solid #1E1E24}
+.vm td{padding:9px 0;border-bottom:1px solid #DADAD4;vertical-align:top}
+.vm td:first-child{width:46%;color:#3A3A42}
+.vm-ar{width:8%;text-align:center;color:#E08A4C}
+.vm td b{font-weight:600}
+.vm sup,.pg-foot sup{color:#E08A4C;font-weight:600}
+.vp{display:flex;flex-direction:column;gap:14px;padding:26px 28px;background:#FFFFFF;border:1px solid #DADAD4;color:#1E1E24}
+.vp p{display:grid;grid-template-columns:96px 1fr;gap:14px;margin:0;font-size:18px;line-height:1.35}
+.vp b{font-weight:600;color:#E08A4C}
 .note-t{margin:0;font-family:'Caveat',cursive;font-weight:500;font-size:28px;line-height:1.22}
 .slot-ask .note-t{font-size:38px;font-weight:600;line-height:1.1}
 .pin{position:absolute;right:10px;top:-2px;width:24px;height:24px;border-radius:50%;background:#D2453F;box-shadow:0 4px 8px rgba(0,0,0,.45),inset -3px -3px 0 rgba(0,0,0,.18)}
@@ -470,7 +474,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 .end-string path.glow{stroke:#FF5A4E;opacity:1;filter:drop-shadow(0 0 6px rgba(255,90,78,.85)) drop-shadow(0 0 16px rgba(255,90,78,.45))}
 .end-body{display:flex;flex-direction:column;align-items:center;gap:28px;padding-top:249px}
 .end-dot{width:22px;height:22px;border-radius:50%;background:#D2453F;box-shadow:0 0 0 6px rgba(210,69,63,.18)}
-.end-t{margin:0;font-family:'Caveat',cursive;font-size:clamp(56px,8vw,112px);font-weight:600;line-height:1;color:#EFEFEE}
+.end-t{max-width:880px;margin:0;font-family:'Caveat',cursive;font-size:clamp(48px,6.4vw,92px);font-weight:600;line-height:1;color:#EFEFEE}
 .end-cta{padding:8px 4px;border:0;background:none;color:#A9AFB9;font:inherit;font-size:13px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:color .2s ease}
 .end-cta:hover,.end-cta:focus-visible{color:#EFEFEE}
 .end-cta:focus-visible{outline:2px solid #EFEFEE;outline-offset:4px}
@@ -633,7 +637,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 
   // The end section's string starts exactly under where the last question's string leaves the screen.
   const alignEnd = () => {
-    const c = fit(secs[3]);
+    const c = fit(secs[secs.length - 1]);
     const cx = endSec.clientWidth / 2;
     // On phones the board isn't pinned to the screen, so the string simply drops straight down the middle.
     const x = touch ? cx : view.getBoundingClientRect().left - endSec.getBoundingClientRect().left + c.tx + endPin[0] * c.s;
