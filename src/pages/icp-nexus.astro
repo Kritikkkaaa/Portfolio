@@ -6,7 +6,7 @@
 // Phones: the board opens zoomed out; tap a section to zoom in, then pinch and drag.
 import Base from '../layouts/Base.astro';
 
-const description = 'how a trickle of unsegmented installs became one sentence about marketplace operators, and how the message moved from price to purpose.';
+const description = 'knowing who uses your product doesn’t tell you who to target. how i brought a product manager’s understanding of users into defining nexus’s ideal customer profile and messaging.';
 
 const skills = [
   { id: 'research', label: 'customer and audience research' },
@@ -28,20 +28,21 @@ const slots = {
   ctx: { x: 760, y: 110, w: 390, h: 330, r: -1.2 },
   did: { x: 1190, y: 100, w: 370, h: 360, r: 1.2 },
   data: { x: 60, y: 140, w: 600, h: 400, r: -0.5 },
-  next: { x: 760, y: 500, w: 390, h: 360, r: 0.8 },
+  next: { x: 760, y: 580, w: 390, h: 300, r: 0.8 },
   ask: { x: 1200, y: 560, w: 340, h: 240, r: -1.6 }
 } as const;
 type Slot = keyof typeof slots;
 const ORDER: Slot[] = ['ctx', 'did', 'data', 'next', 'ask'];
 
-type Step = { text?: string; items?: string[]; skills: string[] };
+// A checklist can carry its own title, and mark its items as open questions (?) instead of done (✓).
+type Step = { text?: string; items?: string[]; title?: string; mark?: 'q'; skills: string[] };
 const story: Record<Slot, Step>[] = [
   {
-    ctx: { skills: ['research'], text: 'we had nothing to position. a trickle of organic installs, a couple of active users nobody had segmented, and an ICP that was a blank line in a doc. every messaging conversation stalled on the same question: messaging to whom?' },
-    did: { skills: ['research'], items: ['pulled every install from the partner dashboard', 'tagged active stores by business type', 'split what we knew from what we assumed'] },
+    ctx: { skills: ['research', 'collab'], text: 'the co-founder asked me for a nexus marketing one-pager: who we were targeting, what problem we solved, and why someone should choose us. i knew the product and had watched people use it. now i needed to decide which customers our message should speak to.' },
+    did: { skills: ['research'], title: 'open questions', mark: 'q', items: ['who installs nexus today, and who pays?', 'who did the founders originally build it for?', 'what do those customers need nexus to handle?', 'which customers should our messaging target first?'] },
     data: { skills: ['research'] },
-    next: { skills: ['research', 'collab'], items: ['opened an ICP doc with honest blanks', 'booked calls with every active founder', 'paused all messaging work'] },
-    ask: { skills: ['research'], text: 'who is Nexus actually for?' }
+    next: { skills: ['research', 'collab'], items: ['review the one-pager with the co-founder'] },
+    ask: { skills: ['research'], text: 'what did our paying customers have in common?' }
   },
   {
     ctx: { skills: ['research', 'positioning'], text: 'i assumed positioning starts with the product. the calls showed me it starts a step earlier, in discovery: finding the people you’re looking for. that’s what an ICP is for.' },
@@ -74,7 +75,11 @@ const pieces = story.flatMap((sec, i) => ORDER.map((slot, k) => ({
 // Where the camera looks, and which pieces get pinned up. -1 = the whole board, 0–3 = a section.
 // The first frame is the snapshot: every piece on the board at once.
 const frames: { cam: number; show: string[] }[] = [{ cam: -1, show: pieces.map((p) => p.id) }];
-story.forEach((_, i) => ORDER.forEach((slot) => frames.push({ cam: i, show: [`s${i + 1}-${slot}`] })));
+story.forEach((_, i) => ORDER.forEach((slot) => frames.push({ cam: i, show: i === 0 && slot === 'ctx' ? ['s1-ctx', 's1-shot'] : [`s${i + 1}-${slot}`] })));
+frames[0].show.push('s1-shot');
+// Section 1's context note has part of the one-pager pinned to it, in the free space under the chart.
+const shot = { x: 60, y: 600, w: 600, h: 250 };
+const tie = `M ${sections[0].x + slots.ctx.x + 30} ${sections[0].y + slots.ctx.y + 360} C ${sections[0].x + 700} ${sections[0].y + 520}, ${sections[0].x + 640} ${sections[0].y + 560}, ${sections[0].x + shot.x + shot.w - 40} ${sections[0].y + shot.y + 14}`;
 
 // A pin beside each heading; the string leaves from each section's question and lands on the next heading pin,
 // travelling through the gutters so it never crosses a piece.
@@ -87,7 +92,7 @@ const stringPath = `M ${a1[0]} ${a1[1]} C ${a1[0] + 240} ${a1[1]}, ${pins[1][0] 
   + ` M ${a4[0]} ${a4[1]} L ${a4[0]} ${WORLD_H + 4000}`;
 const knots = [a1, a2, a3, a4];
 
-const rects = Object.fromEntries(pieces.map((p) => [p.id, { x: p.ax, y: p.ay, w: p.w, h: p.h }]));
+const rects = { ...Object.fromEntries(pieces.map((p) => [p.id, { x: p.ax, y: p.ay, w: p.w, h: p.h }])), 's1-shot': shot };
 const secRects = sections.map((s) => ({ x: s.x, y: s.y, w: SEC_W, h: SEC_H }));
 const skillCount = (id: string) => pieces.filter((p) => p.skills.includes(id)).length;
 // Stamped when the site is built, i.e. when a change to this page is pushed and deployed.
@@ -99,8 +104,17 @@ const personas = [
   { id: 'bank', caption: 'settles every vendor payout', r: -1.5 }
 ];
 const checkTitle: Record<string, string> = { did: 'what i did', next: 'what i did next' };
+// Section 1's number: store status across the 240 classified stores (growth and launch plans counted together as paying).
+const DONUT_C = 2 * Math.PI * 84;
+const donutRaw = [
+  { label: 'trial expired', stores: 211, share: '87.9%', color: '#B9B9C0' },
+  { label: 'paying', stores: 19, share: '7.9%', color: '#E08A4C' },
+  { label: 'on trial', stores: 10, share: '4.2%', color: '#8FB3DA' }
+];
+let donutAt = 0;
+const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; const seg = { ...d, len: Math.max(len - 3, 1), off: donutAt }; donutAt += len; return seg; });
 ---
-<Base title="ICP-Nexus · finding who Nexus was for · Kritika Upadhyay" description={description}>
+<Base title="ICP-Nexus · from user personas to an ideal customer profile · Kritika Upadhyay" description={description}>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap">
 <div class="ic">
 
@@ -154,7 +168,7 @@ const checkTitle: Record<string, string> = { did: 'what i did', next: 'what i di
 
 <section class="ic-fold">
 <div class="ic-intro">
-<h1 class="ic-title">finding who Nexus was for</h1>
+<h1 class="ic-title">from user personas to an ideal customer profile</h1>
 <p class="ic-desc">{description}</p>
 <p class="ic-date">published {published}</p>
 </div>
@@ -172,6 +186,7 @@ const checkTitle: Record<string, string> = { did: 'what i did', next: 'what i di
 <path d={stringPath} class="ic-string" id="string"></path>
 {pins.map(([x, y]) => <circle cx={x} cy={y} r="11" class="ic-pin"></circle>)}
 {knots.map(([x, y]) => <circle cx={x} cy={y} r="7" class="ic-pin"></circle>)}
+<path d={tie} class="ic-tie" id="tie"></path>
 </svg>
 
 {sections.map((s, i) => (
@@ -185,21 +200,27 @@ const checkTitle: Record<string, string> = { did: 'what i did', next: 'what i di
 {p.slot === 'ask' && <span class="pin" aria-hidden="true"></span>}
 {(p.slot === 'ctx' || p.slot === 'ask') && <p class="note-t">{p.text}</p>}
 {(p.slot === 'did' || p.slot === 'next') && <>
-<p class="ck-t">{checkTitle[p.slot]}</p>
+<p class="ck-t">{p.title ?? checkTitle[p.slot]}</p>
 <ul class="ck-list">
-{p.items!.map((it) => <li><svg class="ck-box" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="3"></rect><path d="M6 12.5 L10.5 17 L19 6.5"></path></svg><span>{it}</span></li>)}
+{p.items!.map((it) => <li>{p.mark === 'q'
+  ? <span class="ck-q" aria-hidden="true">?</span>
+  : <svg class="ck-box" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="3"></rect><path d="M6 12.5 L10.5 17 L19 6.5"></path></svg>}<span>{it}</span></li>)}
 </ul>
 </>}
 
 {p.id === 's1-data' && <>
-<p class="pg-k">who installed?</p>
-<div class="pg-bars">
-<div class="pg-row"><span>unsegmented</span><i style="width:100%" class="grey"></i><b>142</b></div>
-<div class="pg-row"><span>marketplace operators</span><i style="width:100%" class="empty"></i><b>?</b></div>
-<div class="pg-row"><span>d2c brands</span><i style="width:100%" class="empty"></i><b>?</b></div>
-<div class="pg-row"><span>agencies</span><i style="width:100%" class="empty"></i><b>?</b></div>
+<p class="pg-k">who was paying?</p>
+<div class="dn">
+<svg class="dn-chart" viewBox="0 0 220 220" role="img" aria-label="Store status: 211 trial expired, 19 paying, 10 on trial.">
+{donut.map((d) => <circle cx="110" cy="110" r="84" class="dn-seg" stroke={d.color} stroke-dasharray={`${d.len} ${DONUT_C - d.len}`} stroke-dashoffset={-d.off}></circle>)}
+<text x="110" y="106" class="dn-n">19</text>
+<text x="110" y="132" class="dn-l">paying stores</text>
+</svg>
+<ul class="dn-legend">
+{donut.map((d) => <li><i style={`background:${d.color}`}></i><span>{d.label}</span><b>{d.stores}</b><em>{d.share}</em></li>)}
+</ul>
 </div>
-<p class="pg-foot">142 organic installs · 3 active users · 0 segments</p>
+<p class="pg-foot">2 nov snapshot; test and internal stores excluded.</p>
 </>}
 
 {p.id === 's2-data' && <>
@@ -234,6 +255,11 @@ const checkTitle: Record<string, string> = { did: 'what i did', next: 'what i di
 </>}
 </div>
 ))}
+<figure class="pc pc-shot" id="s1-shot" data-skills="research collab" style={`left:${sections[0].x + shot.x}px;top:${sections[0].y + shot.y}px;width:${shot.w}px;--r:-1.2deg`}>
+<span class="pin" aria-hidden="true"></span>
+<img src="/case/icp-nexus/one-pager.png" alt="Part of the Nexus marketing one-pager: the minimum data needed, from business goal to desired action, and how to get each." width="1732" height="720">
+<figcaption>part of the one-pager</figcaption>
+</figure>
 </div>
 <p class="ic-hint" id="hint" hidden>exploring · scroll to pick the story back up</p>
 </div>
@@ -327,6 +353,24 @@ const checkTitle: Record<string, string> = { did: 'what i did', next: 'what i di
 .ck-list{display:flex;flex-direction:column;gap:14px;margin:0;padding:0;list-style:none}
 .ck-list li{display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:start;font-family:'Caveat',cursive;font-size:27px;line-height:1.15}
 .ck-box{width:28px;height:28px;margin-top:2px}
+.ck-q{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;margin-top:2px;border:2px solid #1E1E24;border-radius:50%;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif;font-size:15px;font-weight:600;color:#D2453F}
+.pc-shot{margin:0;padding:10px 10px 0;background:#FFFFFF;box-shadow:0 14px 28px rgba(0,0,0,.45)}
+.pc-shot img{display:block;width:100%;height:auto;border:1px solid #DADAD4}
+.pc-shot figcaption{padding:8px 4px 10px;font-family:'Caveat',cursive;font-size:24px;color:#5A5A62}
+.pc-shot .pin{right:auto;left:50%;margin-left:-12px;top:-12px}
+.ic-tie{fill:none;stroke:#8FB3DA;stroke-width:3;stroke-linecap:round;stroke-dasharray:8 7;opacity:0;transition:opacity .6s ease}
+.ic-tie.on{opacity:.9}
+.dn{display:flex;align-items:center;gap:28px}
+.dn-chart{flex:none;width:220px;height:220px;transform:rotate(-90deg)}
+.dn-seg{fill:none;stroke-width:34}
+.dn-n,.dn-l{transform:rotate(90deg);transform-origin:110px 110px;text-anchor:middle;fill:#1E1E24}
+.dn-n{font-size:40px;font-weight:600}
+.dn-l{font-size:15px;fill:#5A5A62}
+.dn-legend{flex:1;display:flex;flex-direction:column;gap:16px;margin:0;padding:0;list-style:none;font-size:17px}
+.dn-legend li{display:grid;grid-template-columns:14px 1fr auto 64px;align-items:center;gap:12px}
+.dn-legend i{width:14px;height:14px;border-radius:3px}
+.dn-legend b{font-size:20px}
+.dn-legend em{font-style:normal;text-align:right;color:#5A5A62}
 .ck-box rect{fill:none;stroke:#1E1E24;stroke-width:2}
 .ck-box path{fill:none;stroke:#2F8F5B;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
 
@@ -419,6 +463,7 @@ const checkTitle: Record<string, string> = { did: 'what i did', next: 'what i di
   const endSec = document.getElementById('end')!;
   const endLine = document.getElementById('end-line');
   const pieces = Array.from(world.querySelectorAll<HTMLElement>('.pc'));
+  const tie = document.getElementById('tie');
   const touch = window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
   const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (touch) root.classList.add('touch');
@@ -446,6 +491,7 @@ const checkTitle: Record<string, string> = { did: 'what i did', next: 'what i di
     if (upTo <= 0) frames[0].show.forEach((id) => on.add(id));
     else frames.forEach((f, k) => { if (k > 0 && k <= upTo) f.show.forEach((id) => on.add(id)); });
     pieces.forEach((p) => p.classList.toggle('on', on.has(p.id)));
+    tie?.classList.toggle('on', on.has('s1-shot'));
   };
   // The progress bar: the current section is marked, and each track fills as its pieces go up.
   const progress = (sec: number, reach: number) => {
@@ -537,8 +583,9 @@ const checkTitle: Record<string, string> = { did: 'what i did', next: 'what i di
   // The end section's string starts exactly under where the last question's string leaves the screen.
   const alignEnd = () => {
     const c = fit(secs[3]);
-    const x = view.getBoundingClientRect().left - endSec.getBoundingClientRect().left + c.tx + endPin[0] * c.s;
     const cx = endSec.clientWidth / 2;
+    // On phones the board isn't pinned to the screen, so the string simply drops straight down the middle.
+    const x = touch ? cx : view.getBoundingClientRect().left - endSec.getBoundingClientRect().left + c.tx + endPin[0] * c.s;
     endLine?.setAttribute('d', `M ${x.toFixed(1)} 0 C ${x.toFixed(1)} 160, ${cx} 90, ${cx} 260`);
   };
   // Start over: back to the top of the case study.
