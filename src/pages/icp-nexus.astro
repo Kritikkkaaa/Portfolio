@@ -15,11 +15,11 @@ const skills = [
 ];
 
 // The three sections are stacked down the board, and the ending sits at the bottom, so zoomed out the whole case fits on one screen.
-const SEC_W = 1600, GAP = 300, S2Y = 1000 + GAP, S3Y = S2Y + 1100 + GAP, END_Y = S3Y + 1360 + 140, WORLD_W = SEC_W, WORLD_H = END_Y + 380;
+const SEC_W = 1600, GAP = 300, S2Y = 1000 + GAP, S3Y = S2Y + 1100 + GAP, END_Y = S3Y + 900 + 140, WORLD_W = SEC_W, WORLD_H = END_Y + 380;
 const sections = [
   { n: '01', title: 'users, but no clear audience', short: 'unclear', x: 0, y: 0, h: 1000 },
   { n: '02', title: 'choosing who to target', short: 'learned', x: 0, y: S2Y, h: 1100 },
-  { n: '03', title: 'turning customer value into messaging', short: 'changed', x: 0, y: S3Y, h: 1360 }
+  { n: '03', title: 'turning customer value into messaging', short: 'changed', x: 0, y: S3Y, h: 900 }
 ];
 
 // The same five slots in every section, in reading order. Section-local positions:
@@ -56,11 +56,9 @@ const story: Partial<Record<Slot, Step>>[] = [
     ask: { skills: ['positioning'], at: { x: 1200, y: 110 }, text: 'what value does our primary ICP get?', sub: 'aka positioning' }
   },
   {
-    ctx: { skills: ['positioning', 'collab'], at: { h: 220 }, text: 'i knew who to target.\n\ni spoke with shashwat to align the message with his vision for nexus.' },
-    did: { skills: ['research', 'collab'], mark: 'q', intro: 'interviewed the co-founder using the mom test.', items: ['what should merchants say about nexus after a year?', 'which merchants would you turn away?', 'if we showed one thing, what would it be?'] },
-    data: { skills: ['positioning'], at: { h: 360 } },
-    next: { skills: ['positioning'], at: { x: 60, y: 540, w: 560 }, img: { src: '/case/icp-nexus/value-prop.png', iw: 734, ih: 972, caption: 'messaging from the one-pager', alt: 'Value Proposition section of the Nexus marketing one-pager: positioning, the old way, and with Nexus. Simple to use: sellers sign up through your branded link and land on their own dashboard. Simple to grow with: sellers manage their own products, and Nexus calculates each commission. Simple to migrate: install from the Shopify App Store, try it for 14 days and start on your existing store.' } },
-    ask: { skills: ['positioning'], tint: 'green', at: { x: 760, y: 420 }, text: 'nexus is simple.\n\nsimple to start, manage and grow!' }
+    ctx: { skills: ['positioning', 'collab'], at: { x: 60, y: 130, w: 420, h: 220 }, text: 'i knew who to target.\n\ni spoke with leadership to align the message with their vision for nexus.' },
+    did: { skills: ['research', 'collab'], at: { x: 60, y: 470, w: 420, h: 180 }, intro: 'i interviewed the founder, keeping the mom test in mind.', items: [] },
+    data: { skills: ['positioning'], at: { x: 1180, y: 330, w: 380, h: 360 } },
   }
 ];
 
@@ -71,7 +69,8 @@ const pieces = story.flatMap((sec, i) => ORDER.filter((slot) => sec[slot]).map((
 
 // Documents pinned to a card, revealed with it and joined to it by a dotted thread. Section-local positions.
 // An attachment is either an image, or (until its screenshot arrives) a typed excerpt with its lines listed.
-type Attachment = { id: string; sec: number; with: string; x: number; y: number; w: number; r: number; src?: string; iw: number; ih: number; lines?: [string, string][]; alt: string; caption: string; skills: string[]; from: [number, number]; color: string };
+// A third kind: an interview sheet, questions typed and answers handwritten.
+type Attachment = { id: string; sec: number; with: string; x: number; y: number; w: number; r: number; src?: string; iw: number; ih: number; qa?: [string, string][]; lines?: [string, string][]; alt: string; caption: string; skills: string[]; from: [number, number]; color: string };
 const attachments: Attachment[] = [
   { id: 's1-shot', sec: 0, with: 's1-next', x: 60, y: 540, w: 600, r: -1.2, src: '/case/icp-nexus/one-pager.png', iw: 1732, ih: 720,
     alt: 'Part of the Nexus marketing one-pager: the minimum data needed, from business goal to desired action, and how to get each.',
@@ -84,7 +83,17 @@ const attachments: Attachment[] = [
     caption: 'guardrails aka, who we do not serve', skills: ['positioning'], from: [1150, 650], color: '#BCE5CF' },
   { id: 's2-where', sec: 1, with: 's2-next', x: 1180, y: 745, w: 400, r: -1, src: '/case/icp-nexus/where-they-gather.png', iw: 896, ih: 252,
     alt: 'Where they gather: Shopify App Store search, about 48% of discovery; Google, about 11%; AI assistants and the listicles they cite; other platforms such as Product Hunt and G2.',
-    caption: 'where they hang out', skills: ['research', 'positioning'], from: [1370, 712], color: '#BCE5CF' }
+    caption: 'where they hang out', skills: ['research', 'positioning'], from: [1370, 712], color: '#BCE5CF' },
+  { id: 's3-qa', sec: 2, with: 's3-did', x: 560, y: 110, w: 560, r: 0.8, iw: 560, ih: 600, color: '#8FB3DA', from: [480, 560], skills: ['research', 'collab'], caption: '',
+    alt: 'Interview questions and answers.',
+    qa: [
+      ['a year in, what should a brand tell a friend?', 'simple to use, to find users, to configure, to decide.'],
+      ['if nexus were a car or a person?', 'powerful, yet so simple to use.'],
+      ['which merchant would you turn away?', 'people who don’t respect software, or want a custom build.'],
+      ['what should nexus never feel like?', 'unstable or unreliable.'],
+      ['which merchant story makes you proudest?', 'erica from art therapy.'],
+      ['if we showed one thing, what would it be?', 'how easy nexus is to use.']
+    ] }
 ];
 const attachAt = (a: Attachment) => ({ x: sections[a.sec].x + a.x, y: sections[a.sec].y + a.y, w: a.w, h: Math.round(a.w * a.ih / a.iw) + 60 });
 const ties = attachments.map((a) => {
@@ -99,16 +108,13 @@ const ties = attachments.map((a) => {
 type Area = { x: number; y: number; w: number; h: number };
 const s2View: Area = { x: sections[1].x, y: sections[1].y - 80, w: SEC_W, h: 1180 };
 // Section 03 is read the same way: cards first, then the value proposition pinned under its chart.
-const s3Top: Area = { x: sections[2].x, y: sections[2].y - 40, w: SEC_W, h: 1040 };
-const s3Low: Area = { x: sections[2].x, y: sections[2].y + 380, w: SEC_W, h: 1000 };
-const s3Shot: Area = { x: sections[2].x + 40, y: sections[2].y + 510, w: 600, h: 830 };
-// The last stop: section 03's closing note, the string running down, and the ending under it.
-const endView: Area = { x: 0, y: sections[2].y + 380, w: SEC_W, h: END_Y + 380 - (sections[2].y + 380) };
+const s3View: Area = { x: sections[2].x, y: sections[2].y - 40, w: SEC_W, h: 940 };
+// The last stop: section 03's positioning card, the string running down, and the ending under it.
+const endView: Area = { x: 0, y: sections[2].y + 280, w: SEC_W, h: END_Y + 380 - (sections[2].y + 280) };
 const frames: { cam: number | Area; sec: number; show: string[] }[] = [{ cam: -1, sec: -1, show: [...pieces.map((p) => p.id), ...attachments.map((a) => a.id)] }];
 story.forEach((sec, i) => ORDER.filter((slot) => sec[slot]).forEach((slot) => {
   const id = `s${i + 1}-${slot}`;
-  const low = slot === 'next' || slot === 'ask';
-  const cam = i === 1 ? s2View : i === 2 ? (slot === 'next' ? s3Shot : low ? s3Low : s3Top) : i;
+  const cam = i === 1 ? s2View : i === 2 ? s3View : i;
   frames.push({ cam, sec: i, show: [id, ...attachments.filter((a) => a.with === id).map((a) => a.id)] });
 }));
 frames.push({ cam: endView, sec: 2, show: [] });
@@ -116,7 +122,8 @@ frames.push({ cam: endView, sec: 2, show: [] });
 // A pin beside each heading; the string leaves from each section's question and lands on the next heading pin,
 // travelling through the gutters so it never crosses a piece.
 const pins = sections.map((s) => [s.x + 40, s.y + 44]);
-const askPin = (i: number) => { const q = pieces.find((p) => p.id === `s${i + 1}-ask`)!; return [q.ax + q.w - 22, q.ay + 10]; };
+const askPin = (i: number) => { const q = pieces.filter((p) => p.sec === i).at(-1)!; return [q.ax + q.w - 22, q.ay + 10]; };
+const lastIds = sections.map((_, i) => pieces.filter((p) => p.sec === i).at(-1)!.id);
 const [a1, a2, a3] = [askPin(0), askPin(1), askPin(2)];
 // Each question's string runs out to the right of its section, down past it, and back across the gap to the next heading.
 const bridge = ([x, y]: number[], bottom: number, [tx, ty]: number[]) =>
@@ -128,14 +135,11 @@ const knots = [a1, a2, a3];
 const rects = { ...Object.fromEntries(pieces.map((p) => [p.id, { x: p.ax, y: p.ay, w: p.w, h: p.h }])), ...Object.fromEntries(attachments.map((a) => [a.id, attachAt(a)])) };
 const secRects = sections.map((s) => ({ x: s.x, y: s.y, w: SEC_W, h: s.h }));
 const skillCount = (id: string) => pieces.filter((p) => p.skills.includes(id)).length;
+const boardWords = [description, ...pieces.flatMap((p) => [p.text ?? '', p.intro ?? '', ...(p.items ?? [])]), ...attachments.flatMap((a) => (a.qa ?? []).flat())].join(' ');
+// Words at 230 a minute, plus 12 seconds for each screenshot to look at.
+const readMins = Math.max(1, Math.round(boardWords.split(/\s+/).length / 230 + attachments.filter((a) => a.src).length * 12 / 60));
 // Stamped when the site is built, i.e. when a change to this page is pushed and deployed.
 const published = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Kolkata' }).format(new Date()).toLowerCase().replace(',', ' ·') + ' ist';
-// The cover: three black-and-white scenes from a marketplace operator's week, on the accent colour.
-const personas = [
-  { id: 'yard', caption: 'ships for forty vendors', r: -3 },
-  { id: 'chart', caption: 'reports growth on monday', r: 2 },
-  { id: 'bank', caption: 'settles every vendor payout', r: -1.5 }
-];
 const checkTitle: Record<string, string> = { did: 'what i did', next: 'what i did next' };
 // Section 1's number: store status across the 240 classified stores (growth and launch plans counted together as paying).
 const DONUT_C = 2 * Math.PI * 84;
@@ -158,59 +162,16 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap">
 <div class="ic">
 
-<figure class="ic-cover" aria-label="Three scenes from a marketplace operator’s week: a shipping yard, a chart in a meeting, a visit to the bank.">
-<a class="ic-return ic-home" href="/">← return</a>
-<div class="cv-row">
-{personas.map((pp) => (
-<div class="cv-cut" style={`--r:${pp.r}deg`}>
-<svg viewBox="0 0 300 220" aria-hidden="true">
-<defs><pattern id={`dots-${pp.id}`} width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.3" fill="#111"></circle></pattern></defs>
-<rect width="300" height="220" fill="#F2F1EC"></rect>
-{pp.id === 'yard' && <g>
-<rect x="0" y="176" width="300" height="44" fill={`url(#dots-${pp.id})`}></rect>
-<path d="M190 20 V176 M190 30 H292 M262 30 V70" stroke="#111" stroke-width="5" fill="none"></path>
-<rect x="246" y="70" width="34" height="18" fill="#111"></rect>
-<g fill="#111"><rect x="150" y="128" width="96" height="48"></rect><rect x="160" y="84" width="80" height="44" fill={`url(#dots-${pp.id})`} stroke="#111" stroke-width="3"></rect></g>
-<g stroke="#F2F1EC" stroke-width="3"><path d="M166 132 V172 M182 132 V172 M198 132 V172 M214 132 V172 M230 132 V172"></path></g>
-<circle cx="78" cy="88" r="17" fill="#111"></circle>
-<path d="M58 84 Q78 58 98 84 Z" fill="#F2F1EC" stroke="#111" stroke-width="4"></path>
-<path d="M56 176 V122 Q56 106 78 106 Q100 106 100 122 V176 Z" fill="#111"></path>
-<rect x="96" y="120" width="30" height="38" fill="#F2F1EC" stroke="#111" stroke-width="4" transform="rotate(8 111 139)"></rect>
-<path d="M102 130 H120 M102 138 H120 M102 146 H114" stroke="#111" stroke-width="2.5" transform="rotate(8 111 139)"></path>
-</g>}
-{pp.id === 'chart' && <g>
-<rect x="120" y="26" width="160" height="116" fill="#F2F1EC" stroke="#111" stroke-width="5"></rect>
-<path d="M140 120 L172 98 L200 108 L232 70 L262 46" stroke="#111" stroke-width="6" fill="none" stroke-linejoin="round"></path>
-<path d="M140 132 H264" stroke="#111" stroke-width="3"></path>
-<path d="M170 142 L150 206 M230 142 L250 206" stroke="#111" stroke-width="5"></path>
-<circle cx="66" cy="74" r="18" fill="#111"></circle>
-<path d="M40 206 V118 Q40 98 66 98 Q92 98 92 118 V206 Z" fill={`url(#dots-${pp.id})`} stroke="#111" stroke-width="4"></path>
-<path d="M88 116 L150 82" stroke="#111" stroke-width="9" stroke-linecap="round"></path>
-<path d="M150 82 L196 70" stroke="#111" stroke-width="3" stroke-dasharray="6 5"></path>
-</g>}
-{pp.id === 'bank' && <g>
-<path d="M120 62 L200 24 L280 62 Z" fill="#111"></path>
-<rect x="124" y="62" width="152" height="12" fill="#111"></rect>
-<g fill={`url(#dots-${pp.id})`} stroke="#111" stroke-width="3"><rect x="134" y="80" width="18" height="96"></rect><rect x="168" y="80" width="18" height="96"></rect><rect x="214" y="80" width="18" height="96"></rect><rect x="248" y="80" width="18" height="96"></rect></g>
-<rect x="118" y="176" width="164" height="14" fill="#111"></rect>
-<rect x="110" y="190" width="180" height="14" fill="#111"></rect>
-<circle cx="62" cy="96" r="16" fill="#111"></circle>
-<path d="M42 204 V138 Q42 118 62 118 Q82 118 82 138 V204 Z" fill="#111"></path>
-<rect x="78" y="146" width="34" height="26" fill="#F2F1EC" stroke="#111" stroke-width="4"></rect>
-<path d="M84 154 H106 M84 162 H100" stroke="#111" stroke-width="2.5"></path>
-</g>}
-</svg>
-<p class="cv-cap">{pp.caption}</p>
-</div>
-))}
-</div>
+<figure class="ic-cover">
+<a class="ic-return ic-home" href="/">← back</a>
+<div class="ic-cover-crop"><img src="/case/icp-nexus/cover.webp" width="2000" height="667" alt="Three polaroids on a sand-coloured board: different merchants and stores, captioned who uses nexus?; two of them circled, captioned who should we target?; and a merchant speaking about starting, running and growing a marketplace, captioned what should we say?"></div>
 </figure>
 
 <section class="ic-fold">
 <h1 class="ic-title">from user stories to identifying ICP, positioning and messaging</h1>
 <div class="ic-intro">
 <p class="ic-desc">{description}</p>
-<p class="ic-date">published {published}</p>
+<p class="ic-date">published {published} · {readMins} min read</p>
 </div>
 <div class="ic-skillbox">
 <p class="ic-skills-h">skills</p>
@@ -226,7 +187,8 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 <div class="ic-view" id="view">
 <div class="ic-world" id="world" style={`width:${WORLD_W}px;height:${WORLD_H}px`}>
 <svg class="ic-lines" width={WORLD_W} height={WORLD_H} aria-hidden="true">
-<path d={stringPath} class="ic-string" id="string"></path>
+<g class="ic-string" id="string"><path d={stringPath} class="th-base"></path><path d={stringPath} class="th-fibre"></path></g>
+<path d={stringPath} class="ic-string-hit" id="string-hit"></path>
 {pins.map(([x, y]) => <circle cx={x} cy={y} r="11" class="ic-pin"></circle>)}
 {knots.map(([x, y]) => <circle cx={x} cy={y} r="7" class="ic-pin"></circle>)}
 {ties.map((t) => <path d={t.d} class="ic-tie" data-for={t.for} stroke={t.color}></path>)}
@@ -240,18 +202,18 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 <div class={`pc pc-${p.img ? 'shot' : p.slot === 'did' || p.slot === 'next' ? 'check' : p.slot === 'data' ? 'page' : 'note'} slot-${p.slot}${p.tint ? ' tint-' + p.tint : ''}`} id={p.id} data-skills={p.skills.join(' ')}
   style={`left:${p.ax}px;top:${p.ay}px;width:${p.w}px;${p.slot === 'data' ? `height:${p.h}px;` : p.img ? '' : `min-height:${p.h - 40}px;`}--r:${p.r}deg`}>
 <span class="pc-step" aria-hidden="true">{p.step}</span>
-{p.slot === 'ask' && <span class="pin" aria-hidden="true"></span>}
+{lastIds.includes(p.id) && <span class="pin" aria-hidden="true"></span>}
 {(p.slot === 'ctx' || p.slot === 'ask') && <div class="note-b">{p.text!.split('\n\n').map((t) => <p class="note-t">{t}</p>)}{p.sub && <p class="note-sub">{p.sub}</p>}</div>}
 {p.img && <><span class="pin" aria-hidden="true"></span><img src={p.img.src} alt={p.img.alt} width={p.img.iw} height={p.img.ih}><p class="shot-cap-h">{p.img.caption}</p></>}
 {(p.slot === 'did' || p.slot === 'next') && !p.img && <>
 {p.aim && <p class="ck-aim"><svg class="ck-aim-ring" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true"><path d="M30 64 C 30 18, 180 6, 290 14 C 380 22, 392 74, 340 98 C 270 124, 80 120, 36 92 C 8 74, 30 40, 96 26"></path></svg><span>{p.aim}</span></p>}
 <p class="ck-t">{p.title ?? checkTitle[p.slot]}</p>
 {p.intro && <p class="ck-intro">{p.intro}</p>}
-<ul class="ck-list">
+{p.items!.length > 0 && <ul class="ck-list">
 {p.items!.map((it) => <li>{p.mark === 'q'
   ? <span class="ck-q" aria-hidden="true">?</span>
   : <svg class="ck-box" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="3"></rect><path d="M6 12.5 L10.5 17 L19 6.5"></path></svg>}<span>{it}</span></li>)}
-</ul>
+</ul>}
 </>}
 
 {p.id === 's1-data' && <>
@@ -296,10 +258,12 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 {attachments.map((a, k) => (
 <figure class="pc pc-shot" id={a.id} data-skills={a.skills.join(' ')} style={`left:${sections[a.sec].x + a.x}px;top:${sections[a.sec].y + a.y}px;width:${a.w}px;--r:${a.r}deg;--delay:${(k % 3) * 0.12}s`}>
 <span class="pin" aria-hidden="true"></span>
-{a.src
+{a.qa
+  ? <ol class="qa">{a.qa.map(([q, ans]) => <li><span class="qa-q">{q}</span><span class="qa-a">{ans}</span></li>)}</ol>
+  : a.src
   ? <img src={a.src} alt={a.alt} width={a.iw} height={a.ih}>
   : <div class="vp" role="img" aria-label={a.alt}>{a.lines!.map(([k, v]) => <p><b>{k}</b><span>{v}</span></p>)}</div>}
-<figcaption>{a.caption}</figcaption>
+{a.caption && <figcaption>{a.caption}</figcaption>}
 </figure>
 ))}
 <div class="ic-finale" style={`top:${END_Y - 18}px;width:${SEC_W}px`}>
@@ -317,7 +281,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 </button>
 <nav class="ic-progress" aria-label="Sections of the case study">
 <ol>
-{sections.map((s, i) => <li><button type="button" class="ic-step" data-sec={i}><span class="st-l"><b>{s.n}</b> {s.short}</span><span class="st-track"><i class="st-fill"></i></span></button></li>)}
+{sections.map((s, i) => <li><button type="button" class="ic-step" data-sec={i} aria-label={`${s.n} ${s.title}`}><span class="st-track"><i class="st-fill"></i></span></button></li>)}
 </ol>
 <button type="button" class="ic-chip" id="chip" hidden></button>
 </nav>
@@ -340,15 +304,12 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 .ic-return{color:#A9AFB9;font-size:13px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none}
 .ic-return:hover,.ic-return:focus-visible{color:#EFEFEE}
 
-.ic-cover{position:relative;margin:0;padding:72px 24px 40px;background-color:#D8C9A3;background-image:radial-gradient(rgba(30,30,36,.09) 1px,transparent 1px);background-size:5px 5px;overflow:hidden}
-.ic-home{position:absolute;top:22px;left:max(24px,calc((100% - 1200px) / 2 + 24px));color:#1E1E24;font-weight:500}
+.ic-cover{position:relative;margin:0;background:#E3D6AE}
+.ic-cover-crop{overflow:hidden;aspect-ratio:2000/587}
+.ic-cover-crop img{display:block;width:100%;height:auto;margin-top:-4%}
+.ic-home{position:absolute;top:22px;left:max(24px,calc((100% - 1200px) / 2 + 24px));z-index:1;color:#1E1E24;font-weight:500}
 .ic-home:hover,.ic-home:focus-visible{color:#000}
-.cv-row{display:flex;justify-content:center;align-items:flex-end;gap:clamp(16px,4vw,64px);max-width:1200px;margin:0 auto}
-.cv-cut{flex:1 1 0;max-width:340px;padding:10px 10px 0;background:#FFFFFF;box-shadow:0 2px 0 rgba(0,0,0,.08),0 18px 30px rgba(60,48,20,.28);transform:rotate(var(--r))}
-.cv-cut:nth-child(2){margin-bottom:28px}
-.cv-cut svg{display:block;width:100%;height:auto;filter:grayscale(1) contrast(1.05)}
-.cv-cap{margin:0;padding:10px 4px 12px;font-family:'Caveat',cursive;font-size:24px;line-height:1.1;color:#1E1E24}
-.ic-fold{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,340px);gap:28px 64px;align-items:start;max-width:1200px;margin:0 auto;padding:48px 24px 56px}
+.ic-fold{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,340px);gap:28px 64px;align-items:center;max-width:1200px;margin:0 auto;padding:48px 24px 56px}
 .ic-skills-h{margin:0 0 10px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#8A8D96}
 .ic-title{grid-column:1/-1;margin:0;font-weight:500;font-size:clamp(38px,6vw,92px);line-height:1;letter-spacing:-.03em}
 .ic-desc{max-width:640px;margin:0 0 18px;font-size:18px;line-height:1.6;color:#C9CDD5}
@@ -362,7 +323,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 .ic-skill:hover .sk-n,.ic-skill:focus-visible .sk-n,.ic-skill[aria-pressed="true"] .sk-n{color:#D8C9A3}
 .ic-skill:hover .sk-more,.ic-skill:focus-visible .sk-more,.ic-skill[aria-pressed="true"] .sk-more{max-height:30px;opacity:1;margin-top:4px}
 .ic-skill:focus-visible,.ic-step:focus-visible{outline:2px solid #EFEFEE;outline-offset:3px}
-@media (max-width:760px){.ic-fold{grid-template-columns:1fr}.cv-row{gap:10px}.cv-cap{font-size:17px}.ic-cover{padding:64px 16px 28px}}
+@media (max-width:760px){.ic-fold{grid-template-columns:1fr}}
 
 .ic-board{position:relative;height:1200vh}
 .ic-view{position:sticky;top:0;height:100vh;overflow:hidden;touch-action:pan-y}
@@ -370,8 +331,14 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 .ic-world.anim{transition:transform .7s cubic-bezier(.2,.7,.2,1)}
 .ic-world:not(.inside){cursor:zoom-in}
 .ic-lines{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
-.ic-string{fill:none;stroke:#B33A35;stroke-width:3.5;stroke-linecap:round;opacity:.75;transition:stroke .4s ease,opacity .4s ease,filter .4s ease}
-.ic-string.glow{stroke:#FF5A4E;opacity:1;filter:drop-shadow(0 0 6px rgba(255,90,78,.85)) drop-shadow(0 0 16px rgba(255,90,78,.45))}
+.ic-string{opacity:.8;transition:opacity .4s ease,filter .4s ease}
+.ic-string path{fill:none;stroke-linecap:round;transition:stroke .4s ease}
+.th-base{stroke:#A8322D;stroke-width:4.5}
+.th-fibre{stroke:#E8857B;stroke-width:1.6;stroke-dasharray:2 5;opacity:.6}
+.ic-string.glow{opacity:1;filter:drop-shadow(0 0 6px rgba(255,90,78,.8)) drop-shadow(0 0 16px rgba(255,90,78,.4))}
+.ic-string.glow .th-base{stroke:#F0544A}
+.ic-string.glow .th-fibre{stroke:#FFC9C2}
+.ic-string-hit{fill:none;stroke:transparent;stroke-width:30;pointer-events:stroke;cursor:default}
 .ic-pin{fill:#D2453F;stroke:#141416;stroke-width:3}
 .ic-sec-h{position:absolute;margin:0;font-size:60px;font-weight:500;line-height:1.1;letter-spacing:-.02em;color:#EFEFEE;white-space:nowrap}
 .ic-sec-h span{margin-right:18px;font-size:22px;letter-spacing:.2em;color:#D2453F;vertical-align:middle}
@@ -421,6 +388,11 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 .pie{flex:none;width:220px;height:220px}
 .dn-legend li.muted{color:#5A5A62}
 .ck-q{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;margin-top:2px;border:2px solid #1E1E24;border-radius:50%;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif;font-size:15px;font-weight:600;color:#D2453F}
+.qa{display:flex;flex-direction:column;gap:18px;margin:0;padding:22px 26px 26px;list-style:none;background:#FFFFFF;border:1px solid #DADAD4}
+.qa li{display:flex;flex-direction:column;gap:2px}
+.qa-q{font-size:17px;font-weight:500;color:#1E1E24}
+.qa-a{font-family:'Caveat',cursive;font-size:28px;line-height:1.1;color:#2457B8}
+.pc-page .pin{right:10px;top:-2px;z-index:1}
 .pc.pc-shot.on{transition-delay:var(--delay,0s)}
 .pc-shot{margin:0;padding:10px 10px 0;background:#FFFFFF;box-shadow:0 14px 28px rgba(0,0,0,.45)}
 .pc-shot img{display:block;width:100%;height:auto;border:1px solid #DADAD4}
@@ -471,12 +443,10 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 .ic-round.in .zoom-plus{display:none}
 .ic-progress{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 18px 12px;border-radius:16px}
 .ic-progress ol{display:flex;gap:14px;margin:0;padding:0;list-style:none}
-.ic-step{display:flex;flex-direction:column;gap:7px;min-width:84px;padding:0;border:0;background:none;color:#8A8D96;font:inherit;font-size:12px;letter-spacing:.06em;text-align:left;cursor:pointer;transition:color .2s ease}
-.st-l b{font-weight:500;color:#5E5E66}
+.ic-step{display:flex;flex-direction:column;justify-content:center;min-width:72px;min-height:36px;padding:0;border:0;background:none;color:#8A8D96;font:inherit;font-size:12px;letter-spacing:.06em;text-align:left;cursor:pointer;transition:color .2s ease}
 .st-track{display:block;height:3px;border-radius:3px;background:#2A2A2E;overflow:hidden}
 .st-fill{display:block;width:0;height:100%;background:#D2453F;transition:width .25s ease}
 .ic-step:hover,.ic-step.on{color:#EFEFEE}
-.ic-step.on b{color:#D2453F}
 .ic-chip{padding:2px 0 0;border:0;background:none;color:#D8C9A3;font:inherit;font-size:12px;cursor:pointer}
 .ic-chip[hidden]{display:none}
 .ic-hint{position:absolute;left:50%;bottom:100px;z-index:5;margin:0;transform:translateX(-50%);font-size:12px;letter-spacing:.08em;color:#8A8D96;white-space:nowrap}
@@ -494,9 +464,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 .ic.touch .ic-view{position:relative;height:100svh}
 .ic.touch .ic-view.zoomed{touch-action:none}
 @media (max-width:760px){
-.ic-step{min-width:34px}
-.st-l{font-size:0}
-.st-l b{font-size:12px}
+.ic-step{min-width:44px}
 .ic-progress{padding:10px 12px 12px}
 .ic-progress ol{gap:8px}
 .ic-ctrls{gap:6px}
@@ -542,7 +510,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
     world.classList.toggle('anim', animate && !calm);
     world.style.transform = `translate(${c.tx.toFixed(1)}px, ${c.ty.toFixed(1)}px) scale(${c.s.toFixed(4)})`;
   };
-  const ease = (t: number) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const ease = (t: number) => (1 - Math.cos(Math.PI * t)) / 2;
   const firstFrameOf = (sec: number) => frames.findIndex((f) => f.sec === sec);
   const lastFrameOf = (sec: number) => frames.length - 1 - [...frames].reverse().findIndex((f) => f.sec === sec);
 
@@ -575,21 +543,34 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
   let out = true;
 
   // Guided mode (desktop): the scroll position inside the tall board section drives the camera.
-  const frameLen = () => window.innerHeight * 0.55;
+  const unit = () => window.innerHeight * 0.55;
+  const camKey = (c: number | Area) => JSON.stringify(c);
+  // Scroll needed to reach each frame from the one before: camera moves take 2.6 steps, pinning a card up takes one.
+  const gaps = frames.map((f, k) => k === 0 ? 0 : camKey(f.cam) === camKey(frames[k - 1].cam) ? 1 : 2.6);
+  const offsets = gaps.reduce<number[]>((acc, w, k) => (acc.push(k === 0 ? 0 : acc[k - 1] + w), acc), []);
+  const frameAt = (k: number) => offsets[k] * unit();
   const boardTop = () => board.getBoundingClientRect().top + window.scrollY;
-  const size = () => { if (!touch) board.style.height = `${(frames.length - 1) * frameLen() + window.innerHeight}px`; };
+  const size = () => { if (!touch) board.style.height = `${frameAt(frames.length - 1) + window.innerHeight}px`; };
+  // Where the reader is: the frame just passed, and how far (0–1) they are towards the next one.
+  const position = () => {
+    const y = Math.max(0, window.scrollY - boardTop()) / unit();
+    let i = 0;
+    while (i < frames.length - 1 && offsets[i + 1] <= y) i++;
+    const f = i < frames.length - 1 ? (y - offsets[i]) / (offsets[i + 1] - offsets[i]) : 0;
+    return { i, f };
+  };
   const guided = () => {
-    const s = Math.max(0, Math.min(frames.length - 1, (window.scrollY - boardTop()) / frameLen()));
-    const i = Math.floor(s), f = s - i;
-    const a = fit(rectFor(frames[i].cam)), b = fit(rectFor(frames[Math.min(i + 1, frames.length - 1)].cam));
-    const t = ease(Math.min(1, f / 0.55));
+    const { i, f } = position();
+    const j = Math.min(i + 1, frames.length - 1);
+    const a = fit(rectFor(frames[i].cam)), b = fit(rectFor(frames[j].cam));
+    const t = ease(Math.max(0, Math.min(1, (f - 0.05) / 0.9)));
     cam = { tx: a.tx + (b.tx - a.tx) * t, ty: a.ty + (b.ty - a.ty) * t, s: a.s + (b.s - a.s) * t };
     put(cam);
-    const reach = Math.floor(s + 0.45);
+    const reach = f >= 0.7 ? j : i;
     show(reach);
-    current = frames[Math.round(s)].sec;
+    current = frames[f >= 0.5 ? j : i].sec;
     progress(current, reach);
-    out = s < 0.5;
+    out = i === 0 && f < 0.5;
     setOut(out);
   };
   const draw = () => { if (!exploring) guided(); };
@@ -614,7 +595,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
   const goSection = (sec: number) => {
     if (touch) return touchGo(sec);
     explore(false);
-    window.scrollTo({ top: boardTop() + firstFrameOf(sec) * frameLen() + 2, behavior: calm ? 'auto' : 'smooth' });
+    window.scrollTo({ top: boardTop() + frameAt(firstFrameOf(sec)) + 2, behavior: calm ? 'auto' : 'smooth' });
   };
   const zoomOut = () => {
     if (touch) return touchGo(-1);
@@ -626,7 +607,8 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
   };
   const zoomIn = () => {
     if (touch) return touchGo(Math.max(0, current));
-    const s = (window.scrollY - boardTop()) / frameLen();
+    const { i, f } = position();
+    const s = i + f;
     if (exploring && s >= 0.5) return explore(false);
     goSection(Math.max(0, current));
   };
@@ -706,12 +688,16 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
   }, { passive: false });
 
   // The red string is always there; it glows along its whole length while the cursor moves.
-  let glowT: number | undefined;
-  window.addEventListener('mousemove', () => {
+  let glowT: number | undefined, hovering = false;
+  const glow = () => {
     string?.classList.add('glow');
     clearTimeout(glowT);
-    glowT = window.setTimeout(() => string?.classList.remove('glow'), 650);
-  }, { passive: true });
+    glowT = window.setTimeout(() => { if (!hovering) string?.classList.remove('glow'); }, 650);
+  };
+  const hit = document.getElementById('string-hit');
+  hit?.addEventListener('pointerenter', () => { hovering = true; string?.classList.add('glow'); });
+  hit?.addEventListener('pointerleave', () => { hovering = false; glow(); });
+  window.addEventListener('scroll', glow, { passive: true });
 
   // Skill tags: light up every piece that shows the skill, and take the reader to the first one.
   const tags = Array.from(document.querySelectorAll<HTMLButtonElement>('.ic-skill'));
@@ -735,7 +721,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
       touchGo(frames[first].sec);
     } else {
       explore(false);
-      window.scrollTo({ top: boardTop() + first * frameLen() + 2, behavior: calm ? 'auto' : 'smooth' });
+      window.scrollTo({ top: boardTop() + frameAt(first) + 2, behavior: calm ? 'auto' : 'smooth' });
     }
   }));
   chip.addEventListener('click', () => filter(''));
