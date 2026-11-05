@@ -16,11 +16,11 @@ const skills = [
 
 // Section 02 is taller: it carries a cluster of three documents under its cards. Section 03, the conclusion,
 // sits on its own in the second row.
-const SEC_W = 1600, ROW2 = 2000, WORLD_W = 3500, WORLD_H = ROW2 + 1000;
+const SEC_W = 1600, ROW2 = 1500, WORLD_W = 3500, WORLD_H = ROW2 + 1260;
 const sections = [
   { n: '01', title: 'what was unclear', short: 'unclear', x: 0, y: 0, h: 1000 },
-  { n: '02', title: 'what i learned', short: 'learned', x: 1900, y: 0, h: 1600 },
-  { n: '03', title: 'how the message changed', short: 'changed', x: 0, y: ROW2, h: 1000 }
+  { n: '02', title: 'what i learned', short: 'learned', x: 1900, y: 0, h: 1100 },
+  { n: '03', title: 'how the message changed', short: 'changed', x: 0, y: ROW2, h: 1260 }
 ];
 
 // The same five slots in every section, in reading order. Section-local positions:
@@ -38,8 +38,9 @@ const ORDER: Slot[] = ['ctx', 'did', 'data', 'next', 'ask'];
 // A checklist can carry its own title, and mark its items as open questions (?) instead of done (✓).
 // It can also carry a circled handwritten aim written on the board just above it.
 // A note can be tinted green instead of its usual colour.
-type Step = { text?: string; items?: string[]; title?: string; mark?: 'q'; aim?: string; tint?: 'green'; skills: string[] };
-const story: Record<Slot, Step>[] = [
+// A section can skip a slot, and move a slot with `at`. A note can add a smaller handwritten line under its text.
+type Step = { text?: string; sub?: string; items?: string[]; title?: string; mark?: 'q'; aim?: string; tint?: 'green'; at?: { x?: number; y?: number; h?: number }; skills: string[] };
+const story: Partial<Record<Slot, Step>>[] = [
   {
     ctx: { skills: ['research', 'collab'], text: 'the co-founder asked me for a nexus marketing one-pager: who we were targeting, what problem we solved, and why someone should choose us. i knew the product and had watched people use it. now i needed to decide which customers our message should speak to.' },
     did: { skills: ['research'], title: 'open questions', mark: 'q', items: ['who installs nexus today, and who pays?', 'who did the founders originally build it for?', 'what do those customers need nexus to handle?', 'which customers should our messaging target first?'] },
@@ -48,11 +49,10 @@ const story: Record<Slot, Step>[] = [
     ask: { skills: ['research'], text: 'what did our paying customers have in common?' }
   },
   {
-    ctx: { skills: ['research', 'collab'], text: 'reviewing the one-pager with the co-founder exposed three gaps. our current users weren’t necessarily the customers we wanted to target. beyond pricing, we hadn’t settled what nexus should stand for. and without that decision, we couldn’t decide what our messaging should emphasize.' },
-    did: { skills: ['research', 'collab'], aim: 'the aim: identify which businesses would get the most value from nexus.', items: ['defined a working ICP with the co-founder', 'checked uninstall feedback for signs of poor fit', 'compared the profile with needs raised in intercom chats'] },
-    data: { skills: ['research'] },
-    next: { skills: ['research', 'positioning'], items: ['documented the primary customer profile', 'clarified who nexus wasn’t for', 'mapped where to reach those customers'] },
-    ask: { skills: ['positioning'], text: 'who to target was clearer. what should nexus mean to them?' }
+    did: { skills: ['research', 'collab'], at: { x: 760, y: 110 }, aim: 'the aim: find who gets the most value from nexus.', items: ['defined who to target with the co-founder', 'checked why merchants uninstalled', 'checked what merchants needed in intercom'] },
+    data: { skills: ['research'], at: { h: 340 } },
+    next: { skills: ['research', 'positioning'], at: { x: 760, y: 560 }, items: ['defined the primary ICP', 'defined guardrails and where they hang out'] },
+    ask: { skills: ['positioning'], at: { x: 1200, y: 110 }, text: 'what value does our primary ICP get?', sub: 'aka positioning' }
   },
   {
     ctx: { skills: ['positioning', 'collab'], text: 'i had an audience to write for. next, i needed to understand what nexus should mean to them. i spoke with shashwat, the co-founder, to keep the messaging aligned with his vision. i asked what he wanted merchants to say about nexus, who it wasn’t for, and what we should show as proof.' },
@@ -63,10 +63,10 @@ const story: Record<Slot, Step>[] = [
   }
 ];
 
-const pieces = story.flatMap((sec, i) => ORDER.map((slot, k) => ({
-  id: `s${i + 1}-${slot}`, sec: i, slot, step: k + 1, ...slots[slot], ...sec[slot],
-  ax: sections[i].x + slots[slot].x, ay: sections[i].y + slots[slot].y
-})));
+const pieces = story.flatMap((sec, i) => ORDER.filter((slot) => sec[slot]).map((slot, k) => {
+  const pos = { ...slots[slot], ...sec[slot]!.at };
+  return { id: `s${i + 1}-${slot}`, sec: i, slot, step: k + 1, ...pos, ...sec[slot]!, ax: sections[i].x + pos.x, ay: sections[i].y + pos.y };
+}));
 
 // Documents pinned to a card, revealed with it and joined to it by a dotted thread. Section-local positions.
 // An attachment is either an image, or (until its screenshot arrives) a typed excerpt with its lines listed.
@@ -75,18 +75,17 @@ const attachments: Attachment[] = [
   { id: 's1-shot', sec: 0, with: 's1-ctx', x: 60, y: 600, w: 600, r: -1.2, src: '/case/icp-nexus/one-pager.png', iw: 1732, ih: 720,
     alt: 'Part of the Nexus marketing one-pager: the minimum data needed, from business goal to desired action, and how to get each.',
     caption: 'part of the one-pager', skills: ['research', 'collab'], from: [790, 470], color: '#8FB3DA' },
-  { id: 's2-icp', sec: 1, with: 's2-next', x: 40, y: 960, w: 640, r: -1, src: '/case/icp-nexus/icp-table.png', iw: 1084, ih: 660,
+  { id: 's2-icp', sec: 1, with: 's2-next', x: 40, y: 600, w: 640, r: -1, src: '/case/icp-nexus/icp-table.png', iw: 1084, ih: 660,
     alt: 'The Nexus ideal customer profile: business, Shopify plan, region, trigger moment and job to be done, each with its evidence.',
-    caption: 'the ideal customer profile', skills: ['research', 'positioning'], from: [955, 905], color: '#BCE5CF' },
-  { id: 's2-notfor', sec: 1, with: 's2-next', x: 740, y: 975, w: 560, r: 1.4, src: '/case/icp-nexus/not-for.png', iw: 1106, ih: 488,
+    caption: 'final ICP!', skills: ['research', 'positioning'], from: [790, 815], color: '#BCE5CF' },
+  { id: 's2-notfor', sec: 1, with: 's2-next', x: 1170, y: 470, w: 400, r: 1.2, src: '/case/icp-nexus/not-for.png', iw: 1106, ih: 488,
     alt: 'Who Nexus is not for: stores syncing to Etsy, Amazon or Walmart, vendors looking to join a marketplace, agencies testing on dev stores, and large enterprises needing a custom build.',
-    caption: 'who nexus isn’t for', skills: ['positioning'], from: [955, 905], color: '#BCE5CF' },
-  { id: 's2-where', sec: 1, with: 's2-next', x: 1010, y: 1255, w: 540, r: -1.2, src: '/case/icp-nexus/where-they-gather.png', iw: 896, ih: 252,
+    caption: 'guardrails aka, who we do not serve', skills: ['positioning'], from: [1150, 650], color: '#BCE5CF' },
+  { id: 's2-where', sec: 1, with: 's2-next', x: 1180, y: 745, w: 400, r: -1, src: '/case/icp-nexus/where-they-gather.png', iw: 896, ih: 252,
     alt: 'Where they gather: Shopify App Store search, about 48% of discovery; Google, about 11%; AI assistants and the listicles they cite; other platforms such as Product Hunt and G2.',
-    caption: 'where to reach them', skills: ['research', 'positioning'], from: [955, 905], color: '#BCE5CF' },
-  { id: 's3-vp', sec: 2, with: 's3-next', x: 60, y: 600, w: 600, r: 1, iw: 600, ih: 250,
-    lines: [['start', 'use the existing Shopify store'], ['operate', 'give sellers their own dashboard'], ['grow', 'let sellers manage listings while the brand retains control']],
-    alt: 'Value proposition excerpt from the marketing one-pager: start, use the existing Shopify store; operate, give sellers their own dashboard; grow, let sellers manage listings while the brand retains control.',
+    caption: 'where they hang out', skills: ['research', 'positioning'], from: [1370, 712], color: '#BCE5CF' },
+  { id: 's3-vp', sec: 2, with: 's3-next', x: 60, y: 570, w: 440, r: 1, src: '/case/icp-nexus/value-prop.png', iw: 734, ih: 972,
+    alt: 'Value proposition from the marketing one-pager, the old way against with Nexus. Simple to use: sellers sign up through your branded link and land on their own dashboard. Simple to grow with: sellers manage their own products, and Nexus calculates each commission. Simple to migrate: install from the Shopify App Store, try it for 14 days and start on your existing store.',
     caption: 'value proposition, from the one-pager', skills: ['positioning'], from: [790, 880], color: '#BCE5CF' }
 ];
 const attachAt = (a: Attachment) => ({ x: sections[a.sec].x + a.x, y: sections[a.sec].y + a.y, w: a.w, h: Math.round(a.w * a.ih / a.iw) + 60 });
@@ -100,22 +99,25 @@ const ties = attachments.map((a) => {
 // or an exact area. Section 02 is read in two halves: its cards first, then its document cluster.
 // The first frame is the snapshot: every piece on the board at once.
 type Area = { x: number; y: number; w: number; h: number };
-const s2Top: Area = { x: sections[1].x, y: -80, w: SEC_W, h: 1080 };
-const s2Low: Area = { x: sections[1].x, y: 540, w: SEC_W, h: 1000 };
+const s2View: Area = { x: sections[1].x, y: -80, w: SEC_W, h: 1180 };
+// Section 03 is read the same way: cards first, then the value proposition pinned under its chart.
+const s3Top: Area = { x: sections[2].x, y: ROW2 - 40, w: SEC_W, h: 1040 };
+const s3Low: Area = { x: sections[2].x, y: ROW2 + 300, w: SEC_W, h: 1000 };
 const frames: { cam: number | Area; sec: number; show: string[] }[] = [{ cam: -1, sec: -1, show: [...pieces.map((p) => p.id), ...attachments.map((a) => a.id)] }];
-story.forEach((_, i) => ORDER.forEach((slot) => {
+story.forEach((sec, i) => ORDER.filter((slot) => sec[slot]).forEach((slot) => {
   const id = `s${i + 1}-${slot}`;
-  const cam = i === 1 ? (slot === 'next' || slot === 'ask' ? s2Low : s2Top) : i;
+  const low = slot === 'next' || slot === 'ask';
+  const cam = i === 1 ? s2View : i === 2 ? (low ? s3Low : s3Top) : i;
   frames.push({ cam, sec: i, show: [id, ...attachments.filter((a) => a.with === id).map((a) => a.id)] });
 }));
 
 // A pin beside each heading; the string leaves from each section's question and lands on the next heading pin,
 // travelling through the gutters so it never crosses a piece.
 const pins = sections.map((s) => [s.x + 40, s.y + 44]);
-const askPin = (i: number) => [sections[i].x + slots.ask.x + slots.ask.w - 22, sections[i].y + slots.ask.y + 10];
+const askPin = (i: number) => { const q = pieces.find((p) => p.id === `s${i + 1}-ask`)!; return [q.ax + q.w - 22, q.ay + 10]; };
 const [a1, a2, a3] = [askPin(0), askPin(1), askPin(2)];
 const stringPath = `M ${a1[0]} ${a1[1]} C ${a1[0] + 240} ${a1[1]}, ${pins[1][0] - 180} ${pins[1][1]}, ${pins[1][0]} ${pins[1][1]}`
-  + ` M ${a2[0]} ${a2[1]} C ${a2[0] + 90} ${ROW2 - 300}, 2300 ${ROW2 - 200}, 1750 ${ROW2 - 200} C 1200 ${ROW2 - 200}, ${pins[2][0]} ${ROW2 - 160}, ${pins[2][0]} ${pins[2][1]}`
+  + ` M ${a2[0]} ${a2[1]} C ${a2[0] + 182} ${a2[1]}, ${a2[0] + 182} ${a2[1] + 180}, ${a2[0] + 182} 700 C ${a2[0] + 182} ${ROW2 - 250}, 2300 ${ROW2 - 200}, 1750 ${ROW2 - 200} C 1200 ${ROW2 - 200}, ${pins[2][0]} ${ROW2 - 160}, ${pins[2][0]} ${pins[2][1]}`
   + ` M ${a3[0]} ${a3[1]} L ${a3[0]} ${WORLD_H + 4000}`;
 const knots = [a1, a2, a3];
 
@@ -232,7 +234,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
   style={`left:${p.ax}px;top:${p.ay}px;width:${p.w}px;${p.slot === 'data' ? `height:${p.h}px;` : `min-height:${p.h - 40}px;`}--r:${p.r}deg`}>
 <span class="pc-step" aria-hidden="true">{p.step}</span>
 {p.slot === 'ask' && <span class="pin" aria-hidden="true"></span>}
-{(p.slot === 'ctx' || p.slot === 'ask') && <p class="note-t">{p.text}</p>}
+{(p.slot === 'ctx' || p.slot === 'ask') && <div class="note-b"><p class="note-t">{p.text}</p>{p.sub && <p class="note-sub">{p.sub}</p>}</div>}
 {(p.slot === 'did' || p.slot === 'next') && <>
 {p.aim && <p class="ck-aim"><svg class="ck-aim-ring" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true"><path d="M30 64 C 30 18, 180 6, 290 14 C 380 22, 392 74, 340 98 C 270 124, 80 120, 36 92 C 8 74, 30 40, 96 26"></path></svg><span>{p.aim}</span></p>}
 <p class="ck-t">{p.title ?? checkTitle[p.slot]}</p>
@@ -259,7 +261,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 </>}
 
 {p.id === 's2-data' && <>
-<p class="pg-k">who we attracted</p>
+<p class="pg-k">current installs with primary ICP</p>
 <div class="dn">
 <svg class="pie" viewBox="-10 -10 240 240" role="img" aria-label="18% of current installs match the primary ICP; 82% are other installs.">
 <path d={pieRest} fill="#C9C9CF"></path>
@@ -270,7 +272,6 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 <li class="muted"><i style="background:#C9C9CF"></i><span>other installs</span><b>82%</b></li>
 </ul>
 </div>
-<p class="pg-foot">current status of users as per our primary ICP.</p>
 </>}
 
 {p.id === 's3-data' && <>
@@ -391,6 +392,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 .vp p{display:grid;grid-template-columns:96px 1fr;gap:14px;margin:0;font-size:18px;line-height:1.35}
 .vp b{font-weight:600;color:#E08A4C}
 .note-t{margin:0;font-family:'Caveat',cursive;font-weight:500;font-size:28px;line-height:1.22}
+.note-sub{margin:10px 0 0;font-family:'Caveat',cursive;font-size:26px;font-weight:500;color:rgba(30,30,36,.7)}
 .slot-ask .note-t{font-size:38px;font-weight:600;line-height:1.1}
 .pin{position:absolute;right:10px;top:-2px;width:24px;height:24px;border-radius:50%;background:#D2453F;box-shadow:0 4px 8px rgba(0,0,0,.45),inset -3px -3px 0 rgba(0,0,0,.18)}
 
@@ -637,7 +639,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 
   // The end section's string starts exactly under where the last question's string leaves the screen.
   const alignEnd = () => {
-    const c = fit(secs[secs.length - 1]);
+    const c = fit(rectFor(frames[frames.length - 1].cam));
     const cx = endSec.clientWidth / 2;
     // On phones the board isn't pinned to the screen, so the string simply drops straight down the middle.
     const x = touch ? cx : view.getBoundingClientRect().left - endSec.getBoundingClientRect().left + c.tx + endPin[0] * c.s;
