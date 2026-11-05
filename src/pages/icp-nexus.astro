@@ -12,12 +12,12 @@ const skills = [
   { id: 'collab', label: 'cross-functional collaboration' }
 ];
 
-const SEC_W = 1600, SEC_H = 1000, WORLD_W = 3500, WORLD_H = 2820;
+const SEC_W = 1600, SEC_H = 1000, WORLD_W = 3500, WORLD_H = 2400;
 const sections = [
-  { n: '01', title: 'what was unclear', x: 0, y: 0 },
-  { n: '02', title: 'what i learned', x: 1900, y: 260 },
-  { n: '03', title: 'what i chose', x: 1900, y: 1560 },
-  { n: '04', title: 'how the message changed', x: 0, y: 1820 }
+  { n: '01', title: 'what was unclear', short: 'unclear', x: 0, y: 0 },
+  { n: '02', title: 'what i learned', short: 'learned', x: 1900, y: 0 },
+  { n: '03', title: 'what i chose', short: 'chose', x: 1900, y: 1400 },
+  { n: '04', title: 'how the message changed', short: 'changed', x: 0, y: 1400 }
 ];
 
 type Piece = { id: string; sec: number; kind: 'page' | 'shot' | 'note'; tone?: 'story' | 'quote' | 'insight' | 'decision' | 'small'; x: number; y: number; w: number; h: number; r: number; skills: string[]; text?: string; who?: string; pick?: boolean };
@@ -84,12 +84,13 @@ const frames: { cam: number | string; show: string[] }[] = [
   { cam: 3, show: ['s4-story'] }, { cam: 3, show: ['s4-shot'] }, { cam: 3, show: ['s4-insight'] }, { cam: 's4-data', show: ['s4-data'] }
 ];
 
-const pins = sections.map((s) => [s.x + 46, s.y + 52]);
-let stringPath = `M ${pins[0][0]} ${pins[0][1]}`;
-for (let i = 1; i < pins.length; i++) {
-  const [x1, y1] = pins[i - 1], [x2, y2] = pins[i];
-  stringPath += ` Q ${(x1 + x2) / 2} ${Math.max(y1, y2) + 260} ${x2} ${y2}`;
-}
+// One pin per section, beside its heading. The string arcs over the top row, curves down the gutter
+// between the columns, then swings back through the gap between the rows, so it never crosses a piece.
+const pins = sections.map((s) => [s.x + 40, s.y + 44]);
+const [p1, p2, p3, p4] = pins;
+const stringPath = `M ${p1[0]} ${p1[1]} C ${p1[0]} -320, ${p2[0]} -320, ${p2[0]} ${p2[1]}`
+  + ` C ${p2[0] - 260} 380, ${p3[0] - 260} 1060, ${p3[0]} ${p3[1]}`
+  + ` C ${p3[0] - 140} 1180, ${p4[0] + 140} 1180, ${p4[0]} ${p4[1]}`;
 
 const rects = Object.fromEntries(pieces.map((p) => [p.id, { x: sections[p.sec].x + p.x, y: sections[p.sec].y + p.y, w: p.w, h: p.h }]));
 const secRects = sections.map((s) => ({ x: s.x, y: s.y, w: SEC_W, h: SEC_H }));
@@ -181,7 +182,8 @@ const personas = [
 </svg>
 
 {sections.map((s, i) => (
-<h2 class="ic-sec-h" style={`left:${s.x + 84}px;top:${s.y + 18}px`} data-sec={i}><span>{s.n}</span>{s.title}</h2>
+<div class="ic-zone" style={`left:${s.x}px;top:${s.y}px;width:${SEC_W}px;height:${SEC_H}px`} data-sec={i}><span class="ic-zone-tip">click to zoom in</span></div>
+<h2 class="ic-sec-h" style={`left:${s.x + 80}px;top:${s.y + 8}px`} data-sec={i}><span>{s.n}</span>{s.title}</h2>
 ))}
 
 {pieces.map((p) => (
@@ -246,15 +248,18 @@ const personas = [
 ))}
 </div>
 
-<nav class="ic-bar" aria-label="Case study navigation">
-<ol class="ic-steps">
-{sections.map((s, i) => <li><button type="button" class="ic-step" data-sec={i}><span>{s.n}</span> {s.title.replace('how the message ', '').replace('what ', '').replace('i ', '')}</button></li>)}
+<button type="button" class="ic-round ic-zoom" id="zoom" aria-label="Zoom in">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5 L20.5 20.5 M10.5 7.5 V13.5 M7.5 10.5 H13.5"></path></svg>
+</button>
+<nav class="ic-progress" aria-label="Sections of the case study">
+<ol>
+{sections.map((s, i) => <li><button type="button" class="ic-step" data-sec={i}><span class="st-l"><b>{s.n}</b> {s.short}</span><span class="st-track"><i class="st-fill"></i></span></button></li>)}
 </ol>
-<button type="button" class="ic-ctl" id="whole">see whole board</button>
-<button type="button" class="ic-ctl ic-next" id="next">next →</button>
-<button type="button" class="ic-ctl ic-chip" id="chip" hidden></button>
-<a class="ic-ctl" href="/">return</a>
+<button type="button" class="ic-chip" id="chip" hidden></button>
 </nav>
+<button type="button" class="ic-round ic-close" id="close" aria-label="Back to the whole board">
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6 L18 18 M18 6 L6 18"></path></svg>
+</button>
 <p class="ic-hint" id="hint" hidden>exploring · scroll to pick the story back up</p>
 </div>
 </section>
@@ -296,7 +301,7 @@ const personas = [
 .ic-skill:hover .sk-l,.ic-skill:focus-visible .sk-l,.ic-skill[aria-pressed="true"] .sk-l{color:#EFEFEE}
 .ic-skill:hover .sk-n,.ic-skill:focus-visible .sk-n,.ic-skill[aria-pressed="true"] .sk-n{color:#D8C9A3}
 .ic-skill:hover .sk-more,.ic-skill:focus-visible .sk-more,.ic-skill[aria-pressed="true"] .sk-more{max-height:30px;opacity:1;margin-top:4px}
-.ic-skill:focus-visible,.ic-ctl:focus-visible,.ic-step:focus-visible{outline:2px solid #EFEFEE;outline-offset:3px}
+.ic-skill:focus-visible,.ic-step:focus-visible{outline:2px solid #EFEFEE;outline-offset:3px}
 @media (max-width:760px){.ic-fold{grid-template-columns:1fr}.cv-row{gap:10px}.cv-cap{font-size:17px}.ic-cover{padding:64px 16px 28px}}
 
 .ic-board{position:relative;height:1000vh}
@@ -312,8 +317,14 @@ const personas = [
 .ic-sec-h{position:absolute;margin:0;font-size:60px;font-weight:500;line-height:1.1;letter-spacing:-.02em;color:#EFEFEE;white-space:nowrap}
 .ic-sec-h span{margin-right:18px;font-size:22px;letter-spacing:.2em;color:#D2453F;vertical-align:middle}
 
-.pc{position:absolute;box-sizing:border-box;transform:rotate(var(--r)) scale(.97);opacity:.12;transition:opacity .55s ease,transform .55s cubic-bezier(.2,.7,.2,1),box-shadow .3s ease,filter .3s ease}
-.pc.on{opacity:1;transform:rotate(var(--r))}
+.ic-zone{position:absolute;box-sizing:border-box;border:2px dashed rgba(169,175,185,.14);border-radius:18px;cursor:zoom-in;transition:border-color .3s ease,background-color .3s ease}
+.ic-zone:hover{border-color:rgba(210,69,63,.55);background-color:rgba(210,69,63,.035)}
+.ic-zone-tip{position:absolute;left:50%;bottom:36px;transform:translateX(-50%);font-size:34px;letter-spacing:.14em;text-transform:uppercase;color:#D2453F;opacity:0;transition:opacity .3s ease;pointer-events:none}
+.ic-zone:hover .ic-zone-tip{opacity:.85}
+.ic-world.inside .ic-zone{border-color:transparent;background:none;cursor:auto}
+.ic-world.inside .ic-zone-tip{display:none}
+.pc{position:absolute;box-sizing:border-box;pointer-events:none;transform:translateY(28px) rotate(calc(var(--r) + 2deg)) scale(.96);opacity:0;visibility:hidden;transition:opacity .55s ease,transform .7s cubic-bezier(.2,.7,.2,1),visibility 0s linear .7s,box-shadow .3s ease,filter .3s ease}
+.pc.on{opacity:1;visibility:visible;transform:rotate(var(--r));transition:opacity .55s ease,transform .7s cubic-bezier(.2,.7,.2,1),visibility 0s,box-shadow .3s ease,filter .3s ease}
 .pc-note{padding:28px 30px 26px;color:#1E1E24;box-shadow:0 2px 0 rgba(0,0,0,.08),0 14px 28px rgba(0,0,0,.45);background-image:linear-gradient(to bottom,rgba(255,255,255,.18),transparent 40%)}
 .tone-story{background-color:#BFD4EA}
 .tone-quote{background-color:#D4EC8E}
@@ -359,17 +370,23 @@ const personas = [
 .ic-world.filtering .pc{filter:saturate(.3) brightness(.55)}
 .ic-world.filtering .pc.hl{filter:none;box-shadow:0 0 0 4px #D8C9A3,0 0 40px rgba(216,201,163,.55),0 14px 28px rgba(0,0,0,.45)}
 
-.ic-bar{position:absolute;left:50%;bottom:16px;z-index:5;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px;max-width:calc(100% - 24px);padding:6px;transform:translateX(-50%);border:1px solid #2A2A2E;border-radius:999px;background:rgba(10,10,12,.82);backdrop-filter:blur(8px)}
-.ic-steps{display:flex;gap:2px;margin:0;padding:0;list-style:none}
-.ic-step,.ic-ctl{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;border:0;border-radius:999px;background:transparent;color:#8A8D96;font:inherit;font-size:12px;letter-spacing:.08em;text-decoration:none;cursor:pointer;transition:color .2s ease,background-color .2s ease}
-.ic-step span{color:#5E5E66}
-.ic-step:hover,.ic-ctl:hover{color:#EFEFEE}
-.ic-step.on{background:#26262B;color:#EFEFEE}
-.ic-step.on span{color:#D2453F}
-.ic-ctl{border-left:1px solid #2A2A2E;border-radius:0 999px 999px 0}
-.ic-chip{color:#D8C9A3}
-.ic-next{display:none}
-.ic-hint{position:absolute;left:50%;bottom:72px;z-index:5;margin:0;transform:translateX(-50%);font-size:12px;letter-spacing:.08em;color:#8A8D96;white-space:nowrap}
+.ic-round,.ic-progress{position:absolute;bottom:18px;z-index:5;border:1px solid #2A2A2E;background:rgba(10,10,12,.86);backdrop-filter:blur(8px)}
+.ic-round{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;padding:0;border-radius:50%;color:#A9AFB9;cursor:pointer;transition:color .2s ease,border-color .2s ease}
+.ic-round:hover,.ic-round:focus-visible{color:#EFEFEE;border-color:#4A4A50}
+.ic-round:focus-visible{outline:2px solid #EFEFEE;outline-offset:3px}
+.ic-zoom{left:20px}
+.ic-close{right:20px}
+.ic-progress{left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 18px 12px;border-radius:16px}
+.ic-progress ol{display:flex;gap:14px;margin:0;padding:0;list-style:none}
+.ic-step{display:flex;flex-direction:column;gap:7px;min-width:84px;padding:0;border:0;background:none;color:#8A8D96;font:inherit;font-size:12px;letter-spacing:.06em;text-align:left;cursor:pointer;transition:color .2s ease}
+.st-l b{font-weight:500;color:#5E5E66}
+.st-track{display:block;height:3px;border-radius:3px;background:#2A2A2E;overflow:hidden}
+.st-fill{display:block;width:0;height:100%;background:#D2453F;transition:width .25s ease}
+.ic-step:hover,.ic-step.on{color:#EFEFEE}
+.ic-step.on b{color:#D2453F}
+.ic-chip{padding:2px 0 0;border:0;background:none;color:#D8C9A3;font:inherit;font-size:12px;cursor:pointer}
+.ic-chip[hidden]{display:none}
+.ic-hint{position:absolute;left:50%;bottom:96px;z-index:5;margin:0;transform:translateX(-50%);font-size:12px;letter-spacing:.08em;color:#8A8D96;white-space:nowrap}
 
 .ic-end{display:flex;flex-direction:column;align-items:center;gap:20px;padding:120px 24px 160px;text-align:center}
 .ic-end p{margin:0;font-size:clamp(20px,2.4vw,28px);color:#C9CDD5}
@@ -378,11 +395,12 @@ const personas = [
 .ic.touch .ic-board{height:auto}
 .ic.touch .ic-view{position:relative;height:100svh}
 .ic.touch .ic-view.zoomed{touch-action:none}
-.ic.touch .ic-next{display:inline-flex}
-.ic.touch .ic-step{padding:0 9px}
 @media (max-width:760px){
-.ic-step{font-size:0;gap:0}
-.ic-step span{font-size:12px}
+.ic-step{min-width:38px}
+.st-l{font-size:0}
+.st-l b{font-size:12px}
+.ic-progress ol{gap:10px}
+.ic-zone-tip{display:none}
 }
 @media (prefers-reduced-motion:reduce){.pc,.ic-world.anim,.pg-order li,.ic-arrow,.ic-string{transition:none}}
 </style>
@@ -394,10 +412,11 @@ const personas = [
   const world = document.getElementById('world')!;
   const string = document.getElementById('string');
   const hint = document.getElementById('hint')!;
-  const wholeBtn = document.getElementById('whole') as HTMLButtonElement;
-  const nextBtn = document.getElementById('next') as HTMLButtonElement;
+  const zoomBtn = document.getElementById('zoom') as HTMLButtonElement;
+  const closeBtn = document.getElementById('close') as HTMLButtonElement;
   const chip = document.getElementById('chip') as HTMLButtonElement;
   const steps = Array.from(document.querySelectorAll<HTMLButtonElement>('.ic-step'));
+  const fills = steps.map((b) => b.querySelector<HTMLElement>('.st-fill')!);
   const frames: { cam: number | string; show: string[] }[] = JSON.parse(board.dataset.frames!);
   const rects: Record<string, { x: number; y: number; w: number; h: number }> = JSON.parse(board.dataset.rects!);
   const secs: { x: number; y: number; w: number; h: number }[] = JSON.parse(board.dataset.secs!);
@@ -410,8 +429,8 @@ const personas = [
   if (touch) root.classList.add('touch');
 
   type Cam = { tx: number; ty: number; s: number };
-  const BAR = 76;
-  const all = { x: -60, y: -60, w: W.w + 120, h: W.h + 120 };
+  const BAR = 96;
+  const all = { x: -60, y: -380, w: W.w + 120, h: W.h + 440 };
   const rectFor = (cam: number | string) => typeof cam === 'string' ? rects[cam] : cam < 0 ? all : secs[cam];
   const fit = (r: { x: number; y: number; w: number; h: number }): Cam => {
     const vw = view.clientWidth, vh = view.clientHeight - BAR;
@@ -429,8 +448,9 @@ const personas = [
     return secs.findIndex((r) => rects[c].x >= r.x && rects[c].x < r.x + r.w && rects[c].y >= r.y && rects[c].y < r.y + r.h);
   };
   const firstFrameOf = (sec: number) => frames.findIndex((f, k) => frameSec(k) === sec);
+  const lastFrameOf = (sec: number) => frames.length - 1 - [...frames].reverse().findIndex((f, k) => frameSec(frames.length - 1 - k) === sec);
 
-  // What is pinned up: everything while exploring, otherwise only what the story has reached.
+  // Pieces stay off the board until the story reaches them; while exploring freely, everything is up.
   const show = (upTo: number) => {
     const on = new Set<string>();
     frames.forEach((f, k) => { if (k <= upTo) f.show.forEach((id) => on.add(id)); });
@@ -438,11 +458,20 @@ const personas = [
     arrows.forEach((a) => a.classList.toggle('on', on.has(a.dataset.reveal!)));
     order?.classList.toggle('swapped', on.has('s2-insight'));
   };
-  const mark = (sec: number) => steps.forEach((b, i) => b.classList.toggle('on', i === sec));
+  // The progress bar: the current section is marked, and each track fills as its pieces go up.
+  const progress = (sec: number, reach: number) => {
+    steps.forEach((b, i) => b.classList.toggle('on', i === sec));
+    fills.forEach((f, i) => {
+      const a = firstFrameOf(i), z = lastFrameOf(i);
+      f.style.width = `${Math.max(0, Math.min(1, (reach - a + 1) / (z - a + 1))) * 100}%`;
+    });
+  };
+  // Section outlines invite a click only when the reader is looking at the whole board.
+  const overviewMode = (on: boolean) => world.classList.toggle('inside', !on);
 
   let exploring = touch;
   let cam: Cam = fit(all);
-  let zoomedSec = -1;
+  let current = -1;
 
   // Guided mode (desktop): the scroll position inside the tall board section drives the camera.
   const frameLen = () => window.innerHeight * 0.6;
@@ -455,8 +484,11 @@ const personas = [
     const t = ease(Math.min(1, f / 0.55));
     cam = { tx: a.tx + (b.tx - a.tx) * t, ty: a.ty + (b.ty - a.ty) * t, s: a.s + (b.s - a.s) * t };
     put(cam);
-    show(Math.floor(s + 0.45));
-    mark(frameSec(Math.round(s)));
+    const reach = Math.floor(s + 0.45);
+    show(reach);
+    current = frameSec(Math.round(s));
+    progress(current, reach);
+    overviewMode(s < 0.5);
   };
   const draw = () => { if (!exploring) guided(); };
 
@@ -464,44 +496,56 @@ const personas = [
     if (touch) return;
     exploring = on;
     hint.hidden = !on;
-    wholeBtn.textContent = on ? 'back to the story' : 'see whole board';
-    if (on) show(frames.length - 1); else draw();
+    if (on) { show(frames.length - 1); progress(current, frames.length); } else draw();
   };
 
-  // Touch mode: zoomed out to start, every piece readable, tap a section to zoom in.
+  // Go to a section: on desktop, by scrolling the story there; on touch, by zooming the camera.
   const touchGo = (sec: number) => {
-    zoomedSec = sec;
+    current = sec;
     view.classList.toggle('zoomed', sec >= 0);
     cam = fit(sec >= 0 ? secs[sec] : all);
     put(cam, true);
-    mark(sec);
+    progress(sec, frames.length);
+    overviewMode(sec < 0);
   };
-
-  steps.forEach((b) => b.addEventListener('click', () => {
-    const sec = Number(b.dataset.sec);
+  const goSection = (sec: number) => {
     if (touch) return touchGo(sec);
     explore(false);
     window.scrollTo({ top: boardTop() + firstFrameOf(sec) * frameLen() + 2, behavior: calm ? 'auto' : 'smooth' });
-  }));
-  wholeBtn.addEventListener('click', () => {
-    if (touch) return touchGo(-1);
-    if (exploring) return explore(false);
-    explore(true);
-    cam = fit(all);
-    put(cam, true);
-  });
-  nextBtn.addEventListener('click', () => touchGo((zoomedSec + 1) % secs.length));
-
-  // Dragging pans the board; pinching (or ctrl + wheel on a trackpad) zooms around the fingers or pointer.
-  const ptrs = new Map<number, { x: number; y: number }>();
-  let moved = 0, pinch = 0;
+  };
   const zoomAt = (px: number, py: number, k: number) => {
     const s = Math.max(fit(all).s * 0.8, Math.min(1.6, cam.s * k));
     cam = { tx: px - (px - cam.tx) * (s / cam.s), ty: py - (py - cam.ty) * (s / cam.s), s };
     put(cam);
   };
+  const zoomCentre = (k: number) => {
+    zoomAt(view.clientWidth / 2, (view.clientHeight - BAR) / 2, k);
+    world.classList.add('anim');
+  };
+
+  steps.forEach((b) => b.addEventListener('click', () => goSection(Number(b.dataset.sec))));
+  // Zoom: from the whole board it starts the story; inside a section it moves in closer.
+  zoomBtn.addEventListener('click', () => {
+    const atOverview = touch ? current < 0 : !world.classList.contains('inside');
+    if (atOverview) return goSection(Math.max(0, current));
+    if (!touch && !exploring) explore(true);
+    zoomCentre(1.4);
+  });
+  // Close: back out to the whole board, with every piece pinned up to look around freely.
+  closeBtn.addEventListener('click', () => {
+    if (touch) return touchGo(-1);
+    explore(true);
+    overviewMode(true);
+    cam = fit(all);
+    put(cam, true);
+  });
+
+  // Dragging pans the board; pinching (or ctrl + wheel on a trackpad) zooms around the fingers or pointer.
+  // A click or tap on a section zooms into it.
+  const ptrs = new Map<number, { x: number; y: number }>();
+  let moved = 0, pinch = 0;
   view.addEventListener('pointerdown', (e) => {
-    if ((e.target as Element).closest('.ic-bar')) return;
+    if ((e.target as Element).closest('.ic-round, .ic-progress')) return;
     ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
     moved = 0;
     if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch = Math.hypot(a.x - b.x, a.y - b.y); }
@@ -526,17 +570,17 @@ const personas = [
     cam = { ...cam, tx: cam.tx + dx, ty: cam.ty + dy };
     put(cam);
   });
-  const lift = (e: PointerEvent) => {
-    const wasTap = ptrs.size === 1 && moved < 6;
+  view.addEventListener('pointerup', (e) => {
+    const wasTap = ptrs.has(e.pointerId) && ptrs.size === 1 && moved < 6;
     ptrs.delete(e.pointerId);
     if (ptrs.size < 2) pinch = 0;
-    if (!touch || !wasTap || view.classList.contains('zoomed')) return;
+    if (!wasTap) return;
     const box = view.getBoundingClientRect();
     const wx = (e.clientX - box.left - cam.tx) / cam.s, wy = (e.clientY - box.top - cam.ty) / cam.s;
     const hit = secs.findIndex((r) => wx >= r.x && wx <= r.x + r.w && wy >= r.y && wy <= r.y + r.h);
-    if (hit >= 0) touchGo(hit);
-  };
-  view.addEventListener('pointerup', lift);
+    const atOverview = !world.classList.contains('inside');
+    if (hit >= 0 && (atOverview || hit !== current)) goSection(hit);
+  });
   view.addEventListener('pointercancel', (e) => { ptrs.delete(e.pointerId); pinch = 0; });
   view.addEventListener('wheel', (e) => {
     if (e.ctrlKey) {
@@ -591,7 +635,7 @@ const personas = [
     queued = true;
     requestAnimationFrame(() => { queued = false; draw(); });
   }, { passive: true });
-  window.addEventListener('resize', () => { size(); if (touch) touchGo(zoomedSec); else draw(); });
+  window.addEventListener('resize', () => { size(); if (touch) touchGo(current); else draw(); });
 
   size();
   if (touch) { show(frames.length - 1); touchGo(-1); } else draw();
