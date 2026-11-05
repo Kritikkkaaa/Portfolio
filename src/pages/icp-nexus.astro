@@ -247,13 +247,13 @@ const checkTitle: Record<string, string> = { did: 'what i did', next: 'what i di
 </ol>
 <button type="button" class="ic-chip" id="chip" hidden></button>
 </nav>
-<button type="button" class="ic-round" id="close" aria-label="Back to the whole board">
+<button type="button" class="ic-round" id="close" aria-label="Leave the board">
 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6 L18 18 M18 6 L6 18"></path></svg>
 </button>
 </div>
 </section>
 
-<section class="ic-end">
+<section class="ic-end" id="end">
 <p>that’s where the numbers stand today.</p>
 <a class="ic-return" href="/">← return</a>
 </section>
@@ -513,7 +513,11 @@ const checkTitle: Record<string, string> = { did: 'what i did', next: 'what i di
 
   steps.forEach((b) => b.addEventListener('click', () => goSection(Number(b.dataset.sec))));
   zoomBtn.addEventListener('click', () => out ? zoomIn() : zoomOut());
-  closeBtn.addEventListener('click', zoomOut);
+  // Close: leave the board and carry on to the end of the page.
+  closeBtn.addEventListener('click', () => {
+    if (!touch && exploring) explore(false);
+    document.getElementById('end')?.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' });
+  });
 
   // The control bar stays fixed to the bottom of the screen while the board is on screen.
   const bar = () => {
