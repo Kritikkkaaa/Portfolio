@@ -4,7 +4,7 @@ const first = 'content marketer';
 const firstLetters = first.split('').map((ch, i) => ({ ch: ch === ' ' ? ' ' : ch, d: (0.35 + i * 0.05).toFixed(3) }));
 ---
 <section id="top" aria-labelledby="hello" style="display: flex; flex-wrap: wrap; gap: 48px 56px; align-items: center; box-sizing: border-box; min-height: calc(100vh - 100px); padding-bottom: 112px">
-<div style="flex: 7 1 0; min-width: min(100%, 420px); display: flex; flex-direction: column; gap: 20px">
+<div style="flex: 6 1 0; min-width: min(100%, 420px); display: flex; flex-direction: column; gap: 20px">
 <h1 id="hello" class="rise" style="animation-delay: 0.3s; margin: 0; font-family: 'Inter', system-ui, sans-serif; font-weight: 500; font-size: clamp(44px, 6.2vw, 76px); line-height: 1; letter-spacing: -0.02em">Kritika Upadhyay<span class="roles" aria-hidden="true" style="font-family: 'Newsreader', serif; font-weight: 400; letter-spacing: 0; font-style: italic; font-size: 0.72em; color: #D8C9A3"><span class="wstack"><span class="wlayer" id="w-out"></span><span class="wlayer" id="w-in">{firstLetters.map((l) => <span class="lt ia" style={`animation-delay: ${l.d}s`}>{l.ch}</span>)}</span></span></span><span class="sr-only">, content marketer, storyteller, product manager and growth marketer</span></h1>
 <p class="rise" style="animation-delay: 0.42s; margin: 0; max-width: 560px; font-size: 20px; color: #C9CDD5; text-wrap: pretty">grew up in product startups. i've done marketing, product, content and support. i'm at my best where deep user empathy meets product teardowns, and then i tweet about it.</p>
 <nav class="skills rise" aria-label="What i do" style="animation-delay: 0.54s; margin-left: -6px">
@@ -14,20 +14,24 @@ const firstLetters = first.split('').map((ch, i) => ({ ch: ch === ' ' ? ' ' : c
 <a class="skill" href="#work">events</a><span class="dot" aria-hidden="true">·</span>
 <a class="skill" href="#work">growth</a>
 </nav>
-<!-- Temporary: a direct way into the ICP case study until the work section links to it. -->
+<div class="hd-cta-row">
 <a class="ft-secondary rise" href="/work/icp-positioning-messaging-nexus" style="animation-delay: 0.66s; align-self: flex-start">ICP case study<span aria-hidden="true">→</span></a>
+<span class="hd-note"><span style="font-size: 20px" aria-hidden="true">←</span> start here</span>
+</div>
 </div>
 
-<div class="fade" style="animation-delay: 0.4s; flex: 3 1 0; min-width: 260px; display: flex; justify-content: center">
+<div class="fade" style="animation-delay: 0.4s; flex: 4 1 0; min-width: 300px; display: flex; justify-content: center">
+<div style="width: 100%; max-width: 500px">
 <svg class="venn" viewBox="0 0 320 300" role="img" aria-label="Three overlapping circles: product, writing and users. Where all three meet: me.">
-<circle class="venn-c" cx="125" cy="115" r="86" fill="rgba(201,205,213,0.07)" stroke="rgba(201,205,213,0.55)"></circle>
-<circle class="venn-c" cx="195" cy="115" r="86" fill="rgba(216,201,163,0.08)" stroke="rgba(216,201,163,0.55)"></circle>
-<circle class="venn-c" cx="160" cy="178" r="86" fill="rgba(159,176,200,0.08)" stroke="rgba(159,176,200,0.55)"></circle>
-<text class="venn-l" x="88" y="92" text-anchor="middle">product</text>
-<text class="venn-l" x="232" y="92" text-anchor="middle">writing</text>
-<text class="venn-l" x="160" y="238" text-anchor="middle">users</text>
-<text class="venn-me" x="160" y="144">me</text>
+<circle class="venn-c" cx="112" cy="106" r="86" fill="rgba(201,205,213,0.07)" stroke="rgba(201,205,213,0.55)"></circle>
+<circle class="venn-c" cx="208" cy="106" r="86" fill="rgba(216,201,163,0.08)" stroke="rgba(216,201,163,0.55)"></circle>
+<circle class="venn-c" cx="160" cy="190" r="86" fill="rgba(159,176,200,0.08)" stroke="rgba(159,176,200,0.55)"></circle>
+<text class="venn-l" x="74" y="82" text-anchor="middle">product</text>
+<text class="venn-l" x="246" y="82" text-anchor="middle">writing</text>
+<text class="venn-l" x="160" y="256" text-anchor="middle">users</text>
+<text class="venn-me" x="160" y="140">me</text>
 </svg>
+</div>
 </div>
 {/* The crystal orb used to live here. It now sits in the footer (Footer.astro); its markup is kept below for reference.
 <div class="fade" style="animation-delay: 0.4s; flex: 3 1 0; min-width: 240px; display: flex; flex-direction: column; align-items: center; gap: 14px">

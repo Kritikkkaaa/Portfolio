@@ -1,8 +1,6 @@
 ---
-// Third fold: typing heading, the two exits, the coffee-card deck beside the crystal orb, constellation socials and the hairline row.
-import moon from '../parts/dkmoon.html?raw';
+// Third fold: typing heading, the two exits, the crystal orb, constellation socials and the hairline row.
 import rings from '../parts/rings.html?raw';
-const closed = [-16, -8, 0, 8, 16];
 const LINKEDIN = 'https://www.linkedin.com/in/kritika-upadhyay-2001/?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
 const RESUME = '/resume.pdf';
 const INSTAGRAM = 'https://www.instagram.com/verykritikal/?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
@@ -20,19 +18,6 @@ const SUBSTACK = 'https://substack.com/@verykritikal/posts?utm_source=Portfolio&
 </div>
 
 <div class="ft-play">
-<div class="ft-deckcol">
-<div class="deck" id="deck">
-{closed.map((a, i) => (
-<button class="dk-card" type="button" aria-label={`Draw card ${i + 1} of 5`} aria-pressed="false" data-i={i} style={`transform: rotate(${a}deg); z-index: ${i + 1}`}>
-<span class="dk-inner" style={`animation-delay: ${(-i * 0.6).toFixed(1)}s`}>
-<span class="dk-face"><span class="dk-frame" set:html={moon}></span></span>
-<span class="dk-face dk-back"><span class="dk-frame" style="flex-direction: column; gap: 8px; padding: 10px 9px; text-align: center"><span style="font-size: 8px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #D8C9A3">your coffee card</span><span class="dk-fortune" style="font-family: 'Newsreader', serif; font-style: italic; font-size: 13px; line-height: 1.25; color: #E8EBF0"></span><span class="dk-close" style="position: absolute; left: 0; right: 0; bottom: 12px; font-size: 8px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #A9AFB9">close ×</span></span></span>
-</span>
-</button>
-))}
-</div>
-<div id="deck-hint" aria-live="polite" style="min-height: 22px; margin-top: -14px; font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #8A8D96">pick a card</div>
-</div>
 <div class="ft-orbcol">
 <button class="orb" id="orb" type="button" aria-label="Crystal ball. Touch it to know your future" aria-pressed="false">
 <span id="ripples"></span>
@@ -102,46 +87,6 @@ const SUBSTACK = 'https://substack.com/@verykritikal/posts?utm_source=Portfolio&
     };
     setTimeout(step, 600);
   }
-
-  // The coffee-card deck.
-  const F = [
-    'you will leave with one GTM idea you did not walk in with.',
-    'your best feature is hiding three clicks deep.',
-    'the right people are closer than your funnel thinks.',
-    'a launch you are planning needs a better first sentence.',
-    'someone on your team already knows the answer. ask them.'
-  ];
-  const deck = document.getElementById('deck') as HTMLElement;
-  const hint = document.getElementById('deck-hint') as HTMLElement;
-  const cards = Array.from(deck.querySelectorAll<HTMLButtonElement>('.dk-card'));
-  const fortunes = Array.from(deck.querySelectorAll<HTMLElement>('.dk-fortune'));
-  const closed = [-16, -8, 0, 8, 16];
-  const opened = [-30, -15, 0, 15, 30];
-  let fan = false, drawn = -1, f = 0;
-  const render = () => {
-    deck.classList.toggle('has', drawn >= 0);
-    hint.textContent = drawn >= 0 ? '' : 'pick a card';
-    fortunes.forEach((el) => { el.textContent = F[f]; });
-    cards.forEach((c, i) => {
-      const isDrawn = drawn === i;
-      const ang = isDrawn ? 0 : (fan || drawn >= 0 ? opened[i] : closed[i]);
-      c.style.transform = isDrawn ? 'translateY(-10px) rotate(0deg) scale(1.3)' : `rotate(${ang}deg)`;
-      c.style.zIndex = String(isDrawn ? 10 : i + 1);
-      c.classList.toggle('drawn', isDrawn);
-      c.setAttribute('aria-pressed', String(isDrawn));
-      c.setAttribute('aria-label', isDrawn ? `Your coffee card: ${F[f]} Close` : `Draw card ${i + 1} of 5`);
-    });
-  };
-  deck.addEventListener('mouseenter', () => { fan = true; render(); });
-  deck.addEventListener('mouseleave', () => { fan = false; render(); });
-  cards.forEach((c, i) => c.addEventListener('click', () => {
-    if (drawn === i) { drawn = -1; render(); return; }
-    let next = Math.floor(Math.random() * F.length);
-    if (next === f) next = (next + 1) % F.length;
-    f = next; drawn = i;
-    render();
-  }));
-  render();
 
   // The crystal orb lives here now; its code sits in its own block so its names don't clash with the deck's.
   {

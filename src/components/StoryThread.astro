@@ -1,0 +1,207 @@
+---
+// Second fold: how i got into product, as a horizontal thread of moments.
+// Ported from the Alloy prototype (StoryThread.tsx). Text in [brackets] is a placeholder to fill in.
+const ICP = '/work/icp-positioning-messaging-nexus';
+const OPENING_W = 600;
+const NODE = 28;
+
+const thread = (w: number, n?: number) =>
+  n === undefined
+    ? `M0 20 L${w} 20`
+    : `M0 20 C${n * 0.25} 20 ${n * 0.25} 15 ${n * 0.5} 15 S${n * 0.75} 20 ${n} 20 C${n + (w - n) * 0.25} 20 ${n + (w - n) * 0.25} 25 ${n + (w - n) * 0.5} 25 S${n + (w - n) * 0.75} 20 ${w} 20`;
+
+const moments = [
+  { id: 'tedx', label: 'TEDx', width: 400, side: 'up' },
+  { id: 'art', label: 'Art internship', width: 420, side: 'down' },
+  { id: 'cad', label: 'AutoCAD', width: 400, side: 'up' },
+  { id: 'plane', label: 'Plane', width: 700, side: 'down' },
+  { id: 'ea', label: 'Freelance EA', width: 480, side: 'up' },
+  { id: 'marmeto', label: 'Marmeto', width: 460, side: 'down' },
+  { id: 'nexus', label: 'Nexus', width: 820, side: 'up' },
+  { id: 'now', label: 'Now', width: 440, side: 'down', now: true }
+];
+const labels = ['start', ...moments.map((m) => m.label)];
+const swatches = ['#E8EBF0', '#C9CDD5', '#8A8D96', '#3A3842', '#141319'];
+---
+<section id="work" class="tl-wrap" aria-label="How I got into product">
+<div class="tl-scroller" id="tl-scroller" tabindex="0" role="region" aria-roledescription="timeline" aria-label="Timeline. Use the left and right arrow keys to move between moments.">
+<div class="tl-lead" id="tl-lead"><svg class="tl-thread" width="200" height="40" viewBox="0 0 200 40" aria-hidden="true"><path d={thread(200)} fill="none" stroke="rgb(210,69,63)" stroke-width="1.6" stroke-linecap="round"></path></svg></div>
+
+<article class="tl-item tl-open" style={`width: ${OPENING_W}px`}>
+<svg class="tl-thread" width={OPENING_W} height="40" viewBox={`0 0 ${OPENING_W} 40`} aria-hidden="true"><path d={thread(OPENING_W)} fill="none" stroke="rgb(210,69,63)" stroke-width="1.6" stroke-linecap="round"></path></svg>
+<p class="tl-open-a">I was an adult.</p>
+<p class="tl-open-b">I was out of school.</p>
+</article>
+
+{moments.map((m, i) => (
+<article class={`tl-item ${m.side}${m.now ? ' now' : ''}`} style={`width: ${m.width}px`} aria-label={m.label}>
+<svg class="tl-thread" width={m.width} height="40" viewBox={`0 0 ${m.width} 40`} aria-hidden="true"><path d={thread(m.width, NODE)} fill="none" stroke="rgb(210,69,63)" stroke-width="1.6" stroke-linecap="round"></path></svg>
+<span class="tl-node" style={`left: ${NODE - 7}px`}></span>
+<span class="tl-idx" style={`left: ${NODE + 14}px`}>{String(i + 1).padStart(2, '0')}</span>
+<div class="tl-card" style={`left: ${NODE}px; width: ${m.width - NODE - 36}px`}>
+
+{m.id === 'tedx' && <>
+<div class="tl-date"><span>apr 2022</span><em>tentative</em></div>
+<h3>TEDx</h3>
+<p>after leaving school, i helped organize a TEDx event.</p>
+<div class="tl-ticket" aria-hidden="true"><div class="tl-ticket-main"><small>admit one</small><b>TEDx<span>[ event ]</span></b></div><div class="tl-ticket-stub">x</div></div>
+<p class="tl-opens"><span>opened up</span> <span class="tl-fill">[what this opened up]</span></p>
+</>}
+
+{m.id === 'art' && <>
+<div class="tl-date"><span><span class="tl-fill">[mon yy]</span> → <span class="tl-fill">[mon yy]</span></span></div>
+<h3><span class="tl-fill">[internship name, from LinkedIn]</span></h3>
+<p>the art internship. i made sales calls on commission, and earned money doing it.</p>
+<svg class="tl-art" width="150" height="46" viewBox="0 0 150 46" aria-hidden="true">
+{[0, 1, 2, 3].map((k) => <line x1={8 + k * 11} y1="6" x2={8 + k * 11} y2="30" stroke="#C9CDD5" stroke-width="1.5" stroke-linecap="round"></line>)}
+<line x1="2" y1="26" x2="48" y2="10" stroke="rgb(210,69,63)" stroke-width="1.5" stroke-linecap="round"></line>
+{[0, 1, 2].map((k) => <line x1={66 + k * 11} y1="6" x2={66 + k * 11} y2="30" stroke="#C9CDD5" stroke-width="1.5" stroke-linecap="round"></line>)}
+<text x="2" y="44" font-size="8.5" letter-spacing="1.6" fill="#8A8D96">CALLS MADE</text>
+</svg>
+<p class="tl-opens"><span>opened up</span> <span class="tl-fill">[what this opened up]</span></p>
+</>}
+
+{m.id === 'cad' && <>
+<div class="tl-date"><span><span class="tl-fill">[mon yy]</span></span></div>
+<h3>AutoCAD, and other tools</h3>
+<p>i started learning AutoCAD and a handful of other tools.</p>
+<svg class="tl-art" width="170" height="74" viewBox="0 0 170 74" aria-hidden="true">
+<rect x="14" y="8" width="120" height="40" fill="none" stroke="#C9CDD5" stroke-width="1.2"></rect>
+<rect x="26" y="20" width="30" height="28" fill="none" stroke="#8A8D96" stroke-width="1" stroke-dasharray="3 3"></rect>
+<circle cx="104" cy="28" r="9" fill="none" stroke="#8A8D96" stroke-width="1"></circle>
+<line x1="14" y1="62" x2="134" y2="62" stroke="rgb(210,69,63)" stroke-width="1"></line>
+<path d="M14 62 l6 -3 v6 z M134 62 l-6 -3 v6 z" fill="rgb(210,69,63)"></path>
+<line x1="14" y1="50" x2="14" y2="68" stroke="rgb(210,69,63)" stroke-width="0.8"></line>
+<line x1="134" y1="50" x2="134" y2="68" stroke="rgb(210,69,63)" stroke-width="0.8"></line>
+<text x="74" y="58" font-size="8.5" text-anchor="middle" fill="#C9CDD5" letter-spacing="1">1200</text>
+</svg>
+<p class="tl-opens"><span>why i started</span> <span class="tl-fill">[what made me start]</span></p>
+</>}
+
+{m.id === 'plane' && <div class="tl-plane">
+<div class="tl-plane-text">
+<div class="tl-date"><span><span class="tl-fill">[mon yy]</span> → <span class="tl-fill">[mon yy]</span></span></div>
+<h3>Plane</h3>
+<p>i joined as an intern and spent most of my time on cold outreach for discovery. Vihar introduced me to product.</p>
+<p>about eight months in, i moved into marketing and helped get the website launch over the line.</p>
+<div class="tl-mini" aria-hidden="true">
+<div class="tl-mini-line"></div>
+<div class="tl-mini-pt" style="left: 0"><b>intern</b><span>cold outreach for discovery</span></div>
+<div class="tl-mini-pt" style="left: 100%; transform: translateX(-100%); align-items: flex-end; text-align: right"><b>marketing</b><span>website launch</span></div>
+<span class="tl-mini-dot" style="left: 0"></span>
+<span class="tl-mini-dot" style="left: 100%; margin-left: -7px"></span>
+<span class="tl-mini-mid">~ 8 months</span>
+</div>
+<p class="tl-opens"><span>opened up</span> product, from the inside. <span class="tl-fill">[more]</span></p>
+<span class="tl-soon">case study · soon</span>
+</div>
+<div class="tl-polaroid" aria-hidden="true">
+<svg class="hd-pin" width="22" height="26" viewBox="0 0 22 26" style="position: absolute; left: 50%; top: -14px; margin-left: -11px; z-index: 1"><ellipse cx="13" cy="22" rx="6" ry="2" fill="rgba(0,0,0,0.45)"></ellipse><circle cx="11" cy="10" r="8" fill="rgb(210,69,63)"></circle><circle cx="8.5" cy="7.5" r="2.4" fill="rgba(255,255,255,0.35)"></circle><path d="M11 17 L11 24" stroke="rgb(169,175,185)" stroke-width="1.2"></path></svg>
+<div class="tl-polaroid-img">[ photo ]</div>
+<span>[ caption ]</span>
+</div>
+</div>}
+
+{m.id === 'ea' && <>
+<div class="tl-date"><span><span class="tl-fill">[mon yy]</span> → <span class="tl-fill">[mon yy]</span></span></div>
+<h3>Freelance EA work</h3>
+<p>i learned about product, taste and community, and wrote some of my best work here.</p>
+<blockquote>thinking and expressing what i think are two different things.</blockquote>
+<p class="tl-opens"><span>opened up</span> <span class="tl-fill">[what this opened up]</span></p>
+</>}
+
+{m.id === 'marmeto' && <>
+<div class="tl-date"><span><span class="tl-fill">[mon yy]</span> → <span class="tl-fill">[mon yy]</span></span></div>
+<h3>Marmeto</h3>
+<p>i joined as a PM and worked on the design system.</p>
+<div class="tl-tokens" aria-hidden="true">
+{swatches.map((c, k) => <span style={`background: ${c}`}><i>--c-{k + 1}</i></span>)}
+<div class="tl-scale">{[4, 8, 12, 16, 24].map((s) => <span style={`width: ${s}px; height: ${s}px`}></span>)}<small>space</small></div>
+</div>
+<span class="tl-soon">See my work on the design system · soon</span>
+</>}
+
+{m.id === 'nexus' && <div class="tl-nexus">
+<div class="tl-nexus-text">
+<div class="tl-date"><span><span class="tl-fill">[mon yy]</span> → <span class="tl-fill">[mon yy]</span></span></div>
+<h3>Nexus</h3>
+<p>i built it zero to one, then took it to market myself: every demo became a requirement, every requirement a sprint.</p>
+<div class="tl-stats">
+<div><b>250+</b><span>organic installs in launch week</span></div>
+<div><b>65.5%</b><span>merchant activation, up from 32% in a week</span></div>
+</div>
+<a class="ft-secondary" href={ICP}>See how I found who Nexus is for<span aria-hidden="true">→</span></a>
+</div>
+<figure class="tl-fig">
+<img src="/case/icp-nexus/icp-table.png" alt="The Nexus ideal customer profile: business, Shopify plan, region, trigger moment and job to be done, each with its evidence." width="1084" height="660" loading="lazy">
+<figcaption>final ICP!</figcaption>
+</figure>
+</div>}
+
+{m.id === 'now' && <>
+<div class="tl-date"><span>now</span></div>
+<h3>i’m on the hunt again.</h3>
+<p>looking for the next place to build, and to be useful. <span class="tl-fill">[what i’m looking for]</span></p>
+</>}
+
+</div>
+</article>
+))}
+
+<div class="tl-tail" aria-hidden="true"></div>
+</div>
+
+<div class="tl-controls">
+<button class="tl-btn" id="tl-prev" type="button" aria-label="Previous moment" disabled>←</button>
+<div class="tl-dots" role="tablist" aria-label="Moments">
+{labels.map((l, i) => <button class={`tl-dot${i === 0 ? ' on' : ''}`} type="button" role="tab" aria-selected={i === 0 ? 'true' : 'false'} aria-label={l} title={l} data-i={i}></button>)}
+</div>
+<button class="tl-btn" id="tl-next" type="button" aria-label="Next moment">→</button>
+<span class="tl-count" id="tl-count" data-labels={JSON.stringify(labels)}><b>00</b> / {String(labels.length - 1).padStart(2, '0')} · start</span>
+</div>
+</section>
+
+<script>
+  const scroller = document.getElementById('tl-scroller') as HTMLElement;
+  const lead = document.getElementById('tl-lead') as HTMLElement;
+  const prev = document.getElementById('tl-prev') as HTMLButtonElement;
+  const next = document.getElementById('tl-next') as HTMLButtonElement;
+  const counter = document.getElementById('tl-count') as HTMLElement;
+  const labels: string[] = JSON.parse(counter.dataset.labels!);
+  const dots = Array.from(document.querySelectorAll<HTMLButtonElement>('.tl-dot'));
+  const items = Array.from(scroller.querySelectorAll<HTMLElement>('.tl-item'));
+  const count = items.length;
+  const total = String(count - 1).padStart(2, '0');
+  let active = 0;
+
+  const left = (i: number) => items[i].offsetLeft - lead.offsetWidth;
+  const goTo = (i: number) => scroller.scrollTo({ left: left(Math.max(0, Math.min(count - 1, i))), behavior: 'smooth' });
+
+  const paint = () => {
+    prev.disabled = active === 0;
+    next.disabled = active === count - 1;
+    dots.forEach((d, i) => {
+      d.classList.toggle('on', i === active);
+      d.setAttribute('aria-selected', String(i === active));
+    });
+    counter.innerHTML = `<b>${String(active).padStart(2, '0')}</b> / ${total} · ${labels[active]}`;
+  };
+  const onScroll = () => {
+    let best = 0, dist = Infinity;
+    items.forEach((_, i) => {
+      const d = Math.abs(left(i) - scroller.scrollLeft);
+      if (d < dist) { dist = d; best = i; }
+    });
+    if (best !== active) { active = best; paint(); }
+  };
+
+  scroller.addEventListener('scroll', onScroll, { passive: true });
+  scroller.addEventListener('keydown', (e) => {
+    const keys: Record<string, number> = { ArrowRight: active + 1, ArrowLeft: active - 1, Home: 0, End: count - 1 };
+    if (e.key in keys) { e.preventDefault(); goTo(keys[e.key]); }
+  });
+  prev.addEventListener('click', () => goTo(active - 1));
+  next.addEventListener('click', () => goTo(active + 1));
+  dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
+  paint();
+</script>
