@@ -1,0 +1,175 @@
+---
+// /work: two ways into the work. Look for a kind of moment (a decision, something owned, a use of data...) and jump
+// straight to the case-study section that shows it, or browse the projects and pick a story.
+// Same world as the case studies: grid board, Commissioner for print, Kalam for handwriting, sticky-note colours, red pins.
+import Base from '../../layouts/Base.astro';
+
+const ICP = '/work/icp-positioning-messaging-nexus';
+
+// The kinds of evidence a reader might come looking for, each with its sticky-note colour.
+const kinds = [
+  { id: 'decision', label: 'a hard decision', color: '#F2C8A2' },
+  { id: 'owned', label: 'something i owned', color: '#BFD4EA' },
+  { id: 'data', label: 'how i used data', color: '#F4F3EF' },
+  { id: 'users', label: 'how i listened to users', color: '#D4EC8E' },
+  { id: 'founders', label: 'working with founders', color: '#BCE5CF' }
+];
+
+// Moments from the work. Real ones link straight to the case-study section that shows them; placeholders are marked.
+type Moment = { kind: string; text: string; project: string; where?: string; href?: string };
+const moments: Moment[] = [
+  { kind: 'decision', text: 'chose to start with merchants already running a marketplace, not everyone who installed.', project: 'nexus · ICP', where: 'section 2 · choosing who to target', href: `${ICP}#choosing-who-to-target` },
+  { kind: 'decision', text: 'moved the message from pricing and free trials to “simple to start, manage and grow”.', project: 'nexus · ICP', where: 'section 3 · turning customer value into messaging', href: `${ICP}#turning-value-into-messaging` },
+  { kind: 'owned', text: 'wrote nexus’s ideal customer profile and its guardrails, with the co-founder.', project: 'nexus · ICP', where: 'section 2 · choosing who to target', href: `${ICP}#choosing-who-to-target` },
+  { kind: 'data', text: 'found only 7.9% of stores were paying before deciding who to target.', project: 'nexus · ICP', where: 'section 1 · users, but no clear audience', href: `${ICP}#no-clear-audience` },
+  { kind: 'users', text: 'checked why merchants uninstalled and what they asked for in intercom.', project: 'nexus · ICP', where: 'section 2 · choosing who to target', href: `${ICP}#choosing-who-to-target` },
+  { kind: 'founders', text: 'interviewed the founder with the mom test to find what nexus should mean.', project: 'nexus · ICP', where: 'section 3 · turning customer value into messaging', href: `${ICP}#turning-value-into-messaging` },
+  { kind: 'decision', text: '[placeholder: a decision from another project]', project: '[project two]' },
+  { kind: 'owned', text: '[placeholder: something you owned end to end]', project: '[project three]' },
+  { kind: 'data', text: '[placeholder: a number that changed your mind]', project: '[project two]' }
+];
+
+// Projects to browse. Each has a few named entrances straight into its strongest moments.
+type Project = { title: string; what: string; role: string; when: string; href?: string; doors: { label: string; href?: string }[] };
+const projects: Project[] = [
+  { title: 'from user stories to an ICP, positioning and messaging', what: 'nexus, a shopify app for multi-vendor marketplaces, had installs but no clear audience. three steps to who it’s for and what to say.',
+    role: 'product marketing', when: '2026', href: ICP, doors: [
+      { label: 'the 7.9% that made us stop and look', href: `${ICP}#no-clear-audience` },
+      { label: 'choosing who to target', href: `${ICP}#choosing-who-to-target` },
+      { label: 'from founder vision to one line', href: `${ICP}#turning-value-into-messaging` }
+    ] },
+  { title: '[project two]', what: '[one line on what it was and why it mattered]', role: '[role]', when: '[year]', doors: [{ label: '[a strong moment]' }, { label: '[another moment]' }] },
+  { title: '[project three]', what: '[one line on what it was and why it mattered]', role: '[role]', when: '[year]', doors: [{ label: '[a strong moment]' }, { label: '[another moment]' }] }
+];
+const kindOf = (id: string) => kinds.find((k) => k.id === id)!;
+const tilt = (i: number) => [-1.2, 0.8, -0.5, 1.1, -0.9, 0.6][i % 6];
+---
+<Base title="work · Kritika Upadhyay" description="find a decision, something i owned, or how i used data, and jump straight to the part of the case study that shows it. or browse the projects.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400&family=Commissioner:wght@400;500;600;700&display=swap">
+<div class="wk">
+
+<header class="wk-head">
+<a class="wk-back" href="/">← back</a>
+<h1>work</h1>
+<p class="wk-hand">two ways in. look for a moment, or wander through the projects.</p>
+</header>
+
+<section class="wk-find" aria-labelledby="find-h">
+<p class="wk-k" id="find-h">find a moment</p>
+<p class="wk-ask">what are you looking for?</p>
+<div class="wk-tabs" role="group" aria-label="Kinds of moment">
+<button type="button" class="wk-tab" data-kind="all" aria-pressed="true">everything</button>
+{kinds.map((k) => <button type="button" class="wk-tab" data-kind={k.id} aria-pressed="false" style={`--c:${k.color}`}>{k.label}<span class="wk-n">{moments.filter((m) => m.kind === k.id && m.href).length}</span></button>)}
+</div>
+<ul class="wk-slips" id="slips">
+{moments.map((m, i) => {
+  const k = kindOf(m.kind);
+  const inner = <>
+    <span class="tape" aria-hidden="true"></span>
+    <span class="sl-k">{k.label}</span>
+    <span class="sl-t">{m.text}</span>
+    <span class="sl-f"><span>{m.project}</span>{m.href ? <b>{m.where} →</b> : <b>[link to the section]</b>}</span>
+  </>;
+  return <li class={`slip${m.href ? '' : ' ph'}`} data-kind={m.kind} style={`--c:${k.color};--r:${tilt(i)}deg`}>
+    {m.href ? <a href={m.href}>{inner}</a> : <div aria-label="placeholder">{inner}</div>}
+  </li>;
+})}
+</ul>
+</section>
+
+<section class="wk-browse" aria-labelledby="browse-h">
+<p class="wk-k" id="browse-h">or browse the projects</p>
+<ul class="wk-projects">
+{projects.map((p, i) => (
+<li class={`proj${p.href ? '' : ' ph'}`} style={`--r:${tilt(i + 2)}deg`}>
+<span class="pin" aria-hidden="true"></span>
+{p.href
+  ? <a class="proj-cover" href={p.href} aria-label={`Open the case study: ${p.title}`}><svg viewBox="0 0 320 170" aria-hidden="true"><rect width="320" height="170" fill="#141416"></rect><path d="M0 0 H320 M0 17 H320 M0 34 H320 M0 51 H320 M0 68 H320 M0 85 H320 M0 102 H320 M0 119 H320 M0 136 H320 M0 153 H320 M16 0 V170 M48 0 V170 M80 0 V170 M112 0 V170 M144 0 V170 M176 0 V170 M208 0 V170 M240 0 V170 M272 0 V170 M304 0 V170" stroke="rgba(169,175,185,.08)"></path><rect x="24" y="22" width="78" height="52" fill="#BFD4EA" transform="rotate(-2 63 48)"></rect><rect x="118" y="20" width="84" height="58" fill="#F4F3EF" transform="rotate(1.5 160 49)"></rect><rect x="222" y="26" width="74" height="46" fill="#F4B9B2" transform="rotate(-1.5 259 49)"></rect><rect x="40" y="98" width="96" height="50" fill="#F4F3EF" transform="rotate(1 88 123)"></rect><rect x="172" y="100" width="110" height="46" fill="#B8E2C2" transform="rotate(-1 227 123)"></rect><path d="M290 30 C 310 70, 120 70, 88 100 M136 124 C 150 124, 160 124, 172 124" fill="none" stroke="#C2423A" stroke-width="2"></path></svg></a>
+  : <div class="proj-cover ph-cover">[cover]</div>}
+<p class="proj-meta">{p.role} · {p.when}</p>
+<h2>{p.href ? <a href={p.href}>{p.title}</a> : p.title}</h2>
+<p class="proj-what">{p.what}</p>
+<p class="proj-doors-k">ways in</p>
+<ul class="proj-doors">
+{p.doors.map((d) => <li>{d.href ? <a href={d.href}>{d.label} →</a> : <span>{d.label}</span>}</li>)}
+</ul>
+</li>
+))}
+</ul>
+</section>
+
+</div>
+</Base>
+
+<style is:global>
+.sky,.sky a,.sky button{cursor:auto}
+</style>
+
+<style>
+.wk{min-height:100vh;padding:28px 24px 120px;color:#EFEFEE;font-family:'Commissioner',system-ui,sans-serif;background-color:#141416;background-image:linear-gradient(rgba(169,175,185,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(169,175,185,.075) 1px,transparent 1px);background-size:18px 18px;background-position:-1px -1px}
+.wk > *{max-width:1200px;margin-left:auto;margin-right:auto}
+.wk-back{display:inline-block;margin-bottom:48px;color:#A9AFB9;font-size:13px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none}
+.wk-back:hover,.wk-back:focus-visible{color:#EFEFEE}
+.wk-head h1{margin:0;font-weight:500;font-size:clamp(56px,9vw,120px);line-height:.95;letter-spacing:-.04em}
+.wk-hand,.wk-ask{margin:14px 0 0;font-family:'Kalam',cursive;font-weight:300;font-size:clamp(22px,2.4vw,28px);letter-spacing:1px;color:#C9CDD5}
+.wk-k{margin:88px 0 0;font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#D2453F}
+.wk-ask{margin-top:6px;color:#EFEFEE}
+
+.wk-tabs{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 30px}
+.wk-tab{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 16px;border:1px solid #34343A;border-radius:10px 10px 4px 4px;background:rgba(6,6,6,.6);color:#C9CDD5;font:inherit;font-size:14px;cursor:pointer;transition:background-color .2s ease,color .2s ease,transform .2s ease}
+.wk-tab::before{content:"";width:10px;height:10px;border-radius:2px;background:var(--c,#EFEFEE)}
+.wk-tab[data-kind="all"]::before{display:none}
+.wk-tab:hover{transform:translateY(-2px)}
+.wk-tab[aria-pressed="true"]{background:var(--c,#EFEFEE);border-color:transparent;color:#1E1E24;transform:translateY(-3px)}
+.wk-tab[aria-pressed="true"]::before{background:#1E1E24}
+.wk-tab:focus-visible,.slip a:focus-visible,.proj a:focus-visible{outline:2px solid #EFEFEE;outline-offset:3px}
+.wk-n{min-width:22px;padding:1px 6px;border-radius:999px;background:rgba(239,239,238,.12);font-size:12px;text-align:center}
+.wk-tab[aria-pressed="true"] .wk-n{background:rgba(30,30,36,.15)}
+
+.wk-slips{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:34px 26px;margin:0;padding:0;list-style:none}
+.slip{transform:rotate(var(--r));transition:opacity .3s ease,transform .3s ease}
+.slip[hidden]{display:none}
+.slip > a,.slip > div{position:relative;display:flex;flex-direction:column;gap:12px;height:100%;box-sizing:border-box;padding:26px 24px 20px;background:var(--c);color:#1E1E24;text-decoration:none;box-shadow:0 2px 0 rgba(0,0,0,.08),0 14px 28px rgba(0,0,0,.45);transition:transform .25s ease,box-shadow .25s ease}
+.slip > a:hover{transform:translateY(-4px) rotate(calc(var(--r) * -1));box-shadow:0 2px 0 rgba(0,0,0,.08),0 22px 36px rgba(0,0,0,.5)}
+.tape{position:absolute;left:50%;top:-11px;width:84px;height:22px;margin-left:-42px;background:rgba(239,239,238,.45);transform:rotate(-2deg)}
+.sl-k{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(30,30,36,.6)}
+.sl-t{font-family:'Kalam',cursive;font-weight:300;font-size:23px;line-height:1.25;letter-spacing:1px}
+.sl-f{display:flex;flex-direction:column;gap:2px;margin-top:auto;padding-top:12px;border-top:1px dashed rgba(30,30,36,.25);font-size:13px;color:rgba(30,30,36,.7)}
+.sl-f b{font-weight:600;color:#1E1E24}
+.slip.ph > div{background:transparent;border:2px dashed #3A3A42;box-shadow:none;color:#8A8D96}
+.slip.ph .sl-k,.slip.ph .sl-f,.slip.ph .sl-f b{color:#8A8D96;border-color:#3A3A42}
+.slip.ph .tape{display:none}
+
+.wk-projects{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:40px 30px;margin:26px 0 0;padding:0;list-style:none}
+.proj{position:relative;display:flex;flex-direction:column;gap:10px;padding:14px 14px 22px;background:#F4F3EF;color:#1E1E24;box-shadow:0 14px 28px rgba(0,0,0,.45);transform:rotate(var(--r))}
+.pin{position:absolute;left:50%;top:-11px;width:22px;height:22px;margin-left:-11px;border-radius:50%;background:#D2453F;box-shadow:0 4px 8px rgba(0,0,0,.45),inset -3px -3px 0 rgba(0,0,0,.18)}
+.proj-cover{display:block;border:1px solid #DADAD4}
+.proj-cover svg{display:block;width:100%;height:auto}
+.ph-cover{display:flex;align-items:center;justify-content:center;aspect-ratio:320/170;color:#8A8D96;font-size:13px;letter-spacing:.14em;text-transform:uppercase;background:repeating-linear-gradient(135deg,#ECEBE5 0 1px,transparent 1px 12px)}
+.proj-meta{margin:6px 4px 0;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#5A5A62}
+.proj h2{margin:0 4px;font-size:22px;font-weight:600;line-height:1.2;letter-spacing:-.01em}
+.proj h2 a{color:inherit;text-decoration:none}
+.proj h2 a:hover{text-decoration:underline;text-decoration-color:#D2453F;text-underline-offset:4px}
+.proj-what{margin:0 4px;font-size:15px;line-height:1.5;color:#3A3A42}
+.proj-doors-k{margin:8px 4px 0;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#D2453F}
+.proj-doors{display:flex;flex-direction:column;gap:6px;margin:0 4px;padding:0;list-style:none;font-family:'Kalam',cursive;font-weight:300;font-size:21px;letter-spacing:1px}
+.proj-doors a{color:#2457B8;text-decoration:none}
+.proj-doors a:hover{text-decoration:underline}
+.proj-doors span{color:#8A8D96}
+.proj.ph{background:transparent;border:2px dashed #3A3A42;box-shadow:none;color:#8A8D96}
+.proj.ph .pin{display:none}
+.proj.ph h2,.proj.ph .proj-what,.proj.ph .proj-meta{color:#8A8D96}
+.proj.ph .ph-cover{background:repeating-linear-gradient(135deg,#1C1C20 0 1px,transparent 1px 12px);border-color:#3A3A42}
+@media (prefers-reduced-motion:reduce){.slip,.slip > a,.wk-tab{transition:none}}
+</style>
+
+<script>
+  // Tabs filter the moments to one kind; "everything" shows them all.
+  const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('.wk-tab'));
+  const slips = Array.from(document.querySelectorAll<HTMLElement>('.slip'));
+  tabs.forEach((t) => t.addEventListener('click', () => {
+    const kind = t.dataset.kind!;
+    tabs.forEach((b) => b.setAttribute('aria-pressed', String(b === t)));
+    slips.forEach((s) => { s.hidden = kind !== 'all' && s.dataset.kind !== kind; });
+  }));
+</script>

@@ -15,11 +15,11 @@ const skills = [
 ];
 
 // The three sections are stacked down the board, and the ending sits at the bottom, so zoomed out the whole case fits on one screen.
-const SEC_W = 1600, GAP = 300, S2Y = 1000 + GAP, S3Y = S2Y + 1100 + GAP, END_Y = S3Y + 900 + 140, WORLD_W = SEC_W, WORLD_H = END_Y + 380;
+const SEC_W = 1600, GAP = 300, S2Y = 1040 + GAP, S3Y = S2Y + 920 + GAP, END_Y = S3Y + 820 + 140, WORLD_W = SEC_W, WORLD_H = END_Y + 380;
 const sections = [
-  { n: '01', title: 'users, but no clear audience', short: 'unclear', x: 0, y: 0, h: 1000 },
-  { n: '02', title: 'choosing who to target', short: 'learned', x: 0, y: S2Y, h: 1100 },
-  { n: '03', title: 'turning customer value into messaging', short: 'changed', x: 0, y: S3Y, h: 900 }
+  { n: '01', title: 'users, but no clear audience', short: 'unclear', slug: 'no-clear-audience', x: 0, y: 0, h: 1040 },
+  { n: '02', title: 'choosing who to target', short: 'learned', slug: 'choosing-who-to-target', x: 0, y: S2Y, h: 920 },
+  { n: '03', title: 'turning customer value into messaging', short: 'changed', slug: 'turning-value-into-messaging', x: 0, y: S3Y, h: 820 }
 ];
 
 // The same five slots in every section, in reading order. Section-local positions:
@@ -37,34 +37,46 @@ const ORDER: Slot[] = ['ctx', 'did', 'data', 'next', 'ask'];
 // A checklist can carry its own title, and mark its items as open questions (?) instead of done (✓).
 // It can also carry a circled handwritten aim written on the board just above it.
 // A note can be tinted green instead of its usual colour.
-// A section can skip a slot, and move a slot with `at`. A note can add a smaller handwritten line under its text.
+// A section can skip a slot. A note can add a smaller handwritten line under its text.
 // Note text can hold paragraphs (separated by a blank line). A checklist can open with an intro line.
 // A slot can be a pinned screenshot instead of a card.
-type Step = { text?: string; intro?: string; img?: { src: string; iw: number; ih: number; alt: string; caption: string }; sub?: string; items?: string[]; title?: string; mark?: 'q'; aim?: string; tint?: 'green'; at?: { x?: number; y?: number; h?: number }; skills: string[] };
+type Step = { text?: string; intro?: string; img?: { src: string; iw: number; ih: number; alt: string; caption: string }; sub?: string; items?: string[]; title?: string; mark?: 'q'; aim?: string; tint?: 'green'; skills: string[] };
 const story: Partial<Record<Slot, Step>>[] = [
   {
-    ctx: { skills: ['research', 'collab'], at: { h: 220 }, text: 'the co-founder asked for a nexus marketing one-pager. i knew how people used the product.\n\ni needed to decide who to target and what to say.' },
+    ctx: { skills: ['research', 'collab'], text: 'the co-founder asked for a nexus marketing one-pager. i knew how people used the product.\n\ni needed to decide who to target and what to say.' },
     did: { skills: ['research'], title: 'open questions', mark: 'q', items: ['who installs nexus today, and who pays?', 'who did the founders originally build it for?', 'what do those customers need nexus to handle?', 'which customers should our messaging target first?'] },
-    data: { skills: ['research'], at: { h: 340 } },
-    next: { skills: ['research', 'collab'], at: { x: 760, y: 420 }, items: ['collated all existing user information', 'reviewed the one-pager with the co-founder'] },
-    ask: { skills: ['research'], at: { x: 1200, y: 540 }, text: 'who should nexus be for?' }
+    data: { skills: ['research'] },
+    next: { skills: ['research', 'collab'], items: ['collated all existing user information', 'reviewed the one-pager with the co-founder'] },
+    ask: { skills: ['research'], text: 'who should nexus be for?' }
   },
   {
-    did: { skills: ['research', 'collab'], at: { x: 760, y: 110 }, aim: 'the aim: find who gets the most value from nexus.', items: ['defined who to target with the co-founder', 'checked why merchants uninstalled', 'checked what merchants needed in intercom'] },
-    data: { skills: ['research'], at: { h: 340 } },
-    next: { skills: ['research', 'positioning'], at: { x: 760, y: 560 }, items: ['defined the primary ICP', 'defined guardrails and where they hang out'] },
-    ask: { skills: ['positioning'], at: { x: 1200, y: 110 }, text: 'what value does our primary ICP get?', sub: 'aka positioning' }
+    did: { skills: ['research', 'collab'], aim: 'the aim: find who gets the most value from nexus.', items: ['defined who to target with the co-founder', 'checked why merchants uninstalled', 'checked what merchants needed in intercom'] },
+    data: { skills: ['research'] },
+    next: { skills: ['research', 'positioning'], items: ['defined the primary ICP', 'defined guardrails and where they hang out'] },
+    ask: { skills: ['positioning'], text: 'what value does our primary ICP get?', sub: 'aka positioning' }
   },
   {
-    ctx: { skills: ['positioning', 'collab'], at: { x: 60, y: 130, w: 420, h: 220 }, text: 'i knew who to target.\n\ni spoke with leadership to align the message with their vision for nexus.' },
-    did: { skills: ['research', 'collab'], at: { x: 60, y: 470, w: 420, h: 180 }, intro: 'i interviewed the founder, keeping the mom test in mind.', items: [] },
-    data: { skills: ['positioning'], at: { x: 1180, y: 330, w: 380, h: 360 } },
+    ctx: { skills: ['positioning', 'collab'], text: 'i knew who to target.\n\ni spoke with leadership to align the message with their vision for nexus.' },
+    did: { skills: ['research', 'collab'], intro: 'i interviewed the founder, keeping the mom test in mind.', items: [] },
+    data: { skills: ['positioning'] },
   }
 ];
 
-const pieces = story.flatMap((sec, i) => ORDER.filter((slot) => sec[slot]).map((slot, k) => {
-  const pos = { ...slots[slot], ...sec[slot]!.at };
-  return { id: `s${i + 1}-${slot}`, sec: i, slot, step: k + 1, ...pos, ...sec[slot]!, ax: sections[i].x + pos.x, ay: sections[i].y + pos.y };
+// Every section reads the same way: top to bottom down a column, then on to the next column.
+// Columns start at x 60, 580 and 1140; documents sit beside or below the card they belong to.
+const place: Record<string, { x: number; y: number; w: number; h: number }> = {
+  's1-ctx': { x: 40, y: 130, w: 520, h: 200 }, 's1-did': { x: 40, y: 390, w: 520, h: 330 },
+  's1-data': { x: 600, y: 130, w: 520, h: 340 }, 's1-next': { x: 600, y: 530, w: 520, h: 160 },
+  's1-ask': { x: 1160, y: 130, w: 400, h: 200 },
+  's2-did': { x: 40, y: 240, w: 520, h: 260 }, 's2-data': { x: 40, y: 590, w: 520, h: 300 },
+  's2-next': { x: 600, y: 130, w: 520, h: 160 }, 's2-ask': { x: 1160, y: 130, w: 400, h: 200 },
+  's3-ctx': { x: 40, y: 130, w: 520, h: 200 }, 's3-did': { x: 40, y: 410, w: 520, h: 150 },
+  's3-data': { x: 1160, y: 130, w: 400, h: 380 }
+};
+let storyStep = 0;
+const pieces = story.flatMap((sec, i) => ORDER.filter((slot) => sec[slot]).map((slot) => {
+  const pos = { ...slots[slot], ...place[`s${i + 1}-${slot}`] };
+  return { id: `s${i + 1}-${slot}`, sec: i, slot, step: ++storyStep, ...pos, ...sec[slot]!, ax: sections[i].x + pos.x, ay: sections[i].y + pos.y };
 }));
 
 // Documents pinned to a card, revealed with it and joined to it by a dotted thread. Section-local positions.
@@ -72,19 +84,19 @@ const pieces = story.flatMap((sec, i) => ORDER.filter((slot) => sec[slot]).map((
 // A third kind: an interview sheet, questions typed and answers handwritten.
 type Attachment = { id: string; sec: number; with: string; x: number; y: number; w: number; r: number; src?: string; iw: number; ih: number; qa?: [string, string][]; lines?: [string, string][]; alt: string; caption: string; skills: string[]; from: [number, number]; color: string };
 const attachments: Attachment[] = [
-  { id: 's1-shot', sec: 0, with: 's1-next', x: 60, y: 540, w: 600, r: -1.2, src: '/case/icp-nexus/one-pager.png', iw: 1732, ih: 720,
+  { id: 's1-shot', sec: 0, with: 's1-next', x: 600, y: 780, w: 520, r: -1.2, src: '/case/icp-nexus/one-pager.png', iw: 1732, ih: 720,
     alt: 'Part of the Nexus marketing one-pager: the minimum data needed, from business goal to desired action, and how to get each.',
-    caption: 'part of the one-pager', skills: ['research', 'collab'], from: [770, 480], color: '#8FB3DA' },
-  { id: 's2-icp', sec: 1, with: 's2-next', x: 40, y: 600, w: 640, r: -1, src: '/case/icp-nexus/icp-table.png', iw: 1084, ih: 660,
+    caption: 'part of the one-pager', skills: ['research', 'collab'], from: [860, 720], color: '#8FB3DA' },
+  { id: 's2-icp', sec: 1, with: 's2-next', x: 600, y: 380, w: 520, r: -1, src: '/case/icp-nexus/icp-table.png', iw: 1084, ih: 660,
     alt: 'The Nexus ideal customer profile: business, Shopify plan, region, trigger moment and job to be done, each with its evidence.',
-    caption: 'final ICP!', skills: ['research', 'positioning'], from: [790, 815], color: '#BCE5CF' },
-  { id: 's2-notfor', sec: 1, with: 's2-next', x: 1170, y: 470, w: 400, r: 1.2, src: '/case/icp-nexus/not-for.png', iw: 1106, ih: 488,
+    caption: 'final ICP!', skills: ['research', 'positioning'], from: [860, 310], color: '#BCE5CF' },
+  { id: 's2-notfor', sec: 1, with: 's2-next', x: 1160, y: 410, w: 400, r: 1.2, src: '/case/icp-nexus/not-for.png', iw: 1106, ih: 488,
     alt: 'Who Nexus is not for: stores syncing to Etsy, Amazon or Walmart, vendors looking to join a marketplace, agencies testing on dev stores, and large enterprises needing a custom build.',
-    caption: 'guardrails aka, who we do not serve', skills: ['positioning'], from: [1150, 650], color: '#BCE5CF' },
-  { id: 's2-where', sec: 1, with: 's2-next', x: 1180, y: 745, w: 400, r: -1, src: '/case/icp-nexus/where-they-gather.png', iw: 896, ih: 252,
+    caption: 'guardrails aka, who we do not serve', skills: ['positioning'], from: [1090, 310], color: '#BCE5CF' },
+  { id: 's2-where', sec: 1, with: 's2-next', x: 1160, y: 700, w: 400, r: -1, src: '/case/icp-nexus/where-they-gather.png', iw: 896, ih: 252,
     alt: 'Where they gather: Shopify App Store search, about 48% of discovery; Google, about 11%; AI assistants and the listicles they cite; other platforms such as Product Hunt and G2.',
-    caption: 'where they hang out', skills: ['research', 'positioning'], from: [1370, 712], color: '#BCE5CF' },
-  { id: 's3-qa', sec: 2, with: 's3-did', x: 560, y: 110, w: 560, r: 0.8, iw: 560, ih: 600, color: '#8FB3DA', from: [480, 560], skills: ['research', 'collab'], caption: '',
+    caption: 'where they hang out', skills: ['research', 'positioning'], from: [1360, 660], color: '#BCE5CF' },
+  { id: 's3-qa', sec: 2, with: 's3-did', x: 600, y: 120, w: 520, r: 0.8, iw: 520, ih: 640, color: '#8FB3DA', from: [560, 480], skills: ['research', 'collab'], caption: '',
     alt: 'Interview questions and answers.',
     qa: [
       ['a year in, what should a brand tell a friend?', 'simple to use, to find users, to configure, to decide.'],
@@ -102,19 +114,27 @@ const ties = attachments.map((a) => {
   return { for: a.id, color: a.color, d: `M ${fx} ${fy} C ${fx} ${my}, ${tx} ${my}, ${tx} ${ty}` };
 });
 
+// The camera frames each section on its content: heading, cards and documents, plus a margin.
+const view = (i: number): { x: number; y: number; w: number; h: number } => {
+  const boxes = [...pieces.filter((p) => p.sec === i).map((p) => ({ x: p.ax, y: p.ay - (p.aim ? 150 : 0), w: p.w, h: p.h + (p.aim ? 150 : 0) })),
+    ...attachments.filter((a) => a.sec === i).map((a) => attachAt(a)), { x: sections[i].x + 30, y: sections[i].y, w: 700, h: 80 }];
+  const x0 = Math.min(...boxes.map((b) => b.x)), y0 = Math.min(...boxes.map((b) => b.y));
+  const x1 = Math.max(...boxes.map((b) => b.x + b.w)), y1 = Math.max(...boxes.map((b) => b.y + b.h));
+  return { x: x0 - 20, y: y0 - 20, w: x1 - x0 + 40, h: y1 - y0 + 40 };
+};
 // Where the camera looks, and which pieces get pinned up. cam: -1 = the whole board, 0–3 = a section,
 // or an exact area. Section 02 is read in two halves: its cards first, then its document cluster.
 // The first frame is the snapshot: every piece on the board at once.
 type Area = { x: number; y: number; w: number; h: number };
-const s2View: Area = { x: sections[1].x, y: sections[1].y - 80, w: SEC_W, h: 1180 };
+
 // Section 03 is read the same way: cards first, then the value proposition pinned under its chart.
-const s3View: Area = { x: sections[2].x, y: sections[2].y - 40, w: SEC_W, h: 940 };
+
 // The last stop: section 03's positioning card, the string running down, and the ending under it.
 const endView: Area = { x: 0, y: sections[2].y + 280, w: SEC_W, h: END_Y + 380 - (sections[2].y + 280) };
 const frames: { cam: number | Area; sec: number; show: string[] }[] = [{ cam: -1, sec: -1, show: [...pieces.map((p) => p.id), ...attachments.map((a) => a.id)] }];
 story.forEach((sec, i) => ORDER.filter((slot) => sec[slot]).forEach((slot) => {
   const id = `s${i + 1}-${slot}`;
-  const cam = i === 1 ? s2View : i === 2 ? s3View : i;
+  const cam = view(i);
   frames.push({ cam, sec: i, show: [id, ...attachments.filter((a) => a.with === id).map((a) => a.id)] });
 }));
 frames.push({ cam: endView, sec: 2, show: [] });
@@ -129,7 +149,8 @@ const [a1, a2, a3] = [askPin(0), askPin(1), askPin(2)];
 const bridge = ([x, y]: number[], bottom: number, [tx, ty]: number[]) =>
   ` M ${x} ${y} C 1700 ${y}, 1700 ${y + 130}, 1700 ${bottom} C 1700 ${bottom + 200}, ${tx} ${ty - 220}, ${tx} ${ty}`;
 const bottomOf = (i: number) => sections[i].y + sections[i].h;
-const stringPath = bridge(a1, bottomOf(0), pins[1]) + bridge(a2, bottomOf(1), pins[2]) + bridge(a3, bottomOf(2), [SEC_W / 2, END_Y]);
+const segPaths = [bridge(a1, bottomOf(0), pins[1]), bridge(a2, bottomOf(1), pins[2]), bridge(a3, bottomOf(2), [SEC_W / 2, END_Y])];
+const stringPath = segPaths.join('');
 const knots = [a1, a2, a3];
 
 const rects = { ...Object.fromEntries(pieces.map((p) => [p.id, { x: p.ax, y: p.ay, w: p.w, h: p.h }])), ...Object.fromEntries(attachments.map((a) => [a.id, attachAt(a)])) };
@@ -159,7 +180,7 @@ let donutAt = 0;
 const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; const seg = { ...d, len: Math.max(len - 3, 1), off: donutAt }; donutAt += len; return seg; });
 ---
 <Base title="ICP-Nexus · from user stories to identifying ICP, positioning and messaging · Kritika Upadhyay" description={description}>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400&family=Commissioner:wght@400;500;600;700&display=swap">
 <div class="ic">
 
 <figure class="ic-cover" aria-label="Three polaroids: different merchants and their stores, captioned who uses nexus?; two of them circled with the people they serve, captioned who should we target?; and two merchants describing a store growing into a marketplace, captioned what should we say?">
@@ -252,19 +273,19 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 </div>
 </section>
 
-<section class="ic-board" id="board" data-frames={JSON.stringify(frames)} data-rects={JSON.stringify(rects)} data-secs={JSON.stringify(secRects)} data-world={JSON.stringify({ w: WORLD_W, h: WORLD_H })}>
+<section class="ic-board" id="board" data-frames={JSON.stringify(frames)} data-rects={JSON.stringify(rects)} data-secs={JSON.stringify(secRects)} data-world={JSON.stringify({ w: WORLD_W, h: WORLD_H })} data-slugs={JSON.stringify(sections.map((s) => s.slug))}>
 <div class="ic-view" id="view">
 <div class="ic-world" id="world" style={`width:${WORLD_W}px;height:${WORLD_H}px`}>
 <svg class="ic-lines" width={WORLD_W} height={WORLD_H} aria-hidden="true">
-<g class="ic-string" id="string"><path d={stringPath} class="th-base"></path><path d={stringPath} class="th-fibre"></path></g>
-<path d={stringPath} class="ic-string-hit" id="string-hit"></path>
+<g class="ic-string" id="string"><path d={stringPath} class="th-base"></path></g>
+{segPaths.map((d, k) => <path d={d} class="th-fill" data-seg={k} pathLength="1"></path>)}
 {pins.map(([x, y]) => <circle cx={x} cy={y} r="11" class="ic-pin"></circle>)}
 {knots.map(([x, y]) => <circle cx={x} cy={y} r="7" class="ic-pin"></circle>)}
 {ties.map((t) => <path d={t.d} class="ic-tie" data-for={t.for} stroke={t.color}></path>)}
 </svg>
 
 {sections.map((s, i) => (
-<h2 class="ic-sec-h" style={`left:${s.x + 80}px;top:${s.y + 8}px`} data-sec={i}><span>{s.n}</span>{s.title}</h2>
+<h2 class="ic-sec-h" style={`left:${s.x + 80}px;top:${s.y + 8}px`} data-sec={i}>{s.title}</h2>
 ))}
 
 {pieces.map((p) => (
@@ -369,7 +390,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 </style>
 
 <style>
-.ic{position:relative;color:#EFEFEE;background-color:#141416;background-image:linear-gradient(rgba(169,175,185,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(169,175,185,.075) 1px,transparent 1px);background-size:18px 18px;background-position:-1px -1px}
+.ic{position:relative;font-family:'Commissioner',system-ui,sans-serif;color:#EFEFEE;background-color:#141416;background-image:linear-gradient(rgba(169,175,185,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(169,175,185,.075) 1px,transparent 1px);background-size:18px 18px;background-position:-1px -1px}
 .ic-return{color:#A9AFB9;font-size:13px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none}
 .ic-return:hover,.ic-return:focus-visible{color:#EFEFEE}
 
@@ -379,7 +400,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 .cv-cut{flex:1 1 0;max-width:400px;padding:12px 12px 0;background:#FFFFFF;box-shadow:0 2px 0 rgba(0,0,0,.06),0 18px 30px rgba(60,48,20,.28);transform:rotate(var(--r))}
 .cv-mid{margin-top:-28px}
 .cv-cut svg{display:block;width:100%;height:auto}
-.cv-cap{margin:0;padding:12px 6px 16px;font-family:'Caveat',cursive;font-size:clamp(17px,2vw,28px);font-weight:600;line-height:1.1;color:#1E1E24}
+.cv-cap{margin:0;padding:12px 6px 16px;font-family:'Kalam',cursive;font-size:clamp(15px,1.72vw,24px);font-weight:400;line-height:1.1;color:#1E1E24}
 .ic-home{position:absolute;top:22px;left:max(24px,calc((100% - 1200px) / 2 + 24px));z-index:1;color:#1E1E24;font-weight:500}
 .ic-home:hover,.ic-home:focus-visible{color:#000}
 .ic-fold{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,340px);gap:28px 64px;align-items:center;max-width:1200px;margin:0 auto;padding:48px 24px 56px}
@@ -391,7 +412,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 .ic-skill{display:grid;grid-template-columns:28px 1fr;align-items:baseline;width:100%;padding:14px 0;border:0;border-bottom:1px solid #2E2E34;background:none;color:#C9CDD5;font:inherit;text-align:left;cursor:pointer}
 .sk-n{font-size:11px;letter-spacing:.12em;color:#5E5E66;transition:color .25s ease}
 .sk-l{font-size:13px;letter-spacing:.14em;text-transform:uppercase;transition:color .25s ease}
-.sk-more{grid-column:2;max-height:0;overflow:hidden;opacity:0;font-family:'Caveat',cursive;font-size:20px;color:#D8C9A3;transition:max-height .3s ease,opacity .3s ease,margin .3s ease}
+.sk-more{grid-column:2;max-height:0;overflow:hidden;opacity:0;font-family:'Kalam',cursive;font-size:17px;color:#D8C9A3;transition:max-height .3s ease,opacity .3s ease,margin .3s ease}
 .ic-skill:hover .sk-l,.ic-skill:focus-visible .sk-l,.ic-skill[aria-pressed="true"] .sk-l{color:#EFEFEE}
 .ic-skill:hover .sk-n,.ic-skill:focus-visible .sk-n,.ic-skill[aria-pressed="true"] .sk-n{color:#D8C9A3}
 .ic-skill:hover .sk-more,.ic-skill:focus-visible .sk-more,.ic-skill[aria-pressed="true"] .sk-more{max-height:30px;opacity:1;margin-top:4px}
@@ -404,14 +425,10 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 .ic-world.anim{transition:transform .7s cubic-bezier(.2,.7,.2,1)}
 .ic-world:not(.inside){cursor:zoom-in}
 .ic-lines{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
-.ic-string{opacity:.8;transition:opacity .4s ease,filter .4s ease}
-.ic-string path{fill:none;stroke-linecap:round;transition:stroke .4s ease}
-.th-base{stroke:#A8322D;stroke-width:4.5}
-.th-fibre{stroke:#E8857B;stroke-width:1.6;stroke-dasharray:2 5;opacity:.6}
-.ic-string.glow{opacity:1;filter:drop-shadow(0 0 6px rgba(255,90,78,.8)) drop-shadow(0 0 16px rgba(255,90,78,.4))}
-.ic-string.glow .th-base{stroke:#F0544A}
-.ic-string.glow .th-fibre{stroke:#FFC9C2}
-.ic-string-hit{fill:none;stroke:transparent;stroke-width:30;pointer-events:stroke;cursor:default}
+.ic-string{opacity:.35}
+.ic-string path{fill:none;stroke-linecap:round}
+.th-base{stroke:#9A4A44;stroke-width:2}
+.th-fill{fill:none;stroke:#E2574C;stroke-width:2.4;stroke-linecap:round;stroke-dasharray:1 1;stroke-dashoffset:1}
 .ic-pin{fill:#D2453F;stroke:#141416;stroke-width:3}
 .ic-sec-h{position:absolute;margin:0;font-size:60px;font-weight:500;line-height:1.1;letter-spacing:-.02em;color:#EFEFEE;white-space:nowrap}
 .ic-sec-h span{margin-right:18px;font-size:22px;letter-spacing:.2em;color:#D2453F;vertical-align:middle}
@@ -434,55 +451,56 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 .vp{display:flex;flex-direction:column;gap:14px;padding:26px 28px;background:#FFFFFF;border:1px solid #DADAD4;color:#1E1E24}
 .vp p{display:grid;grid-template-columns:96px 1fr;gap:14px;margin:0;font-size:18px;line-height:1.35}
 .vp b{font-weight:600;color:#E08A4C}
-.note-t{margin:0;font-family:'Caveat',cursive;font-weight:500;font-size:28px;line-height:1.22}
+.note-t{margin:0;font-family:'Kalam',cursive;font-weight:300;font-size:27px;line-height:1.22}
 .note-t + .note-t{margin-top:12px}
-.ck-intro{margin:-4px 0 16px;font-family:'Caveat',cursive;font-size:27px;line-height:1.15}
-.shot-cap-h{margin:0;padding:8px 4px 10px;font-family:'Caveat',cursive;font-size:24px;color:#5A5A62}
+.cv-cap,.sk-more,.note-t,.ck-intro,.shot-cap-h,.note-sub,.ck-list li,.ck-aim,.qa-a,.pc-shot figcaption,.end-t{letter-spacing:1px}
+.ck-intro{margin:-4px 0 16px;font-family:'Kalam',cursive;font-weight:300;font-size:27px;line-height:1.15}
+.shot-cap-h{margin:0;padding:8px 4px 10px;font-family:'Kalam',cursive;font-size:20px;color:#5A5A62}
 .pc-shot > img{display:block;width:100%;height:auto;border:1px solid #DADAD4}
 .pos{display:flex;flex-direction:column;align-items:flex-start;gap:6px;height:100%;justify-content:center}
-.pos-k{margin:0;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#5A5A62}
-.pos-old{margin:0 0 4px;font-size:26px;color:#8A8A92;text-decoration:line-through;text-decoration-color:#D2453F;text-decoration-thickness:2px}
+.pos-k{margin:0;font-size:15px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#5A5A62}
+.pos-old{margin:0 0 4px;font-size:29px;color:#8A8A92;text-decoration:line-through;text-decoration-color:#D2453F;text-decoration-thickness:2px}
 .pos-ar{margin:2px 0 6px;font-size:34px;line-height:1;color:#E08A4C}
-.pos-new{margin:0;font-size:34px;font-weight:600;line-height:1.15;letter-spacing:-.01em;color:#1E1E24}
-.note-sub{margin:10px 0 0;font-family:'Caveat',cursive;font-size:26px;font-weight:500;color:rgba(30,30,36,.7)}
-.slot-ask .note-t{font-size:38px;font-weight:600;line-height:1.1}
+.pos-new{margin:0;font-size:38px;font-weight:600;line-height:1.15;letter-spacing:-.01em;color:#1E1E24}
+.note-sub{margin:10px 0 0;font-family:'Kalam',cursive;font-weight:300;font-size:27px;color:rgba(30,30,36,.7)}
+.slot-ask .note-t{font-size:36px;font-weight:300;line-height:1.1}
 .pin{position:absolute;right:10px;top:-2px;width:24px;height:24px;border-radius:50%;background:#D2453F;box-shadow:0 4px 8px rgba(0,0,0,.45),inset -3px -3px 0 rgba(0,0,0,.18)}
 
 .pc-check{padding:28px 28px 22px;background:#F4F3EF;color:#1E1E24;box-shadow:0 14px 28px rgba(0,0,0,.45)}
 .pc-check::before{content:"";position:absolute;left:50%;top:-12px;width:96px;height:24px;margin-left:-48px;background:rgba(188,229,207,.75);transform:rotate(-2deg)}
-.ck-t{margin:0 0 16px;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#5A5A62}
+.ck-t{margin:0 0 16px;font-size:15px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#5A5A62}
 .ck-list{display:flex;flex-direction:column;gap:14px;margin:0;padding:0;list-style:none}
-.ck-list li{display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:start;font-family:'Caveat',cursive;font-size:27px;line-height:1.15}
+.ck-list li{display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:start;font-family:'Kalam',cursive;font-weight:300;font-size:27px;line-height:1.15}
 .ck-box{width:28px;height:28px;margin-top:2px}
-.ck-aim{position:absolute;left:-6px;right:-6px;bottom:calc(100% + 26px);margin:0;padding:22px 34px;text-align:center;font-family:'Caveat',cursive;font-size:28px;font-weight:600;line-height:1.15;color:#EFEFEE}
+.ck-aim{position:absolute;left:18px;right:-14px;bottom:calc(100% + 26px);margin:0;padding:22px 34px;text-align:center;font-family:'Kalam',cursive;font-size:23px;font-weight:400;line-height:1.15;color:#EFEFEE}
 .ck-aim span{position:relative}
 .ck-aim-ring{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .ck-aim-ring path{fill:none;stroke:#D2453F;stroke-width:3;stroke-linecap:round;vector-effect:non-scaling-stroke}
-.pie{flex:none;width:220px;height:220px}
+.pie{flex:none;width:180px;height:180px}
 .dn-legend li.muted{color:#5A5A62}
-.ck-q{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;margin-top:2px;border:2px solid #1E1E24;border-radius:50%;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif;font-size:15px;font-weight:600;color:#D2453F}
+.ck-q{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;margin-top:2px;border:2px solid #1E1E24;border-radius:50%;box-sizing:border-box;font-family:'Commissioner',system-ui,sans-serif;font-size:15px;font-weight:600;color:#D2453F}
 .qa{display:flex;flex-direction:column;gap:18px;margin:0;padding:22px 26px 26px;list-style:none;background:#FFFFFF;border:1px solid #DADAD4}
 .qa li{display:flex;flex-direction:column;gap:2px}
-.qa-q{font-size:17px;font-weight:500;color:#1E1E24}
-.qa-a{font-family:'Caveat',cursive;font-size:28px;line-height:1.1;color:#2457B8}
+.qa-q{font-size:19px;font-weight:500;color:#1E1E24}
+.qa-a{font-family:'Kalam',cursive;font-weight:300;font-size:27px;line-height:1.1;color:#2457B8}
 .pc-page .pin{right:10px;top:-2px;z-index:1}
 .pc.pc-shot.on{transition-delay:var(--delay,0s)}
 .pc-shot{margin:0;padding:10px 10px 0;background:#FFFFFF;box-shadow:0 14px 28px rgba(0,0,0,.45)}
 .pc-shot img{display:block;width:100%;height:auto;border:1px solid #DADAD4}
-.pc-shot figcaption{padding:8px 4px 10px;font-family:'Caveat',cursive;font-size:24px;color:#5A5A62}
+.pc-shot figcaption{padding:8px 4px 10px;font-family:'Kalam',cursive;font-size:20px;color:#5A5A62}
 .pc-shot .pin{right:auto;left:50%;margin-left:-12px;top:-12px}
 .ic-tie{fill:none;stroke-width:3;stroke-linecap:round;stroke-dasharray:8 7;opacity:0;transition:opacity .6s ease}
 .ic-tie.on{opacity:.9}
 .dn{display:flex;align-items:center;gap:28px}
-.dn-chart{flex:none;width:220px;height:220px;transform:rotate(-90deg)}
+.dn-chart{flex:none;width:180px;height:180px;transform:rotate(-90deg)}
 .dn-seg{fill:none;stroke-width:34}
 .dn-n,.dn-l{transform:rotate(90deg);transform-origin:110px 110px;text-anchor:middle;fill:#1E1E24}
 .dn-n{font-size:36px;font-weight:600}
 .dn-l{font-size:15px;fill:#5A5A62}
-.dn-legend{flex:1;display:flex;flex-direction:column;gap:16px;margin:0;padding:0;list-style:none;font-size:17px}
+.dn-legend{flex:1;display:flex;flex-direction:column;gap:16px;margin:0;padding:0;list-style:none;font-size:19px}
 .dn-legend li{display:grid;grid-template-columns:14px 1fr auto;align-items:center;gap:12px}
 .dn-legend i{width:14px;height:14px;border-radius:3px}
-.dn-legend b{font-size:20px}
+.dn-legend b{font-size:22px}
 .dn-legend em{font-style:normal;text-align:right;color:#5A5A62}
 .ck-box rect{fill:none;stroke:#1E1E24;stroke-width:2}
 .ck-box path{fill:none;stroke:#2F8F5B;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
@@ -490,7 +508,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 .pc-page{padding:30px 34px;background:#FFFFFF;color:#1E1E24;box-shadow:0 14px 28px rgba(0,0,0,.45)}
 .pc-page::before,.pc-page::after{content:"";position:absolute;top:10px;width:14px;height:14px;border-radius:50%;background:#9A9AA2;box-shadow:inset -2px -2px 0 rgba(0,0,0,.2)}
 .pc-page::before{left:10px}.pc-page::after{right:10px}
-.pg-k{margin:0 0 24px;font-size:30px;font-weight:600;letter-spacing:-.01em}
+.pg-k{margin:0 0 24px;font-size:32px;font-weight:600;letter-spacing:-.01em}
 .pg-bars{display:flex;flex-direction:column;gap:16px}
 .pg-row{display:grid;grid-template-columns:220px 1fr 50px;align-items:center;gap:14px;font-size:17px}
 .pg-row i{display:block;height:22px}
@@ -527,7 +545,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 /* The end sits on the board, under the last question: one red dot, the next challenge, and a way back to the top. */
 .ic-finale{position:absolute;left:0;display:flex;flex-direction:column;align-items:center;gap:44px;text-align:center}
 .end-dot{width:36px;height:36px;border-radius:50%;background:#D2453F;box-shadow:0 0 0 10px rgba(210,69,63,.18)}
-.end-t{max-width:1300px;margin:0;font-family:'Caveat',cursive;font-size:120px;font-weight:600;line-height:1;color:#EFEFEE}
+.end-t{max-width:1300px;margin:0;font-family:'Kalam',cursive;font-size:100px;font-weight:400;line-height:1;color:#EFEFEE}
 .end-cta{padding:10px 8px;border:0;background:none;color:#A9AFB9;font:inherit;font-size:30px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:color .2s ease}
 .end-cta:hover,.end-cta:focus-visible{color:#EFEFEE}
 .end-cta:focus-visible{outline:4px solid #EFEFEE;outline-offset:6px}
@@ -543,7 +561,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 .ic-ctrls{gap:6px}
 .ic-round{width:44px;height:44px}
 }
-@media (prefers-reduced-motion:reduce){.pc,.ic-world.anim,.ic-string,.ic-ctrls{transition:none}}
+@media (prefers-reduced-motion:reduce){.pc,.ic-world.anim,.ic-ctrls{transition:none}}
 </style>
 
 <script>
@@ -551,7 +569,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
   const board = document.getElementById('board')!;
   const view = document.getElementById('view')!;
   const world = document.getElementById('world')!;
-  const string = document.getElementById('string');
+  const threads = Array.from(world.querySelectorAll<SVGPathElement>('.th-fill'));
   const hint = document.getElementById('hint')!;
   const ctrls = document.getElementById('ctrls')!;
   const zoomBtn = document.getElementById('zoom') as HTMLButtonElement;
@@ -632,8 +650,16 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
     const f = i < frames.length - 1 ? (y - offsets[i]) / (offsets[i + 1] - offsets[i]) : 0;
     return { i, f };
   };
+  // The thread between two sections fills in while the camera travels it, from a section's last card to the next section.
+  const fillThread = (y: number | null) => threads.forEach((p, k) => {
+    const lastCard = frames.findLastIndex((f) => f.sec === k && f.show.length > 0);
+    const from = offsets[lastCard], to = offsets[k + 1 < secs.length ? firstFrameOf(k + 1) : frames.length - 1];
+    const v = y === null ? 1 : Math.max(0, Math.min(1, (y - from) / (to - from)));
+    p.style.strokeDashoffset = `${1 - v}`;
+  });
   const guided = () => {
     const { i, f } = position();
+    fillThread(i + f >= 0 ? offsets[i] + f * ((offsets[i + 1] ?? offsets[i]) - offsets[i]) : 0);
     const j = Math.min(i + 1, frames.length - 1);
     const a = fit(rectFor(frames[i].cam)), b = fit(rectFor(frames[j].cam));
     const t = ease(Math.max(0, Math.min(1, (f - 0.05) / 0.9)));
@@ -652,7 +678,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
     if (touch) return;
     exploring = on;
     hint.hidden = !on;
-    if (on) { show(0); progress(current, frames.length); } else draw();
+    if (on) { show(0); progress(current, frames.length); fillThread(null); } else draw();
   };
 
   // Moving between sections: on desktop, by scrolling the story there; on touch, by zooming the camera.
@@ -760,17 +786,6 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
     }
   }, { passive: false });
 
-  // The red string is always there; it glows along its whole length while the cursor moves.
-  let glowT: number | undefined, hovering = false;
-  const glow = () => {
-    string?.classList.add('glow');
-    clearTimeout(glowT);
-    glowT = window.setTimeout(() => { if (!hovering) string?.classList.remove('glow'); }, 650);
-  };
-  const hit = document.getElementById('string-hit');
-  hit?.addEventListener('pointerenter', () => { hovering = true; string?.classList.add('glow'); });
-  hit?.addEventListener('pointerleave', () => { hovering = false; glow(); });
-  window.addEventListener('scroll', glow, { passive: true });
 
   // Skill tags: light up every piece that shows the skill, and take the reader to the first one.
   const tags = Array.from(document.querySelectorAll<HTMLButtonElement>('.ic-skill'));
@@ -809,6 +824,13 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
   window.addEventListener('resize', () => { size(); if (touch) touchGo(current); else draw(); bar(); });
 
   size();
-  if (touch) { show(0); touchGo(-1); } else draw();
+  if (touch) { show(0); touchGo(-1); fillThread(null); } else draw();
+  // Deep links (from /work): #no-clear-audience, #choosing-who-to-target or #turning-value-into-messaging opens that section.
+  const slugs: string[] = JSON.parse(board.dataset.slugs!);
+  const deep = slugs.indexOf(location.hash.slice(1));
+  if (deep >= 0) {
+    if (touch) { view.scrollIntoView(); touchGo(deep); }
+    else window.scrollTo({ top: boardTop() + frameAt(firstFrameOf(deep)) + 2, behavior: 'auto' });
+  }
   bar();
 </script>

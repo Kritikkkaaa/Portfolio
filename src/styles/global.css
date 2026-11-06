@@ -19,7 +19,7 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 @keyframes widen{0%{transform:scale(1)}35%{transform:scale(1.18,1.4)}62%{transform:scale(1.06,.08)}82%,100%{transform:scale(1)}}
 @keyframes pulse{0%,100%{opacity:.35;transform:scale(.96)}50%{opacity:1;transform:scale(1)}}
 .pulse{transform-box:fill-box;transform-origin:center;animation:pulse 4s ease-in-out infinite}
-.space{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:#080808}
+.space{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background-color:#141416;background-image:linear-gradient(rgba(169,175,185,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(169,175,185,.075) 1px,transparent 1px);background-size:18px 18px;background-position:-1px -1px}
 .plx{position:absolute;inset:0;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
 .stars{position:absolute;left:0;top:0;width:1px;height:1px;border-radius:50%;background:transparent}
 .stars.far{animation:voyage 260s linear infinite}
@@ -85,6 +85,14 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .ripple.r3{animation-delay:.44s}
 @keyframes ripple{0%{transform:scale(.95);opacity:.9}100%{transform:scale(1.9);opacity:0}}
 .omen{animation:rise .7s cubic-bezier(.2,.7,.2,1) both}
+.venn{display:block;width:100%;max-width:340px;height:auto;overflow:visible}
+.venn-c{stroke-width:1.2}
+.venn-l{font-family:'Inter',system-ui,sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;fill:#A9AFB9}
+.venn-me{font-family:'Newsreader',serif;font-style:italic;font-size:24px;fill:#EFEFEE;text-anchor:middle}
+.ft-play{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:28px 80px}
+.ft-deckcol,.ft-orbcol{display:flex;flex-direction:column;align-items:center}
+.ft-deckcol{gap:36px}
+.ft-orbcol{gap:14px}
 .marquee{overflow:hidden;margin:0 -24px;padding:28px 0 36px;-webkit-mask-image:linear-gradient(to right,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(to right,transparent,#000 7%,#000 93%,transparent)}
 .track{display:flex;width:max-content;animation:drift 48s linear infinite}
 .marquee:hover .track{animation-play-state:paused}
