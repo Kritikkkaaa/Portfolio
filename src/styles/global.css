@@ -649,3 +649,46 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .tt-main small,.tt-stub,.pr-p,.ui-btn,.ct-count,.ct-price,.ct-add,.ui-bar b,.tk-chip,.tl-idx{font-size:var(--t-caps) !important}
 .ui-line b,.pl-labels,.ct-name{font-size:var(--t-small) !important}
 .ta-head,.toy-quote{font-size:var(--h-note) !important;font-weight:300;letter-spacing:.5px}
+/* Footer, "the ask" (kritikal marks sheet), on the frozen type scale */
+.fx{position:relative;display:flex;flex-direction:column;align-items:center;padding:96px 24px 0;color:#EFEFEE;font-family:'Commissioner',system-ui,sans-serif}
+.fx-ask{position:relative;display:inline-block;max-width:100%}
+.fx-ask h2{margin:0;font-size:var(--t-h1);font-weight:500;line-height:1.05;letter-spacing:-0.02em;text-align:center;text-wrap:balance}
+.fx-note{position:absolute;margin:0;white-space:nowrap;font-family:'Kalam',cursive;font-weight:300;font-size:var(--h-hint);letter-spacing:.5px;line-height:1.2;color:#D8C9A3;opacity:.9}
+.fx-note.a{left:0;top:-26px;transform:rotate(-3deg);transform-origin:left bottom}
+.fx-note.b{right:0;bottom:-30px;transform:rotate(-2deg);transform-origin:right top}
+.fx-ctas{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:68px}
+.fx-cta{display:inline-flex;align-items:center;gap:10px;padding:18px 30px;border-radius:999px;font-size:var(--t-body);font-weight:500;line-height:1;text-decoration:none;border:1px solid rgba(169,175,185,.2);color:#EFEFEE;transition:border-color .2s,background-color .2s,color .2s}
+.fx-cta svg{width:16px;height:16px;flex:none}
+.fx-cta.p{background:#EFEFEE;border-color:#EFEFEE;color:#111}
+.fx-cta.p:hover{background:#D8C9A3;border-color:#D8C9A3}
+.fx-cta.s:hover{border-color:#D8C9A3;color:#D8C9A3}
+.fx-cta:focus-visible,.fx-soc a:focus-visible{outline:2px solid #D8C9A3;outline-offset:3px}
+.fx-duo{width:100%;max-width:1120px;margin-top:64px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 20px;align-items:center}
+.fx-svg{grid-column:1/-1;grid-row:1;width:100%;max-width:520px;height:auto;margin:0 auto;display:block}
+.fx-lst{display:flex;flex-direction:column;gap:14px}
+.fx-lst h3{margin:0;font-size:var(--t-caps);font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#8A8D96}
+.fx-lst ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.fx-lst li{font-size:var(--t-body);font-weight:500;line-height:1.35;color:#C9CDD5}
+.fx-lst li.hw{font-family:'Kalam',cursive;font-weight:300;font-size:var(--h-note);letter-spacing:.5px;color:#D8C9A3}
+@media (min-width:1100px){
+.fx-duo{grid-template-columns:minmax(240px,1fr) minmax(300px,520px) minmax(240px,1fr)}
+.fx-svg{grid-column:2;grid-row:1}
+.fx-lst{gap:0}
+.fx-lst.l{grid-column:1;grid-row:1;justify-self:end}
+.fx-lst.r{grid-column:3;grid-row:1;justify-self:start}
+.fx-lst h3{line-height:36px}
+.fx-lst ul{gap:0}
+.fx-lst li{height:36px;line-height:36px;white-space:nowrap}
+}
+.fx-rm{margin:18px 0 0;font-size:var(--t-h2);font-weight:500;text-align:center}
+.fx-base{width:100%;max-width:1180px;box-sizing:border-box;margin-top:64px;padding:18px 24px 22px;border-top:1px solid rgba(169,175,185,.2);display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:14px 24px;font-size:var(--t-small);line-height:1.4;color:#8A8D96}
+.fx-base .loc{justify-self:start}
+.fx-base .cred{justify-self:end;text-align:right}
+.fx-base span{display:inline-flex;align-items:center;gap:8px}
+.fx-base span svg{width:16px;height:16px;flex:none}
+.fx-soc{display:flex;gap:12px;justify-self:center}
+.fx-soc a{width:44px;height:44px;display:grid;place-items:center;border-radius:50%;color:#C9CDD5;transition:color .2s}
+.fx-soc a svg{width:20px;height:20px}
+.fx-soc a:hover{color:#D8C9A3}
+@media (max-width:760px){.fx-base{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center}.fx-soc{order:-1}.fx-base .loc,.fx-base .cred{justify-self:center;text-align:center}}
+@media (max-width:600px){.fx{padding-top:64px}.fx-note{position:static;transform:none;display:block}.fx-note.b{text-align:right;margin-top:10px}.fx-note.a{margin-bottom:10px}.fx-ctas{margin-top:36px;flex-wrap:nowrap;gap:10px}.fx-cta{padding:15px 18px;gap:8px;white-space:nowrap}}
