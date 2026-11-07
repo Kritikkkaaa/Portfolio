@@ -1,170 +1,114 @@
 ---
-// Silver star cursor, a pond-ripple wobble on the sky behind it, and a light wobble on text under it.
-// Hidden on touch devices and for reduced motion (via global CSS and the media checks below).
+// The overlap cursor (from the "kritikal marks" sheet), on every page.
+// Mouse: two 9px circles with a red lens where they overlap; the leading one is the hotspot, the trailing one lags.
+// Over anything clickable they merge into one red ball. A click makes it hop 2cm and bounce to a stop.
+// Touch: no persistent cursor; a tap flashes the two circles sliding together. Reduced motion: no lag, hop or spring.
 ---
-<svg class="fx-defs" aria-hidden="true" width="0" height="0" focusable="false">
-<filter id="pond" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-color="rgb(128,128,128)" result="flat"></feFlood>
-<feImage class="pond-drop" x="-999" y="-999" width="1" height="1" preserveAspectRatio="none" result="r0"></feImage>
-<feImage class="pond-drop" x="-999" y="-999" width="1" height="1" preserveAspectRatio="none" result="r1"></feImage>
-<feImage class="pond-drop" x="-999" y="-999" width="1" height="1" preserveAspectRatio="none" result="r2"></feImage>
-<feImage class="pond-drop" x="-999" y="-999" width="1" height="1" preserveAspectRatio="none" result="r3"></feImage>
-<feMerge result="map"><feMergeNode in="flat"></feMergeNode><feMergeNode in="r0"></feMergeNode><feMergeNode in="r1"></feMergeNode><feMergeNode in="r2"></feMergeNode><feMergeNode in="r3"></feMergeNode></feMerge>
-<feDisplacementMap id="pond-amp" in="SourceGraphic" in2="map" scale="0" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap>
-</filter>
-<filter id="wob" x="-5%" y="-20%" width="110%" height="140%" color-interpolation-filters="sRGB">
-<feTurbulence id="wob-noise" type="fractalNoise" baseFrequency="0.015 0.05" numOctaves="1" seed="3" result="n"></feTurbulence>
-<feDisplacementMap id="wob-amp" in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap>
-</filter>
-</svg>
-
-<div class="comet-layer" aria-hidden="true">
-<div class="cstar off" id="cstar">
-<svg width="32" height="32" viewBox="0 0 24 24" style="overflow: visible">
-<defs>
-<linearGradient id="pf-silver" x1="0" y1="0" x2="1" y2="1">
-<stop offset="0" stop-color="#FFFFFF"></stop>
-<stop offset="0.45" stop-color="#D9DDE4"></stop>
-<stop offset="0.7" stop-color="#A9AFB9"></stop>
-<stop offset="1" stop-color="#E8EBF0"></stop>
-</linearGradient>
-</defs>
-<path d="M12 0 C12.9 7.6 16.4 11.1 24 12 C16.4 12.9 12.9 16.4 12 24 C11.1 16.4 7.6 12.9 0 12 C7.6 11.1 11.1 7.6 12 0 Z" fill="url(#pf-silver)" stroke="#F4F5F7" stroke-width="0.4" stroke-linejoin="round"></path>
-</svg>
-</div>
-</div>
+<svg class="ov-cursor" id="ov-cursor" aria-hidden="true"></svg>
 
 <script>
-  const star = document.getElementById('cstar') as HTMLElement | null;
-  const fine = window.matchMedia('(hover: hover)').matches;
-  const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (star && fine) {
-    const CONTENT = 'a, button, p, h1, h2, h3, nav, svg, img, label, input, .chip, .skill, .wcard, .tcard, .zcard, .sp-card, .dk-card';
-    const m = { x: -100, y: -100 };
-    const p = { x: -100, y: -100 };
-    const st = { inside: false, rest: false, gone: false, hot: false, hide: false };
-    let raf = 0;
-    let restT: number | undefined, idleT: number | undefined;
+  const ov = document.getElementById('ov-cursor') as unknown as SVGSVGElement;
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const C = { fg: '#efefee', red: '#d2453f' };
+  const HOP = 2 * 96 / 2.54, G = 4200, REST = 0.55;
+  const HOT = 'a, button, summary, label, [role=button], .vc, input[type=range], select';
+  const f = (n: number) => Math.round(n * 100) / 100;
+  const lensD = (r: number, d: number) => {
+    const h = Math.sqrt(Math.max(r * r - (d / 2) * (d / 2), 0));
+    return `M0 ${f(-h)}A${f(r)} ${f(r)} 0 0 1 0 ${f(h)}A${f(r)} ${f(r)} 0 0 1 0 ${f(-h)}Z`;
+  };
+  const pair = (ax: number, ay: number, bx: number, by: number, r: number, op: number, so: number, lo: number) => {
+    const dx = bx - ax, dy = by - ay, d = Math.max(Math.hypot(dx, dy), 0.01);
+    const ang = d > 0.02 ? Math.atan2(dy, dx) * 180 / Math.PI : 0;
+    const ring = `fill="none" stroke="${C.fg}" stroke-width="1.4" stroke-opacity="${f(so)}"`;
+    return `<g opacity="${f(op)}" transform="translate(${f((ax + bx) / 2)} ${f((ay + by) / 2)}) rotate(${f(ang)})">` +
+      (d < 2 * r ? `<path d="${lensD(r, d)}" fill="${C.red}" fill-opacity="${f(lo)}"/>` : '') +
+      `<circle cx="${f(-d / 2)}" cy="0" r="${f(r)}" ${ring}/><circle cx="${f(d / 2)}" cy="0" r="${f(r)}" ${ring}/></g>`;
+  };
 
-    const paint = () => {
-      star.className = 'cstar' + (st.hot ? ' hot' : '') + (st.hide ? ' hide' : '') + (st.rest ? ' rest' : '') + ((!st.inside || st.gone) ? ' off' : '');
-    };
+  const S = { x: 0, y: 0, active: false, hover: false, qx: 0, qy: 0, mg: 0, rr: 9, vr: 0, h: 0, v: 0, sq: 0, launch: false, tr: [] as number[][], taps: [] as number[][] };
+  if (fine) document.documentElement.classList.add('ov-on');
 
-    // Pond: each drop is a ring-shaped displacement map that spreads out from where the cursor passed.
-    const sky = document.querySelector<HTMLElement>('.space');
-    const amp = document.getElementById('pond-amp');
-    const slots = Array.from(document.querySelectorAll<SVGFEImageElement>('.pond-drop'));
-    const drops: { x: number; y: number; born: number }[] = [];
-    let energy = 0;
-    let lastDrop = { x: -999, y: -999 };
-    const ripple = (() => {
-      const n = 128, c = document.createElement('canvas');
-      c.width = c.height = n;
-      const ctx = c.getContext('2d');
-      if (!ctx) return '';
-      const img = ctx.createImageData(n, n);
-      for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
-        const x = (i + 0.5) / n * 2 - 1, y = (j + 0.5) / n * 2 - 1, r = Math.hypot(x, y) || 1e-6;
-        const w = r < 1 ? Math.sin(r * Math.PI * 5) * Math.sin(r * Math.PI) : 0;
-        const k = (j * n + i) * 4;
-        img.data[k] = Math.round(128 + 127 * w * x / r);
-        img.data[k + 1] = Math.round(128 + 127 * w * y / r);
-        img.data[k + 2] = 128;
-        img.data[k + 3] = 255;
-      }
-      ctx.putImageData(img, 0, 0);
-      return c.toDataURL();
-    })();
-    const pond = !calm && !!(sky && amp && ripple && slots.length);
-    if (pond) slots.forEach((s) => s.setAttribute('href', ripple));
-    const LIFE = 1800;
+  addEventListener('pointermove', (e) => {
+    if (e.pointerType === 'touch') return;
+    S.x = e.clientX; S.y = e.clientY;
+    if (!S.active) { S.active = true; S.qx = S.x + 11; S.qy = S.y; }
+    wake();
+  }, { passive: true });
+  addEventListener('pointerover', (e) => {
+    if (e.pointerType === 'touch') return;
+    const t = e.target as Element;
+    const typing = !!(t.closest && t.closest('input:not([type=range]):not([type=button]):not([type=submit]), textarea, [contenteditable]'));
+    S.hover = !typing && !!(t.closest && t.closest(HOT));
+    ov.style.visibility = typing ? 'hidden' : '';
+    wake();
+  });
+  document.documentElement.addEventListener('pointerleave', () => { S.active = false; S.hover = false; wake(); });
+  addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'touch') { S.taps.push([e.clientX, e.clientY, performance.now()]); wake(); return; }
+    S.x = e.clientX; S.y = e.clientY; S.launch = true; wake();
+  }, { passive: true });
 
-    // Text under the cursor: a light, liquid wobble that eases in and out.
-    const noise = document.getElementById('wob-noise');
-    const wobAmp = document.getElementById('wob-amp');
-    const TEXT = 'h1, h2, h3, p, li, .skill';
-    let wobEl: HTMLElement | null = null;
-    let wob = 0;
+  // Returns true while anything is still moving.
+  const update = (dt: number, now: number) => {
+    const live = S.active, px = S.x, py = S.y;
+    let busy = false;
+    const merge = live && S.hover;
+    const mgT = merge ? 1 : 0;
+    S.mg += (mgT - S.mg) * (RM ? 1 : 1 - Math.exp(-dt * 16));
+    const rt = merge ? 8.5 : 9;
+    if (RM) { S.rr = rt; S.vr = 0; }
+    else { S.vr += (320 * (rt - S.rr) - 15 * S.vr) * dt; S.rr += S.vr * dt; }
+    if (S.rr < 3) S.rr = 3;
+    const tx = merge ? px : px + 11, ty = py;
+    const k = RM ? 1 : 1 - Math.exp(-dt * (merge ? 16 : 10));
+    S.qx += (tx - S.qx) * k; S.qy += (ty - S.qy) * k;
+    const dx = S.qx - px, dy = S.qy - py, dl = Math.hypot(dx, dy);
+    if (dl > 34) { S.qx = px + dx / dl * 34; S.qy = py + dy / dl * 34; }
+    if (Math.hypot(S.qx - tx, S.qy - ty) > 0.2 || Math.abs(S.mg - mgT) > 0.01 || Math.abs(S.rr - rt) > 0.02) busy = true;
 
-    const loop = (now: number) => {
-      const dx = m.x - p.x, dy = m.y - p.y;
-      p.x += dx * 0.3;
-      p.y += dy * 0.3;
-      const lag = Math.hypot(dx, dy);
-      star.style.left = p.x.toFixed(1) + 'px';
-      star.style.top = p.y.toFixed(1) + 'px';
+    if (S.launch) { S.launch = false; if (!RM && live) { S.v = Math.sqrt(2 * G * HOP); S.h = Math.max(S.h, 0.01); } }
+    if (!live) { S.h = 0; S.v = 0; S.sq = 0; S.tr = []; }
+    if (S.h > 0 || S.v > 0) {
+      busy = true;
+      S.v -= G * dt; S.h += S.v * dt;
+      if (S.h <= 0) { S.h = 0; const imp = -S.v; S.v = imp * REST; S.sq = Math.min(imp / 800, 1); if (S.v < 90) S.v = 0; }
+    }
+    S.sq *= Math.exp(-dt * 14);
+    if (S.sq > 0.01) busy = true;
+    const air = S.h > 0.5, st = air ? Math.min(Math.abs(S.v) / 1800, 0.28) : 0;
+    const sy = 1 + st - 0.34 * S.sq, sx = 1 / (1 + st) + 0.42 * S.sq;
 
-      let busy = lag > 0.3;
-      if (pond && sky && amp) {
-        while (drops.length && now - drops[0].born > LIFE) drops.shift();
-        energy *= 0.975;
-        slots.forEach((s, i) => {
-          const d = drops[i];
-          if (!d) { s.setAttribute('x', '-999'); s.setAttribute('y', '-999'); return; }
-          const t = (now - d.born) / LIFE;
-          const size = 60 + t * 460;
-          s.setAttribute('x', (d.x - size / 2).toFixed(1));
-          s.setAttribute('y', (d.y - size / 2).toFixed(1));
-          s.setAttribute('width', size.toFixed(1));
-          s.setAttribute('height', size.toFixed(1));
-        });
-        const live = drops.length > 0 && energy > 0.02;
-        amp.setAttribute('scale', live ? (energy * 64).toFixed(1) : '0');
-        sky.style.filter = live ? 'url(#pond)' : '';
-        busy = busy || live;
-      }
-      if (!calm && noise && wobAmp) {
-        const target = wobEl ? 1 : 0;
-        wob += (target - wob) * 0.12;
-        const t = now / 1000;
-        noise.setAttribute('baseFrequency', (0.015 + 0.004 * Math.sin(t * 1.7)).toFixed(4) + ' ' + (0.05 + 0.012 * Math.cos(t * 2.3)).toFixed(4));
-        wobAmp.setAttribute('scale', (wob * 9).toFixed(2));
-        if (!wobEl && wob < 0.02) {
-          document.querySelectorAll('.wob').forEach((el) => el.classList.remove('wob'));
-          wob = 0;
-        } else busy = true;
-      }
-      raf = busy ? requestAnimationFrame(loop) : 0;
-    };
-
-    window.addEventListener('mousemove', (e) => {
-      const tg = e.target as Element | null;
-      const over = !!(tg && tg.closest && tg.closest(CONTENT));
-      st.hide = over;
-      st.hot = !st.hide && !!(tg && tg.closest && tg.closest('a, button'));
-      m.x = e.clientX; m.y = e.clientY;
-      if (!st.inside || st.gone) { p.x = m.x; p.y = m.y; }
-      st.inside = true; st.rest = false; st.gone = false;
-      paint();
-      clearTimeout(restT); restT = window.setTimeout(() => { st.rest = true; paint(); }, 220);
-      clearTimeout(idleT); idleT = window.setTimeout(() => { st.gone = true; paint(); }, 5000);
-
-      if (pond) {
-        const now = performance.now();
-        if (Math.hypot(m.x - lastDrop.x, m.y - lastDrop.y) > 45) {
-          drops.push({ x: m.x, y: m.y, born: now });
-          while (drops.length > slots.length) drops.shift();
-          lastDrop = { x: m.x, y: m.y };
-        }
-        energy = Math.min(1, energy + 0.16);
-      }
-      if (!calm) {
-        const txt = tg && tg.closest ? tg.closest<HTMLElement>(TEXT) : null;
-        if (txt !== wobEl) {
-          if (wobEl && txt) wobEl.classList.remove('wob');
-          wobEl = txt;
-          if (wobEl) wobEl.classList.add('wob');
-        }
-      }
-      if (!raf) raf = requestAnimationFrame(loop);
-    }, { passive: true });
-
-    document.documentElement.addEventListener('mouseleave', () => {
-      clearTimeout(restT); clearTimeout(idleT);
-      st.inside = false; st.rest = false;
-      wobEl = null;
-      paint();
-      if (!raf) raf = requestAnimationFrame(loop);
+    let out = '';
+    if (live) {
+      if (S.h > 2) S.tr.push([px, py - S.h, now]);
+      while (S.tr.length && now - S.tr[0][2] > 200) S.tr.shift();
+      if (S.tr.length) busy = true;
+      S.tr.forEach((t) => {
+        const o = 0.38 * (1 - (now - t[2]) / 200);
+        if (o > 0.02) out += `<circle cx="${f(t[0])}" cy="${f(t[1])}" r="${f(S.rr * 0.92)}" fill="${C.red}" opacity="${f(o)}"/>`;
+      });
+      const ox = px, oy = py + S.rr;
+      out += `<g transform="translate(${f(ox)} ${f(oy - S.h)}) scale(${f(sx)} ${f(sy)}) translate(${f(-ox)} ${f(-oy)})">` +
+        pair(px, py, S.qx, S.qy, S.rr, 1, 1 - S.mg, 0.95 + 0.05 * S.mg) + '</g>';
+    }
+    S.taps = S.taps.filter((t) => now - t[2] < 850);
+    S.taps.forEach((t) => {
+      busy = true;
+      const p = (now - t[2]) / 850;
+      const o2 = p < 0.7 ? 1 : 1 - (p - 0.7) / 0.3, tt = RM ? 1 : Math.min(p / 0.5, 1);
+      const e2 = 1 - Math.pow(1 - tt, 3), dd = Math.max(34 * (1 - e2) + 4, 0.01);
+      out += pair(t[0] - dd / 2, t[1], t[0] + dd / 2, t[1], 13, o2, 1, 0.95);
     });
-  }
+    ov.innerHTML = out;
+    return busy;
+  };
+
+  let raf = 0, last = 0;
+  const frame = (now: number) => {
+    const dt = Math.min((now - last) / 1000, 0.05); last = now;
+    raf = update(dt, now) ? requestAnimationFrame(frame) : 0;
+  };
+  function wake() { if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); } }
 </script>

@@ -1,87 +1,80 @@
 ---
-// Top-right floating animated ripple moon that opens the full-screen menu.
-import rings from '../parts/rings.html?raw';
+// Top-right nav (from the "kritikal marks" sheet): the overlap mark as a reading meter.
+// At the top of the page the circles overlap a little; as you scroll they close in into one red disc.
+// Click it to open the menu: the circles part, a red dot appears, and the links unfold to its left.
+const SUBSTACK = 'https://substack.com/@verykritikal/posts?utm_source=Portfolio&utm_medium=Nav&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
+const links = [
+  { label: 'Home', href: '/' },
+  { label: 'Work', href: '/work' },
+  { label: 'Writing', href: SUBSTACK, external: true }
+];
 ---
-<header class="topbar">
-<div style="position: relative; z-index: 21; display: flex; align-items: center; justify-content: flex-end; gap: 16px; padding: 12px 20px">
-<button class="seerbtn" id="seerbtn" type="button" aria-expanded="false" aria-controls="deckmenu" aria-label="Open menu" style="display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 4px; border: 0; background-color: transparent; color: #A9AFB9; font: inherit; cursor: pointer">
-<span class="seerlabel" id="seerlabel" aria-hidden="true" style="font-family: 'Inter', system-ui, sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase">menu</span>
-<svg class="navmoon om-svg" aria-hidden="true" viewBox="0 0 200 200">
-<defs>
-<mask id="nav-moon-mask"><circle cx="100" cy="100" r="30" fill="#fff"></circle><circle class="om-shadow" cx="100" cy="100" r="31" fill="#000"></circle></mask>
-<filter id="nav-goo" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur in="SourceGraphic" stdDeviation="1.8" result="b"></feGaussianBlur><feColorMatrix in="b" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10"></feColorMatrix></filter>
-</defs>
-<g class="om-rings" fill="none" stroke="#C9CDD5" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round" set:html={rings}></g>
-<g class="om-moon"><g filter="url(#nav-goo)" fill="#C9CDD5"><circle cx="100" cy="100" r="30" mask="url(#nav-moon-mask)"></circle><circle class="om-drop" cx="100" cy="131" r="3.4"></circle><circle class="om-drop d2" cx="94" cy="130" r="2.6"></circle></g></g>
-</svg>
-</button>
-</div>
-<div id="deckmenu" class="navpanel">
-<div style="height: 100%; max-width: 1040px; margin: 0 auto; padding: 120px 24px 48px; box-sizing: border-box; display: flex; align-items: center; gap: 32px">
-<nav aria-label="Main" style="flex: 7 1 0; min-width: 0; display: flex; flex-direction: column; gap: 18px">
-<a class="mlink" id="mlink-home" href="#top" tabindex="-1" style="display: grid; grid-template-columns: 14px minmax(0, 1fr); column-gap: 22px; align-items: center; text-decoration: none; color: #E8EBF0">
-<span aria-hidden="true" style="grid-row: 2; width: 14px; height: 14px; border-radius: 999px; background-color: #E8EBF0"></span>
-<span style="grid-column: 2; font-family: 'Inter', system-ui, sans-serif; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #8A8D96">Currently viewing</span>
-<span style="grid-column: 2; grid-row: 2; font-family: 'Inter', system-ui, sans-serif; font-weight: 500; font-size: clamp(44px, 6.5vw, 88px); line-height: 1.05; letter-spacing: -0.02em">Home</span>
-</a>
-<a class="mlink" href="https://substack.com/@verykritikal/posts" target="_blank" rel="noopener" tabindex="-1" style="display: grid; grid-template-columns: 14px minmax(0, 1fr); column-gap: 22px; align-items: center; text-decoration: none; color: #6E717B">
-<span aria-hidden="true"></span>
-<span style="font-family: 'Newsreader', serif; font-style: italic; font-size: clamp(44px, 6.5vw, 88px); line-height: 1.05; letter-spacing: -0.02em">I write on Substack<span class="marrow" aria-hidden="true" style="font-style: normal; font-size: 0.4em; margin-left: 12px">↗</span></span>
-</a>
+<nav class="mk-nav" id="mk-nav" aria-label="Main">
+<button class="mk-btn" id="mk-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mk-menu"></button>
+<ul class="mk-menu" id="mk-menu">
+{links.map((l, i) => <li style={`--i: ${links.length - 1 - i}`}><a href={l.href} tabindex="-1" {...(l.external ? { target: '_blank', rel: 'noopener' } : {})}>{l.label}</a></li>)}
+</ul>
 </nav>
-<div class="zwrap" style="flex: 3 1 0; min-width: 0; display: flex; justify-content: center">
-<div class="zcard" aria-hidden="true" style="width: 100%; max-width: 280px; aspect-ratio: 5/8; box-sizing: border-box; padding: 10px; border-radius: 16px; background-color: #141319; border: 1px solid #2C2B33">
-<div style="width: 100%; height: 100%; box-sizing: border-box; border-radius: 10px; border: 1px solid #2C2B33; padding: 22px 16px 18px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px">
-<div id="z-num" style="font-family: 'Inter', system-ui, sans-serif; font-size: 10px; letter-spacing: 0.2em; color: #8A8D96">I / XII</div>
-<div class="zsym" id="z-sym" style="font-family: 'Segoe UI Symbol', 'Noto Sans Symbols 2', 'Noto Sans Symbols', 'Apple Symbols', serif; font-size: 80px; line-height: 1.1; color: #E8EBF0; text-shadow: 0 0 18px rgba(232,235,240,0.45)">&#x2648;&#xFE0E;</div>
-<div id="z-name" style="font-family: 'Inter', system-ui, sans-serif; font-size: 13px; letter-spacing: 0.24em; text-transform: uppercase; color: #A9AFB9">Aries</div>
-<p id="z-trait" style="margin: auto 0 0; font-family: 'Newsreader', serif; font-style: italic; font-size: 16px; line-height: 1.4; color: #E8EBF0">bold, impatient, first through the door.</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</header>
 
 <script>
-  const btn = document.getElementById('seerbtn') as HTMLButtonElement;
-  const label = document.getElementById('seerlabel') as HTMLElement;
-  const panel = document.getElementById('deckmenu') as HTMLElement;
-  const links = Array.from(panel.querySelectorAll<HTMLAnchorElement>('.mlink'));
-  let open = false;
-  const set = (v: boolean) => {
-    open = v;
-    panel.classList.toggle('open', v);
-    btn.setAttribute('aria-expanded', String(v));
-    btn.setAttribute('aria-label', v ? 'Close menu' : 'Open menu');
-    label.textContent = v ? 'close' : 'menu';
-    links.forEach((a) => a.setAttribute('tabindex', v ? '0' : '-1'));
+  const C = { fg: '#efefee', red: '#d2453f' };
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const f = (n: number) => Math.round(n * 100) / 100;
+  const box = document.getElementById('mk-nav') as HTMLElement;
+  const btn = document.getElementById('mk-btn') as HTMLButtonElement;
+  const menu = document.getElementById('mk-menu') as HTMLElement;
+  const items = Array.from(menu.querySelectorAll<HTMLAnchorElement>('a'));
+  const lensD = (r: number, d: number) => {
+    const h = Math.sqrt(Math.max(r * r - (d / 2) * (d / 2), 0));
+    return `M0 ${f(-h)}A${f(r)} ${f(r)} 0 0 1 0 ${f(h)}A${f(r)} ${f(r)} 0 0 1 0 ${f(-h)}Z`;
   };
-  btn.addEventListener('click', () => set(!open));
-  document.getElementById('mlink-home')?.addEventListener('click', () => set(false));
-  document.addEventListener('keydown', (e) => { if (open && e.key === 'Escape') { set(false); btn.focus(); } });
+  // sc = scroll 0..1 (circles close in), hov = hover nudge, o = menu open (circles part, red dot between)
+  const mark = (sc: number, hov: number, o: number) => {
+    const r = 17, d = Math.max(15 * (1 - sc) * (1 - o) + 26 * o - 3 * hov * (1 - o), 0.01);
+    const so = Math.min(d / 5, 1);
+    const ring = `fill="none" stroke="${C.fg}" stroke-width="3.2" stroke-opacity="${f(so)}"`;
+    const dot = o > 0.02 ? `<circle cx="32" cy="32" r="${f(5.5 * o)}" fill="${C.red}"/>` : '';
+    return `<svg viewBox="0 0 64 64" width="48" height="48" aria-hidden="true"><g transform="translate(32 32)">` +
+      (d < 2 * r ? `<path d="${lensD(r, d)}" fill="${C.red}"/>` : '') +
+      `<circle cx="${f(-d / 2)}" cy="0" r="${r}" ${ring}/><circle cx="${f(d / 2)}" cy="0" r="${r}" ${ring}/></g>${dot}</svg>`;
+  };
 
-  const Z: [string, string, string][] = [
-    ['♈︎', 'Aries', 'bold, impatient, first through the door.'],
-    ['♉︎', 'Taurus', 'steady, loyal, slow to change its mind.'],
-    ['♊︎', 'Gemini', 'curious, quick, always two tabs open.'],
-    ['♋︎', 'Cancer', 'protective, intuitive, remembers everything.'],
-    ['♌︎', 'Leo', 'warm, dramatic, made for the spotlight.'],
-    ['♍︎', 'Virgo', 'precise, helpful, spots the typo first.'],
-    ['♎︎', 'Libra', 'fair, charming, cannot pick a restaurant.'],
-    ['♏︎', 'Scorpio', 'intense, private, reads between the lines.'],
-    ['♐︎', 'Sagittarius', 'free, honest, already planning the next trip.'],
-    ['♑︎', 'Capricorn', 'ambitious, disciplined, has a five-year plan.'],
-    ['♒︎', 'Aquarius', 'original, independent, a little ahead of time.'],
-    ['♓︎', 'Pisces', 'dreamy, empathetic, feels the room first.']
-  ];
-  const NUM = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
-  let z = 0;
-  setInterval(() => {
-    z = (z + 1) % 12;
-    (document.getElementById('z-num') as HTMLElement).textContent = NUM[z] + ' / XII';
-    (document.getElementById('z-sym') as HTMLElement).textContent = Z[z][0];
-    (document.getElementById('z-name') as HTMLElement).textContent = Z[z][1];
-    (document.getElementById('z-trait') as HTMLElement).textContent = Z[z][2];
-  }, 20000);
+  const N = { open: false, sc: 0, hov: 0, th: 0, o: 0, key: '' };
+  const target = () => {
+    const de = document.documentElement;
+    return Math.min(Math.max(scrollY / Math.max(1, de.scrollHeight - innerHeight), 0), 1);
+  };
+  const setOpen = (b: boolean) => {
+    N.open = b;
+    menu.classList.toggle('on', b);
+    btn.setAttribute('aria-expanded', String(b));
+    items.forEach((a) => a.setAttribute('tabindex', b ? '0' : '-1'));
+    wake();
+  };
+  btn.addEventListener('click', () => setOpen(!N.open));
+  btn.addEventListener('pointerenter', () => { N.th = 1; wake(); });
+  btn.addEventListener('pointerleave', () => { N.th = 0; wake(); });
+  btn.addEventListener('focus', () => { N.th = 1; wake(); });
+  btn.addEventListener('blur', () => { N.th = 0; wake(); });
+  items.forEach((a) => a.addEventListener('click', () => setOpen(false)));
+  document.addEventListener('pointerdown', (e) => { if (N.open && !box.contains(e.target as Node)) setOpen(false); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && N.open) { setOpen(false); btn.focus(); } });
+  addEventListener('scroll', () => wake(), { passive: true });
+
+  let raf = 0, last = 0;
+  const frame = (now: number) => {
+    const dt = Math.min((now - last) / 1000, 0.05); last = now;
+    const ts = target(), oT = N.open ? 1 : 0;
+    const ease = (rate: number) => (RM ? 1 : 1 - Math.exp(-dt * rate));
+    N.sc += (ts - N.sc) * ease(10);
+    N.hov += (N.th - N.hov) * ease(14);
+    N.o += (oT - N.o) * ease(12);
+    const k = Math.round(N.sc * 600) + ',' + Math.round(N.hov * 300) + ',' + Math.round(N.o * 300);
+    if (k !== N.key) { N.key = k; btn.innerHTML = mark(N.sc, N.hov, N.o); }
+    const moving = Math.abs(ts - N.sc) > 0.001 || Math.abs(N.th - N.hov) > 0.003 || Math.abs(oT - N.o) > 0.003;
+    raf = moving ? requestAnimationFrame(frame) : 0;
+  };
+  function wake() { if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); } }
+  N.sc = target();
+  btn.innerHTML = mark(N.sc, 0, 0);
 </script>

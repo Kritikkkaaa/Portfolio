@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Cursor from '../components/Cursor.astro';
 interface Props { title?: string; description?: string }
 const {
   title = 'Kritika Upadhyay · marketer, product manager, storyteller',
@@ -21,10 +22,12 @@ const GA_ID = 'G-RZWTH5REJH';
 <meta property="og:title" content={title}>
 <meta property="og:description" content={description}>
 <meta name="theme-color" content="#080808">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/mark.svg" type="image/svg+xml">
+<link rel="icon" href="/mark-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/mark-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Inter:wght@400;500;600;700&family=Kalam:wght@300;400&family=Commissioner:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;700&family=Kalam:wght@300&display=swap" rel="stylesheet">
 <script is:inline define:vars={{ POSTHOG_KEY, POSTHOG_HOST, GA_ID }}>
   // Small wrapper so private browsing or blocked storage never breaks the page.
   const store = {
@@ -118,15 +121,16 @@ const GA_ID = 'G-RZWTH5REJH';
 </script>
 </head>
 <body>
-<div class="sky" style="background: #080808; color: #EFEFEE; font-family: 'Inter', system-ui, sans-serif; font-size: 17px; line-height: 1.7; min-height: 100vh; position: relative; overflow: clip">
+<div class="sky" style="background: #080808; color: #EFEFEE; font-family: 'Commissioner', system-ui, sans-serif; font-size: 17px; line-height: 1.7; min-height: 100vh; position: relative; overflow: clip">
 <slot />
 </div>
-<div id="consent" role="dialog" aria-label="Cookie choice" hidden style="position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 55; max-width: 360px; box-sizing: border-box; padding: 18px 20px; border-radius: 16px; background: #141319; border: 1px solid #3A3842; box-shadow: 0 20px 50px rgba(0,0,0,0.6); font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.5; color: #C9CDD5">
+<div id="consent" role="dialog" aria-label="Cookie choice" hidden style="position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 55; max-width: 360px; box-sizing: border-box; padding: 18px 20px; border-radius: 16px; background: #141319; border: 1px solid #3A3842; box-shadow: 0 20px 50px rgba(0,0,0,0.6); font-family: 'Commissioner', system-ui, sans-serif; font-size: 14px; line-height: 1.5; color: #C9CDD5">
 <p style="margin: 0 0 14px">Allow cookies on your visit so I know what you resonate with. No ads, I promise.</p>
 <div style="display: flex; gap: 10px">
 <button class="ft-primary" type="button" data-consent="yes" style="min-height: 40px; padding: 0 20px; border: 0; font-family: inherit; font-size: 14px; cursor: pointer">Yes!</button>
 <button class="ft-secondary" type="button" data-consent="no" style="min-height: 40px; padding: 0 18px; background: none; font-family: inherit; font-size: 14px; cursor: pointer">No thanks</button>
 </div>
 </div>
+<Cursor />
 </body>
 </html>
