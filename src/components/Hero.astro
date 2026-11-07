@@ -1,5 +1,6 @@
 ---
-// First fold: name, dropping role words, short intro, skill links and the product / writing / users Venn diagram.
+import Venn from './Venn.astro';
+// First fold: name, dropping role words, short intro, skill links and the listens / thinks / solves Venn diagram.
 const first = 'content marketer';
 const firstLetters = first.split('').map((ch, i) => ({ ch: ch === ' ' ? ' ' : ch, d: (0.35 + i * 0.05).toFixed(3) }));
 ---
@@ -22,15 +23,7 @@ const firstLetters = first.split('').map((ch, i) => ({ ch: ch === ' ' ? ' ' : c
 
 <div class="fade" style="animation-delay: 0.4s; flex: 4 1 0; min-width: 300px; display: flex; justify-content: center">
 <div style="width: 100%; max-width: 500px">
-<svg class="venn" viewBox="0 0 320 300" role="img" aria-label="Three overlapping circles: product, writing and users. Where all three meet: me.">
-<circle class="venn-c" cx="112" cy="106" r="86" fill="rgba(201,205,213,0.07)" stroke="rgba(201,205,213,0.55)"></circle>
-<circle class="venn-c" cx="208" cy="106" r="86" fill="rgba(216,201,163,0.08)" stroke="rgba(216,201,163,0.55)"></circle>
-<circle class="venn-c" cx="160" cy="190" r="86" fill="rgba(159,176,200,0.08)" stroke="rgba(159,176,200,0.55)"></circle>
-<text class="venn-l" x="74" y="82" text-anchor="middle">product</text>
-<text class="venn-l" x="246" y="82" text-anchor="middle">writing</text>
-<text class="venn-l" x="160" y="256" text-anchor="middle">users</text>
-<text class="venn-me" x="160" y="140">me</text>
-</svg>
+<Venn />
 </div>
 </div>
 {/* The crystal orb used to live here. It now sits in the footer (Footer.astro); its markup is kept below for reference.

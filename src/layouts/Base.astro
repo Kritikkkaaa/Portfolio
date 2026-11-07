@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Cursor from '../components/Cursor.astro';
 interface Props { title?: string; description?: string }
 const {
   title = 'Kritika Upadhyay · marketer, product manager, storyteller',
@@ -22,6 +23,8 @@ const GA_ID = 'G-RZWTH5REJH';
 <meta property="og:description" content={description}>
 <meta name="theme-color" content="#080808">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Inter:wght@400;500;600;700&family=Kalam:wght@300;400&family=Commissioner:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -128,5 +131,6 @@ const GA_ID = 'G-RZWTH5REJH';
 <button class="ft-secondary" type="button" data-consent="no" style="min-height: 40px; padding: 0 18px; background: none; font-family: inherit; font-size: 14px; cursor: pointer">No thanks</button>
 </div>
 </div>
+<Cursor />
 </body>
 </html>
