@@ -1,197 +1,171 @@
 ---
-// Second fold: my scenic route, as a horizontal thread of moments. Option A loops and knots; option B branches off on detours.
-// Ported from the Alloy prototype (StoryThread.tsx). Text in [brackets] is a placeholder to fill in.
-interface Props { variant?: 'loops' | 'detours'; first?: boolean }
-const { variant = 'loops', first = true } = Astro.props;
+// Second fold: my scenic route. One red thread of milestones; detours wander off below the main road
+// (which carries on as a dotted line) and come back. Each milestone: greyed date, what i did, what i learnt,
+// and a small thing to play with beside the text. Text in [brackets] is a placeholder to fill in.
 const ICP = '/work/icp-positioning-messaging-nexus';
-const OPENING_W = 600;
+const OPENING_W = 380;
 const NODE = 28;
+const RED = 'rgb(210,69,63)';
 
-const thread = (w: number, n?: number) =>
-  n === undefined
-    ? `M0 20 L${w} 20`
-    : `M0 20 C${n * 0.25} 20 ${n * 0.25} 15 ${n * 0.5} 15 S${n * 0.75} 20 ${n} 20 C${n + (w - n) * 0.25} 20 ${n + (w - n) * 0.25} 25 ${n + (w - n) * 0.5} 25 S${n + (w - n) * 0.75} 20 ${w} 20`;
-
-// A loop: the thread doubles back on itself at cx, curling to the free side of the card (dir 1 = down, -1 = up).
-type Loop = { at: number; r: number };
-const loopPath = (cx: number, r: number, dir: number) => {
-  const b = 20 + dir * 2.2 * r;
-  return `L${cx - r} 20 C${cx + 1.7 * r} 20 ${cx + 1.7 * r} ${b} ${cx} ${b} C${cx - 1.7 * r} ${b} ${cx - 1.4 * r} ${20 - dir * 0.4 * r} ${cx + r} 20`;
+const straight = (w: number) => `M0 20 L${w} 20`;
+const bumped = (w: number, n: number) =>
+  `M0 20 C${n * 0.25} 20 ${n * 0.25} 15 ${n * 0.5} 15 S${n * 0.75} 20 ${n} 20 C${n + (w - n) * 0.25} 20 ${n + (w - n) * 0.25} 25 ${n + (w - n) * 0.5} 25 S${n + (w - n) * 0.75} 20 ${w} 20`;
+// A detour: leaves the road, wanders along a wobbly path at depth D, and climbs back before the next milestone.
+const wander = (w: number, nd: number, D: number) => {
+  const y = 20 + D;
+  const end = w - nd * 0.8;
+  const step = 34;
+  let d = `M0 20 C${nd * 0.55} 20 ${nd * 0.4} ${y} ${nd} ${y}`;
+  let x = nd, k = 0;
+  while (x + step < end) {
+    const amp = (k % 2 ? -1 : 1) * (5 + (k % 3) * 2.5);
+    d += ` Q${x + step / 2} ${y + amp} ${x + step} ${y}`;
+    x += step; k++;
+  }
+  d += ` C${x + (w - x) * 0.45} ${y} ${x + (w - x) * 0.55} 20 ${w} 20`;
+  return d;
 };
-const loopedThread = (w: number, n: number, loops: Loop[], dir: number) => {
-  const bump = `M0 20 C${n * 0.25} 20 ${n * 0.25} 15 ${n * 0.5} 15 S${n * 0.75} 20 ${n} 20`;
-  return bump + loops.map((l) => loopPath(l.at * w, l.r, dir)).join(' ') + ` L${w} 20`;
-};
-// A detour: the thread leaves the main line, runs at depth D, and comes back before the next moment.
-const detourThread = (w: number, nd: number, D: number) =>
-  `M0 20 C${nd * 0.55} 20 ${nd * 0.45} ${20 + D} ${nd} ${20 + D} L${w - nd} ${20 + D} C${w - nd * 0.45} ${20 + D} ${w - nd * 0.55} 20 ${w} 20`;
 
-type Moment = { id: string; label: string; width: number; side: string; now?: boolean; loops?: Loop[]; detour?: number };
-const base: Moment[] = [
-  { id: 'tedx', label: 'TEDx', width: 400, side: 'up' },
-  { id: 'art', label: 'Art internship', width: 420, side: 'down' },
-  { id: 'cad', label: 'AutoCAD', width: 400, side: 'up' },
-  { id: 'plane', label: 'Plane', width: 700, side: 'down' },
-  { id: 'ea', label: 'Freelance EA', width: 480, side: 'up' },
-  { id: 'marmeto', label: 'Marmeto', width: 460, side: 'down' },
-  { id: 'nexus', label: 'Nexus', width: 820, side: 'up' },
-  { id: 'now', label: 'Now', width: 440, side: 'down', now: true }
+type Milestone = { id: string; label: string; date: string; title: string; learnt: string; side: 'up' | 'down'; width: number; detour?: boolean; link?: { text: string; href?: string }; now?: boolean };
+const milestones: Milestone[] = [
+  { id: 'tedx', label: 'TEDx', date: 'apr 2022', title: 'TEDx', learnt: 'after leaving school, i helped organize a TEDx event.', side: 'up', width: 600 },
+  { id: 'art', label: 'Art internship', date: '[mon yy] → [mon yy]', title: 'Art internship', learnt: 'i made sales calls on commission, and earned money doing it.', side: 'down', width: 600 },
+  { id: 'cad', label: 'AutoCAD', date: '[mon yy]', title: 'AutoCAD, and other tools', learnt: 'i started learning AutoCAD and a handful of other tools.', side: 'down', width: 780, detour: true },
+  { id: 'plane', label: 'Plane', date: '[mon yy] → [mon yy]', title: 'Plane', learnt: 'i joined as an intern and spent most of my time on cold outreach for discovery. Vihar introduced me to product. about eight months in, i moved into marketing and helped get the website launch over the line.', side: 'up', width: 640, link: { text: 'case study · soon' } },
+  { id: 'ea', label: 'Freelance EA', date: '[mon yy] → [mon yy]', title: 'Freelance EA work', learnt: 'i learned about product, taste and community, and wrote some of my best work here.', side: 'down', width: 780, detour: true },
+  { id: 'marmeto', label: 'Marmeto', date: '[mon yy] → [mon yy]', title: 'Marmeto', learnt: 'i joined as a PM and worked on the design system.', side: 'up', width: 600, link: { text: 'see my work on the design system · soon' } },
+  { id: 'nexus', label: 'Nexus', date: '[mon yy] → [mon yy]', title: 'Nexus', learnt: 'i built it zero to one, then took it to market myself: every demo became a requirement, every requirement a sprint.', side: 'down', width: 640, link: { text: 'See how I found who Nexus is for', href: ICP } },
+  { id: 'now', label: 'Now', date: 'now', title: 'i’m on the hunt again.', learnt: 'looking for the next place to build, and to be useful.', side: 'up', width: 600, now: true }
 ];
-// Option A: loops and knots between moments (one big loop = a turn, two small ones = a knot).
-const loopsA: Record<string, Loop[]> = {
-  tedx: [{ at: 0.72, r: 26 }],
-  art: [{ at: 0.6, r: 10 }, { at: 0.66, r: 10 }],
-  cad: [{ at: 0.7, r: 34 }],
-  plane: [{ at: 0.82, r: 22 }],
-  ea: [{ at: 0.62, r: 11 }, { at: 0.68, r: 11 }],
-  marmeto: [{ at: 0.74, r: 30 }],
-  nexus: [{ at: 0.9, r: 18 }]
-};
-// Option B: AutoCAD and Freelance EA sit on side branches below the main line.
-const DETOUR = 96;
-const moments: Moment[] = base.map((m) => {
-  if (variant === 'loops') return { ...m, loops: loopsA[m.id] ?? [] };
-  if (m.id === 'cad') return { ...m, side: 'down', width: 540, detour: DETOUR };
-  if (m.id === 'ea') return { ...m, side: 'down', width: 640, detour: DETOUR };
-  return m;
-});
-const nodeX = (m: Moment) => (m.detour ? Math.round(m.width * 0.2) : NODE);
-const tag = variant === 'loops' ? 'A' : 'B';
-const swatches = ['#E8EBF0', '#C9CDD5', '#8A8D96', '#3A3842', '#141319'];
+const DEPTH = 150;
+const nodeX = (m: Milestone) => (m.detour ? Math.round(m.width * 0.16) : NODE);
+const swatches = ['#E8EBF0', '#D8C9A3', '#9FB0C8', 'rgb(210,69,63)', '#3A3842'];
+const quote = 'thinking and expressing what i think are two different things.'.split(' ');
+const loop = ['demo', 'requirement', 'sprint'];
 ---
-<section id={first ? 'work' : undefined} class="tl-wrap" aria-label={`My scenic route, option ${tag}`}>
-{first && <div class="tl-head">
+<section id="work" class="tl-wrap" aria-label="My scenic route">
+<div class="tl-head">
 <h2>My scenic route<span style="color: var(--tl-red)">.</span></h2>
 <span class="hd-note">it was never a straight line</span>
-</div>}
-<p class="tl-option"><b>option {tag}</b> · {variant === 'loops' ? 'loops and knots' : 'detours that branch off'}</p>
-<div class="tl-scroller" tabindex="0" role="region" aria-roledescription="timeline" aria-label="Timeline. Use the left and right arrow keys to move between moments.">
+<button type="button" class="tl-zoom" aria-pressed="false" aria-label="Zoom out to see the whole route" title="See the whole route">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5 L20.5 20.5 M7.5 10.5 H13.5"></path><path class="zoom-plus" d="M10.5 7.5 V13.5"></path></svg>
+</button>
+</div>
+<div class="tl-scroller" tabindex="0" role="region" aria-roledescription="timeline" aria-label="Timeline. Use the left and right arrow keys to move between milestones.">
 <div class="tl-track">
-<div class="tl-lead"><svg class="tl-thread" width="200" height="40" viewBox="0 0 200 40" aria-hidden="true"><path d={thread(200)} fill="none" stroke="rgb(210,69,63)" stroke-width="1.6" stroke-linecap="round"></path></svg></div>
+<div class="tl-lead"><svg class="tl-thread" width="200" height="40" viewBox="0 0 200 40" aria-hidden="true"><path d={straight(200)} fill="none" stroke={RED} stroke-width="1.6" stroke-linecap="round"></path></svg></div>
 
 <article class="tl-item tl-open" style={`width: ${OPENING_W}px`}>
-<svg class="tl-thread" width={OPENING_W} height="40" viewBox={`0 0 ${OPENING_W} 40`} aria-hidden="true"><path d={thread(OPENING_W)} fill="none" stroke="rgb(210,69,63)" stroke-width="1.6" stroke-linecap="round"></path></svg>
-<p class="tl-open-a">I was an adult.</p>
-<p class="tl-open-b">I was out of school.</p>
+<svg class="tl-thread" width={OPENING_W} height="40" viewBox={`0 0 ${OPENING_W} 40`} aria-hidden="true"><path d={straight(OPENING_W)} fill="none" stroke={RED} stroke-width="1.6" stroke-linecap="round"></path></svg>
+<p class="tl-open-a">I turned 18 and dad said <em>College.</em></p>
 </article>
 
-{moments.map((m, i) => (
-<article class={`tl-item ${m.side}${m.now ? ' now' : ''}`} style={`width: ${m.width}px`} aria-label={m.label}>
+{milestones.map((m, i) => (
+<article class={`tl-item ${m.side}${m.now ? ' now' : ''}${m.detour ? ' detour' : ''}`} style={`width: ${m.width}px`} aria-label={m.detour ? `${m.label}, a detour` : m.label}>
 <svg class="tl-thread" width={m.width} height="40" viewBox={`0 0 ${m.width} 40`} aria-hidden="true">
 {m.detour ? <>
-<path d={thread(m.width)} fill="none" stroke="rgb(210,69,63)" stroke-width="1.3" stroke-dasharray="4 6" opacity="0.7"></path>
-<path d={detourThread(m.width, nodeX(m), m.detour)} fill="none" stroke="rgb(210,69,63)" stroke-width="1.6" stroke-linecap="round"></path>
-</> : <path d={variant === 'loops' ? loopedThread(m.width, NODE, m.loops ?? [], m.side === 'up' ? 1 : -1) : thread(m.width, NODE)} fill="none" stroke="rgb(210,69,63)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>}
+<path d={straight(m.width)} fill="none" stroke={RED} stroke-width="1.3" stroke-dasharray="4 6" opacity="0.7"></path>
+<path d={wander(m.width, nodeX(m), DEPTH)} fill="none" stroke={RED} stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+</> : <path d={bumped(m.width, NODE)} fill="none" stroke={RED} stroke-width="1.6" stroke-linecap="round"></path>}
 </svg>
-{m.detour && <span class="tl-detour" style={`left: ${nodeX(m) + 14}px; top: ${330 + m.detour - 4}px`}>detour</span>}
-<span class="tl-node" style={`left: ${nodeX(m) - 7}px${m.detour ? `; top: ${343 + m.detour}px` : ''}`}></span>
-<span class="tl-idx" style={`left: ${nodeX(m) + 14}px${m.detour ? `; top: ${360 + m.detour}px` : ''}`}>{String(i + 1).padStart(2, '0')}</span>
-<div class="tl-card" style={`left: ${nodeX(m)}px; width: ${m.width - nodeX(m) - 36}px${m.detour ? `; top: ${350 + m.detour}px` : ''}`}>
+<span class="tl-node" style={`left: ${nodeX(m) - 7}px${m.detour ? `; top: ${343 + DEPTH}px` : ''}`}></span>
+<span class="tl-idx" style={`left: ${nodeX(m) + 14}px${m.detour ? `; top: ${360 + DEPTH}px` : ''}`}>{String(i + 1).padStart(2, '0')}</span>
+<div class="tl-card" style={`left: ${nodeX(m)}px; width: ${m.width - nodeX(m) - 36}px${m.detour ? `; top: ${350 + DEPTH}px` : ''}`}>
+<div class="ms">
+<div class="ms-text">
+<div class="ms-date">{m.date}</div>
+<h3>{m.title}</h3>
+<p>{m.learnt}</p>
+{m.link && (m.link.href
+  ? <a class="ms-link" href={m.link.href}>{m.link.text}<span aria-hidden="true"> →</span></a>
+  : <span class="ms-soon">{m.link.text}</span>)}
+</div>
 
+<div class="ms-toy">
 {m.id === 'tedx' && <>
-<div class="tl-date"><span>apr 2022</span><em>tentative</em></div>
-<h3>TEDx</h3>
-<p>after leaving school, i helped organize a TEDx event.</p>
-<div class="tl-ticket" aria-hidden="true"><div class="tl-ticket-main"><small>admit one</small><b>TEDx<span>[ event ]</span></b></div><div class="tl-ticket-stub">x</div></div>
-<p class="tl-opens"><span>opened up</span> <span class="tl-fill">[what this opened up]</span></p>
+<button type="button" class="toy-ticket" aria-pressed="false" aria-label="Tear the ticket stub">
+<span class="tt-main"><small>admit one</small><b>TEDx</b><span class="tt-stamp">admitted</span></span>
+<span class="tt-stub">no. 001</span>
+</button>
+<span class="toy-hint">tear the stub</span>
 </>}
 
 {m.id === 'art' && <>
-<div class="tl-date"><span><span class="tl-fill">[mon yy]</span> → <span class="tl-fill">[mon yy]</span></span></div>
-<h3><span class="tl-fill">[internship name, from LinkedIn]</span></h3>
-<p>the art internship. i made sales calls on commission, and earned money doing it.</p>
-<svg class="tl-art" width="150" height="46" viewBox="0 0 150 46" aria-hidden="true">
-{[0, 1, 2, 3].map((k) => <line x1={8 + k * 11} y1="6" x2={8 + k * 11} y2="30" stroke="#C9CDD5" stroke-width="1.5" stroke-linecap="round"></line>)}
-<line x1="2" y1="26" x2="48" y2="10" stroke="rgb(210,69,63)" stroke-width="1.5" stroke-linecap="round"></line>
-{[0, 1, 2].map((k) => <line x1={66 + k * 11} y1="6" x2={66 + k * 11} y2="30" stroke="#C9CDD5" stroke-width="1.5" stroke-linecap="round"></line>)}
-<text x="2" y="44" font-size="8.5" letter-spacing="1.6" fill="#8A8D96">CALLS MADE</text>
-</svg>
-<p class="tl-opens"><span>opened up</span> <span class="tl-fill">[what this opened up]</span></p>
+<button type="button" class="toy-tally" aria-label="Make a call. Calls made: 0">
+<svg width="170" height="48" viewBox="0 0 170 48" aria-hidden="true"><g class="tally-marks"></g></svg>
+<span class="tally-count">0 calls made</span>
+</button>
+<span class="toy-hint">click to make a call</span>
 </>}
 
 {m.id === 'cad' && <>
-<div class="tl-date"><span><span class="tl-fill">[mon yy]</span></span></div>
-<h3>AutoCAD, and other tools</h3>
-<p>i started learning AutoCAD and a handful of other tools.</p>
-<svg class="tl-art" width="170" height="74" viewBox="0 0 170 74" aria-hidden="true">
-<rect x="14" y="8" width="120" height="40" fill="none" stroke="#C9CDD5" stroke-width="1.2"></rect>
-<rect x="26" y="20" width="30" height="28" fill="none" stroke="#8A8D96" stroke-width="1" stroke-dasharray="3 3"></rect>
-<circle cx="104" cy="28" r="9" fill="none" stroke="#8A8D96" stroke-width="1"></circle>
-<line x1="14" y1="62" x2="134" y2="62" stroke="rgb(210,69,63)" stroke-width="1"></line>
-<path d="M14 62 l6 -3 v6 z M134 62 l-6 -3 v6 z" fill="rgb(210,69,63)"></path>
-<line x1="14" y1="50" x2="14" y2="68" stroke="rgb(210,69,63)" stroke-width="0.8"></line>
-<line x1="134" y1="50" x2="134" y2="68" stroke="rgb(210,69,63)" stroke-width="0.8"></line>
-<text x="74" y="58" font-size="8.5" text-anchor="middle" fill="#C9CDD5" letter-spacing="1">1200</text>
+<div class="toy-cad">
+<svg width="190" height="96" viewBox="0 0 190 96" aria-hidden="true">
+<rect class="cad-box" x="14" y="10" width="110" height="46" fill="none" stroke="#C9CDD5" stroke-width="1.2"></rect>
+<rect x="26" y="22" width="30" height="34" fill="none" stroke="#8A8D96" stroke-width="1" stroke-dasharray="3 3"></rect>
+<line class="cad-dim" x1="14" y1="74" x2="124" y2="74" stroke={RED} stroke-width="1"></line>
+<line x1="14" y1="62" x2="14" y2="80" stroke={RED} stroke-width="0.8"></line>
+<line class="cad-tick" x1="124" y1="62" x2="124" y2="80" stroke={RED} stroke-width="0.8"></line>
+<text class="cad-num" x="69" y="70" font-size="9" text-anchor="middle" fill="#C9CDD5" letter-spacing="1">1100</text>
 </svg>
-<p class="tl-opens"><span>why i started</span> <span class="tl-fill">[what made me start]</span></p>
+<span class="cad-handle" role="slider" tabindex="0" aria-label="Wall length" aria-valuemin="400" aria-valuemax="1600" aria-valuenow="1100"></span>
+</div>
+<span class="toy-hint">drag the corner</span>
 </>}
 
-{m.id === 'plane' && <div class="tl-plane">
-<div class="tl-plane-text">
-<div class="tl-date"><span><span class="tl-fill">[mon yy]</span> → <span class="tl-fill">[mon yy]</span></span></div>
-<h3>Plane</h3>
-<p>i joined as an intern and spent most of my time on cold outreach for discovery. Vihar introduced me to product.</p>
-<p>about eight months in, i moved into marketing and helped get the website launch over the line.</p>
-<div class="tl-mini" aria-hidden="true">
-<div class="tl-mini-line"></div>
-<div class="tl-mini-pt" style="left: 0"><b>intern</b><span>cold outreach for discovery</span></div>
-<div class="tl-mini-pt" style="left: 100%; transform: translateX(-100%); align-items: flex-end; text-align: right"><b>marketing</b><span>website launch</span></div>
-<span class="tl-mini-dot" style="left: 0"></span>
-<span class="tl-mini-dot" style="left: 100%; margin-left: -7px"></span>
-<span class="tl-mini-mid">~ 8 months</span>
+{m.id === 'plane' && <>
+<div class="toy-plane">
+<div class="pl-labels"><span class="pl-a on"><b>intern</b>cold outreach for discovery</span><span class="pl-b"><b>marketing</b>website launch</span></div>
+<input class="pl-range" type="range" min="0" max="100" value="0" aria-label="Slide from intern to marketing">
+<span class="pl-mid">~ 8 months</span>
 </div>
-<p class="tl-opens"><span>opened up</span> product, from the inside. <span class="tl-fill">[more]</span></p>
-<span class="tl-soon">case study · soon</span>
-</div>
-<div class="tl-polaroid" aria-hidden="true">
-<svg class="hd-pin" width="22" height="26" viewBox="0 0 22 26" style="position: absolute; left: 50%; top: -14px; margin-left: -11px; z-index: 1"><ellipse cx="13" cy="22" rx="6" ry="2" fill="rgba(0,0,0,0.45)"></ellipse><circle cx="11" cy="10" r="8" fill="rgb(210,69,63)"></circle><circle cx="8.5" cy="7.5" r="2.4" fill="rgba(255,255,255,0.35)"></circle><path d="M11 17 L11 24" stroke="rgb(169,175,185)" stroke-width="1.2"></path></svg>
-<div class="tl-polaroid-img">[ photo ]</div>
-<span>[ caption ]</span>
-</div>
-</div>}
+<span class="toy-hint">slide through it</span>
+</>}
 
 {m.id === 'ea' && <>
-<div class="tl-date"><span><span class="tl-fill">[mon yy]</span> → <span class="tl-fill">[mon yy]</span></span></div>
-<h3>Freelance EA work</h3>
-<p>i learned about product, taste and community, and wrote some of my best work here.</p>
-<blockquote>thinking and expressing what i think are two different things.</blockquote>
-<p class="tl-opens"><span>opened up</span> <span class="tl-fill">[what this opened up]</span></p>
+<button type="button" class="toy-quote" aria-pressed="false" aria-label="Thinking and expressing what i think are two different things. Click to put the words in order.">
+{quote.map((w, k) => <span class="qw" style={`--qx: ${((k * 37) % 70) - 30}px; --qy: ${((k * 53) % 46) - 20}px; --qr: ${((k * 29) % 40) - 20}deg`}>{w}</span>)}
+</button>
+<span class="toy-hint">click to express it</span>
 </>}
 
 {m.id === 'marmeto' && <>
-<div class="tl-date"><span><span class="tl-fill">[mon yy]</span> → <span class="tl-fill">[mon yy]</span></span></div>
-<h3>Marmeto</h3>
-<p>i joined as a PM and worked on the design system.</p>
-<div class="tl-tokens" aria-hidden="true">
-{swatches.map((c, k) => <span style={`background: ${c}`}><i>--c-{k + 1}</i></span>)}
-<div class="tl-scale">{[4, 8, 12, 16, 24].map((s) => <span style={`width: ${s}px; height: ${s}px`}></span>)}<small>space</small></div>
+<div class="toy-tokens">
+<div class="tk-swatches" role="group" aria-label="Colour tokens">
+{swatches.map((c, k) => <button type="button" class={`tk-sw${k === 3 ? ' on' : ''}`} style={`background: ${c}`} data-c={c} aria-label={`Colour token ${k + 1}`}></button>)}
 </div>
-<span class="tl-soon">See my work on the design system · soon</span>
+<div class="tk-space" role="group" aria-label="Spacing tokens">
+{[4, 8, 12, 16].map((s, k) => <button type="button" class={`tk-sp${k === 2 ? ' on' : ''}`} data-s={s} aria-label={`Spacing ${s}`}><span style={`width: ${s}px; height: ${s}px`}></span></button>)}
+</div>
+<div class="tk-preview" style="--tk: rgb(210,69,63); --sp: 12px"><span class="tk-chip">button</span><span class="tk-chip ghost">button</span></div>
+</div>
+<span class="toy-hint">pick a token</span>
 </>}
 
-{m.id === 'nexus' && <div class="tl-nexus">
-<div class="tl-nexus-text">
-<div class="tl-date"><span><span class="tl-fill">[mon yy]</span> → <span class="tl-fill">[mon yy]</span></span></div>
-<h3>Nexus</h3>
-<p>i built it zero to one, then took it to market myself: every demo became a requirement, every requirement a sprint.</p>
-<div class="tl-stats">
-<div><b>250+</b><span>organic installs in launch week</span></div>
-<div><b>65.5%</b><span>merchant activation, up from 32% in a week</span></div>
-</div>
-<a class="ft-secondary" href={ICP}>See how I found who Nexus is for<span aria-hidden="true">→</span></a>
-</div>
-<figure class="tl-fig">
-<img src="/case/icp-nexus/icp-table.png" alt="The Nexus ideal customer profile: business, Shopify plan, region, trigger moment and job to be done, each with its evidence." width="1084" height="660" loading="lazy">
-<figcaption>final ICP!</figcaption>
-</figure>
-</div>}
+{m.id === 'nexus' && <>
+<button type="button" class="toy-loop" aria-label="Turn the loop: demo, requirement, sprint">
+<svg width="150" height="150" viewBox="0 0 150 150" aria-hidden="true">
+<circle cx="75" cy="75" r="50" fill="none" stroke="#3A3842" stroke-width="1" stroke-dasharray="3 5"></circle>
+<g class="lp-arrow"><path d="M75 25 A50 50 0 0 1 118 50" fill="none" stroke={RED} stroke-width="1.6" stroke-linecap="round"></path><path d="M118 50 l-8 -1 l5 -6 z" fill={RED}></path></g>
+</svg>
+{loop.map((l, k) => <span class={`lp-word w${k}${k === 0 ? ' on' : ''}`}>{l}</span>)}
+</button>
+<span class="toy-hint">turn the loop</span>
+</>}
 
 {m.id === 'now' && <>
-<div class="tl-date"><span>now</span></div>
-<h3>i’m on the hunt again.</h3>
-<p>looking for the next place to build, and to be useful. <span class="tl-fill">[what i’m looking for]</span></p>
+<button type="button" class="toy-compass" aria-label="Spin the compass: where next?">
+<svg width="120" height="120" viewBox="0 0 120 120" aria-hidden="true">
+<circle cx="60" cy="60" r="46" fill="none" stroke="#3A3842" stroke-width="1"></circle>
+<g fill="#8A8D96" font-size="8" letter-spacing="1" text-anchor="middle"><text x="60" y="22">N</text><text x="102" y="63">E</text><text x="60" y="106">S</text><text x="18" y="63">W</text></g>
+<g class="cp-needle"><path d="M60 24 L65 60 L55 60 Z" fill={RED}></path><path d="M60 96 L65 60 L55 60 Z" fill="#C9CDD5"></path><circle cx="60" cy="60" r="3" fill="#141319" stroke="#C9CDD5"></circle></g>
+</svg>
+<span class="cp-out">where next?</span>
+</button>
+<span class="toy-hint">spin it</span>
 </>}
-
+</div>
+</div>
 </div>
 </article>
 ))}
@@ -199,70 +173,195 @@ const swatches = ['#E8EBF0', '#C9CDD5', '#8A8D96', '#3A3842', '#141319'];
 <div class="tl-tail" aria-hidden="true"></div>
 </div>
 </div>
-
-<div class="tl-controls">
-<button class="tl-zoom" type="button" aria-pressed="false">see the whole route</button>
-</div>
 </section>
 
 <script>
-  // Each timeline on the page (option A and option B) runs on its own.
-  document.querySelectorAll<HTMLElement>('.tl-wrap').forEach((wrap) => {
-    const scroller = wrap.querySelector('.tl-scroller') as HTMLElement;
-    const track = wrap.querySelector('.tl-track') as HTMLElement;
-    const lead = wrap.querySelector('.tl-lead') as HTMLElement;
-    const zoom = wrap.querySelector('.tl-zoom') as HTMLButtonElement;
-    const items = Array.from(wrap.querySelectorAll<HTMLElement>('.tl-item'));
-    const count = items.length;
-    let active = 0;
-    let zoomed = false;
+  const wrap = document.querySelector('.tl-wrap') as HTMLElement;
+  const scroller = wrap.querySelector('.tl-scroller') as HTMLElement;
+  const track = wrap.querySelector('.tl-track') as HTMLElement;
+  const lead = wrap.querySelector('.tl-lead') as HTMLElement;
+  const zoom = wrap.querySelector('.tl-zoom') as HTMLButtonElement;
+  const items = Array.from(wrap.querySelectorAll<HTMLElement>('.tl-item'));
+  const count = items.length;
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let active = 0;
+  let zoomed = false;
 
-    const left = (i: number) => items[i].offsetLeft - lead.offsetWidth;
-    const goTo = (i: number) => scroller.scrollTo({ left: left(Math.max(0, Math.min(count - 1, i))), behavior: 'smooth' });
-
-    const onScroll = () => {
-      if (zoomed) return;
-      let best = 0, dist = Infinity;
-      items.forEach((_, i) => {
-        const d = Math.abs(left(i) - scroller.scrollLeft);
-        if (d < dist) { dist = d; best = i; }
-      });
-      active = best;
-    };
-
-    // Zoom out: scale the whole route down to fit the width, like the case study overview.
-    const setZoom = (on: boolean, land?: number) => {
-      zoomed = on;
-      wrap.classList.toggle('zoomed', on);
-      zoom.setAttribute('aria-pressed', String(on));
-      zoom.textContent = on ? 'back to one moment' : 'see the whole route';
-      if (on) {
-        scroller.scrollLeft = 0;
-        const s = scroller.clientWidth / track.scrollWidth;
-        track.style.transform = `scale(${s})`;
-        scroller.style.height = `${Math.ceil(740 * s)}px`;
-      } else {
-        track.style.transform = '';
-        scroller.style.height = '';
-        requestAnimationFrame(() => {
-          scroller.scrollLeft = left(land ?? active);
-          active = land ?? active;
-        });
-      }
-    };
-
-    scroller.addEventListener('scroll', onScroll, { passive: true });
-    scroller.addEventListener('keydown', (e) => {
-      if (zoomed) return;
-      const keys: Record<string, number> = { ArrowRight: active + 1, ArrowLeft: active - 1, Home: 0, End: count - 1 };
-      if (e.key in keys) { e.preventDefault(); goTo(keys[e.key]); }
+  const left = (i: number) => items[i].offsetLeft - lead.offsetWidth;
+  const goTo = (i: number) => scroller.scrollTo({ left: left(Math.max(0, Math.min(count - 1, i))), behavior: calm ? 'auto' : 'smooth' });
+  scroller.addEventListener('scroll', () => {
+    if (zoomed) return;
+    let best = 0, dist = Infinity;
+    items.forEach((_, i) => {
+      const d = Math.abs(left(i) - scroller.scrollLeft);
+      if (d < dist) { dist = d; best = i; }
     });
-    items.forEach((it, i) => it.addEventListener('click', (e) => {
-      if (!zoomed) return;
-      e.preventDefault();
-      setZoom(false, i);
+    active = best;
+  }, { passive: true });
+  scroller.addEventListener('keydown', (e) => {
+    if (zoomed || (e.target as Element).closest('.ms-toy')) return;
+    const keys: Record<string, number> = { ArrowRight: active + 1, ArrowLeft: active - 1, Home: 0, End: count - 1 };
+    if (e.key in keys) { e.preventDefault(); goTo(keys[e.key]); }
+  });
+
+  // Zoom: the same magnifier as the case study. Minus shows the whole route; plus (or a click on a milestone) goes back in.
+  const setZoom = (on: boolean, land?: number) => {
+    zoomed = on;
+    wrap.classList.toggle('zoomed', on);
+    zoom.classList.toggle('in', on);
+    zoom.setAttribute('aria-pressed', String(on));
+    zoom.setAttribute('aria-label', on ? 'Zoom back in' : 'Zoom out to see the whole route');
+    if (on) {
+      scroller.scrollLeft = 0;
+      const s = scroller.clientWidth / track.scrollWidth;
+      track.style.transform = `scale(${s})`;
+      scroller.style.height = `${Math.ceil(740 * s)}px`;
+    } else {
+      track.style.transform = '';
+      scroller.style.height = '';
+      if (land !== undefined) active = land;
+      requestAnimationFrame(() => { scroller.scrollLeft = left(active); });
+    }
+  };
+  zoom.addEventListener('click', () => setZoom(!zoomed));
+  items.forEach((it, i) => it.addEventListener('click', (e) => {
+    if (!zoomed) return;
+    e.preventDefault();
+    e.stopPropagation();
+    setZoom(false, i);
+  }, true));
+  window.addEventListener('resize', () => { if (zoomed) setZoom(true); });
+
+  // TEDx: tear the stub.
+  wrap.querySelectorAll<HTMLButtonElement>('.toy-ticket').forEach((b) => b.addEventListener('click', () => {
+    const on = !b.classList.contains('torn');
+    b.classList.toggle('torn', on);
+    b.setAttribute('aria-pressed', String(on));
+  }));
+
+  // Art internship: each click is a call; every fifth strikes through the group.
+  wrap.querySelectorAll<HTMLButtonElement>('.toy-tally').forEach((b) => {
+    const g = b.querySelector('.tally-marks') as SVGGElement;
+    const out = b.querySelector('.tally-count') as HTMLElement;
+    let n = 0;
+    const NS = 'http://www.w3.org/2000/svg';
+    const line = (x1: number, y1: number, x2: number, y2: number, red: boolean) => {
+      const l = document.createElementNS(NS, 'line');
+      Object.entries({ x1, y1, x2, y2 }).forEach(([k, v]) => l.setAttribute(k, String(v)));
+      l.setAttribute('stroke', red ? 'rgb(210,69,63)' : '#C9CDD5');
+      l.setAttribute('stroke-width', '1.6');
+      l.setAttribute('stroke-linecap', 'round');
+      l.classList.add('tally-new');
+      g.appendChild(l);
+    };
+    b.addEventListener('click', () => {
+      if (n >= 20) { n = 0; g.textContent = ''; }
+      const grp = Math.floor(n / 5), k = n % 5, x0 = 6 + grp * 42;
+      if (k < 4) line(x0 + k * 8, 8, x0 + k * 8, 40, false);
+      else line(x0 - 4, 34, x0 + 30, 12, true);
+      n++;
+      out.textContent = `${n} call${n === 1 ? '' : 's'} made`;
+      b.setAttribute('aria-label', `Make a call. Calls made: ${n}`);
+    });
+  });
+
+  // AutoCAD: drag the corner to stretch the wall; the dimension follows.
+  wrap.querySelectorAll<HTMLElement>('.toy-cad').forEach((t) => {
+    const box = t.querySelector('.cad-box') as SVGRectElement;
+    const dim = t.querySelector('.cad-dim') as SVGLineElement;
+    const tick = t.querySelector('.cad-tick') as SVGLineElement;
+    const num = t.querySelector('.cad-num') as SVGTextElement;
+    const handle = t.querySelector('.cad-handle') as HTMLElement;
+    const set = (w: number) => {
+      w = Math.max(40, Math.min(160, w));
+      const x2 = 14 + w;
+      box.setAttribute('width', String(w));
+      dim.setAttribute('x2', String(x2));
+      tick.setAttribute('x1', String(x2));
+      tick.setAttribute('x2', String(x2));
+      num.setAttribute('x', String(14 + w / 2));
+      num.textContent = String(w * 10);
+      handle.style.left = `${x2}px`;
+      handle.setAttribute('aria-valuenow', String(w * 10));
+    };
+    let dragging = false, startX = 0, startW = 110;
+    handle.addEventListener('pointerdown', (e) => {
+      dragging = true; startX = e.clientX; startW = Number(box.getAttribute('width'));
+      handle.setPointerCapture(e.pointerId);
+      e.stopPropagation();
+    });
+    handle.addEventListener('pointermove', (e) => { if (dragging) set(startW + (e.clientX - startX)); });
+    handle.addEventListener('pointerup', () => { dragging = false; });
+    handle.addEventListener('keydown', (e) => {
+      const w = Number(box.getAttribute('width'));
+      if (e.key === 'ArrowRight') { e.preventDefault(); set(w + 10); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); set(w - 10); }
+    });
+    set(110);
+  });
+
+  // Plane: slide from intern to marketing.
+  wrap.querySelectorAll<HTMLElement>('.toy-plane').forEach((t) => {
+    const r = t.querySelector('.pl-range') as HTMLInputElement;
+    const a = t.querySelector('.pl-a') as HTMLElement;
+    const b = t.querySelector('.pl-b') as HTMLElement;
+    const paint = () => {
+      const v = Number(r.value);
+      r.style.setProperty('--v', `${v}%`);
+      a.classList.toggle('on', v < 50);
+      b.classList.toggle('on', v >= 50);
+    };
+    r.addEventListener('input', paint);
+    r.addEventListener('pointerdown', (e) => e.stopPropagation());
+    paint();
+  });
+
+  // Freelance EA: scattered thoughts fall into a sentence.
+  wrap.querySelectorAll<HTMLButtonElement>('.toy-quote').forEach((b) => b.addEventListener('click', () => {
+    const on = !b.classList.contains('said');
+    b.classList.toggle('said', on);
+    b.setAttribute('aria-pressed', String(on));
+  }));
+
+  // Marmeto: pick colour and spacing tokens; the sample buttons update.
+  wrap.querySelectorAll<HTMLElement>('.toy-tokens').forEach((t) => {
+    const prev = t.querySelector('.tk-preview') as HTMLElement;
+    t.querySelectorAll<HTMLButtonElement>('.tk-sw').forEach((b) => b.addEventListener('click', () => {
+      t.querySelectorAll('.tk-sw').forEach((x) => x.classList.toggle('on', x === b));
+      prev.style.setProperty('--tk', b.dataset.c!);
     }));
-    zoom.addEventListener('click', () => setZoom(!zoomed));
-    window.addEventListener('resize', () => { if (zoomed) setZoom(true); });
+    t.querySelectorAll<HTMLButtonElement>('.tk-sp').forEach((b) => b.addEventListener('click', () => {
+      t.querySelectorAll('.tk-sp').forEach((x) => x.classList.toggle('on', x === b));
+      prev.style.setProperty('--sp', `${b.dataset.s}px`);
+    }));
+  });
+
+  // Nexus: demo → requirement → sprint, round and round.
+  wrap.querySelectorAll<HTMLButtonElement>('.toy-loop').forEach((b) => {
+    const arrow = b.querySelector('.lp-arrow') as SVGGElement;
+    const words = Array.from(b.querySelectorAll<HTMLElement>('.lp-word'));
+    let k = 0;
+    b.addEventListener('click', () => {
+      k++;
+      arrow.style.transform = `rotate(${k * 120}deg)`;
+      words.forEach((w, i) => w.classList.toggle('on', i === k % 3));
+    });
+  });
+
+  // Now: spin the compass.
+  wrap.querySelectorAll<HTMLButtonElement>('.toy-compass').forEach((b) => {
+    const needle = b.querySelector('.cp-needle') as SVGGElement;
+    const out = b.querySelector('.cp-out') as HTMLElement;
+    const next = ['product', 'growth', 'GTM', 'positioning', 'somewhere new'];
+    let turn = 0, last = -1;
+    b.addEventListener('click', () => {
+      let i = Math.floor(Math.random() * next.length);
+      if (i === last) i = (i + 1) % next.length;
+      last = i;
+      turn += 720 + i * 72;
+      needle.style.transform = `rotate(${turn}deg)`;
+      out.textContent = '…';
+      window.setTimeout(() => { out.textContent = `next: ${next[i]}`; }, calm ? 0 : 1100);
+    });
   });
 </script>
