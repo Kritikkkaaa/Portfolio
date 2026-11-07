@@ -1,19 +1,18 @@
 ---
 // Top-right nav (from the "kritikal marks" sheet): the overlap mark as a reading meter.
 // At the top of the page the circles overlap a little; as you scroll they close in into one red disc.
-// Click it to open the menu: the circles part, a red dot appears, and the links hang from a gold hairline.
+// Click it to open the menu: the circles part, a red dot appears, and the links unfold to its left.
 const SUBSTACK = 'https://substack.com/@verykritikal/posts?utm_source=Portfolio&utm_medium=Nav&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
 const links = [
-  { label: 'home', href: '/' },
-  { label: 'work', href: '/work' },
-  { label: 'writing', href: SUBSTACK, external: true },
-  { label: 'get coffee', href: '/#coffee' }
+  { label: 'Home', href: '/' },
+  { label: 'Work', href: '/work' },
+  { label: 'Writing', href: SUBSTACK, external: true }
 ];
 ---
 <nav class="mk-nav" id="mk-nav" aria-label="Main">
 <button class="mk-btn" id="mk-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mk-menu"></button>
 <ul class="mk-menu" id="mk-menu">
-{links.map((l, i) => <li style={`--i: ${i}`}><a href={l.href} tabindex="-1" {...(l.external ? { target: '_blank', rel: 'noopener' } : {})}>{l.label}</a></li>)}
+{links.map((l, i) => <li style={`--i: ${links.length - 1 - i}`}><a href={l.href} tabindex="-1" {...(l.external ? { target: '_blank', rel: 'noopener' } : {})}>{l.label}</a></li>)}
 </ul>
 </nav>
 
