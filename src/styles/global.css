@@ -692,3 +692,11 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .fx-soc a:hover{color:#D8C9A3}
 @media (max-width:760px){.fx-base{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center}.fx-soc{order:-1}.fx-base .loc,.fx-base .cred{justify-self:center;text-align:center}}
 @media (max-width:600px){.fx{padding-top:64px}.fx-note{position:static;transform:none;display:block}.fx-note.b{text-align:right;margin-top:10px}.fx-note.a{margin-bottom:10px}.fx-ctas{margin-top:36px;flex-wrap:nowrap;gap:10px}.fx-cta{padding:15px 18px;gap:8px;white-space:nowrap}}
+/* Open nav sits on a dark band; footer base row on the same dark; footer is its own full screen */
+.mk-bar{position:fixed;top:0;left:0;right:0;height:76px;background:#0B0A0F;border-bottom:1px solid rgba(169,175,185,.14);opacity:0;pointer-events:none;transition:opacity .25s ease}
+.mk-nav.open .mk-bar{opacity:1;pointer-events:auto}
+.mk-btn,.mk-menu{position:relative;z-index:1}
+.mk-menu,.mk-menu.on{position:fixed}
+.fx{min-height:100svh;box-sizing:border-box;padding-bottom:0}
+.fx-base{margin-top:auto;background:#0B0A0F;box-shadow:0 0 0 100vmax #0B0A0F;clip-path:inset(0 -100vmax -100vmax);border-top-color:rgba(169,175,185,.14)}
+.fx-duo{margin-bottom:64px}

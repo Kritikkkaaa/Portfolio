@@ -10,6 +10,7 @@ const links = [
 ];
 ---
 <nav class="mk-nav" id="mk-nav" aria-label="Main">
+<span class="mk-bar" aria-hidden="true"></span>
 <button class="mk-btn" id="mk-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mk-menu"></button>
 <ul class="mk-menu" id="mk-menu">
 {links.map((l, i) => <li style={`--i: ${links.length - 1 - i}`}><a href={l.href} tabindex="-1" {...(l.external ? { target: '_blank', rel: 'noopener' } : {})}>{l.label}</a></li>)}
@@ -47,6 +48,7 @@ const links = [
   const setOpen = (b: boolean) => {
     N.open = b;
     menu.classList.toggle('on', b);
+    box.classList.toggle('open', b);
     btn.setAttribute('aria-expanded', String(b));
     items.forEach((a) => a.setAttribute('tabindex', b ? '0' : '-1'));
     wake();
