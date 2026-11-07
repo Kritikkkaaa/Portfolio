@@ -562,6 +562,14 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 .ic-round{width:44px;height:44px}
 }
 @media (prefers-reduced-motion:reduce){.pc,.ic-world.anim,.ic-ctrls{transition:none}}
+
+/* Frozen type scale (see global.css) for everything around the board; text on the board is sized in board units */
+.ic-return,.ic-skills-h,.ic-date,.sk-n,.sk-l{font-size:var(--t-caps);font-weight:500;letter-spacing:.18em}
+.ic-title{font-size:var(--t-display);font-weight:500;letter-spacing:-.02em;line-height:1}
+.ic-desc{font-size:var(--t-lead);line-height:1.6}
+.ic-step,.ic-chip,.ic-hint{font-size:var(--t-small)}
+.cv-cap{font-size:var(--h-note);font-weight:300;letter-spacing:.5px}
+.sk-more{font-size:var(--h-hint);font-weight:300;letter-spacing:.5px}
 </style>
 
 <script>
