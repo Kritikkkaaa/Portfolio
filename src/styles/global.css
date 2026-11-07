@@ -700,3 +700,19 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .fx{min-height:100svh;box-sizing:border-box;padding-bottom:0}
 .fx-base{margin-top:auto;background:#0B0A0F;box-shadow:0 0 0 100vmax #0B0A0F;clip-path:inset(0 -100vmax -100vmax);border-top-color:rgba(169,175,185,.14)}
 .fx-duo{margin-bottom:64px}
+/* Scenic route, zoomed out: the river view */
+.tl-scroller[hidden],.rv[hidden]{display:none !important}
+.tl-scroller,.rv{transition:opacity .22s ease}
+.tl-scroller.fading,.rv.fading{opacity:0}
+.rv{position:relative;max-width:1180px;margin:8px auto 0;padding:0;box-sizing:border-box;width:calc(100% - 96px)}
+.rv-line{position:absolute;left:0;top:0;width:100%;overflow:visible;pointer-events:none}
+.rv-card{position:absolute;box-sizing:border-box;padding:18px 0 0 22px;border-left:1px dashed rgba(210,69,63,.65)}
+.rv-card.up{padding:0 0 18px 22px}
+.rv .ms{flex-direction:column;align-items:flex-start;gap:14px}
+.rv .ms-text{flex:none;width:100%;display:flex;flex-direction:column}
+.rv-card.up .ms-date{order:9;margin:12px 0 0}
+.rv .tl-card,.rv h3{font-size:var(--t-h3);font-weight:500;line-height:1.2;letter-spacing:-0.01em;margin:0 0 8px}
+.rv p{margin:0 0 10px;font-size:var(--t-body);line-height:1.6;color:#C9CDD5}
+.rv p em{font-family:'Kalam',cursive;font-weight:300;color:#D8C9A3}
+.rv-close{position:absolute;margin:0;max-width:340px;font-size:var(--t-h2) !important;font-weight:500;line-height:1.25;letter-spacing:-0.01em;color:#EFEFEE !important}
+.rv-close em{font-family:'Kalam',cursive;font-style:normal;font-weight:300;color:#D8C9A3}
