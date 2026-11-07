@@ -1,18 +1,19 @@
 ---
-// Second fold: my scenic route. One red thread of milestones; detours wander off below the main road
-// (which carries on as a dotted line) and come back. Each milestone: greyed date, what i did, what i learnt,
-// and a small thing to play with beside the text. Text in [brackets] is a placeholder to fill in.
+// Second fold: my scenic route. One red thread of milestones. Detours wander off the main road (which carries on
+// as a dotted line) and come back; a stretch of two jobs at once splits into two strands until Marmeto.
+// Each milestone: greyed date, what i did, what i learnt, and a small thing to play with beside the text.
 const ICP = '/work/icp-positioning-messaging-nexus';
-const OPENING_W = 380;
+const OPENING_W = 300;
 const NODE = 28;
+const D = 80;
 const RED = 'rgb(210,69,63)';
 
 const straight = (w: number) => `M0 20 L${w} 20`;
 const bumped = (w: number, n: number) =>
   `M0 20 C${n * 0.25} 20 ${n * 0.25} 15 ${n * 0.5} 15 S${n * 0.75} 20 ${n} 20 C${n + (w - n) * 0.25} 20 ${n + (w - n) * 0.25} 25 ${n + (w - n) * 0.5} 25 S${n + (w - n) * 0.75} 20 ${w} 20`;
-// A detour: leaves the road, wanders along a wobbly path at depth D, and climbs back before the next milestone.
-const wander = (w: number, nd: number, D: number) => {
-  const y = 20 + D;
+// Leaves the road, wanders along a wobbly path D away (dir -1 = above, 1 = below), and comes back at the far end.
+const wander = (w: number, nd: number, dir: number) => {
+  const y = 20 + dir * D;
   const end = w - nd * 0.8;
   const step = 34;
   let d = `M0 20 C${nd * 0.55} 20 ${nd * 0.4} ${y} ${nd} ${y}`;
@@ -22,26 +23,32 @@ const wander = (w: number, nd: number, D: number) => {
     d += ` Q${x + step / 2} ${y + amp} ${x + step} ${y}`;
     x += step; k++;
   }
-  d += ` C${x + (w - x) * 0.45} ${y} ${x + (w - x) * 0.55} 20 ${w} 20`;
-  return d;
+  return d + ` C${x + (w - x) * 0.45} ${y} ${x + (w - x) * 0.55} 20 ${w} 20`;
 };
 
-type Milestone = { id: string; label: string; date: string; title: string; learnt: string; side: 'up' | 'down'; width: number; detour?: boolean; link?: { text: string; href?: string }; now?: boolean };
-const milestones: Milestone[] = [
-  { id: 'tedx', label: 'TEDx', date: 'apr 2022', title: 'TEDx', learnt: 'after leaving school, i helped organize a TEDx event.', side: 'up', width: 600 },
-  { id: 'art', label: 'Art internship', date: '[mon yy] → [mon yy]', title: 'Art internship', learnt: 'i made sales calls on commission, and earned money doing it.', side: 'down', width: 600 },
-  { id: 'cad', label: 'AutoCAD', date: '[mon yy]', title: 'AutoCAD, and other tools', learnt: 'i started learning AutoCAD and a handful of other tools.', side: 'down', width: 780, detour: true },
-  { id: 'plane', label: 'Plane', date: '[mon yy] → [mon yy]', title: 'Plane', learnt: 'i joined as an intern and spent most of my time on cold outreach for discovery. Vihar introduced me to product. about eight months in, i moved into marketing and helped get the website launch over the line.', side: 'up', width: 640, link: { text: 'case study · soon' } },
-  { id: 'ea', label: 'Freelance EA', date: '[mon yy] → [mon yy]', title: 'Freelance EA work', learnt: 'i learned about product, taste and community, and wrote some of my best work here.', side: 'down', width: 780, detour: true },
-  { id: 'marmeto', label: 'Marmeto', date: '[mon yy] → [mon yy]', title: 'Marmeto', learnt: 'i joined as a PM and worked on the design system.', side: 'up', width: 600, link: { text: 'see my work on the design system · soon' } },
-  { id: 'nexus', label: 'Nexus', date: '[mon yy] → [mon yy]', title: 'Nexus', learnt: 'i built it zero to one, then took it to market myself: every demo became a requirement, every requirement a sprint.', side: 'down', width: 640, link: { text: 'See how I found who Nexus is for', href: ICP } },
-  { id: 'now', label: 'Now', date: 'now', title: 'i’m on the hunt again.', learnt: 'looking for the next place to build, and to be useful.', side: 'up', width: 600, now: true }
+type Toy = 'ticket' | 'phone' | 'plan' | 'ui' | 'taste' | 'cart' | 'quote' | 'tokens' | 'priority' | 'compass';
+type Card = { date: string; title: string; learnt: string; toy: Toy; link?: { text: string; href?: string } };
+type Stop = { kind: 'road' | 'detour' | 'split'; side?: 'up' | 'down'; width: number; label: string; cards: Card[] };
+const stops: Stop[] = [
+  { kind: 'road', side: 'up', width: 460, label: 'TEDx', cards: [{ date: 'jul 2021', title: 'Curated a TEDx event as organizer', learnt: '120 attendees, 9 speakers, 5.5 lacs of sponsorship and <em>10k steps</em> daily.', toy: 'ticket' }] },
+  { kind: 'road', side: 'down', width: 460, label: 'Sales intern', cards: [{ date: 'may 2022', title: 'Sales intern making 50 cold calls a day', learnt: 'Learned that I am good at understanding what people want and how to give it to them.', toy: 'phone' }] },
+  { kind: 'detour', side: 'up', width: 700, label: 'AutoCAD and Revit', cards: [{ date: 'aug 2021 → jan 2022', title: 'Learnt architecture tools like AutoCAD and Revit', learnt: 'Dad wanted me to, and i love design and any chance to play. What stayed with me: see the whole plan from a bird’s eye view before getting stuck in its nuances.', toy: 'plan' }] },
+  { kind: 'road', side: 'down', width: 520, label: 'Plane', cards: [{ date: 'mar → jul 2023', title: 'Sales and Marketing Intern, Plane', learnt: 'What is product? What is first principles thinking, and why does any of it matter?', toy: 'ui', link: { text: 'case study · soon' } }] },
+  { kind: 'road', side: 'up', width: 520, label: 'Product Marketing Engineer', cards: [{ date: 'aug 2023 → may 2024', title: 'Product Marketing Engineer', learnt: 'Everything from website, to distribution, to competitive research, to community. Did my best work there.', toy: 'taste' }] },
+  { kind: 'split', width: 740, label: 'Shopify agency and EA work', cards: [
+    { date: 'jun → dec 2025', title: 'Project Manager for a small Shopify agency run by my school senior', learnt: 'Learnt about the world of e-commerce and Shopify. Toby is a genius.', toy: 'cart' },
+    { date: 'jun → dec 2025', title: 'EA to my previous boss, writing mails, managing his day to day indulgences', learnt: 'Learnt that i am not only a writer, but a good writer.', toy: 'quote' }
+  ] },
+  { kind: 'road', side: 'down', width: 560, label: 'Marmeto', cards: [{ date: 'apr → aug 2025', title: 'Built a product component library', learnt: 'Learnt how bigger systems work in silos. Understood the importance of processes and got to manage my first team. Tried my hand at design and experience without any in-house design team.', toy: 'tokens', link: { text: 'see my work on the design system · soon' } }] },
+  { kind: 'road', side: 'up', width: 540, label: 'Nexus', cards: [{ date: 'aug 2025 → sep 2026', title: 'Launched Nexus, a multi-vendor app on Shopify', learnt: 'Owned the product end to end: what to build, in what order, and why. Every demo became a requirement, every requirement a sprint.', toy: 'priority', link: { text: 'See how I found who Nexus is for', href: ICP } }] },
+  { kind: 'road', side: 'down', width: 520, label: 'Notice period', cards: [{ date: 'oct → nov 2026', title: 'Serving notice period', learnt: 'Building Nexus marketing and distribution strategy with the cofounder. I had missed marketing.', toy: 'compass' }] }
 ];
-const DEPTH = 150;
-const nodeX = (m: Milestone) => (m.detour ? Math.round(m.width * 0.16) : NODE);
+let n = 0;
+const numbered = stops.map((s) => ({ ...s, nums: s.cards.map(() => String(++n).padStart(2, '0')) }));
+const nodeX = (s: Stop) => (s.kind === 'road' ? NODE : Math.round(s.width * 0.1));
 const swatches = ['#E8EBF0', '#D8C9A3', '#9FB0C8', 'rgb(210,69,63)', '#3A3842'];
 const quote = 'thinking and expressing what i think are two different things.'.split(' ');
-const loop = ['demo', 'requirement', 'sprint'];
+const tickets = ['vendor payouts', 'bulk upload', 'dark mode'];
 ---
 <section id="work" class="tl-wrap" aria-label="My scenic route">
 <div class="tl-head">
@@ -60,29 +67,43 @@ const loop = ['demo', 'requirement', 'sprint'];
 <p class="tl-open-a">I turned 18 and dad said <em>College.</em></p>
 </article>
 
-{milestones.map((m, i) => (
-<article class={`tl-item ${m.side}${m.now ? ' now' : ''}${m.detour ? ' detour' : ''}`} style={`width: ${m.width}px`} aria-label={m.detour ? `${m.label}, a detour` : m.label}>
-<svg class="tl-thread" width={m.width} height="40" viewBox={`0 0 ${m.width} 40`} aria-hidden="true">
-{m.detour ? <>
-<path d={straight(m.width)} fill="none" stroke={RED} stroke-width="1.3" stroke-dasharray="4 6" opacity="0.7"></path>
-<path d={wander(m.width, nodeX(m), DEPTH)} fill="none" stroke={RED} stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
-</> : <path d={bumped(m.width, NODE)} fill="none" stroke={RED} stroke-width="1.6" stroke-linecap="round"></path>}
+{numbered.map((s) => {
+  const nx = nodeX(s);
+  const cw = s.width - nx - 36;
+  // Each card on this stop: which side of the road it hangs, and how far off the road its strand runs.
+  const placed = s.kind === 'split'
+    ? [{ c: s.cards[0], side: 'up', off: -D, num: s.nums[0] }, { c: s.cards[1], side: 'down', off: D, num: s.nums[1] }]
+    : [{ c: s.cards[0], side: s.side!, off: s.kind === 'detour' ? (s.side === 'up' ? -D : D) : 0, num: s.nums[0] }];
+  return (
+<article class={`tl-item ${s.kind}${s.side ? ' ' + s.side : ''}`} style={`width: ${s.width}px`} aria-label={s.kind === 'road' ? s.label : `${s.label}, off the main road`}>
+<svg class="tl-thread" width={s.width} height="40" viewBox={`0 0 ${s.width} 40`} aria-hidden="true">
+{s.kind === 'road' && <path d={bumped(s.width, NODE)} fill="none" stroke={RED} stroke-width="1.6" stroke-linecap="round"></path>}
+{s.kind === 'detour' && <>
+<path d={straight(s.width)} fill="none" stroke={RED} stroke-width="1.3" stroke-dasharray="4 6" opacity="0.7"></path>
+<path d={wander(s.width, nx, s.side === 'up' ? -1 : 1)} fill="none" stroke={RED} stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+</>}
+{s.kind === 'split' && <>
+<path d={straight(s.width)} fill="none" stroke={RED} stroke-width="1.3" stroke-dasharray="4 6" opacity="0.7"></path>
+<path d={wander(s.width, nx, -1)} fill="none" stroke={RED} stroke-width="1.6" stroke-dasharray="5 5" stroke-linecap="round"></path>
+<path d={wander(s.width, nx, 1)} fill="none" stroke={RED} stroke-width="1.6" stroke-dasharray="5 5" stroke-linecap="round"></path>
+</>}
 </svg>
-<span class="tl-node" style={`left: ${nodeX(m) - 7}px${m.detour ? `; top: ${343 + DEPTH}px` : ''}`}></span>
-<span class="tl-idx" style={`left: ${nodeX(m) + 14}px${m.detour ? `; top: ${360 + DEPTH}px` : ''}`}>{String(i + 1).padStart(2, '0')}</span>
-<div class="tl-card" style={`left: ${nodeX(m)}px; width: ${m.width - nodeX(m) - 36}px${m.detour ? `; top: ${350 + DEPTH}px` : ''}`}>
+{placed.map((p) => <>
+<span class="tl-node" style={`left: ${nx - 7}px; top: ${343 + p.off}px`}></span>
+<span class="tl-idx" style={`left: ${nx + 14}px; top: ${(p.side === 'up' ? 360 : 322) + p.off}px`}>{p.num}</span>
+<div class={`tl-card ${p.side}`} style={`left: ${nx}px; width: ${cw}px; ${p.side === 'up' ? `bottom: ${390 - p.off}px` : `top: ${350 + p.off}px`}`}>
 <div class="ms">
 <div class="ms-text">
-<div class="ms-date">{m.date}</div>
-<h3>{m.title}</h3>
-<p>{m.learnt}</p>
-{m.link && (m.link.href
-  ? <a class="ms-link" href={m.link.href}>{m.link.text}<span aria-hidden="true"> →</span></a>
-  : <span class="ms-soon">{m.link.text}</span>)}
+<div class="ms-date">{p.c.date}</div>
+<h3>{p.c.title}</h3>
+<p set:html={p.c.learnt}></p>
+{p.c.link && (p.c.link.href
+  ? <a class="ms-link" href={p.c.link.href}>{p.c.link.text}<span aria-hidden="true"> →</span></a>
+  : <span class="ms-soon">{p.c.link.text}</span>)}
 </div>
-
 <div class="ms-toy">
-{m.id === 'tedx' && <>
+
+{p.c.toy === 'ticket' && <>
 <button type="button" class="toy-ticket" aria-pressed="false" aria-label="Tear the ticket stub">
 <span class="tt-main"><small>admit one</small><b>TEDx</b><span class="tt-stamp">admitted</span></span>
 <span class="tt-stub">no. 001</span>
@@ -90,72 +111,101 @@ const loop = ['demo', 'requirement', 'sprint'];
 <span class="toy-hint">tear the stub</span>
 </>}
 
-{m.id === 'art' && <>
-<button type="button" class="toy-tally" aria-label="Make a call. Calls made: 0">
-<svg width="170" height="48" viewBox="0 0 170 48" aria-hidden="true"><g class="tally-marks"></g></svg>
-<span class="tally-count">0 calls made</span>
-</button>
-<span class="toy-hint">click to make a call</span>
-</>}
-
-{m.id === 'cad' && <>
-<div class="toy-cad">
-<svg width="190" height="96" viewBox="0 0 190 96" aria-hidden="true">
-<rect class="cad-box" x="14" y="10" width="110" height="46" fill="none" stroke="#C9CDD5" stroke-width="1.2"></rect>
-<rect x="26" y="22" width="30" height="34" fill="none" stroke="#8A8D96" stroke-width="1" stroke-dasharray="3 3"></rect>
-<line class="cad-dim" x1="14" y1="74" x2="124" y2="74" stroke={RED} stroke-width="1"></line>
-<line x1="14" y1="62" x2="14" y2="80" stroke={RED} stroke-width="0.8"></line>
-<line class="cad-tick" x1="124" y1="62" x2="124" y2="80" stroke={RED} stroke-width="0.8"></line>
-<text class="cad-num" x="69" y="70" font-size="9" text-anchor="middle" fill="#C9CDD5" letter-spacing="1">1100</text>
+{p.c.toy === 'phone' && <>
+<button type="button" class="toy-phone" aria-label="Ring the phone">
+<span class="ph-bubble" aria-live="polite">hello, i am kritika</span>
+<svg class="ph-set" width="96" height="80" viewBox="0 0 96 80" aria-hidden="true">
+<path d="M14 30 C14 14 82 14 82 30 L74 38 C70 34 64 33 60 34 L58 26 C52 24 44 24 38 26 L36 34 C32 33 26 34 22 38 Z" fill="#141319" stroke="#C9CDD5" stroke-width="1.5" stroke-linejoin="round"></path>
+<path d="M24 44 L72 44 L80 72 L16 72 Z" fill="#141319" stroke="#C9CDD5" stroke-width="1.5" stroke-linejoin="round"></path>
+<circle cx="48" cy="58" r="9" fill="none" stroke={RED} stroke-width="1.5"></circle>
+<circle cx="48" cy="58" r="2" fill={RED}></circle>
 </svg>
-<span class="cad-handle" role="slider" tabindex="0" aria-label="Wall length" aria-valuemin="400" aria-valuemax="1600" aria-valuenow="1100"></span>
-</div>
-<span class="toy-hint">drag the corner</span>
+<span class="ph-waves" aria-hidden="true"><i></i><i></i></span>
+</button>
+<span class="toy-hint">pick up the phone</span>
 </>}
 
-{m.id === 'plane' && <>
-<div class="toy-plane">
-<div class="pl-labels"><span class="pl-a on"><b>intern</b>cold outreach for discovery</span><span class="pl-b"><b>marketing</b>website launch</span></div>
-<input class="pl-range" type="range" min="0" max="100" value="0" aria-label="Slide from intern to marketing">
-<span class="pl-mid">~ 8 months</span>
-</div>
-<span class="toy-hint">slide through it</span>
+{p.c.toy === 'plan' && <>
+<button type="button" class="toy-plan" aria-pressed="false" aria-label="Step back to see the whole floor plan">
+<svg width="190" height="120" viewBox="0 0 190 120" aria-hidden="true">
+<g class="plan-cam">
+<rect x="10" y="10" width="170" height="100" fill="none" stroke="#C9CDD5" stroke-width="2"></rect>
+<path d="M90 10 V62 M10 62 H60 M76 62 H180 M130 62 V110" stroke="#C9CDD5" stroke-width="1.4" fill="none"></path>
+<path d="M60 62 A16 16 0 0 1 76 46" stroke="#8A8D96" stroke-width="0.8" fill="none" stroke-dasharray="2 2"></path>
+<rect x="24" y="22" width="36" height="22" fill="none" stroke="#8A8D96" stroke-width="0.8"></rect>
+<circle cx="140" cy="34" r="12" fill="none" stroke="#8A8D96" stroke-width="0.8"></circle>
+<rect x="142" y="76" width="26" height="24" fill="none" stroke="#8A8D96" stroke-width="0.8"></rect>
+<path d="M10 116 H180 M10 113 V119 M180 113 V119" stroke={RED} stroke-width="0.6"></path>
+<text x="40" y="38" font-size="3.2" fill="#8A8D96" letter-spacing=".3">sofa 2100 × 900</text>
+<text x="26" y="52" font-size="2.6" fill={RED}>↔ 1200</text>
+<text x="96" y="20" font-size="5" fill="#C9CDD5" letter-spacing="1">LIVING</text>
+<text x="22" y="90" font-size="5" fill="#C9CDD5" letter-spacing="1">BED</text>
+<text x="96" y="90" font-size="5" fill="#C9CDD5" letter-spacing="1">KITCHEN</text>
+</g>
+</svg>
+<span class="plan-cap">1:20</span>
+</button>
+<span class="toy-hint">step back</span>
 </>}
 
-{m.id === 'ea' && <>
+{p.c.toy === 'ui' && <>
+<button type="button" class="toy-ui" aria-pressed="false" aria-label="Turn the wireframe into a product">
+<span class="ui-bar"><i></i><i></i><i></i><b>plane</b></span>
+<span class="ui-line l1"><b>issues, sprints, pages</b></span>
+<span class="ui-line l2"><b>for teams who ship</b></span>
+<span class="ui-btns"><span class="ui-btn">start</span><span class="ui-btn ghost">docs</span></span>
+</button>
+<span class="toy-hint">ship the wireframe</span>
+</>}
+
+{p.c.toy === 'taste' && <>
+<button type="button" class="toy-taste" aria-label="Add taste to the headline">
+<span class="ta-head" data-i="0">Project management software for teams.</span>
+<span class="ta-meter"><span class="ta-fill"></span></span>
+<span class="ta-label">taste: <b>bland</b></span>
+</button>
+<span class="toy-hint">add taste</span>
+</>}
+
+{p.c.toy === 'cart' && <>
+<div class="toy-cart">
+<div class="ct-product"><span class="ct-img" aria-hidden="true"></span><span class="ct-name">tote bag</span><span class="ct-price">₹1,299</span>
+<button type="button" class="ct-add">add to cart</button></div>
+<span class="ct-bag" aria-live="polite"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C9CDD5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8 H19 L18 20 H6 Z"></path><path d="M9 8 V6 a3 3 0 0 1 6 0 V8"></path></svg><b class="ct-count">0</b></span>
+</div>
+<span class="toy-hint">add to cart</span>
+</>}
+
+{p.c.toy === 'quote' && <>
 <button type="button" class="toy-quote" aria-pressed="false" aria-label="Thinking and expressing what i think are two different things. Click to put the words in order.">
 {quote.map((w, k) => <span class="qw" style={`--qx: ${((k * 37) % 70) - 30}px; --qy: ${((k * 53) % 46) - 20}px; --qr: ${((k * 29) % 40) - 20}deg`}>{w}</span>)}
 </button>
 <span class="toy-hint">click to express it</span>
 </>}
 
-{m.id === 'marmeto' && <>
+{p.c.toy === 'tokens' && <>
 <div class="toy-tokens">
 <div class="tk-swatches" role="group" aria-label="Colour tokens">
 {swatches.map((c, k) => <button type="button" class={`tk-sw${k === 3 ? ' on' : ''}`} style={`background: ${c}`} data-c={c} aria-label={`Colour token ${k + 1}`}></button>)}
 </div>
 <div class="tk-space" role="group" aria-label="Spacing tokens">
-{[4, 8, 12, 16].map((s, k) => <button type="button" class={`tk-sp${k === 2 ? ' on' : ''}`} data-s={s} aria-label={`Spacing ${s}`}><span style={`width: ${s}px; height: ${s}px`}></span></button>)}
+{[4, 8, 12, 16].map((sz, k) => <button type="button" class={`tk-sp${k === 2 ? ' on' : ''}`} data-s={sz} aria-label={`Spacing ${sz}`}><span style={`width: ${sz}px; height: ${sz}px`}></span></button>)}
 </div>
 <div class="tk-preview" style="--tk: rgb(210,69,63); --sp: 12px"><span class="tk-chip">button</span><span class="tk-chip ghost">button</span></div>
 </div>
 <span class="toy-hint">pick a token</span>
 </>}
 
-{m.id === 'nexus' && <>
-<button type="button" class="toy-loop" aria-label="Turn the loop: demo, requirement, sprint">
-<svg width="150" height="150" viewBox="0 0 150 150" aria-hidden="true">
-<circle cx="75" cy="75" r="50" fill="none" stroke="#3A3842" stroke-width="1" stroke-dasharray="3 5"></circle>
-<g class="lp-arrow"><path d="M75 25 A50 50 0 0 1 118 50" fill="none" stroke={RED} stroke-width="1.6" stroke-linecap="round"></path><path d="M118 50 l-8 -1 l5 -6 z" fill={RED}></path></g>
-</svg>
-{loop.map((l, k) => <span class={`lp-word w${k}${k === 0 ? ' on' : ''}`}>{l}</span>)}
-</button>
-<span class="toy-hint">turn the loop</span>
+{p.c.toy === 'priority' && <>
+<div class="toy-priority" role="list" aria-label="Backlog. Click a ticket to make it the top priority.">
+{tickets.map((t, k) => <button type="button" role="listitem" class="pr-ticket" style={`top: ${k * 40}px`} data-k={k}><b class="pr-p">P{k}</b>{t}</button>)}
+</div>
+<span class="toy-hint">click to prioritise</span>
 </>}
 
-{m.id === 'now' && <>
+{p.c.toy === 'compass' && <>
 <button type="button" class="toy-compass" aria-label="Spin the compass: where next?">
-<svg width="120" height="120" viewBox="0 0 120 120" aria-hidden="true">
+<svg width="110" height="110" viewBox="0 0 120 120" aria-hidden="true">
 <circle cx="60" cy="60" r="46" fill="none" stroke="#3A3842" stroke-width="1"></circle>
 <g fill="#8A8D96" font-size="8" letter-spacing="1" text-anchor="middle"><text x="60" y="22">N</text><text x="102" y="63">E</text><text x="60" y="106">S</text><text x="18" y="63">W</text></g>
 <g class="cp-needle"><path d="M60 24 L65 60 L55 60 Z" fill={RED}></path><path d="M60 96 L65 60 L55 60 Z" fill="#C9CDD5"></path><circle cx="60" cy="60" r="3" fill="#141319" stroke="#C9CDD5"></circle></g>
@@ -164,11 +214,14 @@ const loop = ['demo', 'requirement', 'sprint'];
 </button>
 <span class="toy-hint">spin it</span>
 </>}
+
 </div>
 </div>
 </div>
+</>)}
 </article>
-))}
+  );
+})}
 
 <div class="tl-tail" aria-hidden="true"></div>
 </div>
@@ -205,6 +258,7 @@ const loop = ['demo', 'requirement', 'sprint'];
   });
 
   // Zoom: the same magnifier as the case study. Minus shows the whole route; plus (or a click on a milestone) goes back in.
+  const H = () => parseFloat(getComputedStyle(scroller).getPropertyValue('--tl-h')) || 700;
   const setZoom = (on: boolean, land?: number) => {
     zoomed = on;
     wrap.classList.toggle('zoomed', on);
@@ -214,8 +268,8 @@ const loop = ['demo', 'requirement', 'sprint'];
     if (on) {
       scroller.scrollLeft = 0;
       const s = scroller.clientWidth / track.scrollWidth;
-      track.style.transform = `scale(${s})`;
-      scroller.style.height = `${Math.ceil(740 * s)}px`;
+      track.style.transform = `translateY(${-20 * s}px) scale(${s})`;
+      scroller.style.height = `${Math.ceil(H() * s)}px`;
     } else {
       track.style.transform = '';
       scroller.style.height = '';
@@ -232,99 +286,81 @@ const loop = ['demo', 'requirement', 'sprint'];
   }, true));
   window.addEventListener('resize', () => { if (zoomed) setZoom(true); });
 
+  const each = <T extends HTMLElement>(sel: string, fn: (el: T) => void) => wrap.querySelectorAll<T>(sel).forEach(fn);
+  const toggle = (b: HTMLElement, cls: string) => {
+    const on = !b.classList.contains(cls);
+    b.classList.toggle(cls, on);
+    b.setAttribute('aria-pressed', String(on));
+  };
+
   // TEDx: tear the stub.
-  wrap.querySelectorAll<HTMLButtonElement>('.toy-ticket').forEach((b) => b.addEventListener('click', () => {
-    const on = !b.classList.contains('torn');
-    b.classList.toggle('torn', on);
-    b.setAttribute('aria-pressed', String(on));
+  each<HTMLButtonElement>('.toy-ticket', (b) => b.addEventListener('click', () => toggle(b, 'torn')));
+
+  // Sales intern: the phone rings and says hello.
+  each<HTMLButtonElement>('.toy-phone', (b) => b.addEventListener('click', () => {
+    b.classList.remove('ring');
+    void b.offsetWidth;
+    b.classList.add('ring', 'said');
   }));
 
-  // Art internship: each click is a call; every fifth strikes through the group.
-  wrap.querySelectorAll<HTMLButtonElement>('.toy-tally').forEach((b) => {
-    const g = b.querySelector('.tally-marks') as SVGGElement;
-    const out = b.querySelector('.tally-count') as HTMLElement;
-    let n = 0;
-    const NS = 'http://www.w3.org/2000/svg';
-    const line = (x1: number, y1: number, x2: number, y2: number, red: boolean) => {
-      const l = document.createElementNS(NS, 'line');
-      Object.entries({ x1, y1, x2, y2 }).forEach(([k, v]) => l.setAttribute(k, String(v)));
-      l.setAttribute('stroke', red ? 'rgb(210,69,63)' : '#C9CDD5');
-      l.setAttribute('stroke-width', '1.6');
-      l.setAttribute('stroke-linecap', 'round');
-      l.classList.add('tally-new');
-      g.appendChild(l);
-    };
+  // AutoCAD: start in the nuances, step back to the bird's eye view.
+  each<HTMLButtonElement>('.toy-plan', (b) => b.addEventListener('click', () => {
+    toggle(b, 'away');
+    (b.querySelector('.plan-cap') as HTMLElement).textContent = b.classList.contains('away') ? 'bird’s eye · 1:200' : '1:20';
+  }));
+
+  // Plane: a wireframe becomes a product.
+  each<HTMLButtonElement>('.toy-ui', (b) => b.addEventListener('click', () => toggle(b, 'built')));
+
+  // Product Marketing Engineer: the same headline, with more taste each click.
+  each<HTMLButtonElement>('.toy-taste', (b) => {
+    const lines = ['Project management software for teams.', 'Plan, track and ship, together.', 'The open-source alternative to Jira.'];
+    const words = ['bland', 'better', 'sharp'];
+    const head = b.querySelector('.ta-head') as HTMLElement;
+    const fill = b.querySelector('.ta-fill') as HTMLElement;
+    const label = b.querySelector('.ta-label b') as HTMLElement;
+    let i = 0;
     b.addEventListener('click', () => {
-      if (n >= 20) { n = 0; g.textContent = ''; }
-      const grp = Math.floor(n / 5), k = n % 5, x0 = 6 + grp * 42;
-      if (k < 4) line(x0 + k * 8, 8, x0 + k * 8, 40, false);
-      else line(x0 - 4, 34, x0 + 30, 12, true);
-      n++;
-      out.textContent = `${n} call${n === 1 ? '' : 's'} made`;
-      b.setAttribute('aria-label', `Make a call. Calls made: ${n}`);
+      i = (i + 1) % lines.length;
+      head.classList.remove('in');
+      void head.offsetWidth;
+      head.textContent = lines[i];
+      head.classList.add('in');
+      fill.style.width = `${[18, 58, 96][i]}%`;
+      label.textContent = words[i];
     });
   });
 
-  // AutoCAD: drag the corner to stretch the wall; the dimension follows.
-  wrap.querySelectorAll<HTMLElement>('.toy-cad').forEach((t) => {
-    const box = t.querySelector('.cad-box') as SVGRectElement;
-    const dim = t.querySelector('.cad-dim') as SVGLineElement;
-    const tick = t.querySelector('.cad-tick') as SVGLineElement;
-    const num = t.querySelector('.cad-num') as SVGTextElement;
-    const handle = t.querySelector('.cad-handle') as HTMLElement;
-    const set = (w: number) => {
-      w = Math.max(40, Math.min(160, w));
-      const x2 = 14 + w;
-      box.setAttribute('width', String(w));
-      dim.setAttribute('x2', String(x2));
-      tick.setAttribute('x1', String(x2));
-      tick.setAttribute('x2', String(x2));
-      num.setAttribute('x', String(14 + w / 2));
-      num.textContent = String(w * 10);
-      handle.style.left = `${x2}px`;
-      handle.setAttribute('aria-valuenow', String(w * 10));
-    };
-    let dragging = false, startX = 0, startW = 110;
-    handle.addEventListener('pointerdown', (e) => {
-      dragging = true; startX = e.clientX; startW = Number(box.getAttribute('width'));
-      handle.setPointerCapture(e.pointerId);
-      e.stopPropagation();
+  // Shopify agency: add to cart, the item drops into the bag.
+  each<HTMLElement>('.toy-cart', (t) => {
+    const add = t.querySelector('.ct-add') as HTMLButtonElement;
+    const bag = t.querySelector('.ct-bag') as HTMLElement;
+    const num = t.querySelector('.ct-count') as HTMLElement;
+    let c = 0;
+    add.addEventListener('click', () => {
+      const dot = document.createElement('span');
+      dot.className = 'ct-fly';
+      t.appendChild(dot);
+      const a = add.getBoundingClientRect(), z = bag.getBoundingClientRect(), o = t.getBoundingClientRect();
+      dot.style.left = `${a.left - o.left + a.width / 2}px`;
+      dot.style.top = `${a.top - o.top}px`;
+      dot.style.setProperty('--dx', `${z.left - a.left - a.width / 2 + z.width / 2}px`);
+      dot.style.setProperty('--dy', `${z.top - a.top + 6}px`);
+      window.setTimeout(() => {
+        dot.remove();
+        num.textContent = String(++c);
+        bag.classList.remove('bump');
+        void bag.offsetWidth;
+        bag.classList.add('bump');
+      }, calm ? 0 : 650);
     });
-    handle.addEventListener('pointermove', (e) => { if (dragging) set(startW + (e.clientX - startX)); });
-    handle.addEventListener('pointerup', () => { dragging = false; });
-    handle.addEventListener('keydown', (e) => {
-      const w = Number(box.getAttribute('width'));
-      if (e.key === 'ArrowRight') { e.preventDefault(); set(w + 10); }
-      if (e.key === 'ArrowLeft') { e.preventDefault(); set(w - 10); }
-    });
-    set(110);
   });
 
-  // Plane: slide from intern to marketing.
-  wrap.querySelectorAll<HTMLElement>('.toy-plane').forEach((t) => {
-    const r = t.querySelector('.pl-range') as HTMLInputElement;
-    const a = t.querySelector('.pl-a') as HTMLElement;
-    const b = t.querySelector('.pl-b') as HTMLElement;
-    const paint = () => {
-      const v = Number(r.value);
-      r.style.setProperty('--v', `${v}%`);
-      a.classList.toggle('on', v < 50);
-      b.classList.toggle('on', v >= 50);
-    };
-    r.addEventListener('input', paint);
-    r.addEventListener('pointerdown', (e) => e.stopPropagation());
-    paint();
-  });
-
-  // Freelance EA: scattered thoughts fall into a sentence.
-  wrap.querySelectorAll<HTMLButtonElement>('.toy-quote').forEach((b) => b.addEventListener('click', () => {
-    const on = !b.classList.contains('said');
-    b.classList.toggle('said', on);
-    b.setAttribute('aria-pressed', String(on));
-  }));
+  // EA: scattered thoughts fall into a sentence.
+  each<HTMLButtonElement>('.toy-quote', (b) => b.addEventListener('click', () => toggle(b, 'said')));
 
   // Marmeto: pick colour and spacing tokens; the sample buttons update.
-  wrap.querySelectorAll<HTMLElement>('.toy-tokens').forEach((t) => {
+  each<HTMLElement>('.toy-tokens', (t) => {
     const prev = t.querySelector('.tk-preview') as HTMLElement;
     t.querySelectorAll<HTMLButtonElement>('.tk-sw').forEach((b) => b.addEventListener('click', () => {
       t.querySelectorAll('.tk-sw').forEach((x) => x.classList.toggle('on', x === b));
@@ -336,20 +372,24 @@ const loop = ['demo', 'requirement', 'sprint'];
     }));
   });
 
-  // Nexus: demo → requirement → sprint, round and round.
-  wrap.querySelectorAll<HTMLButtonElement>('.toy-loop').forEach((b) => {
-    const arrow = b.querySelector('.lp-arrow') as SVGGElement;
-    const words = Array.from(b.querySelectorAll<HTMLElement>('.lp-word'));
-    let k = 0;
-    b.addEventListener('click', () => {
-      k++;
-      arrow.style.transform = `rotate(${k * 120}deg)`;
-      words.forEach((w, i) => w.classList.toggle('on', i === k % 3));
+  // Nexus: click a ticket to make it P0; the rest move down.
+  each<HTMLElement>('.toy-priority', (t) => {
+    const cards = Array.from(t.querySelectorAll<HTMLButtonElement>('.pr-ticket'));
+    let order = cards.map((_, i) => i);
+    const paint = () => order.forEach((ci, pos) => {
+      cards[ci].style.top = `${pos * 40}px`;
+      (cards[ci].querySelector('.pr-p') as HTMLElement).textContent = `P${pos}`;
+      cards[ci].classList.toggle('top', pos === 0);
     });
+    cards.forEach((c, ci) => c.addEventListener('click', () => {
+      order = [ci, ...order.filter((x) => x !== ci)];
+      paint();
+    }));
+    paint();
   });
 
-  // Now: spin the compass.
-  wrap.querySelectorAll<HTMLButtonElement>('.toy-compass').forEach((b) => {
+  // Notice period: spin the compass.
+  each<HTMLButtonElement>('.toy-compass', (b) => {
     const needle = b.querySelector('.cp-needle') as SVGGElement;
     const out = b.querySelector('.cp-out') as HTMLElement;
     const next = ['product', 'growth', 'GTM', 'positioning', 'somewhere new'];
