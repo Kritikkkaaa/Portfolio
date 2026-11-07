@@ -599,3 +599,11 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .tl-cta{gap:10px;padding:0 24px 40px}
 .tl-resume{font-size:12px;color:#8A8D96;text-decoration-color:rgba(138,141,150,.5)}
 .tl-resume:hover{color:#C9CDD5;text-decoration-color:#C9CDD5}
+/* Round 6: nav links land at the page centre; CTA sits up by the heading; Venn circles can leave their stage */
+.mk-menu,.mk-menu.on{position:fixed;top:38px;right:auto;left:50%;transform:translate(-50%,-50%);gap:56px}
+.mk-menu li{transform:translateX(60px)}
+.mk-menu.on li{transform:none;transition:opacity .3s ease,transform .45s cubic-bezier(.3,.7,.3,1);transition-delay:calc(var(--i) * 70ms + 60ms)}
+.mk-menu a,.mk-menu a:hover{font-size:15px}
+.vn-stage{z-index:2}
+.tl-cta{position:absolute;top:24px;left:50%;transform:translateX(-50%);padding:0;z-index:3}
+.tl-wrap{min-height:100svh;box-sizing:border-box}

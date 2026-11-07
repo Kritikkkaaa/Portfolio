@@ -1,6 +1,6 @@
 ---
 // Hero Venn (from the "kritikal marks" sheet): listens, thinks, solves, and a path forward where they meet.
-// Hover a circle and it says "grab me"; grab one and flick it, it bounces off the edges and springs home.
+// Hover a circle and it says "grab me"; grab one and flick it anywhere in the first fold, it bounces off the fold's edges and springs home.
 // Wide stages (720px+) put the lower callouts to the sides; narrower ones put them under the diagram.
 ---
 <div class="vn-stage" id="vn-stage">
@@ -67,6 +67,13 @@
     return true;
   };
 
+  // Circles may be thrown anywhere in the first fold: the full window width and the hero's height, in stage coordinates.
+  const hero = (stage.closest('section') as HTMLElement | null) ?? stage;
+  const bounds = () => {
+    const sr = stage.getBoundingClientRect(), hr = hero.getBoundingClientRect();
+    return { l: -sr.left, r: document.documentElement.clientWidth - sr.left, t: hr.top - sr.top, b: hr.bottom - sr.top };
+  };
+
   const vtxt = (x: number, y: number, s: string, anc: string, ff: string, fs: number, fill: string, style: string) =>
     `<text x="${f(x)}" y="${f(y)}" text-anchor="${anc}" font-family="${ff}" font-size="${fs}" fill="${fill}" style="${style}">${s}</text>`;
 
@@ -109,7 +116,8 @@
     V.flash = V.flash.filter((e) => now - e.t < 380);
     V.flash.forEach((e) => {
       const t = (now - e.t) / 380, L = V.R * (1.3 - 0.5 * t), a = e.p - L / 2, b = e.p + L / 2, o = f(1 - t);
-      const ln = e.s === 'l' ? [1.5, a, 1.5, b] : e.s === 'r' ? [V.W - 1.5, a, V.W - 1.5, b] : e.s === 't' ? [a, 1.5, b, 1.5] : [a, V.SH - 1.5, b, V.SH - 1.5];
+      const B = bounds();
+      const ln = e.s === 'l' ? [B.l + 1.5, a, B.l + 1.5, b] : e.s === 'r' ? [B.r - 1.5, a, B.r - 1.5, b] : e.s === 't' ? [a, B.t + 1.5, b, B.t + 1.5] : [a, B.b - 1.5, b, B.b - 1.5];
       out += `<line x1="${f(ln[0])}" y1="${f(ln[1])}" x2="${f(ln[2])}" y2="${f(ln[3])}" stroke="${C.gold}" stroke-width="2.4" stroke-linecap="round" opacity="${o}"/>`;
     });
     dyn.innerHTML = out;
@@ -118,13 +126,13 @@
   // Returns true while something is still moving, so the loop can rest when the diagram is still.
   const update = (dt: number, now: number) => {
     if (!V.homes.length) return false;
-    const H = V.homes, R = V.R, lo = R + 2, hx = V.W - R - 2, hy = V.SH - R - 2;
+    const H = V.homes, R = V.R, b = bounds(), lox = b.l + R + 2, hx = b.r - R - 2, loy = b.t + R + 2, hy = b.b - R - 2;
     const steps = Math.max(1, Math.ceil(dt / 0.008)), h = dt / steps;
     let busy = V.pulses.length > 0 || V.flash.length > 0;
     for (let i = 0; i < 3; i++) {
       const P = V.P[i], v = V.vel[i];
       if (RM) {
-        if (V.drag === i) { P[0] = Math.min(Math.max(V.px - V.gx, lo), hx); P[1] = Math.min(Math.max(V.py - V.gy, lo), hy); }
+        if (V.drag === i) { P[0] = Math.min(Math.max(V.px - V.gx, lox), hx); P[1] = Math.min(Math.max(V.py - V.gy, loy), hy); }
         else { P[0] = H[i][0]; P[1] = H[i][1]; }
         v[0] = 0; v[1] = 0;
       } else {
@@ -134,9 +142,9 @@
           else if (V.fly[i] >= 0) { const q = Math.min(V.fly[i] / 1.5, 1); k = 6 + 134 * q * q; c = 1 + 11 * q; V.fly[i] += h; }
           v[0] += (k * (tx - P[0]) - c * v[0]) * h; v[1] += (k * (ty - P[1]) - c * v[1]) * h;
           P[0] += v[0] * h; P[1] += v[1] * h;
-          if (P[0] < lo) { P[0] = lo; if (v[0] < 0) { if (-v[0] > 140) V.flash.push({ s: 'l', p: P[1], t: now }); v[0] = -v[0] * 0.82; } }
+          if (P[0] < lox) { P[0] = lox; if (v[0] < 0) { if (-v[0] > 140) V.flash.push({ s: 'l', p: P[1], t: now }); v[0] = -v[0] * 0.82; } }
           if (P[0] > hx) { P[0] = hx; if (v[0] > 0) { if (v[0] > 140) V.flash.push({ s: 'r', p: P[1], t: now }); v[0] = -v[0] * 0.82; } }
-          if (P[1] < lo) { P[1] = lo; if (v[1] < 0) { if (-v[1] > 140) V.flash.push({ s: 't', p: P[0], t: now }); v[1] = -v[1] * 0.82; } }
+          if (P[1] < loy) { P[1] = loy; if (v[1] < 0) { if (-v[1] > 140) V.flash.push({ s: 't', p: P[0], t: now }); v[1] = -v[1] * 0.82; } }
           if (P[1] > hy) { P[1] = hy; if (v[1] > 0) { if (v[1] > 140) V.flash.push({ s: 'b', p: P[0], t: now }); v[1] = -v[1] * 0.82; } }
         }
         if (V.fly[i] >= 1.5) V.fly[i] = -1;
