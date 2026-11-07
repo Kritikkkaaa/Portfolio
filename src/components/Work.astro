@@ -24,7 +24,7 @@ const cards = [
 ];
 ---
 <section id="work" aria-labelledby="reading" style="padding: 40px 0 120px; display: flex; flex-direction: column; gap: 56px; overflow-x: clip">
-<h2 id="reading" style="margin: 0; font-family: 'Inter', system-ui, sans-serif; font-weight: 500; font-size: clamp(30px, 3.7vw, 54px); line-height: 1.1; letter-spacing: -0.02em; text-wrap: balance">Work I owned, shipped and measured<span style="color: #A9AFB9">.</span></h2>
+<h2 id="reading" style="margin: 0; font-family: 'Commissioner', system-ui, sans-serif; font-weight: 500; font-size: clamp(30px, 3.7vw, 54px); line-height: 1.1; letter-spacing: -0.02em; text-wrap: balance">Work I owned, shipped and measured<span style="color: #A9AFB9">.</span></h2>
 
 <div class="sp-stage" id="sp-stage">
 {cards.map((c, i) => (
@@ -37,7 +37,7 @@ const cards = [
 <span style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #8A8D96"><span>{c.num}</span><span>{c.date}</span></span>
 <span style="display: flex; justify-content: center; padding-top: 6px"><svg class="sp-glyph" aria-hidden="true" width="64" height="64" viewBox="0 0 64 64" fill="none" stroke="#E8EBF0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d={c.glyph}></path></svg></span>
 <span style="margin-top: -6px; text-align: center; font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #A9AFB9">{c.card}</span>
-<span style="font-family: 'Newsreader', serif; font-style: italic; font-size: 21px; line-height: 1.25; color: #E8EBF0; text-wrap: pretty">{c.hook}</span>
+<span style="font-family: 'Kalam', cursive; font-style: normal; font-size: 21px; line-height: 1.25; color: #E8EBF0; text-wrap: pretty">{c.hook}</span>
 <span style="margin-top: auto; display: flex; flex-direction: column; gap: 6px">
 <span class="sp-metric" style="font-size: 40px">{c.metric}</span>
 <span style="font-size: 13px; line-height: 1.4; color: #A9AFB9">{c.metricLine}</span>

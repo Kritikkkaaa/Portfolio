@@ -106,8 +106,8 @@
     }
     const fc = Math.max(12, Math.min(16, R * 0.105));
     out += `<circle cx="${f(g[0])}" cy="${f(g[1] - fc * 1.25)}" r="3.6" fill="${C.red}"/>`;
-    out += vtxt(g[0], g[1] + fc * 0.2, 'a path', 'middle', 'Newsreader, Georgia, serif', fc, C.gold, 'font-style:italic');
-    out += vtxt(g[0], g[1] + fc * 1.45, 'forward', 'middle', 'Newsreader, Georgia, serif', fc, C.gold, 'font-style:italic');
+    out += vtxt(g[0], g[1] + fc * 0.2, 'a path', 'middle', 'Kalam, cursive', fc, C.gold, '');
+    out += vtxt(g[0], g[1] + fc * 1.45, 'forward', 'middle', 'Kalam, cursive', fc, C.gold, '');
     V.pulses = V.pulses.filter((p) => now - p.t < 450);
     V.pulses.forEach((p) => {
       const t = (now - p.t) / 450, e = 1 - Math.pow(1 - t, 3);
