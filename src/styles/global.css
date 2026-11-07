@@ -34,7 +34,6 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 @keyframes nebdrift{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(60px,-40px) scale(1.12)}}
 .shoot{position:absolute;top:12%;left:70%;width:140px;height:1px;background:linear-gradient(to right,rgba(232,235,240,0),#E8EBF0);transform:rotate(-24deg);opacity:0;animation:shoot 17s ease-in 6s infinite}
 @keyframes shoot{0%,94%{opacity:0;transform:translate(0,0) rotate(-24deg)}95%{opacity:1}100%{opacity:0;transform:translate(-520px,230px) rotate(-24deg)}}
-.sky,.sky a,.sky button{cursor:none}
 .fx-defs{position:absolute;width:0;height:0;overflow:hidden}
 .wob{filter:url(#wob)}
 .cstar{position:fixed;z-index:61;pointer-events:none;transform:translate(-50%,-50%) scale(1);transition:opacity .7s ease,transform .45s cubic-bezier(.3,.7,.3,1);filter:drop-shadow(0 0 4px rgba(222,226,234,.35))}
@@ -381,3 +380,17 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .tl-count b { color: #E8EBF0; font-weight: 500; }
 .tl-date .tl-fill { font-size: 14px; }
 .tl-card h3 .tl-fill { font-size: 0.72em; }
+/* Scenic route: heading, option labels, detours and the zoomed-out overview */
+.tl-head{max-width:1180px;margin:40px auto 0;padding:0 24px;box-sizing:border-box;display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
+.tl-head h2{margin:0;font-family:'Inter',system-ui,sans-serif;font-weight:500;font-size:clamp(30px,3.7vw,54px);line-height:1.1;letter-spacing:-0.02em}
+.tl-option{max-width:1180px;margin:28px auto -40px;padding:0 24px;box-sizing:border-box;position:relative;z-index:2;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#8A8D96}
+.tl-option b{color:var(--tl-red);font-weight:500}
+.tl-track{display:flex;align-items:flex-start;flex:none;transform-origin:0 0;transition:transform .5s cubic-bezier(.3,.7,.3,1)}
+.tl-detour{position:absolute;font-family:Kalam,cursive;font-size:14px;color:#D8C9A3;transform:translate(0,-100%) rotate(-3deg)}
+.tl-zoom{margin-left:auto;min-height:36px;padding:0 16px;border-radius:999px;border:1px solid #3A3842;background:rgb(11,10,15);color:#C9CDD5;font:inherit;font-size:11px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:border-color .25s,color .25s}
+.tl-zoom:hover,.tl-zoom:focus-visible,.tl-zoom[aria-pressed="true"]{border-color:var(--tl-red);color:#E8EBF0;outline:none}
+.tl-wrap.zoomed .tl-scroller{overflow:hidden;scroll-snap-type:none;-webkit-mask-image:none;mask-image:none;transition:height .5s cubic-bezier(.3,.7,.3,1)}
+.tl-wrap.zoomed .tl-tail{display:none}
+.tl-wrap.zoomed .tl-item:not(.tl-open){cursor:zoom-in}
+.tl-wrap.zoomed .tl-item:not(.tl-open):hover .tl-card{outline:1px dashed rgba(210,69,63,.6);outline-offset:12px}
+.tl-wrap.zoomed .tl-option{margin-bottom:16px}

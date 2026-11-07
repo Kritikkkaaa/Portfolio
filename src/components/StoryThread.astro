@@ -1,6 +1,8 @@
 ---
-// Second fold: how i got into product, as a horizontal thread of moments.
+// Second fold: my scenic route, as a horizontal thread of moments. Option A loops and knots; option B branches off on detours.
 // Ported from the Alloy prototype (StoryThread.tsx). Text in [brackets] is a placeholder to fill in.
+interface Props { variant?: 'loops' | 'detours'; first?: boolean }
+const { variant = 'loops', first = true } = Astro.props;
 const ICP = '/work/icp-positioning-messaging-nexus';
 const OPENING_W = 600;
 const NODE = 28;
@@ -10,7 +12,22 @@ const thread = (w: number, n?: number) =>
     ? `M0 20 L${w} 20`
     : `M0 20 C${n * 0.25} 20 ${n * 0.25} 15 ${n * 0.5} 15 S${n * 0.75} 20 ${n} 20 C${n + (w - n) * 0.25} 20 ${n + (w - n) * 0.25} 25 ${n + (w - n) * 0.5} 25 S${n + (w - n) * 0.75} 20 ${w} 20`;
 
-const moments = [
+// A loop: the thread doubles back on itself at cx, curling to the free side of the card (dir 1 = down, -1 = up).
+type Loop = { at: number; r: number };
+const loopPath = (cx: number, r: number, dir: number) => {
+  const b = 20 + dir * 2.2 * r;
+  return `L${cx - r} 20 C${cx + 1.7 * r} 20 ${cx + 1.7 * r} ${b} ${cx} ${b} C${cx - 1.7 * r} ${b} ${cx - 1.4 * r} ${20 - dir * 0.4 * r} ${cx + r} 20`;
+};
+const loopedThread = (w: number, n: number, loops: Loop[], dir: number) => {
+  const bump = `M0 20 C${n * 0.25} 20 ${n * 0.25} 15 ${n * 0.5} 15 S${n * 0.75} 20 ${n} 20`;
+  return bump + loops.map((l) => loopPath(l.at * w, l.r, dir)).join(' ') + ` L${w} 20`;
+};
+// A detour: the thread leaves the main line, runs at depth D, and comes back before the next moment.
+const detourThread = (w: number, nd: number, D: number) =>
+  `M0 20 C${nd * 0.55} 20 ${nd * 0.45} ${20 + D} ${nd} ${20 + D} L${w - nd} ${20 + D} C${w - nd * 0.45} ${20 + D} ${w - nd * 0.55} 20 ${w} 20`;
+
+type Moment = { id: string; label: string; width: number; side: string; now?: boolean; loops?: Loop[]; detour?: number };
+const base: Moment[] = [
   { id: 'tedx', label: 'TEDx', width: 400, side: 'up' },
   { id: 'art', label: 'Art internship', width: 420, side: 'down' },
   { id: 'cad', label: 'AutoCAD', width: 400, side: 'up' },
@@ -20,12 +37,38 @@ const moments = [
   { id: 'nexus', label: 'Nexus', width: 820, side: 'up' },
   { id: 'now', label: 'Now', width: 440, side: 'down', now: true }
 ];
+// Option A: loops and knots between moments (one big loop = a turn, two small ones = a knot).
+const loopsA: Record<string, Loop[]> = {
+  tedx: [{ at: 0.72, r: 26 }],
+  art: [{ at: 0.6, r: 10 }, { at: 0.66, r: 10 }],
+  cad: [{ at: 0.7, r: 34 }],
+  plane: [{ at: 0.82, r: 22 }],
+  ea: [{ at: 0.62, r: 11 }, { at: 0.68, r: 11 }],
+  marmeto: [{ at: 0.74, r: 30 }],
+  nexus: [{ at: 0.9, r: 18 }]
+};
+// Option B: AutoCAD and Freelance EA sit on side branches below the main line.
+const DETOUR = 96;
+const moments: Moment[] = base.map((m) => {
+  if (variant === 'loops') return { ...m, loops: loopsA[m.id] ?? [] };
+  if (m.id === 'cad') return { ...m, side: 'down', width: 540, detour: DETOUR };
+  if (m.id === 'ea') return { ...m, side: 'down', width: 640, detour: DETOUR };
+  return m;
+});
+const nodeX = (m: Moment) => (m.detour ? Math.round(m.width * 0.2) : NODE);
+const tag = variant === 'loops' ? 'A' : 'B';
 const labels = ['start', ...moments.map((m) => m.label)];
 const swatches = ['#E8EBF0', '#C9CDD5', '#8A8D96', '#3A3842', '#141319'];
 ---
-<section id="work" class="tl-wrap" aria-label="How I got into product">
-<div class="tl-scroller" id="tl-scroller" tabindex="0" role="region" aria-roledescription="timeline" aria-label="Timeline. Use the left and right arrow keys to move between moments.">
-<div class="tl-lead" id="tl-lead"><svg class="tl-thread" width="200" height="40" viewBox="0 0 200 40" aria-hidden="true"><path d={thread(200)} fill="none" stroke="rgb(210,69,63)" stroke-width="1.6" stroke-linecap="round"></path></svg></div>
+<section id={first ? 'work' : undefined} class="tl-wrap" aria-label={`My scenic route, option ${tag}`}>
+{first && <div class="tl-head">
+<h2>My scenic route<span style="color: var(--tl-red)">.</span></h2>
+<span class="hd-note">it was never a straight line</span>
+</div>}
+<p class="tl-option"><b>option {tag}</b> · {variant === 'loops' ? 'loops and knots' : 'detours that branch off'}</p>
+<div class="tl-scroller" tabindex="0" role="region" aria-roledescription="timeline" aria-label="Timeline. Use the left and right arrow keys to move between moments.">
+<div class="tl-track">
+<div class="tl-lead"><svg class="tl-thread" width="200" height="40" viewBox="0 0 200 40" aria-hidden="true"><path d={thread(200)} fill="none" stroke="rgb(210,69,63)" stroke-width="1.6" stroke-linecap="round"></path></svg></div>
 
 <article class="tl-item tl-open" style={`width: ${OPENING_W}px`}>
 <svg class="tl-thread" width={OPENING_W} height="40" viewBox={`0 0 ${OPENING_W} 40`} aria-hidden="true"><path d={thread(OPENING_W)} fill="none" stroke="rgb(210,69,63)" stroke-width="1.6" stroke-linecap="round"></path></svg>
@@ -35,10 +78,16 @@ const swatches = ['#E8EBF0', '#C9CDD5', '#8A8D96', '#3A3842', '#141319'];
 
 {moments.map((m, i) => (
 <article class={`tl-item ${m.side}${m.now ? ' now' : ''}`} style={`width: ${m.width}px`} aria-label={m.label}>
-<svg class="tl-thread" width={m.width} height="40" viewBox={`0 0 ${m.width} 40`} aria-hidden="true"><path d={thread(m.width, NODE)} fill="none" stroke="rgb(210,69,63)" stroke-width="1.6" stroke-linecap="round"></path></svg>
-<span class="tl-node" style={`left: ${NODE - 7}px`}></span>
-<span class="tl-idx" style={`left: ${NODE + 14}px`}>{String(i + 1).padStart(2, '0')}</span>
-<div class="tl-card" style={`left: ${NODE}px; width: ${m.width - NODE - 36}px`}>
+<svg class="tl-thread" width={m.width} height="40" viewBox={`0 0 ${m.width} 40`} aria-hidden="true">
+{m.detour ? <>
+<path d={thread(m.width)} fill="none" stroke="rgb(210,69,63)" stroke-width="1.3" stroke-dasharray="4 6" opacity="0.7"></path>
+<path d={detourThread(m.width, nodeX(m), m.detour)} fill="none" stroke="rgb(210,69,63)" stroke-width="1.6" stroke-linecap="round"></path>
+</> : <path d={variant === 'loops' ? loopedThread(m.width, NODE, m.loops ?? [], m.side === 'up' ? 1 : -1) : thread(m.width, NODE)} fill="none" stroke="rgb(210,69,63)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>}
+</svg>
+{m.detour && <span class="tl-detour" style={`left: ${nodeX(m) + 14}px; top: ${330 + m.detour - 4}px`}>detour</span>}
+<span class="tl-node" style={`left: ${nodeX(m) - 7}px${m.detour ? `; top: ${343 + m.detour}px` : ''}`}></span>
+<span class="tl-idx" style={`left: ${nodeX(m) + 14}px${m.detour ? `; top: ${360 + m.detour}px` : ''}`}>{String(i + 1).padStart(2, '0')}</span>
+<div class="tl-card" style={`left: ${nodeX(m)}px; width: ${m.width - nodeX(m) - 36}px${m.detour ? `; top: ${350 + m.detour}px` : ''}`}>
 
 {m.id === 'tedx' && <>
 <div class="tl-date"><span>apr 2022</span><em>tentative</em></div>
@@ -150,58 +199,98 @@ const swatches = ['#E8EBF0', '#C9CDD5', '#8A8D96', '#3A3842', '#141319'];
 
 <div class="tl-tail" aria-hidden="true"></div>
 </div>
+</div>
 
 <div class="tl-controls">
-<button class="tl-btn" id="tl-prev" type="button" aria-label="Previous moment" disabled>←</button>
+<button class="tl-btn tl-prev" type="button" aria-label="Previous moment" disabled>←</button>
 <div class="tl-dots" role="tablist" aria-label="Moments">
 {labels.map((l, i) => <button class={`tl-dot${i === 0 ? ' on' : ''}`} type="button" role="tab" aria-selected={i === 0 ? 'true' : 'false'} aria-label={l} title={l} data-i={i}></button>)}
 </div>
-<button class="tl-btn" id="tl-next" type="button" aria-label="Next moment">→</button>
-<span class="tl-count" id="tl-count" data-labels={JSON.stringify(labels)}><b>00</b> / {String(labels.length - 1).padStart(2, '0')} · start</span>
+<button class="tl-btn tl-next" type="button" aria-label="Next moment">→</button>
+<span class="tl-count" data-labels={JSON.stringify(labels)}><b>00</b> / {String(labels.length - 1).padStart(2, '0')} · start</span>
+<button class="tl-zoom" type="button" aria-pressed="false">see the whole route</button>
 </div>
 </section>
 
 <script>
-  const scroller = document.getElementById('tl-scroller') as HTMLElement;
-  const lead = document.getElementById('tl-lead') as HTMLElement;
-  const prev = document.getElementById('tl-prev') as HTMLButtonElement;
-  const next = document.getElementById('tl-next') as HTMLButtonElement;
-  const counter = document.getElementById('tl-count') as HTMLElement;
-  const labels: string[] = JSON.parse(counter.dataset.labels!);
-  const dots = Array.from(document.querySelectorAll<HTMLButtonElement>('.tl-dot'));
-  const items = Array.from(scroller.querySelectorAll<HTMLElement>('.tl-item'));
-  const count = items.length;
-  const total = String(count - 1).padStart(2, '0');
-  let active = 0;
+  // Each timeline on the page (option A and option B) runs on its own.
+  document.querySelectorAll<HTMLElement>('.tl-wrap').forEach((wrap) => {
+    const scroller = wrap.querySelector('.tl-scroller') as HTMLElement;
+    const track = wrap.querySelector('.tl-track') as HTMLElement;
+    const lead = wrap.querySelector('.tl-lead') as HTMLElement;
+    const prev = wrap.querySelector('.tl-prev') as HTMLButtonElement;
+    const next = wrap.querySelector('.tl-next') as HTMLButtonElement;
+    const zoom = wrap.querySelector('.tl-zoom') as HTMLButtonElement;
+    const counter = wrap.querySelector('.tl-count') as HTMLElement;
+    const labels: string[] = JSON.parse(counter.dataset.labels!);
+    const dots = Array.from(wrap.querySelectorAll<HTMLButtonElement>('.tl-dot'));
+    const items = Array.from(wrap.querySelectorAll<HTMLElement>('.tl-item'));
+    const count = items.length;
+    const total = String(count - 1).padStart(2, '0');
+    let active = 0;
+    let zoomed = false;
 
-  const left = (i: number) => items[i].offsetLeft - lead.offsetWidth;
-  const goTo = (i: number) => scroller.scrollTo({ left: left(Math.max(0, Math.min(count - 1, i))), behavior: 'smooth' });
+    const left = (i: number) => items[i].offsetLeft - lead.offsetWidth;
+    const goTo = (i: number) => scroller.scrollTo({ left: left(Math.max(0, Math.min(count - 1, i))), behavior: 'smooth' });
 
-  const paint = () => {
-    prev.disabled = active === 0;
-    next.disabled = active === count - 1;
-    dots.forEach((d, i) => {
-      d.classList.toggle('on', i === active);
-      d.setAttribute('aria-selected', String(i === active));
+    const paint = () => {
+      prev.disabled = zoomed || active === 0;
+      next.disabled = zoomed || active === count - 1;
+      dots.forEach((d, i) => {
+        d.classList.toggle('on', i === active);
+        d.setAttribute('aria-selected', String(i === active));
+      });
+      counter.innerHTML = `<b>${String(active).padStart(2, '0')}</b> / ${total} · ${labels[active]}`;
+    };
+    const onScroll = () => {
+      if (zoomed) return;
+      let best = 0, dist = Infinity;
+      items.forEach((_, i) => {
+        const d = Math.abs(left(i) - scroller.scrollLeft);
+        if (d < dist) { dist = d; best = i; }
+      });
+      if (best !== active) { active = best; paint(); }
+    };
+
+    // Zoom out: scale the whole route down to fit the width, like the case study overview.
+    const setZoom = (on: boolean, land?: number) => {
+      zoomed = on;
+      wrap.classList.toggle('zoomed', on);
+      zoom.setAttribute('aria-pressed', String(on));
+      zoom.textContent = on ? 'back to one moment' : 'see the whole route';
+      if (on) {
+        scroller.scrollLeft = 0;
+        const s = scroller.clientWidth / track.scrollWidth;
+        track.style.transform = `scale(${s})`;
+        scroller.style.height = `${Math.ceil(740 * s)}px`;
+      } else {
+        track.style.transform = '';
+        scroller.style.height = '';
+        requestAnimationFrame(() => {
+          scroller.scrollLeft = left(land ?? active);
+          active = land ?? active;
+          paint();
+        });
+      }
+      paint();
+    };
+
+    scroller.addEventListener('scroll', onScroll, { passive: true });
+    scroller.addEventListener('keydown', (e) => {
+      if (zoomed) return;
+      const keys: Record<string, number> = { ArrowRight: active + 1, ArrowLeft: active - 1, Home: 0, End: count - 1 };
+      if (e.key in keys) { e.preventDefault(); goTo(keys[e.key]); }
     });
-    counter.innerHTML = `<b>${String(active).padStart(2, '0')}</b> / ${total} · ${labels[active]}`;
-  };
-  const onScroll = () => {
-    let best = 0, dist = Infinity;
-    items.forEach((_, i) => {
-      const d = Math.abs(left(i) - scroller.scrollLeft);
-      if (d < dist) { dist = d; best = i; }
-    });
-    if (best !== active) { active = best; paint(); }
-  };
-
-  scroller.addEventListener('scroll', onScroll, { passive: true });
-  scroller.addEventListener('keydown', (e) => {
-    const keys: Record<string, number> = { ArrowRight: active + 1, ArrowLeft: active - 1, Home: 0, End: count - 1 };
-    if (e.key in keys) { e.preventDefault(); goTo(keys[e.key]); }
+    items.forEach((it, i) => it.addEventListener('click', (e) => {
+      if (!zoomed) return;
+      e.preventDefault();
+      setZoom(false, i);
+    }));
+    prev.addEventListener('click', () => goTo(active - 1));
+    next.addEventListener('click', () => goTo(active + 1));
+    dots.forEach((d, i) => d.addEventListener('click', () => (zoomed ? setZoom(false, i) : goTo(i))));
+    zoom.addEventListener('click', () => setZoom(!zoomed));
+    window.addEventListener('resize', () => { if (zoomed) setZoom(true); });
+    paint();
   });
-  prev.addEventListener('click', () => goTo(active - 1));
-  next.addEventListener('click', () => goTo(active + 1));
-  dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
-  paint();
 </script>
