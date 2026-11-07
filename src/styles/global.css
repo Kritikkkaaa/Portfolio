@@ -618,3 +618,34 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .tl-cta .ft-secondary:hover,.tl-cta .ft-secondary:focus-visible{background:#D8C9A3;color:#0B0A0F}
 .tl-cta .tl-resume{position:static;margin:0}
 .tl-item.road.up[aria-label="Nexus"] .tl-card.up{padding-bottom:50px}
+
+/* ============ Frozen type scale ============
+   Commissioner (print): display, h1, h2, h3, lead, body, small, caps.
+   Kalam (handwriting, 300 only, 0.5px tracking): accent, note, hint. */
+:root{
+  --t-display:clamp(44px,6.2vw,76px);
+  --t-h1:clamp(30px,3.7vw,54px);
+  --t-h2:26px;
+  --t-h3:21px;
+  --t-lead:20px;
+  --t-body:15px;
+  --t-small:13px;
+  --t-caps:11px;
+  --h-note:20px;
+  --h-hint:15px;
+}
+.tl-head h2{font-size:var(--t-h1);font-weight:500;line-height:1.1;letter-spacing:-0.02em}
+.tl-close{font-size:var(--t-h2);font-weight:500;line-height:1.25;letter-spacing:-0.01em}
+.tl-card h3{font-size:var(--t-h3);font-weight:500;line-height:1.2;letter-spacing:-0.01em}
+.tl-card p,.ms-link,.mk-menu a,.mk-menu a:hover,.ft-primary,.ft-secondary,.tl-cta .ft-secondary{font-size:var(--t-body)}
+.tl-card p{line-height:1.6}
+.tl-resume,.ct-name,.pr-ticket{font-size:var(--t-small) !important}
+.ms-date,.ms-soon,.skill,.ta-label,.tally-count,.plan-cap,.lp-word,.pl-labels{font-size:var(--t-caps)}
+.ms-date,.ms-soon,.skill,.ta-label,.tally-count,.plan-cap{font-weight:500;letter-spacing:.18em;text-transform:uppercase}
+.hd-note,.cp-out,.tl-open-a em,.tl-close em,.roles{font-weight:300;letter-spacing:.5px}
+.hd-note,.cp-out{font-size:var(--h-note)}
+.toy-hint,.pl-mid,.ph-bubble,.tl-card p em,.tl-polaroid span,.tl-fig figcaption{font-size:var(--h-hint);font-weight:300;letter-spacing:.5px}
+.tl-card p em{font-size:1.05em}
+.tt-main small,.tt-stub,.pr-p,.ui-btn,.ct-count,.ct-price,.ct-add,.ui-bar b,.tk-chip,.tl-idx{font-size:var(--t-caps) !important}
+.ui-line b,.pl-labels,.ct-name{font-size:var(--t-small) !important}
+.ta-head,.toy-quote{font-size:var(--h-note) !important;font-weight:300;letter-spacing:.5px}

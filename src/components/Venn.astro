@@ -47,7 +47,7 @@
     V.off = [false, false, false]; V.pulses = []; V.drag = -1; V.fly = [-1, -1, -1]; V.flash = []; V.hist = []; V.hov = -1;
     const hy = (V.homes[0][1] + V.homes[1][1] + V.homes[2][1]) / 3;
     const topY = V.homes[0][1] - R, botY = V.homes[2][1] + R;
-    const fs = V.desk ? 16 : 13;
+    const fs = V.desk ? 16 : 15; // Kalam hint size
     V.c.t = { x: cx, y: topY - 26, anc: 'middle', lx: cx, ly: topY - 14, lines: ['research they can trust'], fs };
     if (V.desk) {
       V.c.r = { x: cx + 1.78 * R, y: hy + 0.375 * R + 4, anc: 'start', lx: cx + 1.78 * R - 10, ly: hy + 0.375 * R - 1, lines: ['a clear brief,', 'gaps caught early'], fs };
@@ -97,7 +97,7 @@
       out += `<line x1="${f(a[0])}" y1="${f(a[1])}" x2="${f(c.lx)}" y2="${f(c.ly)}" stroke="${C.gold}" stroke-width=".7" opacity=".65"/><circle cx="${f(a[0])}" cy="${f(a[1])}" r="2.2" fill="${C.gold}"/>`;
       c.lines.forEach((s, j) => { out += vtxt(c.x, c.y + j * c.fs * 1.25, s, c.anc, 'Kalam, cursive', c.fs, C.gold, ''); });
     });
-    const fsL = V.desk ? 13 : 11, fsD = 13;
+    const fsL = 12, fsD = 13; // small caps, Kalam description
     for (let i = 0; i < 3; i++) {
       const dx = P[i][0] - g[0], dy = P[i][1] - g[1], dl = Math.hypot(dx, dy) || 1;
       const lx = P[i][0] + dx / dl * 0.54 * R, ly = P[i][1] + dy / dl * 0.54 * R;
