@@ -552,3 +552,6 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 @media (prefers-reduced-motion: reduce){.plan-cam,.ui-line,.ui-btn,.ta-fill,.pr-ticket,.ph-bubble{transition:none}.toy-phone.ring .ph-set,.toy-phone.ring .ph-waves i,.ct-fly,.ct-bag.bump,.ta-head.in{animation:none}}
 .tl-item.detour .ms-text,.tl-item.split .ms-text{flex-basis:300px}
 .toy-ticket{width:170px}
+.tl-head{gap:4px 10px}
+.tl-head .tl-zoom{margin-left:0}
+.tl-head .hd-note{flex-basis:100%;white-space:normal;transform:rotate(-2deg);transform-origin:0 50%}
