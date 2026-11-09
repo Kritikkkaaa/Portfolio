@@ -1,0 +1,135 @@
+---
+// One milestone card: greyed date, what i did, what i learnt, optional link, and its toy.
+// Used by the scenic route's timeline and by its zoomed-out river view.
+interface Props { c: { date: string; title: string; learnt: string; toy: string; link?: { text: string; href?: string } } }
+const { c } = Astro.props;
+const RED = 'rgb(210,69,63)';
+const swatches = ['#E8EBF0', '#D8C9A3', '#9FB0C8', 'rgb(210,69,63)', '#3A3842'];
+const quote = 'thinking and expressing what i think are two different things.'.split(' ');
+const tickets = ['vendor payouts', 'bulk upload', 'dark mode'];
+---
+<div class="ms">
+<div class="ms-text">
+<div class="ms-date">{c.date}</div>
+<h3>{c.title}</h3>
+<p set:html={c.learnt}></p>
+{c.link && (c.link.href
+  ? <a class="ms-link" href={c.link.href}>{c.link.text}<span aria-hidden="true"> →</span></a>
+  : <span class="ms-soon">{c.link.text}</span>)}
+</div>
+<div class="ms-toy">
+
+{c.toy === 'ticket' && <>
+<button type="button" class="toy-ticket" aria-pressed="false" aria-label="Tear the ticket stub">
+<span class="tt-main"><small>admit one</small><b>TEDx</b><span class="tt-stamp">admitted</span></span>
+<span class="tt-stub">no. 001</span>
+</button>
+<span class="toy-hint">tear the stub</span>
+</>}
+
+{c.toy === 'phone' && <>
+<button type="button" class="toy-phone" aria-label="Ring the phone">
+<span class="ph-bubble" aria-live="polite">hello, i am kritika</span>
+<svg class="ph-set" width="96" height="80" viewBox="0 0 96 80" aria-hidden="true">
+<path d="M14 30 C14 14 82 14 82 30 L74 38 C70 34 64 33 60 34 L58 26 C52 24 44 24 38 26 L36 34 C32 33 26 34 22 38 Z" fill="#141319" stroke="#C9CDD5" stroke-width="1.5" stroke-linejoin="round"></path>
+<path d="M24 44 L72 44 L80 72 L16 72 Z" fill="#141319" stroke="#C9CDD5" stroke-width="1.5" stroke-linejoin="round"></path>
+<circle cx="48" cy="58" r="9" fill="none" stroke={RED} stroke-width="1.5"></circle>
+<circle cx="48" cy="58" r="2" fill={RED}></circle>
+</svg>
+<span class="ph-waves" aria-hidden="true"><i></i><i></i></span>
+</button>
+<span class="toy-hint">pick up the phone</span>
+</>}
+
+{c.toy === 'plan' && <>
+<button type="button" class="toy-plan" aria-pressed="false" aria-label="Step back to see the whole floor plan">
+<svg width="190" height="120" viewBox="0 0 190 120" aria-hidden="true">
+<g class="plan-cam">
+<rect x="10" y="10" width="170" height="100" fill="none" stroke="#C9CDD5" stroke-width="2"></rect>
+<path d="M90 10 V62 M10 62 H60 M76 62 H180 M130 62 V110" stroke="#C9CDD5" stroke-width="1.4" fill="none"></path>
+<path d="M60 62 A16 16 0 0 1 76 46" stroke="#8A8D96" stroke-width="0.8" fill="none" stroke-dasharray="2 2"></path>
+<rect x="24" y="22" width="36" height="22" fill="none" stroke="#8A8D96" stroke-width="0.8"></rect>
+<circle cx="140" cy="34" r="12" fill="none" stroke="#8A8D96" stroke-width="0.8"></circle>
+<rect x="142" y="76" width="26" height="24" fill="none" stroke="#8A8D96" stroke-width="0.8"></rect>
+<path d="M10 116 H180 M10 113 V119 M180 113 V119" stroke={RED} stroke-width="0.6"></path>
+<text x="40" y="38" font-size="3.2" fill="#8A8D96" letter-spacing=".3">sofa 2100 × 900</text>
+<text x="26" y="52" font-size="2.6" fill={RED}>↔ 1200</text>
+<text x="96" y="20" font-size="5" fill="#C9CDD5" letter-spacing="1">LIVING</text>
+<text x="22" y="90" font-size="5" fill="#C9CDD5" letter-spacing="1">BED</text>
+<text x="96" y="90" font-size="5" fill="#C9CDD5" letter-spacing="1">KITCHEN</text>
+</g>
+</svg>
+<span class="plan-cap">1:20</span>
+</button>
+<span class="toy-hint">step back</span>
+</>}
+
+{c.toy === 'ui' && <>
+<button type="button" class="toy-ui" aria-pressed="false" aria-label="Turn the wireframe into a product">
+<span class="ui-bar"><i></i><i></i><i></i><b>plane</b></span>
+<span class="ui-line l1"><b>issues, sprints, pages</b></span>
+<span class="ui-line l2"><b>for teams who ship</b></span>
+<span class="ui-btns"><span class="ui-btn">start</span><span class="ui-btn ghost">docs</span></span>
+</button>
+<span class="toy-hint">ship the wireframe</span>
+</>}
+
+{c.toy === 'taste' && <>
+<button type="button" class="toy-taste" aria-label="Add taste to the headline">
+<span class="ta-head" data-i="0">Project management software for teams.</span>
+<span class="ta-meter"><span class="ta-fill"></span></span>
+<span class="ta-label">taste: <b>bland</b></span>
+</button>
+<span class="toy-hint">add taste</span>
+</>}
+
+{c.toy === 'cart' && <>
+<div class="toy-cart">
+<div class="ct-product"><span class="ct-img" aria-hidden="true"></span><span class="ct-name">tote bag</span><span class="ct-price">₹1,299</span>
+<button type="button" class="ct-add">add to cart</button></div>
+<span class="ct-bag" aria-live="polite"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C9CDD5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8 H19 L18 20 H6 Z"></path><path d="M9 8 V6 a3 3 0 0 1 6 0 V8"></path></svg><b class="ct-count">0</b></span>
+</div>
+<span class="toy-hint">add to cart</span>
+</>}
+
+{c.toy === 'quote' && <>
+<button type="button" class="toy-quote" aria-pressed="false" aria-label="Thinking and expressing what i think are two different things. Click to put the words in order.">
+{quote.map((w, k) => <span class="qw" style={`--qx: ${((k * 37) % 70) - 30}px; --qy: ${((k * 53) % 46) - 20}px; --qr: ${((k * 29) % 40) - 20}deg`}>{w}</span>)}
+</button>
+<span class="toy-hint">click to express it</span>
+</>}
+
+{c.toy === 'tokens' && <>
+<div class="toy-tokens">
+<div class="tk-swatches" role="group" aria-label="Colour tokens">
+{swatches.map((c, k) => <button type="button" class={`tk-sw${k === 3 ? ' on' : ''}`} style={`background: ${c}`} data-c={c} aria-label={`Colour token ${k + 1}`}></button>)}
+</div>
+<div class="tk-space" role="group" aria-label="Spacing tokens">
+{[4, 8, 12, 16].map((sz, k) => <button type="button" class={`tk-sp${k === 2 ? ' on' : ''}`} data-s={sz} aria-label={`Spacing ${sz}`}><span style={`width: ${sz}px; height: ${sz}px`}></span></button>)}
+</div>
+<div class="tk-preview" style="--tk: rgb(210,69,63); --sp: 12px"><span class="tk-chip">button</span><span class="tk-chip ghost">button</span></div>
+</div>
+<span class="toy-hint">pick a token</span>
+</>}
+
+{c.toy === 'priority' && <>
+<div class="toy-priority" role="list" aria-label="Backlog. Click a ticket to make it the top priority.">
+{tickets.map((t, k) => <button type="button" role="listitem" class="pr-ticket" style={`top: ${k * 40}px`} data-k={k}><b class="pr-p">P{k}</b>{t}</button>)}
+</div>
+<span class="toy-hint">click to prioritise</span>
+</>}
+
+{c.toy === 'compass' && <>
+<button type="button" class="toy-compass" aria-label="Spin the compass: where next?">
+<svg width="110" height="110" viewBox="0 0 120 120" aria-hidden="true">
+<circle cx="60" cy="60" r="46" fill="none" stroke="#3A3842" stroke-width="1"></circle>
+<g fill="#8A8D96" font-size="8" letter-spacing="1" text-anchor="middle"><text x="60" y="22">N</text><text x="102" y="63">E</text><text x="60" y="106">S</text><text x="18" y="63">W</text></g>
+<g class="cp-needle"><path d="M60 24 L65 60 L55 60 Z" fill={RED}></path><path d="M60 96 L65 60 L55 60 Z" fill="#C9CDD5"></path><circle cx="60" cy="60" r="3" fill="#141319" stroke="#C9CDD5"></circle></g>
+</svg>
+<span class="cp-out">where next?</span>
+</button>
+<span class="toy-hint">spin it</span>
+</>}
+
+</div>
+</div>

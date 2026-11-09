@@ -692,3 +692,27 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .fx-soc a:hover{color:#D8C9A3}
 @media (max-width:760px){.fx-base{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center}.fx-soc{order:-1}.fx-base .loc,.fx-base .cred{justify-self:center;text-align:center}}
 @media (max-width:600px){.fx{padding-top:64px}.fx-note{position:static;transform:none;display:block}.fx-note.b{text-align:right;margin-top:10px}.fx-note.a{margin-bottom:10px}.fx-ctas{margin-top:36px;flex-wrap:nowrap;gap:10px}.fx-cta{padding:15px 18px;gap:8px;white-space:nowrap}}
+/* Open nav sits on a dark band; footer base row on the same dark; footer is its own full screen */
+.mk-bar{position:fixed;top:0;left:0;right:0;height:76px;background:#0B0A0F;border-bottom:1px solid rgba(169,175,185,.14);opacity:0;pointer-events:none;transition:opacity .25s ease}
+.mk-nav.open .mk-bar{opacity:1;pointer-events:auto}
+.mk-btn,.mk-menu{position:relative;z-index:1}
+.mk-menu,.mk-menu.on{position:fixed}
+.fx{min-height:100svh;box-sizing:border-box;padding-bottom:0}
+.fx-base{margin-top:auto;background:#0B0A0F;box-shadow:0 0 0 100vmax #0B0A0F;clip-path:inset(0 -100vmax -100vmax);border-top-color:rgba(169,175,185,.14)}
+.fx-duo{margin-bottom:64px}
+/* Scenic route, zoomed out: the river view */
+.tl-scroller[hidden],.rv[hidden]{display:none !important}
+.tl-scroller,.rv{transition:opacity .22s ease}
+.tl-scroller.fading,.rv.fading{opacity:0}
+.rv{position:relative;max-width:1180px;margin:8px auto 0;padding:0;box-sizing:border-box;width:calc(100% - 96px)}
+.rv-line{position:absolute;left:0;top:0;width:100%;overflow:visible;pointer-events:none}
+.rv-card{position:absolute;box-sizing:border-box;padding:18px 0 0 22px;border-left:1px dashed rgba(210,69,63,.65)}
+.rv-card.up{padding:0 0 18px 22px}
+.rv .ms{flex-direction:column;align-items:flex-start;gap:14px}
+.rv .ms-text{flex:none;width:100%;display:flex;flex-direction:column}
+.rv-card.up .ms-date{order:9;margin:12px 0 0}
+.rv .tl-card,.rv h3{font-size:var(--t-h3);font-weight:500;line-height:1.2;letter-spacing:-0.01em;margin:0 0 8px}
+.rv p{margin:0 0 10px;font-size:var(--t-body);line-height:1.6;color:#C9CDD5}
+.rv p em{font-family:'Kalam',cursive;font-weight:300;color:#D8C9A3}
+.rv-close{position:absolute;margin:0;max-width:340px;font-size:var(--t-h2) !important;font-weight:500;line-height:1.25;letter-spacing:-0.01em;color:#EFEFEE !important}
+.rv-close em{font-family:'Kalam',cursive;font-style:normal;font-weight:300;color:#D8C9A3}
