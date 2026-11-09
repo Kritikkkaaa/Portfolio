@@ -40,7 +40,7 @@ const S = ['#BFD4EA', '#F2C8A2', '#D4EC8E', '#BCE5CF', '#F4B9B2', '#F2C8A2', '#B
 <h1>Work</h1>
 
 <div class="wk-tabs" role="tablist" aria-label="Filter the work">
-{tabs.map((t, i) => <button type="button" role="tab" class="wk-tab" data-tab={t.id} aria-selected={i === 0 ? 'true' : 'false'}>{t.label}<span class="wk-n">{files.filter((f) => f.tags.includes(t.id)).length}</span></button>)}
+{tabs.map((t, i) => <button type="button" role="tab" class="wk-tab" data-tab={t.id} aria-selected={i === 0 ? 'true' : 'false'}>{t.label}</button>)}
 </div>
 
 <ul class="wk-cards" id="wk-cards">
@@ -49,8 +49,7 @@ const S = ['#BFD4EA', '#F2C8A2', '#D4EC8E', '#BCE5CF', '#F4B9B2', '#F2C8A2', '#B
 <a href={f.href ?? '#'} data-file={f.id} class={f.href ? '' : 'soon'}>
 <span class="wc-meta">{f.where}</span>
 <span class="wc-title">{f.title}</span>
-<span class="wc-line">{f.line}</span>
-<span class="wc-foot"><span class="wc-tags">{f.tags.map((t) => <span>{tagLabel(t)}</span>)}</span><b>{f.href ? 'Open file →' : 'Being written'}</b></span>
+<span class="wc-foot"><b>{f.href ? 'View →' : 'Being written'}</b></span>
 </a>
 </li>
 ))}
@@ -133,8 +132,6 @@ const S = ['#BFD4EA', '#F2C8A2', '#D4EC8E', '#BCE5CF', '#F4B9B2', '#F2C8A2', '#B
 .wk-tab{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 16px;margin-bottom:-1px;border:1px solid transparent;border-radius:8px 8px 0 0;background:none;color:var(--mute);font:inherit;font-size:var(--t-body);cursor:pointer;transition:color .2s ease,background-color .2s ease}
 .wk-tab:hover{color:var(--fg)}
 .wk-tab[aria-selected="true"]{color:var(--fg);background:var(--bg);border-color:var(--line);border-bottom-color:var(--bg)}
-.wk-n{min-width:20px;padding:1px 6px;border-radius:999px;background:rgba(239,239,238,.08);font-size:var(--t-small);text-align:center}
-.wk-tab[aria-selected="true"] .wk-n{background:var(--red);color:#fff}
 .wk-tab:focus-visible,.wk-card a:focus-visible,.file:focus-visible{outline:2px solid var(--fg);outline-offset:3px}
 
 .wk-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:36px 20px;margin:44px 0 0;padding:0;list-style:none}
@@ -143,11 +140,10 @@ const S = ['#BFD4EA', '#F2C8A2', '#D4EC8E', '#BCE5CF', '#F4B9B2', '#F2C8A2', '#B
 .wk-card a:hover,.wk-card a.on{border-color:rgba(210,69,63,.7);transform:translateY(-3px)}
 .wc-meta{font-size:var(--t-caps);font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--mute)}
 .wc-title{font-size:var(--t-h3);font-weight:500;line-height:1.25;letter-spacing:-.01em}
-.wc-line{font-size:var(--t-body);line-height:1.6;color:#C9CDD5}
-.wc-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:auto;padding-top:14px;border-top:1px dashed var(--line);font-size:var(--t-small)}
-.wc-tags{display:flex;flex-wrap:wrap;gap:6px}
-.wc-tags span{padding:2px 8px;border:1px solid var(--line);border-radius:999px;color:var(--mute)}
-.wc-foot b{flex:none;font-weight:500;color:var(--fg)}
+.wc-foot{display:flex;align-items:flex-end;justify-content:flex-start;gap:12px;margin-top:auto;padding-top:14px;border-top:1px dashed var(--line);font-size:var(--t-small)}
+.wc-foot b{flex:none;font-weight:400;color:var(--mute)}
+.wk-card a:not(.soon) .wc-foot b{text-decoration:underline;text-underline-offset:4px;transition:color .2s ease}
+.wk-card a:not(.soon):hover .wc-foot b,.wk-card a:not(.soon):focus-visible .wc-foot b{color:var(--red)}
 .wk-card a.soon .wc-foot b{color:var(--mute);font-weight:400}
 
 /* The cabinet */
