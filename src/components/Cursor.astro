@@ -1,8 +1,8 @@
 ---
 // The overlap cursor (from the "kritikal marks" sheet), on every page.
 // Mouse: two 9px circles with a red lens where they overlap; the leading one is the hotspot, the trailing one lags.
-// Over anything clickable they merge into one red ball. A click makes it hop 2cm and bounce to a stop.
-// Touch: no persistent cursor; a tap flashes the two circles sliding together. Reduced motion: no lag, hop or spring.
+// Over anything clickable they merge into one red ball. A click merges them into the ball, which hops 2cm and bounces
+// to a stop, then the circles part again. Touch screens: no cursor at all. Reduced motion: no lag, hop or spring.
 ---
 <svg class="ov-cursor" id="ov-cursor" aria-hidden="true"></svg>
 
@@ -46,15 +46,17 @@
   });
   document.documentElement.addEventListener('pointerleave', () => { S.active = false; S.hover = false; wake(); });
   addEventListener('pointerdown', (e) => {
-    if (e.pointerType === 'touch') { S.taps.push([e.clientX, e.clientY, performance.now()]); wake(); return; }
+    if (e.pointerType !== 'mouse' || !fine) return;
     S.x = e.clientX; S.y = e.clientY; S.launch = true; wake();
   }, { passive: true });
+  // A press-and-drag on a link or image starts the browser's own drag, which stops mouse moves and freezes the drawn cursor.
+  if (fine) addEventListener('dragstart', (e) => e.preventDefault());
 
   // Returns true while anything is still moving.
   const update = (dt: number, now: number) => {
     const live = S.active, px = S.x, py = S.y;
     let busy = false;
-    const merge = live && S.hover;
+    const merge = live && (S.hover || S.h > 0 || S.v > 0);
     const mgT = merge ? 1 : 0;
     S.mg += (mgT - S.mg) * (RM ? 1 : 1 - Math.exp(-dt * 16));
     const rt = merge ? 8.5 : 9;
@@ -68,7 +70,7 @@
     if (dl > 34) { S.qx = px + dx / dl * 34; S.qy = py + dy / dl * 34; }
     if (Math.hypot(S.qx - tx, S.qy - ty) > 0.2 || Math.abs(S.mg - mgT) > 0.01 || Math.abs(S.rr - rt) > 0.02) busy = true;
 
-    if (S.launch) { S.launch = false; if (!RM && live) { S.v = Math.sqrt(2 * G * HOP); S.h = Math.max(S.h, 0.01); } }
+    if (S.launch) { S.launch = false; if (!RM && live) { S.mg = 1; S.qx = px; S.qy = py; S.v = Math.sqrt(2 * G * HOP); S.h = Math.max(S.h, 0.01); } }
     if (!live) { S.h = 0; S.v = 0; S.sq = 0; S.tr = []; }
     if (S.h > 0 || S.v > 0) {
       busy = true;

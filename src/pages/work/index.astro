@@ -1,7 +1,7 @@
 ---
 // /work: a file cabinet. Left 60%: three filters (work i owned, how i use data, how i work with users) and one plain
 // card per case study. Right 40%: an open-shelf cabinet, 2026 on top. Every case study is one file on its year's shelf.
-// Hover a card and its file lifts; the filter dims files that don't match. Pick a file (or a card) and it slides off
+// Hover a card and its file is outlined; the shelf stays the same on every tab. Pick a file (or a card) and it slides off
 // the shelf, comes to the front as its cover, opens, and takes you inside. Phones: just the cabinet with readable names.
 // Cards are one template on purpose, so a new case study is one line of data.
 import Base from '../../layouts/Base.astro';
@@ -61,21 +61,21 @@ const S = ['#A9B9C8', '#D6B79C', '#BFC995', '#A9C6B4', '#D2AAA4', '#D6B79C', '#A
 <div class="cab">
 <svg class="pl pl-money" viewBox="0 0 120 110" overflow="visible" aria-hidden="true">
 <path d="M34 76 C30 58 40 44 52 40 M60 76 C62 56 72 44 86 40 M48 76 C44 62 30 54 18 56" fill="none" stroke="#4A6B2F" stroke-width="2"/>
-<use href="#pothos" transform="translate(52 42) rotate(-20) scale(1.25)" fill="#3F7A36"/>
-<use href="#pothos" transform="translate(86 42) rotate(30) scale(1.15)" fill="#5C9447"/>
-<use href="#pothos" transform="translate(18 58) rotate(-70) scale(1.1)" fill="#4E8A3E"/>
-<use href="#pothos" transform="translate(70 56) rotate(10) scale(1)" fill="#2F6A2C"/>
+<g class="lf" style="--d:-0.7s;--t:4.8s"><use href="#pothos" transform="translate(52 42) rotate(-20) scale(1.25)" fill="#3F7A36"/></g>
+<g class="lf" style="--d:-1.4s;--t:5.4s"><use href="#pothos" transform="translate(86 42) rotate(30) scale(1.15)" fill="#5C9447"/></g>
+<g class="lf" style="--d:-2.1s;--t:6.0s"><use href="#pothos" transform="translate(18 58) rotate(-70) scale(1.1)" fill="#4E8A3E"/></g>
+<g class="lf" style="--d:-2.8s;--t:4.2s"><use href="#pothos" transform="translate(70 56) rotate(10) scale(1)" fill="#2F6A2C"/></g>
 <path d="M22 74 H98 L92 110 H28 Z" fill="#E6E3DC"/><path d="M22 74 H98 V80 H22 Z" fill="#D4D1C9"/><path d="M80 80 L92 80 L88 110 H76 Z" fill="#CFCBC2"/>
 </svg>
 <svg class="pl pl-lily" viewBox="0 0 140 170" overflow="visible" aria-hidden="true">
 <path d="M70 132 C70 100 64 70 56 40 M74 132 C78 104 86 76 96 52" fill="none" stroke="#3E6B34" stroke-width="2"/>
-<g transform="translate(56 40) rotate(-8)"><path d="M0 0 C-8 -6 -9 -22 0 -32 C9 -22 8 -6 0 0Z" fill="#F4F3EC"/><path d="M0 -4 C-2 -10 -2 -16 0 -20" stroke="#E2DFD2" stroke-width="1" fill="none"/><ellipse cx="2" cy="-12" rx="2.4" ry="7" fill="#E5D58A"/></g>
-<g transform="translate(96 52) rotate(14)"><path d="M0 0 C-7 -5 -8 -19 0 -28 C8 -19 7 -5 0 0Z" fill="#F4F3EC"/><ellipse cx="2" cy="-10" rx="2.2" ry="6" fill="#E5D58A"/></g>
-<use href="#lily" transform="translate(70 134) rotate(-58) scale(.9)" fill="#2C5A2E"/>
-<use href="#lily" transform="translate(70 134) rotate(-30) scale(1.05)" fill="#356A35"/>
-<use href="#lily" transform="translate(70 134) rotate(-6) scale(.8)" fill="#2C5A2E"/>
-<use href="#lily" transform="translate(70 134) rotate(22) scale(1)" fill="#3B7038"/>
-<use href="#lily" transform="translate(70 134) rotate(52) scale(.88)" fill="#2C5A2E"/>
+<g class="lf" style="--d:-4.9s;--t:5.4s"><g transform="translate(56 40) rotate(-8)"><path d="M0 0 C-8 -6 -9 -22 0 -32 C9 -22 8 -6 0 0Z" fill="#F4F3EC"/><path d="M0 -4 C-2 -10 -2 -16 0 -20" stroke="#E2DFD2" stroke-width="1" fill="none"/><ellipse cx="2" cy="-12" rx="2.4" ry="7" fill="#E5D58A"/></g></g>
+<g class="lf" style="--d:-0.7s;--t:6.0s"><g transform="translate(96 52) rotate(14)"><path d="M0 0 C-7 -5 -8 -19 0 -28 C8 -19 7 -5 0 0Z" fill="#F4F3EC"/><ellipse cx="2" cy="-10" rx="2.2" ry="6" fill="#E5D58A"/></g></g>
+<g class="lf" style="--d:-3.5s;--t:4.8s"><use href="#lily" transform="translate(70 134) rotate(-58) scale(.9)" fill="#2C5A2E"/></g>
+<g class="lf" style="--d:-4.2s;--t:5.4s"><use href="#lily" transform="translate(70 134) rotate(-30) scale(1.05)" fill="#356A35"/></g>
+<g class="lf" style="--d:-4.9s;--t:6.0s"><use href="#lily" transform="translate(70 134) rotate(-6) scale(.8)" fill="#2C5A2E"/></g>
+<g class="lf" style="--d:-0.7s;--t:4.2s"><use href="#lily" transform="translate(70 134) rotate(22) scale(1)" fill="#3B7038"/></g>
+<g class="lf" style="--d:-1.4s;--t:4.8s"><use href="#lily" transform="translate(70 134) rotate(52) scale(.88)" fill="#2C5A2E"/></g>
 <path d="M36 128 H104 L98 170 H42 Z" fill="#8FA1B1"/><path d="M36 128 H104 V134 H36 Z" fill="#7F92A3"/><path d="M86 134 H98 L94 170 H82 Z" fill="#7F92A3"/>
 </svg>
 <svg class="pl pl-cactus" viewBox="0 0 70 110" overflow="visible" aria-hidden="true">
@@ -89,10 +89,10 @@ const S = ['#A9B9C8', '#D6B79C', '#BFC995', '#A9C6B4', '#D2AAA4', '#D6B79C', '#A
 </svg>
 <svg class="pl pl-monstera" viewBox="0 0 300 260" overflow="visible" aria-hidden="true">
 <path d="M84 214 C84 160 82 110 80 66 M92 214 C100 170 120 130 150 104 M100 214 C130 186 170 166 222 156 M96 214 C120 204 180 204 262 206" fill="none" stroke="#3B6B32" stroke-width="3"/>
-<use href="#mleaf" transform="translate(80 66) rotate(-8) scale(.8)"/>
-<use href="#mleaf" transform="translate(150 104) rotate(30) scale(1)"/>
-<use href="#mleaf" transform="translate(222 156) rotate(66) scale(1.1)"/>
-<use href="#mleaf" transform="translate(262 206) rotate(98) scale(1.15)"/>
+<g class="lf" style="--d:-2.1s;--t:5.4s"><use href="#mleaf" transform="translate(80 66) rotate(-8) scale(.8)"/></g>
+<g class="lf" style="--d:-2.8s;--t:6.0s"><use href="#mleaf" transform="translate(150 104) rotate(30) scale(1)"/></g>
+<g class="lf" style="--d:-3.5s;--t:4.2s"><use href="#mleaf" transform="translate(222 156) rotate(66) scale(1.1)"/></g>
+<g class="lf" style="--d:-4.2s;--t:4.8s"><use href="#mleaf" transform="translate(262 206) rotate(98) scale(1.15)"/></g>
 <path d="M50 210 H134 L124 260 H60 Z" fill="#9C9A94"/><path d="M48 208 H136 V216 H48 Z" fill="#8C8A84"/><path d="M110 216 H128 L120 260 H104 Z" fill="#8C8A84"/>
 </svg>
 <svg class="vines" aria-hidden="true"></svg>
@@ -172,6 +172,9 @@ const S = ['#A9B9C8', '#D6B79C', '#BFC995', '#A9C6B4', '#D2AAA4', '#D6B79C', '#A
 .pl-lily{left:22%;width:120px}
 .pl-cactus{left:47%;width:62px}
 .pl-monstera{right:-70px;width:300px}
+.lf{transform-box:fill-box;transform-origin:50% 100%;animation:sway var(--t,4.8s) ease-in-out var(--d,0s) infinite}
+@keyframes sway{0%,100%{transform:rotate(-2.2deg)}50%{transform:rotate(2.6deg)}}
+@media (prefers-reduced-motion:reduce){.lf{animation:none}}
 .vines{position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible;z-index:2;pointer-events:none}
 .wk{overflow-x:clip}
 .shelf{position:relative;flex:1;display:flex;flex-direction:column;min-height:0;padding:30px 30px 0 20px}
@@ -240,7 +243,7 @@ const S = ['#A9B9C8', '#D6B79C', '#BFC995', '#A9C6B4', '#D2AAA4', '#D6B79C', '#A
   const fileOf = (id: string) => files.find((f) => f.dataset.file === id)!;
   const cardOf = (id: string) => document.querySelector<HTMLAnchorElement>(`.wk-card a[data-file="${id}"]`);
 
-  // Filters: show matching cards, dim the files that don't match.
+  // Filters: show matching cards.
   const pick = (t: HTMLButtonElement) => {
     const id = t.dataset.tab!;
     tabs.forEach((b) => b.setAttribute('aria-selected', String(b === t)));
@@ -280,7 +283,7 @@ const S = ['#A9B9C8', '#D6B79C', '#BFC995', '#A9C6B4', '#D2AAA4', '#D6B79C', '#A
         const p = tmp.getPointAtLength(s), q = tmp.getPointAtLength(Math.min(L, s + 1));
         const ang = Math.atan2(q.y - p.y, q.x - p.x) * 180 / Math.PI + (i % 2 ? 60 : 120) + (k ? 0 : 180);
         const sc = 0.85 + ((i * 37) % 5) * 0.08;
-        out += `<use href="#pothos" transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${ang.toFixed(0)}) scale(${sc.toFixed(2)})" fill="${VG[i % 4]}"/>`;
+        out += `<g class="lf" style="--d:-${((i * 0.9) % 5).toFixed(1)}s;--t:${(4 + (i % 3) * 0.7).toFixed(1)}s"><use href="#pothos" transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${ang.toFixed(0)}) scale(${sc.toFixed(2)})" fill="${VG[i % 4]}"/></g>`;
       }
       tmp.remove();
     });
