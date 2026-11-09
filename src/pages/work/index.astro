@@ -46,7 +46,7 @@ const S = ['#FFFFFF', '#F4F3EF', '#ECEBE5', '#FAFAF7', '#F0EFEA', '#FFFFFF', '#E
 {numbered.map((f) => (
 <li class="wk-card" data-file={f.id} data-tags={f.tags.join(' ')} hidden={!f.tags.includes('owned')}>
 <a href={f.href ?? '#'} data-file={f.id} class={f.href ? '' : 'soon'}>
-<span class="wc-meta">File {f.no} · {f.where}</span>
+<span class="wc-meta">{f.where}</span>
 <span class="wc-title">{f.title}</span>
 <span class="wc-line">{f.line}</span>
 <span class="wc-foot"><span class="wc-tags">{f.tags.map((t) => <span>{tagLabel(t)}</span>)}</span><b>{f.href ? 'Open file →' : 'Being written'}</b></span>
