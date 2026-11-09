@@ -140,20 +140,22 @@ const S = ['#A9B9C8', '#D6B79C', '#BFC995', '#A9C6B4', '#D2AAA4', '#D6B79C', '#A
 </Base>
 
 <style>
-.wk{--bg:#141416;--fg:#EFEFEE;--mute:#A9AFB9;--line:rgba(169,175,185,.22);--red:#D2453F;display:grid;grid-template-columns:minmax(0,60fr) minmax(0,40fr);gap:56px;box-sizing:border-box;min-height:100svh;padding:28px max(24px,calc((100% - 1280px) / 2)) 96px;color:var(--fg);font-family:'Commissioner',system-ui,sans-serif;background-color:var(--bg);background-image:linear-gradient(rgba(169,175,185,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(169,175,185,.075) 1px,transparent 1px);background-size:18px 18px;background-position:-1px -1px}
-.wk-back{display:inline-block;margin-bottom:48px;color:var(--mute);font-size:var(--t-caps);font-weight:500;letter-spacing:.18em;text-transform:uppercase;text-decoration:none}
+.wk{--bg:#141416;--fg:#EFEFEE;--mute:#A9AFB9;--line:rgba(169,175,185,.22);--red:#D2453F;display:grid;grid-template-columns:minmax(0,60fr) minmax(0,40fr);gap:56px;box-sizing:border-box;height:100svh;overflow:hidden;grid-template-rows:minmax(0,1fr);padding:28px max(24px,calc((100% - 1280px) / 2)) 0;color:var(--fg);font-family:'Commissioner',system-ui,sans-serif;background-color:var(--bg);background-image:linear-gradient(rgba(169,175,185,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(169,175,185,.075) 1px,transparent 1px);background-size:18px 18px;background-position:-1px -1px}
+.wk-back{display:inline-block;margin-bottom:32px;color:var(--mute);font-size:var(--t-caps);font-weight:500;letter-spacing:.18em;text-transform:uppercase;text-decoration:none}
 .wk-back:hover,.wk-back:focus-visible{color:var(--fg)}
 .wk h1{margin:0;font-size:var(--t-display);font-weight:500;letter-spacing:-.02em;line-height:1}
 
-.wk-tabs{display:flex;flex-wrap:wrap;gap:4px;margin:56px 0 0;border-bottom:1px solid var(--line)}
+.wk-tabs{flex:none;display:flex;flex-wrap:wrap;gap:4px;margin:40px 0 0;border-bottom:1px solid var(--line)}
 .wk-tab{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 16px;margin-bottom:-1px;border:1px solid transparent;border-radius:8px 8px 0 0;background:none;color:var(--mute);font:inherit;font-size:var(--t-body);cursor:pointer;transition:color .2s ease,background-color .2s ease}
 .wk-tab:hover{color:var(--fg)}
 .wk-tab[aria-selected="true"]{color:var(--fg);background:var(--bg);border-color:var(--line);border-bottom-color:var(--bg)}
 .wk-tab:focus-visible,.wk-card a:focus-visible,.file:focus-visible{outline:2px solid var(--fg);outline-offset:3px}
 
-.wk-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:36px 20px;margin:44px 0 0;padding:0;list-style:none}
+/* One fold: the page never scrolls; if a tab has more cards than fit, only the card list scrolls. */
+.wk-main{display:flex;flex-direction:column;min-height:0}
+.wk-cards{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#34343A transparent;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;gap:16px;margin:0;padding:24px 4px 28px 0;list-style:none}
 .wk-card[hidden]{display:none}
-.wk-card a{position:relative;display:flex;flex-direction:column;gap:10px;height:100%;box-sizing:border-box;padding:22px 22px 18px;border:1px solid var(--line);border-radius:6px;background:#18181C;color:var(--fg);text-decoration:none;transition:border-color .2s ease,transform .25s cubic-bezier(.2,.8,.2,1)}
+.wk-card a{position:relative;display:flex;flex-direction:column;gap:10px;height:100%;box-sizing:border-box;padding:18px 20px 14px;border:1px solid var(--line);border-radius:6px;background:#18181C;color:var(--fg);text-decoration:none;transition:border-color .2s ease,transform .25s cubic-bezier(.2,.8,.2,1)}
 .wk-card a:hover,.wk-card a.on{border-color:rgba(210,69,63,.7);transform:translateY(-3px)}
 .wc-meta{font-size:var(--t-caps);font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--mute)}
 .wc-title{font-size:var(--t-h3);font-weight:500;line-height:1.25;letter-spacing:-.01em}
@@ -216,7 +218,8 @@ const S = ['#A9B9C8', '#D6B79C', '#BFC995', '#A9C6B4', '#D2AAA4', '#D6B79C', '#A
 .cv-front > *{opacity:0}
 
 @media (max-width:900px){
-  .wk{grid-template-columns:1fr;gap:0}
+  .wk{grid-template-columns:1fr;gap:0;height:auto;overflow:visible;grid-template-rows:none;padding-bottom:64px}
+  .wk-main{display:block}
   .wk-tabs,.wk-cards{display:none}
   .wk-phone{display:block;margin:40px 0 0;padding:12px 14px;border:1px dashed var(--line);border-radius:6px;font-size:var(--t-small);color:var(--mute)}
   .wk-cab{position:static;height:auto;padding-top:0}
@@ -344,6 +347,8 @@ const S = ['#A9B9C8', '#D6B79C', '#BFC995', '#A9C6B4', '#D2AAA4', '#D6B79C', '#A
   const tabEl = document.getElementById('cv-tab')!;
   const HOLD = 10000;
   let opening = false, token = 0, current: HTMLElement | null = null;
+  // A click on the cover before the 10s are up opens it straight away.
+  let skipHold: (() => void) | null = null, wantOpen = false, opened = false;
   const run = (el: Element, k: Keyframe[], o: KeyframeAnimationOptions) => el.animate(k, { fill: 'forwards', ...o }).finished.catch(() => {});
   const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
   let geo = { x: 0, y: 0, W: 0, H: 0 };
@@ -368,10 +373,10 @@ const S = ['#A9B9C8', '#D6B79C', '#BFC995', '#A9C6B4', '#D2AAA4', '#D6B79C', '#A
     const W = Math.min(460, innerWidth * 0.8), H = Math.min(W * 1.32, innerHeight * 0.78);
     geo = { x: (innerWidth - W) / 2, y: (innerHeight - H) / 2 + 12, W, H };
     Object.assign(cover.style, { left: geo.x + 'px', top: geo.y + 'px', width: W + 'px', height: H + 'px' });
-    fly.hidden = false;
     file.classList.remove('on');
 
     if (RM) {
+      fly.hidden = false;
       Array.from(front.children).forEach((c) => ((c as HTMLElement).style.opacity = '1'));
       veil.style.opacity = '1';
       file.classList.add('gone');
@@ -380,6 +385,9 @@ const S = ['#A9B9C8', '#D6B79C', '#BFC995', '#A9C6B4', '#D2AAA4', '#D6B79C', '#A
       await run(file, [{ transform: 'translateX(0)' }, { transform: 'translateX(-80px)' }], { duration: 520, easing: 'cubic-bezier(.4,0,.2,1)' });
       if (!alive()) return;
       const from = fromFile(file);
+      // The cover only appears now, already sitting where the file is, so the file is seen leaving once.
+      cover.animate([{ transform: from }], { fill: 'forwards' });
+      fly.hidden = false;
       file.classList.add('gone');
       // 2. it glides to the front, growing into the cover
       run(veil, [{ opacity: 0 }, { opacity: 1 }], { duration: 900, easing: 'ease-out' });
@@ -388,13 +396,15 @@ const S = ['#A9B9C8', '#D6B79C', '#BFC995', '#A9C6B4', '#D2AAA4', '#D6B79C', '#A
       // 3. the cover reads
       await Promise.all(Array.from(front.children).map((c, i) => run(c, [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 600, delay: i * 160, easing: 'cubic-bezier(.22,1,.36,1)' })));
     }
-    // 4. it rests on the cover
-    await wait(HOLD);
+    // 4. it rests on the cover (a click on the cover cuts this short)
+    if (!wantOpen) await new Promise<void>((r) => { skipHold = r; setTimeout(r, HOLD); });
+    skipHold = null; wantOpen = false;
     if (!alive()) return;
     // 5. the cover turns open
     if (RM) front.style.visibility = 'hidden';
     else await run(front, [{ transform: 'rotateY(0)' }, { transform: 'rotateY(-165deg)' }], { duration: 1300, easing: 'cubic-bezier(.65,0,.35,1)' });
     if (!alive()) return;
+    opened = true;
     if (!d.href) { run(soon, [{ opacity: 0 }, { opacity: 1 }], { duration: 500 }); return; }
     // 6. inside waits a button that opens the case study in a new tab (browsers block tabs that open on their own)
     soon.style.display = 'none'; go.hidden = false; run(go, [{ opacity: 0 }, { opacity: 1 }], { duration: 500 });
@@ -426,9 +436,14 @@ const S = ['#A9B9C8', '#D6B79C', '#BFC995', '#A9C6B4', '#D2AAA4', '#D6B79C', '#A
     [veil, cover, front, soon, go, ...Array.from(front.children)].forEach((el) => { el.getAnimations().forEach((a) => a.cancel()); (el as HTMLElement).style.opacity = ''; (el as HTMLElement).style.visibility = ''; });
     soon.style.display = '';
     go.hidden = true;
-    opening = false;
+    opening = false; opened = false; wantOpen = false; skipHold = null;
   }
   go.addEventListener('click', (e) => { e.stopPropagation(); setTimeout(putBack, 300); });
+  cover.addEventListener('click', (e) => {
+    if (opened || !opening) return;
+    e.stopPropagation();
+    if (skipHold) skipHold(); else wantOpen = true;
+  });
   fly.addEventListener('click', () => putBack());
   addEventListener('keydown', (e) => { if (e.key === 'Escape') putBack(); });
   // Coming back with the browser's back button: put the cabinet back as it was.
