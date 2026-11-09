@@ -1,184 +1,319 @@
 ---
-// /work: two ways into the work. Look for a kind of moment (a decision, something owned, a use of data...) and jump
-// straight to the case-study section that shows it, or browse the projects and pick a story.
-// Same world as the case studies: grid board, Commissioner for print, Kalam for handwriting, sticky-note colours, red pins.
+// /work: a file cabinet. Left 60%: three filters (work i owned, how i use data, how i work with users) and one plain
+// card per case study. Right 40%: an open-shelf cabinet, 2026 on top. Every case study is one file on its year's shelf.
+// Hover a card and its file lifts; the filter dims files that don't match. Pick a file (or a card) and it slides off
+// the shelf, comes to the front as its cover, opens, and takes you inside. Phones: just the cabinet with readable names.
+// Cards are one template on purpose, so a new case study is one line of data.
 import Base from '../../layouts/Base.astro';
 
 const ICP = '/work/icp-positioning-messaging-nexus';
-
-// The kinds of evidence a reader might come looking for, each with its sticky-note colour.
-const kinds = [
-  { id: 'decision', label: 'a hard decision', color: '#F2C8A2' },
-  { id: 'owned', label: 'something i owned', color: '#BFD4EA' },
-  { id: 'data', label: 'how i used data', color: '#F4F3EF' },
-  { id: 'users', label: 'how i listened to users', color: '#D4EC8E' },
-  { id: 'founders', label: 'working with founders', color: '#BCE5CF' }
+const tabs = [
+  { id: 'owned', label: 'Work i owned' },
+  { id: 'data', label: 'How i use data' },
+  { id: 'users', label: 'How i work with users' }
 ];
-
-// Moments from the work. Real ones link straight to the case-study section that shows them; placeholders are marked.
-type Moment = { kind: string; text: string; project: string; where?: string; href?: string };
-const moments: Moment[] = [
-  { kind: 'decision', text: 'chose to start with merchants already running a marketplace, not everyone who installed.', project: 'nexus · ICP', where: 'section 2 · choosing who to target', href: `${ICP}#choosing-who-to-target` },
-  { kind: 'decision', text: 'moved the message from pricing and free trials to “simple to start, manage and grow”.', project: 'nexus · ICP', where: 'section 3 · turning customer value into messaging', href: `${ICP}#turning-value-into-messaging` },
-  { kind: 'owned', text: 'wrote nexus’s ideal customer profile and its guardrails, with the co-founder.', project: 'nexus · ICP', where: 'section 2 · choosing who to target', href: `${ICP}#choosing-who-to-target` },
-  { kind: 'data', text: 'found only 7.9% of stores were paying before deciding who to target.', project: 'nexus · ICP', where: 'section 1 · users, but no clear audience', href: `${ICP}#no-clear-audience` },
-  { kind: 'users', text: 'checked why merchants uninstalled and what they asked for in intercom.', project: 'nexus · ICP', where: 'section 2 · choosing who to target', href: `${ICP}#choosing-who-to-target` },
-  { kind: 'founders', text: 'interviewed the founder with the mom test to find what nexus should mean.', project: 'nexus · ICP', where: 'section 3 · turning customer value into messaging', href: `${ICP}#turning-value-into-messaging` },
-  { kind: 'decision', text: '[placeholder: a decision from another project]', project: '[project two]' },
-  { kind: 'owned', text: '[placeholder: something you owned end to end]', project: '[project three]' },
-  { kind: 'data', text: '[placeholder: a number that changed your mind]', project: '[project two]' }
+// Dummy files from the scenic route for now; only the Nexus ICP one has a page.
+type File = { title: string; where: string; year: number; line: string; tags: string[]; href?: string };
+const files: File[] = [
+  { title: 'From user stories to an ICP, positioning and messaging', where: 'Nexus', year: 2026, line: 'Nexus had installs but no clear audience. Three steps to who it is for and what to say.', tags: ['owned', 'data', 'users'], href: ICP },
+  { title: 'Launching Nexus, a multi-vendor app on Shopify', where: 'Nexus', year: 2026, line: 'Owning the product end to end: what to build, in what order, and why.', tags: ['owned', 'users'] },
+  { title: 'Marketing and distribution for Nexus', where: 'Nexus', year: 2026, line: 'Building the go-to-market with the cofounder during my notice period.', tags: ['owned', 'data'] },
+  { title: 'A product component library', where: 'Marmeto', year: 2025, line: 'Systems, processes, and my first team, with no in-house design team.', tags: ['owned'] },
+  { title: 'Project managing a Shopify agency', where: 'Shopify agency', year: 2025, line: 'Learning the world of e-commerce, one client store at a time.', tags: ['owned', 'users'] },
+  { title: 'Writing as an executive assistant', where: 'EA work', year: 2025, line: 'Mails, calendars and day to day indulgences. Turns out i write well.', tags: ['users'] },
+  { title: 'Website, distribution and community', where: 'Product Marketing Engineer', year: 2024, line: 'Everything from website to distribution to competitive research to community.', tags: ['owned', 'data', 'users'] },
+  { title: 'Competitive research', where: 'Product Marketing Engineer', year: 2024, line: 'Reading the market before writing a word about the product.', tags: ['data'] }
 ];
-
-// Projects to browse. Each has a few named entrances straight into its strongest moments.
-type Project = { title: string; what: string; role: string; when: string; href?: string; doors: { label: string; href?: string }[] };
-const projects: Project[] = [
-  { title: 'from user stories to an ICP, positioning and messaging', what: 'nexus, a shopify app for multi-vendor marketplaces, had installs but no clear audience. three steps to who it’s for and what to say.',
-    role: 'product marketing', when: '2026', href: ICP, doors: [
-      { label: 'the 7.9% that made us stop and look', href: `${ICP}#no-clear-audience` },
-      { label: 'choosing who to target', href: `${ICP}#choosing-who-to-target` },
-      { label: 'from founder vision to one line', href: `${ICP}#turning-value-into-messaging` }
-    ] },
-  { title: '[project two]', what: '[one line on what it was and why it mattered]', role: '[role]', when: '[year]', doors: [{ label: '[a strong moment]' }, { label: '[another moment]' }] },
-  { title: '[project three]', what: '[one line on what it was and why it mattered]', role: '[role]', when: '[year]', doors: [{ label: '[a strong moment]' }, { label: '[another moment]' }] }
-];
-const kindOf = (id: string) => kinds.find((k) => k.id === id)!;
-const tilt = (i: number) => [-1.2, 0.8, -0.5, 1.1, -0.9, 0.6][i % 6];
+const years = [2026, 2025, 2024];
+const numbered = files.map((f, i) => ({ ...f, id: i, no: String(i + 1).padStart(2, '0') }));
+const tagLabel = (t: string) => tabs.find((x) => x.id === t)!.label;
+// Small, fixed variety so the shelves don't look stamped out: heights, tab positions, shades.
+const H = [184, 170, 190, 176, 164, 188, 172, 180];
+const T = [10, 24, 6, 18, 12, 28, 8, 20];
+const S = ['#1E1D24', '#26252D', '#1A1A20', '#2B2A33', '#222128', '#1C1B22', '#28272F', '#202026'];
 ---
-<Base title="work · Kritika Upadhyay" description="find a decision, something i owned, or how i used data, and jump straight to the part of the case study that shows it. or browse the projects.">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kalam:wght@300&family=Commissioner:wght@400;500;600;700&display=swap">
+<Base title="work · Kritika Upadhyay" description="Case studies, filed by year. Filter by the work i owned, how i use data, or how i work with users.">
 <div class="wk">
-
-<header class="wk-head">
+<div class="wk-main">
 <a class="wk-back" href="/">← back</a>
 <h1>work</h1>
-<p class="wk-hand">two ways in. look for a moment, or wander through the projects.</p>
-</header>
+<p class="wk-lead">Every project, filed by the year it happened. Filter by what you came to see, or pull a file from the cabinet.</p>
 
-<section class="wk-find" aria-labelledby="find-h">
-<p class="wk-k" id="find-h">find a moment</p>
-<p class="wk-ask">what are you looking for?</p>
-<div class="wk-tabs" role="group" aria-label="Kinds of moment">
-<button type="button" class="wk-tab" data-kind="all" aria-pressed="true">everything</button>
-{kinds.map((k) => <button type="button" class="wk-tab" data-kind={k.id} aria-pressed="false" style={`--c:${k.color}`}>{k.label}<span class="wk-n">{moments.filter((m) => m.kind === k.id && m.href).length}</span></button>)}
+<div class="wk-tabs" role="tablist" aria-label="Filter the work">
+{tabs.map((t, i) => <button type="button" role="tab" class="wk-tab" data-tab={t.id} aria-selected={i === 0 ? 'true' : 'false'}>{t.label}<span class="wk-n">{files.filter((f) => f.tags.includes(t.id)).length}</span></button>)}
 </div>
-<ul class="wk-slips" id="slips">
-{moments.map((m, i) => {
-  const k = kindOf(m.kind);
-  const inner = <>
-    <span class="tape" aria-hidden="true"></span>
-    <span class="sl-k">{k.label}</span>
-    <span class="sl-t">{m.text}</span>
-    <span class="sl-f"><span>{m.project}</span>{m.href ? <b>{m.where} →</b> : <b>[link to the section]</b>}</span>
-  </>;
-  return <li class={`slip${m.href ? '' : ' ph'}`} data-kind={m.kind} style={`--c:${k.color};--r:${tilt(i)}deg`}>
-    {m.href ? <a href={m.href}>{inner}</a> : <div aria-label="placeholder">{inner}</div>}
-  </li>;
-})}
-</ul>
-</section>
 
-<section class="wk-browse" aria-labelledby="browse-h">
-<p class="wk-k" id="browse-h">or browse the projects</p>
-<ul class="wk-projects">
-{projects.map((p, i) => (
-<li class={`proj${p.href ? '' : ' ph'}`} style={`--r:${tilt(i + 2)}deg`}>
-<span class="pin" aria-hidden="true"></span>
-{p.href
-  ? <a class="proj-cover" href={p.href} aria-label={`Open the case study: ${p.title}`}><svg viewBox="0 0 320 170" aria-hidden="true"><rect width="320" height="170" fill="#141416"></rect><path d="M0 0 H320 M0 17 H320 M0 34 H320 M0 51 H320 M0 68 H320 M0 85 H320 M0 102 H320 M0 119 H320 M0 136 H320 M0 153 H320 M16 0 V170 M48 0 V170 M80 0 V170 M112 0 V170 M144 0 V170 M176 0 V170 M208 0 V170 M240 0 V170 M272 0 V170 M304 0 V170" stroke="rgba(169,175,185,.08)"></path><rect x="24" y="22" width="78" height="52" fill="#BFD4EA" transform="rotate(-2 63 48)"></rect><rect x="118" y="20" width="84" height="58" fill="#F4F3EF" transform="rotate(1.5 160 49)"></rect><rect x="222" y="26" width="74" height="46" fill="#F4B9B2" transform="rotate(-1.5 259 49)"></rect><rect x="40" y="98" width="96" height="50" fill="#F4F3EF" transform="rotate(1 88 123)"></rect><rect x="172" y="100" width="110" height="46" fill="#B8E2C2" transform="rotate(-1 227 123)"></rect><path d="M290 30 C 310 70, 120 70, 88 100 M136 124 C 150 124, 160 124, 172 124" fill="none" stroke="#C2423A" stroke-width="2"></path></svg></a>
-  : <div class="proj-cover ph-cover">[cover]</div>}
-<p class="proj-meta">{p.role} · {p.when}</p>
-<h2>{p.href ? <a href={p.href}>{p.title}</a> : p.title}</h2>
-<p class="proj-what">{p.what}</p>
-<p class="proj-doors-k">ways in</p>
-<ul class="proj-doors">
-{p.doors.map((d) => <li>{d.href ? <a href={d.href}>{d.label} →</a> : <span>{d.label}</span>}</li>)}
-</ul>
+<ul class="wk-cards" id="wk-cards">
+{numbered.map((f) => (
+<li class="wk-card" data-file={f.id} data-tags={f.tags.join(' ')} hidden={!f.tags.includes('owned')}>
+<a href={f.href ?? '#'} data-file={f.id} class={f.href ? '' : 'soon'}>
+<span class="wc-tab">{f.year}</span>
+<span class="wc-meta">File {f.no} · {f.where}</span>
+<span class="wc-title">{f.title}</span>
+<span class="wc-line">{f.line}</span>
+<span class="wc-foot"><span class="wc-tags">{f.tags.map((t) => <span>{tagLabel(t)}</span>)}</span><b>{f.href ? 'Open file →' : 'Being written'}</b></span>
+</a>
 </li>
 ))}
 </ul>
-</section>
-
 </div>
+
+<aside class="wk-cab" aria-label="The file cabinet">
+<p class="wk-note" aria-hidden="true">pull a file <svg viewBox="0 0 60 30"><path d="M2 8 C 18 2, 36 4, 52 20 M44 21 L53 21 L51 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></p>
+<p class="wk-phone">The cabinet opens best on a desktop. Here are the files.</p>
+<div class="cab">
+<span class="cab-top" aria-hidden="true"></span>
+{years.map((y) => (
+<div class="shelf">
+<span class="shelf-y">{y}</span>
+<div class="shelf-row">
+{numbered.filter((f) => f.year === y).map((f) => (
+<a class={`file${f.href ? ' real' : ''}`} href={f.href ?? '#'} data-file={f.id} style={`--h:${H[f.id % 8]}px;--t:${T[f.id % 8]}px;--s:${S[f.id % 8]}`} aria-label={`File ${f.no}: ${f.title}${f.href ? '' : ' (being written)'}`}>
+<span class="file-tab" aria-hidden="true">{f.no}</span>
+<span class="file-name">{f.title}</span>
+<span class="file-where" aria-hidden="true">{f.where}</span>
+</a>
+))}
+</div>
+<span class="shelf-board" aria-hidden="true"></span>
+</div>
+))}
+<span class="cab-foot" aria-hidden="true"></span>
+</div>
+</aside>
+</div>
+
+<div class="fly" id="fly" hidden>
+<div class="fly-veil"></div>
+<div class="cover" id="cover">
+<div class="cv-inside"><p class="cv-soon">This file is still being written.<br><span>Check back soon.</span></p></div>
+<div class="cv-front">
+<span class="cv-tab" id="cv-tab"></span>
+<span class="cv-label">
+<span class="cv-meta" id="cv-meta"></span>
+<span class="cv-title" id="cv-title"></span>
+<span class="cv-tags" id="cv-tags"></span>
+</span>
+<span class="cv-mark" aria-hidden="true"><i></i><i></i></span>
+</div>
+</div>
+</div>
+
+<script type="application/json" id="wk-data" set:html={JSON.stringify(numbered.map((f) => ({ no: f.no, title: f.title, where: f.where, year: f.year, href: f.href || '', tags: f.tags.map(tagLabel) })))}></script>
 </Base>
 
-<style is:global>
-.sky,.sky a,.sky button{cursor:auto}
-</style>
-
 <style>
-.wk{min-height:100vh;padding:28px 24px 120px;color:#EFEFEE;font-family:'Commissioner',system-ui,sans-serif;background-color:#141416;background-image:linear-gradient(rgba(169,175,185,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(169,175,185,.075) 1px,transparent 1px);background-size:18px 18px;background-position:-1px -1px}
-.wk > *{max-width:1200px;margin-left:auto;margin-right:auto}
-.wk-back{display:inline-block;margin-bottom:48px;color:#A9AFB9;font-size:13px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none}
-.wk-back:hover,.wk-back:focus-visible{color:#EFEFEE}
-.wk-head h1{margin:0;font-weight:500;font-size:clamp(56px,9vw,120px);line-height:.95;letter-spacing:-.04em}
-.wk-hand,.wk-ask{margin:14px 0 0;font-family:'Kalam',cursive;font-weight:300;font-size:clamp(22px,2.4vw,28px);letter-spacing:1px;color:#C9CDD5}
-.wk-k{margin:88px 0 0;font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#D2453F}
-.wk-ask{margin-top:6px;color:#EFEFEE}
+.wk{--bg:#141416;--fg:#EFEFEE;--mute:#A9AFB9;--line:rgba(169,175,185,.22);--red:#D2453F;display:grid;grid-template-columns:minmax(0,60fr) minmax(0,40fr);gap:56px;box-sizing:border-box;min-height:100svh;padding:28px max(24px,calc((100% - 1280px) / 2)) 96px;color:var(--fg);font-family:'Commissioner',system-ui,sans-serif;background-color:var(--bg);background-image:linear-gradient(rgba(169,175,185,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(169,175,185,.075) 1px,transparent 1px);background-size:18px 18px;background-position:-1px -1px}
+.wk-back{display:inline-block;margin-bottom:48px;color:var(--mute);font-size:var(--t-caps);font-weight:500;letter-spacing:.18em;text-transform:uppercase;text-decoration:none}
+.wk-back:hover,.wk-back:focus-visible{color:var(--fg)}
+.wk h1{margin:0;font-size:var(--t-display);font-weight:500;letter-spacing:-.02em;line-height:1}
+.wk-lead{max-width:34em;margin:18px 0 0;font-size:var(--t-lead);line-height:1.5;color:#C9CDD5}
 
-.wk-tabs{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 30px}
-.wk-tab{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 16px;border:1px solid #34343A;border-radius:10px 10px 4px 4px;background:rgba(6,6,6,.6);color:#C9CDD5;font:inherit;font-size:14px;cursor:pointer;transition:background-color .2s ease,color .2s ease,transform .2s ease}
-.wk-tab::before{content:"";width:10px;height:10px;border-radius:2px;background:var(--c,#EFEFEE)}
-.wk-tab[data-kind="all"]::before{display:none}
-.wk-tab:hover{transform:translateY(-2px)}
-.wk-tab[aria-pressed="true"]{background:var(--c,#EFEFEE);border-color:transparent;color:#1E1E24;transform:translateY(-3px)}
-.wk-tab[aria-pressed="true"]::before{background:#1E1E24}
-.wk-tab:focus-visible,.slip a:focus-visible,.proj a:focus-visible{outline:2px solid #EFEFEE;outline-offset:3px}
-.wk-n{min-width:22px;padding:1px 6px;border-radius:999px;background:rgba(239,239,238,.12);font-size:12px;text-align:center}
-.wk-tab[aria-pressed="true"] .wk-n{background:rgba(30,30,36,.15)}
+.wk-tabs{display:flex;flex-wrap:wrap;gap:4px;margin:56px 0 0;border-bottom:1px solid var(--line)}
+.wk-tab{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 16px;margin-bottom:-1px;border:1px solid transparent;border-radius:8px 8px 0 0;background:none;color:var(--mute);font:inherit;font-size:var(--t-body);cursor:pointer;transition:color .2s ease,background-color .2s ease}
+.wk-tab:hover{color:var(--fg)}
+.wk-tab[aria-selected="true"]{color:var(--fg);background:var(--bg);border-color:var(--line);border-bottom-color:var(--bg)}
+.wk-n{min-width:20px;padding:1px 6px;border-radius:999px;background:rgba(239,239,238,.08);font-size:var(--t-small);text-align:center}
+.wk-tab[aria-selected="true"] .wk-n{background:var(--red);color:#fff}
+.wk-tab:focus-visible,.wk-card a:focus-visible,.file:focus-visible{outline:2px solid var(--fg);outline-offset:3px}
 
-.wk-slips{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:34px 26px;margin:0;padding:0;list-style:none}
-.slip{transform:rotate(var(--r));transition:opacity .3s ease,transform .3s ease}
-.slip[hidden]{display:none}
-.slip > a,.slip > div{position:relative;display:flex;flex-direction:column;gap:12px;height:100%;box-sizing:border-box;padding:26px 24px 20px;background:var(--c);color:#1E1E24;text-decoration:none;box-shadow:0 2px 0 rgba(0,0,0,.08),0 14px 28px rgba(0,0,0,.45);transition:transform .25s ease,box-shadow .25s ease}
-.slip > a:hover{transform:translateY(-4px) rotate(calc(var(--r) * -1));box-shadow:0 2px 0 rgba(0,0,0,.08),0 22px 36px rgba(0,0,0,.5)}
-.tape{position:absolute;left:50%;top:-11px;width:84px;height:22px;margin-left:-42px;background:rgba(239,239,238,.45);transform:rotate(-2deg)}
-.sl-k{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(30,30,36,.6)}
-.sl-t{font-family:'Kalam',cursive;font-weight:300;font-size:23px;line-height:1.25;letter-spacing:1px}
-.sl-f{display:flex;flex-direction:column;gap:2px;margin-top:auto;padding-top:12px;border-top:1px dashed rgba(30,30,36,.25);font-size:13px;color:rgba(30,30,36,.7)}
-.sl-f b{font-weight:600;color:#1E1E24}
-.slip.ph > div{background:transparent;border:2px dashed #3A3A42;box-shadow:none;color:#8A8D96}
-.slip.ph .sl-k,.slip.ph .sl-f,.slip.ph .sl-f b{color:#8A8D96;border-color:#3A3A42}
-.slip.ph .tape{display:none}
+.wk-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:36px 20px;margin:44px 0 0;padding:0;list-style:none}
+.wk-card[hidden]{display:none}
+.wk-card a{position:relative;display:flex;flex-direction:column;gap:10px;height:100%;box-sizing:border-box;padding:22px 22px 18px;border:1px solid var(--line);border-radius:0 6px 6px 6px;background:#18181C;color:var(--fg);text-decoration:none;transition:border-color .2s ease,transform .25s cubic-bezier(.2,.8,.2,1)}
+.wk-card a:hover,.wk-card a.on{border-color:rgba(210,69,63,.7);transform:translateY(-3px)}
+.wc-tab{position:absolute;left:-1px;bottom:100%;padding:3px 12px 2px;border:1px solid var(--line);border-bottom:0;border-radius:6px 6px 0 0;background:#18181C;color:var(--mute);font-size:var(--t-caps);font-weight:500;letter-spacing:.18em;transition:border-color .2s ease,color .2s ease}
+.wk-card a:hover .wc-tab,.wk-card a.on .wc-tab{border-color:rgba(210,69,63,.7);color:var(--fg)}
+.wc-meta{font-size:var(--t-caps);font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--mute)}
+.wc-title{font-size:var(--t-h3);font-weight:500;line-height:1.25;letter-spacing:-.01em}
+.wc-line{font-size:var(--t-body);line-height:1.6;color:#C9CDD5}
+.wc-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:auto;padding-top:14px;border-top:1px dashed var(--line);font-size:var(--t-small)}
+.wc-tags{display:flex;flex-wrap:wrap;gap:6px}
+.wc-tags span{padding:2px 8px;border:1px solid var(--line);border-radius:999px;color:var(--mute)}
+.wc-foot b{flex:none;font-weight:500;color:var(--fg)}
+.wk-card a.soon .wc-foot b{color:var(--mute);font-weight:400}
 
-.wk-projects{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:40px 30px;margin:26px 0 0;padding:0;list-style:none}
-.proj{position:relative;display:flex;flex-direction:column;gap:10px;padding:14px 14px 22px;background:#F4F3EF;color:#1E1E24;box-shadow:0 14px 28px rgba(0,0,0,.45);transform:rotate(var(--r))}
-.pin{position:absolute;left:50%;top:-11px;width:22px;height:22px;margin-left:-11px;border-radius:50%;background:#D2453F;box-shadow:0 4px 8px rgba(0,0,0,.45),inset -3px -3px 0 rgba(0,0,0,.18)}
-.proj-cover{display:block;border:1px solid #DADAD4}
-.proj-cover svg{display:block;width:100%;height:auto}
-.ph-cover{display:flex;align-items:center;justify-content:center;aspect-ratio:320/170;color:#8A8D96;font-size:13px;letter-spacing:.14em;text-transform:uppercase;background:repeating-linear-gradient(135deg,#ECEBE5 0 1px,transparent 1px 12px)}
-.proj-meta{margin:6px 4px 0;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#5A5A62}
-.proj h2{margin:0 4px;font-size:22px;font-weight:600;line-height:1.2;letter-spacing:-.01em}
-.proj h2 a{color:inherit;text-decoration:none}
-.proj h2 a:hover{text-decoration:underline;text-decoration-color:#D2453F;text-underline-offset:4px}
-.proj-what{margin:0 4px;font-size:15px;line-height:1.5;color:#3A3A42}
-.proj-doors-k{margin:8px 4px 0;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#D2453F}
-.proj-doors{display:flex;flex-direction:column;gap:6px;margin:0 4px;padding:0;list-style:none;font-family:'Kalam',cursive;font-weight:300;font-size:21px;letter-spacing:1px}
-.proj-doors a{color:#2457B8;text-decoration:none}
-.proj-doors a:hover{text-decoration:underline}
-.proj-doors span{color:#8A8D96}
-.proj.ph{background:transparent;border:2px dashed #3A3A42;box-shadow:none;color:#8A8D96}
-.proj.ph .pin{display:none}
-.proj.ph h2,.proj.ph .proj-what,.proj.ph .proj-meta{color:#8A8D96}
-.proj.ph .ph-cover{background:repeating-linear-gradient(135deg,#1C1C20 0 1px,transparent 1px 12px);border-color:#3A3A42}
-@media (prefers-reduced-motion:reduce){.slip,.slip > a,.wk-tab{transition:none}}
+/* The cabinet */
+.wk-cab{position:relative}
+.wk-note{position:absolute;top:8px;left:-8px;display:flex;align-items:flex-start;gap:4px;margin:0;font-family:'Kalam',cursive;font-weight:300;font-size:var(--h-note);letter-spacing:.5px;color:#C9CDD5;transform:rotate(-4deg)}
+.wk-note svg{width:52px;height:26px;margin-top:10px;color:var(--red)}
+.wk-phone{display:none}
+.cab{position:sticky;top:72px;margin-top:52px;padding:0 22px;border:1.5px solid rgba(169,175,185,.5);border-top:0;border-bottom:0;background:rgba(11,10,15,.55)}
+.cab-top,.cab-foot{position:absolute;left:-12px;right:-12px;height:14px;border:1.5px solid rgba(169,175,185,.5);background:#0B0A0F;border-radius:3px}
+.cab-top{top:-14px}
+.cab-foot{bottom:-14px}
+.shelf{position:relative;padding-top:56px}
+.shelf-y{position:absolute;top:18px;left:0;font-size:var(--t-caps);font-weight:500;letter-spacing:.18em;color:var(--mute)}
+.shelf-row{display:flex;align-items:flex-end;gap:12px;height:196px}
+.shelf-board{display:block;height:10px;margin:0 -22px;border-top:1.5px solid rgba(169,175,185,.5);border-bottom:1.5px solid rgba(169,175,185,.5);background:#0B0A0F}
+.shelf:last-of-type .shelf-board{border-bottom:0}
 
-/* Frozen type scale (see global.css) */
-.wk-back,.wk-k,.wk-n,.sl-k,.ph-cover,.proj-meta,.proj-doors-k{font-size:var(--t-caps);font-weight:500;letter-spacing:.18em}
-.wk-head h1{font-size:var(--t-display);font-weight:500;letter-spacing:-.02em;line-height:1}
-.wk-tab{font-size:var(--t-body)}
-.sl-f{font-size:var(--t-small)}
-.proj h2{font-size:var(--t-h3);font-weight:500;letter-spacing:-.01em;line-height:1.2}
-.proj-what{font-size:var(--t-body);line-height:1.6}
-.wk-hand,.wk-ask,.sl-t,.proj-doors{font-size:var(--h-note);font-weight:300;letter-spacing:.5px}
+.file{position:relative;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;width:78px;height:var(--h);box-sizing:border-box;padding:16px 0 10px;border:1px solid rgba(169,175,185,.32);border-bottom:0;border-radius:3px 3px 0 0;background:var(--s);color:var(--fg);text-decoration:none;transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .3s ease,border-color .2s ease}
+.file-tab{position:absolute;bottom:100%;left:var(--t);padding:2px 6px 1px;border:1px solid rgba(169,175,185,.32);border-bottom:0;border-radius:4px 4px 0 0;background:var(--s);font-size:10px;font-weight:600;letter-spacing:.08em;color:var(--mute)}
+.file.real .file-tab{background:var(--red);border-color:var(--red);color:#fff}
+.file-name{flex:1;overflow:hidden;writing-mode:vertical-rl;transform:rotate(180deg);font-size:var(--t-small);font-weight:500;line-height:1.15;text-align:left;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.file-where{margin-top:8px;writing-mode:vertical-rl;transform:rotate(180deg);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);white-space:nowrap;overflow:hidden;max-height:64px}
+.file:hover,.file.on{transform:translateY(-22px);border-color:rgba(210,69,63,.75)}
+.file.peek{transform:translateY(-58px)}
+.file.peek:hover{transform:translateY(-66px)}
+.file.dim{opacity:.28}
+.file.gone{visibility:hidden}
+
+/* File to the front */
+.fly{--bg:#141416;--fg:#EFEFEE;--mute:#A9AFB9;--line:rgba(169,175,185,.22);--red:#D2453F;position:fixed;inset:0;z-index:80;font-family:"Commissioner",system-ui,sans-serif;color:var(--fg)}
+.fly[hidden]{display:none}
+.fly-veil{position:absolute;inset:0;background:rgba(8,8,8,.78);opacity:0}
+.cover{position:absolute;perspective:1800px;transform-origin:0 0}
+.cv-front,.cv-inside{position:absolute;inset:0;box-sizing:border-box;border-radius:4px 10px 10px 10px}
+.cv-inside{display:flex;align-items:center;justify-content:center;background-color:var(--bg);background-image:linear-gradient(rgba(169,175,185,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(169,175,185,.075) 1px,transparent 1px);background-size:18px 18px;border:1px solid rgba(169,175,185,.32)}
+.cv-soon{margin:0;padding:0 32px;font-size:var(--t-h3);font-weight:500;line-height:1.4;text-align:center;opacity:0}
+.cv-soon span{font-family:'Kalam',cursive;font-weight:300;font-size:var(--h-note);letter-spacing:.5px;color:#C9CDD5}
+.cv-front{display:flex;flex-direction:column;padding:30px 28px;background:#26252D;border:1px solid rgba(169,175,185,.4);transform-origin:0 50%;backface-visibility:hidden;box-shadow:0 30px 60px rgba(0,0,0,.6)}
+.cv-tab{position:absolute;bottom:100%;left:-1px;padding:5px 16px 4px;border:1px solid rgba(169,175,185,.4);border-bottom:0;border-radius:8px 8px 0 0;background:#26252D;font-size:var(--t-caps);font-weight:600;letter-spacing:.18em;color:var(--fg)}
+.cover.real .cv-tab{background:var(--red);border-color:var(--red)}
+.cv-label{display:flex;flex-direction:column;gap:14px;margin-top:auto;padding:22px;background:#EFEFEE;color:#1E1E24;border-radius:2px;transform:rotate(-1.2deg)}
+.cv-meta{font-size:var(--t-caps);font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#5A5A62}
+.cv-title{font-size:var(--t-h2);font-weight:500;line-height:1.2;letter-spacing:-.01em}
+.cv-tags{display:flex;flex-wrap:wrap;gap:6px;font-size:var(--t-small)}
+.cv-tags span{padding:2px 8px;border:1px solid rgba(30,30,36,.25);border-radius:999px;color:#3A3A42}
+.cv-mark{position:absolute;top:28px;right:28px;width:44px;height:28px}
+.cv-mark i{position:absolute;top:0;width:28px;height:28px;border:1.5px solid var(--fg);border-radius:50%;box-sizing:border-box}
+.cv-mark i:first-child{left:0}
+.cv-mark i:last-child{right:0;background:radial-gradient(circle at 0 50%,var(--red) 0 13px,transparent 13.5px)}
+.cv-front > *{opacity:0}
+
+@media (max-width:900px){
+  .wk{grid-template-columns:1fr;gap:0}
+  .wk-tabs,.wk-cards,.wk-note{display:none}
+  .wk-phone{display:block;margin:40px 0 0;padding:12px 14px;border:1px dashed var(--line);border-radius:6px;font-size:var(--t-small);color:var(--mute)}
+  .cab{position:static;margin-top:40px;padding:0 14px}
+  .shelf-row{flex-direction:column;align-items:stretch;gap:8px;height:auto;padding-bottom:14px}
+  .file{flex-direction:row;align-items:center;gap:12px;width:auto;height:auto;padding:12px 14px;border-bottom:1px solid rgba(169,175,185,.32);border-radius:3px}
+  .file-tab{position:static;flex:none;border-bottom:1px solid rgba(169,175,185,.32);border-radius:3px}
+  .file-name,.file-where{writing-mode:horizontal-tb;transform:none;-webkit-line-clamp:3}
+  .file-where{margin:0 0 0 auto;max-height:none;white-space:normal;text-align:right;max-width:30%}
+  .file:hover,.file.on,.file.peek,.file.peek:hover{transform:none}
+  .file.dim{opacity:1}
+}
+@media (prefers-reduced-motion:reduce){.file,.wk-card a{transition:none}}
 </style>
 
 <script>
-  // Tabs filter the moments to one kind; "everything" shows them all.
+  type F = { no: string; title: string; where: string; year: number; href: string; tags: string[] };
+  const data: F[] = JSON.parse(document.getElementById('wk-data')!.textContent || '[]');
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const narrow = () => matchMedia('(max-width: 900px)').matches;
   const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('.wk-tab'));
-  const slips = Array.from(document.querySelectorAll<HTMLElement>('.slip'));
-  tabs.forEach((t) => t.addEventListener('click', () => {
-    const kind = t.dataset.kind!;
-    tabs.forEach((b) => b.setAttribute('aria-pressed', String(b === t)));
-    slips.forEach((s) => { s.hidden = kind !== 'all' && s.dataset.kind !== kind; });
-  }));
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('.wk-card'));
+  const files = Array.from(document.querySelectorAll<HTMLAnchorElement>('.file'));
+  const fileOf = (id: string) => files.find((f) => f.dataset.file === id)!;
+  const cardOf = (id: string) => document.querySelector<HTMLAnchorElement>(`.wk-card a[data-file="${id}"]`);
+
+  // Filters: show matching cards, dim the files that don't match.
+  const pick = (t: HTMLButtonElement) => {
+    const id = t.dataset.tab!;
+    tabs.forEach((b) => b.setAttribute('aria-selected', String(b === t)));
+    cards.forEach((c) => { c.hidden = !c.dataset.tags!.split(' ').includes(id); });
+    files.forEach((f) => f.classList.toggle('dim', !cards.find((c) => c.dataset.file === f.dataset.file)!.dataset.tags!.split(' ').includes(id)));
+  };
+  tabs.forEach((t) => t.addEventListener('click', () => pick(t)));
+  pick(tabs[0]);
+
+  // Card and file light each other up.
+  const peekId = files[0].dataset.file!;
+  const hover = (id: string, on: boolean) => {
+    fileOf(id).classList.toggle('on', on);
+    cardOf(id)?.classList.toggle('on', on);
+    if (id !== peekId) fileOf(peekId).classList.toggle('peek', !on && !opening);
+  };
+  [...files, ...document.querySelectorAll<HTMLAnchorElement>('.wk-card a')].forEach((el) => {
+    const id = el.dataset.file!;
+    el.addEventListener('pointerenter', () => hover(id, true));
+    el.addEventListener('pointerleave', () => hover(id, false));
+    el.addEventListener('focus', () => hover(id, true));
+    el.addEventListener('blur', () => hover(id, false));
+    el.addEventListener('click', (e) => { if (narrow() && data[+id].href) return; e.preventDefault(); open(id); });
+  });
+
+  // The newest file sits half-pulled, an invitation.
+  setTimeout(() => fileOf(peekId).classList.add('peek'), RM ? 0 : 900);
+
+  // File to the front: slide up off the shelf, fly to the middle as its cover, open, go inside.
+  const fly = document.getElementById('fly')!;
+  const veil = fly.querySelector<HTMLElement>('.fly-veil')!;
+  const cover = document.getElementById('cover')!;
+  const front = cover.querySelector<HTMLElement>('.cv-front')!;
+  const soon = cover.querySelector<HTMLElement>('.cv-soon')!;
+  let opening = false, shut: (() => void) | null = null;
+  const run = (el: Element, k: Keyframe[], o: KeyframeAnimationOptions) => el.animate(k, { fill: 'forwards', ...o }).finished;
+  const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+  async function open(id: string) {
+    if (opening) return;
+    opening = true;
+    const d = data[+id], file = fileOf(id);
+    document.getElementById('cv-tab')!.textContent = `${d.year} · File ${d.no}`;
+    document.getElementById('cv-meta')!.textContent = d.where;
+    document.getElementById('cv-title')!.textContent = d.title;
+    document.getElementById('cv-tags')!.innerHTML = d.tags.map((t) => `<span>${t}</span>`).join('');
+    cover.classList.toggle('real', !!d.href);
+    const W = Math.min(460, innerWidth * 0.8), Hh = Math.min(W * 1.32, innerHeight * 0.78);
+    const x = (innerWidth - W) / 2, y = (innerHeight - Hh) / 2 + 12;
+    Object.assign(cover.style, { left: x + 'px', top: y + 'px', width: W + 'px', height: Hh + 'px' });
+    fly.hidden = false;
+
+    if (RM) {
+      front.querySelectorAll<HTMLElement>(':scope > *').forEach((c) => (c.style.opacity = '1'));
+      await run(fly, [{ opacity: 0 }, { opacity: 1 }], { duration: 1 });
+      veil.style.opacity = '1';
+    } else {
+      // 1. lift off the shelf
+      file.classList.remove('peek', 'on');
+      await run(file, [{ transform: 'translateY(-90px)' }], { duration: 260, easing: 'cubic-bezier(.3,0,.2,1)' });
+      const r = file.getBoundingClientRect();
+      file.classList.add('gone');
+      // 2. fly to the front, growing into the cover
+      const from = `translate(${r.left - x}px, ${r.top - y}px) scale(${r.width / W}, ${r.height / Hh})`;
+      run(veil, [{ opacity: 0 }, { opacity: 1 }], { duration: 520 });
+      await run(cover, [{ transform: from }, { transform: 'translate(0,0) scale(1) rotate(-1.5deg)', offset: 0.8 }, { transform: 'none' }], { duration: 640, easing: 'cubic-bezier(.2,.8,.2,1)' });
+      // 3. the cover reads
+      await Promise.all(Array.from(front.children).map((c, i) => run(c, [{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: 260, delay: i * 70 })));
+    }
+    await wait(RM ? 600 : 520);
+    // 4. it opens
+    if (!RM) await run(front, [{ transform: 'rotateY(0)' }, { transform: 'rotateY(-165deg)' }], { duration: 620, easing: 'cubic-bezier(.5,0,.2,1)' });
+    else front.style.visibility = 'hidden';
+    if (d.href) {
+      // 5. the inside fills the screen and you're in
+      const k = Math.max(innerWidth / W, innerHeight / Hh) * 1.1;
+      front.style.visibility = 'hidden';
+      await run(cover, [{ transform: 'none' }, { transform: `translate(${innerWidth / 2 - x - W / 2}px, ${innerHeight / 2 - y - Hh / 2}px) scale(${k})` }], { duration: RM ? 1 : 420, easing: 'cubic-bezier(.5,0,.3,1)', });
+      location.href = d.href;
+      return;
+    }
+    run(soon, [{ opacity: 0 }, { opacity: 1 }], { duration: 300 });
+    shut = () => close(file);
+  }
+
+  async function close(file: HTMLElement) {
+    shut = null;
+    await run(fly, [{ opacity: 1 }, { opacity: 0 }], { duration: RM ? 1 : 260 });
+    reset();
+    file.getAnimations().forEach((a) => a.cancel());
+    file.classList.remove('gone');
+  }
+  function reset() {
+    fly.hidden = true;
+    [fly, veil, cover, front, soon, ...Array.from(front.children)].forEach((el) => { el.getAnimations().forEach((a) => a.cancel()); (el as HTMLElement).style.opacity = ''; (el as HTMLElement).style.visibility = ''; });
+    veil.style.opacity = '';
+    opening = false;
+  }
+  fly.addEventListener('click', () => shut?.());
+  addEventListener('keydown', (e) => { if (e.key === 'Escape') shut?.(); });
+  // Coming back with the browser's back button: put the cabinet back as it was.
+  addEventListener('pageshow', (e) => {
+    if (!e.persisted) return;
+    reset();
+    files.forEach((f) => { f.getAnimations().forEach((a) => a.cancel()); f.classList.remove('gone'); });
+    fileOf(peekId).classList.add('peek');
+  });
 </script>
