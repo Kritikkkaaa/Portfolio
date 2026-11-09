@@ -27,10 +27,11 @@ const files: File[] = [
 const years = [2026, 2025, 2024];
 const numbered = files.map((f, i) => ({ ...f, id: i, no: String(i + 1).padStart(2, '0') }));
 const tagLabel = (t: string) => tabs.find((x) => x.id === t)!.label;
-// Small, fixed variety so the shelves don't look stamped out: heights, tab positions, shades.
-const H = [86, 78, 92, 82, 76, 90, 80, 84];
-const T = [10, 24, 6, 18, 12, 28, 8, 20];
-const S = ['#FFFFFF', '#F4F3EF', '#ECEBE5', '#FAFAF7', '#F0EFEA', '#FFFFFF', '#E8E7E1', '#F6F5F1'];
+// Small, fixed variety so the stacks don't look stamped out: widths, offsets, tab positions, and the case-study note colours.
+const H = [94, 88, 96, 90, 86, 92, 89, 95];
+const O = [0, 10, 4, 14, 6, 2, 12, 8];
+const T = [6, 14, 4, 12, 8, 16, 5, 10];
+const S = ['#BFD4EA', '#F2C8A2', '#D4EC8E', '#BCE5CF', '#F4B9B2', '#F2C8A2', '#BFD4EA', '#D4EC8E'];
 ---
 <Base title="work · Kritika Upadhyay" description="Case studies, filed by year. Filter by the work i owned, how i use data, or how i work with users.">
 <div class="wk">
@@ -59,24 +60,38 @@ const S = ['#FFFFFF', '#F4F3EF', '#ECEBE5', '#FAFAF7', '#F0EFEA', '#FFFFFF', '#E
 <aside class="wk-cab" aria-label="The file cabinet">
 <p class="wk-phone">The cabinet opens best on a desktop. Here are the files.</p>
 <div class="cab">
-<svg class="cab-plants" viewBox="0 0 170 74" aria-hidden="true">
-<g fill="none" stroke-linecap="round" stroke-linejoin="round">
-<path d="M30 46 C 22 30, 10 26, 6 14 C 18 16, 28 26, 31 44" fill="#BCE5CF" stroke="#4E7B58" stroke-width="1.4"/>
-<path d="M33 46 C 34 26, 42 12, 54 6 C 54 22, 44 34, 35 46" fill="#D4EC8E" stroke="#4E7B58" stroke-width="1.4"/>
-<path d="M32 46 C 40 36, 52 32, 62 34 C 56 42, 44 46, 34 47" fill="#BCE5CF" stroke="#4E7B58" stroke-width="1.4"/>
-<path d="M18 46 H48 L44 74 H22 Z" fill="#F4F3EF" stroke="#CFCEC7" stroke-width="1.2"/>
-<path d="M124 58 V30 C124 22 136 22 136 30 V58" fill="#BCE5CF" stroke="#4E7B58" stroke-width="1.4"/>
-<path d="M124 44 H116 C112 44 112 36 116 34 V40" fill="#BCE5CF" stroke="#4E7B58" stroke-width="1.4"/>
-<path d="M136 38 H142 C146 38 146 30 142 28 V34" fill="#BCE5CF" stroke="#4E7B58" stroke-width="1.4"/>
-<circle cx="130" cy="22" r="2.4" fill="#D2453F" stroke="none"/>
-<path d="M114 58 H146 L143 74 H117 Z" fill="#F4F3EF" stroke="#CFCEC7" stroke-width="1.2"/>
+<svg class="cab-plants" viewBox="0 0 480 150" overflow="visible" aria-hidden="true">
+<g stroke="#3F6B4A" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+<path d="M54 112 C44 90 34 68 30 44 C46 62 58 86 64 112Z" fill="#D4EC8E"/>
+<path d="M62 112 C56 80 52 50 58 14 C66 46 70 80 70 112Z" fill="#7FB08A"/>
+<path d="M74 112 C76 76 84 40 98 20 C96 56 88 86 84 112Z" fill="#BCE5CF"/>
+<path d="M86 112 C96 92 108 76 122 66 C114 86 102 102 94 112Z" fill="#7FB08A"/>
+<path d="M40 110 H112 L104 150 H48 Z" fill="#F2C8A2"/>
+<path d="M200 112 C196 90 186 76 170 66 M202 112 C204 86 206 64 204 46 M206 112 C214 92 226 80 244 72 M203 112 C196 98 190 94 178 92 M204 100 C212 80 220 66 228 56" fill="none"/>
+<circle cx="166" cy="62" r="14" fill="#BCE5CF"/><circle cx="204" cy="36" r="16" fill="#D4EC8E"/><circle cx="248" cy="68" r="14" fill="#BCE5CF"/><circle cx="174" cy="92" r="11" fill="#D4EC8E"/><circle cx="230" cy="52" r="11" fill="#7FB08A"/>
+<path d="M178 110 H232 L226 150 H184 Z" fill="#F4B9B2"/>
+<path d="M300 124 V84 C300 70 318 70 318 84 V124" fill="#BCE5CF"/>
+<path d="M300 104 H291 C285 104 285 90 291 88 V97" fill="#BCE5CF"/>
+<path d="M318 96 H327 C333 96 333 82 327 80 V89" fill="#BCE5CF"/>
+<circle cx="309" cy="70" r="4" fill="#D2453F" stroke="none"/>
+<path d="M290 124 H328 L324 150 H294 Z" fill="#BFD4EA"/>
+<path d="M446 118 C468 122 474 150 470 182 C466 222 478 250 470 292 M436 120 C458 138 454 170 458 202 C462 232 454 250 458 268" fill="none"/>
+<path d="M404 104 c-9 -9 -16 -2 -11 7 c3 6 11 10 11 13 c0 -3 8 -7 11 -13 c5 -9 -2 -16 -11 -7z" fill="#7FB08A"/>
+<path d="M424 94 c-9 -9 -16 -2 -11 7 c3 6 11 10 11 13 c0 -3 8 -7 11 -13 c5 -9 -2 -16 -11 -7z" fill="#BCE5CF"/>
+<path d="M442 104 c-9 -9 -16 -2 -11 7 c3 6 11 10 11 13 c0 -3 8 -7 11 -13 c5 -9 -2 -16 -11 -7z" fill="#D4EC8E"/>
+<path d="M472 170 c-7 -7 -13 -2 -9 6 c2 4 9 8 9 10 c0 -2 7 -6 9 -10 c4 -8 -2 -13 -9 -6z" fill="#BCE5CF"/>
+<path d="M468 232 c-7 -7 -13 -2 -9 6 c2 4 9 8 9 10 c0 -2 7 -6 9 -10 c4 -8 -2 -13 -9 -6z" fill="#7FB08A"/>
+<path d="M470 284 c-7 -7 -13 -2 -9 6 c2 4 9 8 9 10 c0 -2 7 -6 9 -10 c4 -8 -2 -13 -9 -6z" fill="#D4EC8E"/>
+<path d="M456 196 c-7 -7 -13 -2 -9 6 c2 4 9 8 9 10 c0 -2 7 -6 9 -10 c4 -8 -2 -13 -9 -6z" fill="#D4EC8E"/>
+<path d="M458 260 c-7 -7 -13 -2 -9 6 c2 4 9 8 9 10 c0 -2 7 -6 9 -10 c4 -8 -2 -13 -9 -6z" fill="#BCE5CF"/>
+<path d="M392 116 H452 L446 150 H398 Z" fill="#BFD4EA"/>
 </g></svg>
 {years.map((y) => (
 <div class="shelf">
 <span class="shelf-y">{y} <span aria-hidden="true">↓</span></span>
 <div class="shelf-row">
 {numbered.filter((f) => f.year === y).map((f) => (
-<a class={`file${f.href ? ' real' : ''}`} href={f.href ?? '#'} data-file={f.id} style={`--h:${H[f.id % 8]}%;--t:${T[f.id % 8]}px;--s:${S[f.id % 8]}`} aria-label={`File ${f.no}: ${f.title}${f.href ? '' : ' (being written)'}`}>
+<a class={`file${f.href ? ' real' : ''}`} href={f.href ?? '#'} data-file={f.id} style={`--w:${H[f.id % 8]}%;--o:${O[f.id % 8]}px;--t:${T[f.id % 8]}px;--s:${S[f.id % 8]}`} aria-label={`File ${f.no}: ${f.title}${f.href ? '' : ' (being written)'}`}>
 <span class="file-tab" aria-hidden="true"></span>
 <span class="file-name">{f.title}</span>
 </a>
@@ -138,21 +153,20 @@ const S = ['#FFFFFF', '#F4F3EF', '#ECEBE5', '#FAFAF7', '#F0EFEA', '#FFFFFF', '#E
 /* The cabinet */
 .wk-cab{position:sticky;top:28px;align-self:start;display:flex;flex-direction:column;box-sizing:border-box;height:calc(100svh - 28px);padding-top:var(--cab-top,180px)}
 .wk-phone{display:none}
-/* A plain white bookcase: frame, grey back panel, three shelves, a plinth */
+/* A plain white bookcase, see-through, plants on top, files lying in stacks */
 .cab{--wood:#F4F3EF;--edge:#DCDBD5;position:relative;flex:1;display:flex;flex-direction:column;min-height:0;border:14px solid var(--wood);border-bottom:0;border-radius:2px 2px 0 0;box-shadow:0 0 0 1px var(--edge)}
-.cab-plants{position:absolute;right:10px;bottom:calc(100% + 14px);width:150px;height:auto}
-.shelf{position:relative;flex:1;display:flex;flex-direction:column;min-height:0;padding:40px 20px 0}
-.shelf-y{position:absolute;top:14px;right:20px;font-size:var(--t-caps);font-weight:500;letter-spacing:.18em;color:var(--mute)}
-.shelf-row{flex:1;min-height:0;display:flex;align-items:flex-end;gap:10px}
-.shelf-board{display:block;flex:none;height:14px;margin:0 -20px;background:var(--wood);box-shadow:0 0 0 1px var(--edge)}
+.cab-plants{position:absolute;left:-14px;bottom:calc(100% + 14px);width:calc(100% + 28px);height:auto;overflow:visible;z-index:1;pointer-events:none}
+.shelf{position:relative;flex:1;display:flex;flex-direction:column;min-height:0;padding:30px 30px 0 20px}
+.shelf-y{position:absolute;top:-17px;left:22px;z-index:1;padding:4px 9px 3px;background:var(--red);color:#fff;font-size:var(--t-caps);font-weight:600;letter-spacing:.16em;transform:rotate(-2deg);box-shadow:0 2px 4px rgba(0,0,0,.25)}
+.shelf-row{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;gap:2px}
+.shelf-board{display:block;flex:none;height:14px;margin:0 -30px 0 -20px;background:var(--wood);box-shadow:0 0 0 1px var(--edge)}
 .shelf:last-of-type .shelf-board{display:none}
 
-.file{position:relative;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;width:88px;height:var(--h);box-sizing:border-box;padding:16px 0 12px;border:1px solid #CFCEC7;border-bottom:0;border-radius:2px 2px 0 0;background:var(--s);color:#1E1E24;text-decoration:none;box-shadow:2px 0 0 rgba(0,0,0,.05);transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .3s ease,border-color .2s ease,box-shadow .2s ease}
-.file-tab{position:absolute;bottom:100%;left:var(--t);width:24px;height:9px;border:1px solid #CFCEC7;border-bottom:0;border-radius:3px 3px 0 0;background:var(--s)}
-.file-name{flex:1;overflow:hidden;writing-mode:vertical-rl;transform:rotate(180deg);font-size:var(--t-small);font-weight:500;line-height:1.15;text-align:left;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
-.file:hover,.file.on{border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red)}
+.file{position:relative;flex:none;display:flex;align-items:center;width:calc(var(--w) - var(--o));height:40px;margin-left:var(--o);box-sizing:border-box;padding:0 16px;border:1px solid rgba(30,30,36,.2);border-radius:2px;background:var(--s);color:#1E1E24;text-decoration:none;box-shadow:0 2px 0 rgba(0,0,0,.25);transition:opacity .3s ease,border-color .2s ease,box-shadow .2s ease}
+.file-tab{position:absolute;left:100%;top:var(--t);width:9px;height:16px;border:1px solid rgba(30,30,36,.2);border-left:0;border-radius:0 3px 3px 0;background:var(--s)}
+.file-name{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:var(--t-small);font-weight:500}
+.file:hover,.file.on{border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red),0 2px 0 rgba(0,0,0,.25)}
 .file:hover .file-tab,.file.on .file-tab{border-color:var(--red)}
-.file.peek{transform:translateY(-44px)}
 .file.dim{opacity:.35}
 .file.gone{visibility:hidden}
 
@@ -188,13 +202,12 @@ const S = ['#FFFFFF', '#F4F3EF', '#ECEBE5', '#FAFAF7', '#F0EFEA', '#FFFFFF', '#E
   .cab-plants{display:none}
   .cab{margin-top:28px;border-bottom:14px solid var(--wood)}
   .shelf:last-of-type .shelf-board{display:block;height:0}
-  .shelf{padding:44px 12px 0}
+  .shelf{padding:34px 12px 0}
   .shelf-board{margin:0 -12px}
   .shelf-row{flex-direction:column;align-items:stretch;gap:8px;height:auto;padding-bottom:14px}
-  .file{flex-direction:row;align-items:center;gap:12px;width:auto;height:auto;padding:12px 14px;border-bottom:1px solid #CFCEC7;border-radius:2px}
+  .file{width:100%;height:auto;margin-left:0;padding:12px 14px}
   .file-tab{display:none}
-  .file-name{writing-mode:horizontal-tb;transform:none;-webkit-line-clamp:3}
-  .file.peek{transform:none}
+  .file-name{white-space:normal}
   .file.dim{opacity:1}
 }
 @media (prefers-reduced-motion:reduce){.file,.wk-card a{transition:none}}
@@ -232,7 +245,6 @@ const S = ['#FFFFFF', '#F4F3EF', '#ECEBE5', '#FAFAF7', '#F0EFEA', '#FFFFFF', '#E
   addEventListener('resize', align);
 
   // Card and file light each other up.
-  const peekId = files[0].dataset.file!;
   const hover = (id: string, on: boolean) => {
     fileOf(id).classList.toggle('on', on);
     cardOf(id)?.classList.toggle('on', on);
@@ -246,8 +258,6 @@ const S = ['#FFFFFF', '#F4F3EF', '#ECEBE5', '#FAFAF7', '#F0EFEA', '#FFFFFF', '#E
     el.addEventListener('click', (e) => { if (narrow() && data[+id].href) return; e.preventDefault(); open(id); });
   });
 
-  // The newest file sits half-pulled, an invitation.
-  setTimeout(() => fileOf(peekId).classList.add('peek'), RM ? 0 : 900);
 
   // File to the front: slide up off the shelf, fly to the middle as its cover, rest there 10s, open,
   // and the case study opens in a new tab. Then the file goes back on its shelf, ready for the next pick.
@@ -257,6 +267,7 @@ const S = ['#FFFFFF', '#F4F3EF', '#ECEBE5', '#FAFAF7', '#F0EFEA', '#FFFFFF', '#E
   const front = cover.querySelector<HTMLElement>('.cv-front')!;
   const soon = cover.querySelector<HTMLElement>('.cv-soon')!;
   const go = cover.querySelector<HTMLAnchorElement>('.cv-go')!;
+  const tabEl = document.getElementById('cv-tab')!;
   const HOLD = 10000;
   let opening = false, token = 0, current: HTMLElement | null = null;
   const run = (el: Element, k: Keyframe[], o: KeyframeAnimationOptions) => el.animate(k, { fill: 'forwards', ...o }).finished.catch(() => {});
@@ -278,19 +289,21 @@ const S = ['#FFFFFF', '#F4F3EF', '#ECEBE5', '#FAFAF7', '#F0EFEA', '#FFFFFF', '#E
     document.getElementById('cv-title')!.textContent = d.title;
     document.getElementById('cv-tags')!.innerHTML = d.tags.map((t) => `<span>${t}</span>`).join('');
     go.href = d.href || '#';
+    const col = getComputedStyle(file).getPropertyValue('--s').trim();
+    front.style.background = col; tabEl.style.background = col;
     const W = Math.min(460, innerWidth * 0.8), H = Math.min(W * 1.32, innerHeight * 0.78);
     geo = { x: (innerWidth - W) / 2, y: (innerHeight - H) / 2 + 12, W, H };
     Object.assign(cover.style, { left: geo.x + 'px', top: geo.y + 'px', width: W + 'px', height: H + 'px' });
     fly.hidden = false;
-    file.classList.remove('peek', 'on');
+    file.classList.remove('on');
 
     if (RM) {
       Array.from(front.children).forEach((c) => ((c as HTMLElement).style.opacity = '1'));
       veil.style.opacity = '1';
       file.classList.add('gone');
     } else {
-      // 1. it slides up off the shelf
-      await run(file, [{ transform: 'translateY(0)' }, { transform: 'translateY(-90px)' }], { duration: 520, easing: 'cubic-bezier(.4,0,.2,1)' });
+      // 1. it slides out of the stack
+      await run(file, [{ transform: 'translateX(0)' }, { transform: 'translateX(-80px)' }], { duration: 520, easing: 'cubic-bezier(.4,0,.2,1)' });
       if (!alive()) return;
       const from = fromFile(file);
       file.classList.add('gone');
@@ -331,7 +344,7 @@ const S = ['#FFFFFF', '#F4F3EF', '#ECEBE5', '#FAFAF7', '#F0EFEA', '#FFFFFF', '#E
     }
     reset();
     file.classList.remove('gone');
-    if (!RM) await run(file, [{ transform: 'translateY(-90px)' }, { transform: 'translateY(0)' }], { duration: 520, easing: 'cubic-bezier(.4,0,.2,1)' });
+    if (!RM) await run(file, [{ transform: 'translateX(-80px)' }, { transform: 'translateX(0)' }], { duration: 520, easing: 'cubic-bezier(.4,0,.2,1)' });
     file.getAnimations().forEach((a) => a.cancel());
   }
   function reset() {
@@ -350,6 +363,5 @@ const S = ['#FFFFFF', '#F4F3EF', '#ECEBE5', '#FAFAF7', '#F0EFEA', '#FFFFFF', '#E
     token++;
     reset();
     files.forEach((f) => { f.getAnimations().forEach((a) => a.cancel()); f.classList.remove('gone'); });
-    fileOf(peekId).classList.add('peek');
   });
 </script>
