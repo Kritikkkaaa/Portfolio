@@ -1,184 +1,458 @@
 ---
-// /work: two ways into the work. Look for a kind of moment (a decision, something owned, a use of data...) and jump
-// straight to the case-study section that shows it, or browse the projects and pick a story.
-// Same world as the case studies: grid board, Commissioner for print, Kalam for handwriting, sticky-note colours, red pins.
+// /work: a file cabinet. Left 60%: three filters (work i owned, how i use data, how i work with users) and one plain
+// card per case study. Right 40%: an open-shelf cabinet, 2026 on top. Every case study is one file on its year's shelf.
+// Hover a card and its file is outlined; the shelf stays the same on every tab. Pick a file (or a card) and it slides off
+// the shelf, comes to the front as its cover, opens, and takes you inside. Phones: just the cabinet with readable names.
+// Cards are one template on purpose, so a new case study is one line of data.
 import Base from '../../layouts/Base.astro';
 
 const ICP = '/work/icp-positioning-messaging-nexus';
-
-// The kinds of evidence a reader might come looking for, each with its sticky-note colour.
-const kinds = [
-  { id: 'decision', label: 'a hard decision', color: '#F2C8A2' },
-  { id: 'owned', label: 'something i owned', color: '#BFD4EA' },
-  { id: 'data', label: 'how i used data', color: '#F4F3EF' },
-  { id: 'users', label: 'how i listened to users', color: '#D4EC8E' },
-  { id: 'founders', label: 'working with founders', color: '#BCE5CF' }
+const tabs = [
+  { id: 'owned', label: 'Work i owned' },
+  { id: 'data', label: 'How i use data' },
+  { id: 'users', label: 'How i work with users' }
 ];
-
-// Moments from the work. Real ones link straight to the case-study section that shows them; placeholders are marked.
-type Moment = { kind: string; text: string; project: string; where?: string; href?: string };
-const moments: Moment[] = [
-  { kind: 'decision', text: 'chose to start with merchants already running a marketplace, not everyone who installed.', project: 'nexus · ICP', where: 'section 2 · choosing who to target', href: `${ICP}#choosing-who-to-target` },
-  { kind: 'decision', text: 'moved the message from pricing and free trials to “simple to start, manage and grow”.', project: 'nexus · ICP', where: 'section 3 · turning customer value into messaging', href: `${ICP}#turning-value-into-messaging` },
-  { kind: 'owned', text: 'wrote nexus’s ideal customer profile and its guardrails, with the co-founder.', project: 'nexus · ICP', where: 'section 2 · choosing who to target', href: `${ICP}#choosing-who-to-target` },
-  { kind: 'data', text: 'found only 7.9% of stores were paying before deciding who to target.', project: 'nexus · ICP', where: 'section 1 · users, but no clear audience', href: `${ICP}#no-clear-audience` },
-  { kind: 'users', text: 'checked why merchants uninstalled and what they asked for in intercom.', project: 'nexus · ICP', where: 'section 2 · choosing who to target', href: `${ICP}#choosing-who-to-target` },
-  { kind: 'founders', text: 'interviewed the founder with the mom test to find what nexus should mean.', project: 'nexus · ICP', where: 'section 3 · turning customer value into messaging', href: `${ICP}#turning-value-into-messaging` },
-  { kind: 'decision', text: '[placeholder: a decision from another project]', project: '[project two]' },
-  { kind: 'owned', text: '[placeholder: something you owned end to end]', project: '[project three]' },
-  { kind: 'data', text: '[placeholder: a number that changed your mind]', project: '[project two]' }
+// Dummy files from the scenic route for now; only the Nexus ICP one has a page.
+type File = { title: string; where: string; year: number; line: string; tags: string[]; href?: string };
+const files: File[] = [
+  { title: 'From user stories to an ICP, positioning and messaging', where: 'Nexus', year: 2026, line: 'Nexus had installs but no clear audience. Three steps to who it is for and what to say.', tags: ['owned', 'data', 'users'], href: ICP },
+  { title: 'Launching Nexus, a multi-vendor app on Shopify', where: 'Nexus', year: 2026, line: 'Owning the product end to end: what to build, in what order, and why.', tags: ['owned', 'users'] },
+  { title: 'Marketing and distribution for Nexus', where: 'Nexus', year: 2026, line: 'Building the go-to-market with the cofounder during my notice period.', tags: ['owned', 'data'] },
+  { title: 'A product component library', where: 'Marmeto', year: 2025, line: 'Systems, processes, and my first team, with no in-house design team.', tags: ['owned'] },
+  { title: 'Project managing a Shopify agency', where: 'Shopify agency', year: 2025, line: 'Learning the world of e-commerce, one client store at a time.', tags: ['owned', 'users'] },
+  { title: 'Writing as an executive assistant', where: 'EA work', year: 2025, line: 'Mails, calendars and day to day indulgences. Turns out i write well.', tags: ['users'] },
+  { title: 'Website, distribution and community', where: 'Product Marketing Engineer', year: 2024, line: 'Everything from website to distribution to competitive research to community.', tags: ['owned', 'data', 'users'] },
+  { title: 'Competitive research', where: 'Product Marketing Engineer', year: 2024, line: 'Reading the market before writing a word about the product.', tags: ['data'] }
 ];
-
-// Projects to browse. Each has a few named entrances straight into its strongest moments.
-type Project = { title: string; what: string; role: string; when: string; href?: string; doors: { label: string; href?: string }[] };
-const projects: Project[] = [
-  { title: 'from user stories to an ICP, positioning and messaging', what: 'nexus, a shopify app for multi-vendor marketplaces, had installs but no clear audience. three steps to who it’s for and what to say.',
-    role: 'product marketing', when: '2026', href: ICP, doors: [
-      { label: 'the 7.9% that made us stop and look', href: `${ICP}#no-clear-audience` },
-      { label: 'choosing who to target', href: `${ICP}#choosing-who-to-target` },
-      { label: 'from founder vision to one line', href: `${ICP}#turning-value-into-messaging` }
-    ] },
-  { title: '[project two]', what: '[one line on what it was and why it mattered]', role: '[role]', when: '[year]', doors: [{ label: '[a strong moment]' }, { label: '[another moment]' }] },
-  { title: '[project three]', what: '[one line on what it was and why it mattered]', role: '[role]', when: '[year]', doors: [{ label: '[a strong moment]' }, { label: '[another moment]' }] }
-];
-const kindOf = (id: string) => kinds.find((k) => k.id === id)!;
-const tilt = (i: number) => [-1.2, 0.8, -0.5, 1.1, -0.9, 0.6][i % 6];
+const years = [2026, 2025, 2024];
+const numbered = files.map((f, i) => ({ ...f, id: i, no: String(i + 1).padStart(2, '0') }));
+const tagLabel = (t: string) => tabs.find((x) => x.id === t)!.label;
+// Small, fixed variety so the stacks don't look stamped out: widths, offsets, tab positions, and the case-study note colours.
+const H = [94, 88, 96, 90, 86, 92, 89, 95];
+const O = [0, 10, 4, 14, 6, 2, 12, 8];
+const T = [6, 14, 4, 12, 8, 16, 5, 10];
+const S = ['#A9B9C8', '#D6B79C', '#BFC995', '#A9C6B4', '#D2AAA4', '#D6B79C', '#A9B9C8', '#BFC995'];
 ---
-<Base title="work · Kritika Upadhyay" description="find a decision, something i owned, or how i used data, and jump straight to the part of the case study that shows it. or browse the projects.">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kalam:wght@300&family=Commissioner:wght@400;500;600;700&display=swap">
+<Base title="work · Kritika Upadhyay" description="Case studies, filed by year. Filter by the work i owned, how i use data, or how i work with users.">
 <div class="wk">
-
-<header class="wk-head">
+<div class="wk-main">
 <a class="wk-back" href="/">← back</a>
-<h1>work</h1>
-<p class="wk-hand">two ways in. look for a moment, or wander through the projects.</p>
-</header>
+<h1>Work</h1>
 
-<section class="wk-find" aria-labelledby="find-h">
-<p class="wk-k" id="find-h">find a moment</p>
-<p class="wk-ask">what are you looking for?</p>
-<div class="wk-tabs" role="group" aria-label="Kinds of moment">
-<button type="button" class="wk-tab" data-kind="all" aria-pressed="true">everything</button>
-{kinds.map((k) => <button type="button" class="wk-tab" data-kind={k.id} aria-pressed="false" style={`--c:${k.color}`}>{k.label}<span class="wk-n">{moments.filter((m) => m.kind === k.id && m.href).length}</span></button>)}
+<div class="wk-tabs" role="tablist" aria-label="Filter the work">
+{tabs.map((t, i) => <button type="button" role="tab" class="wk-tab" data-tab={t.id} aria-selected={i === 0 ? 'true' : 'false'}>{t.label}</button>)}
 </div>
-<ul class="wk-slips" id="slips">
-{moments.map((m, i) => {
-  const k = kindOf(m.kind);
-  const inner = <>
-    <span class="tape" aria-hidden="true"></span>
-    <span class="sl-k">{k.label}</span>
-    <span class="sl-t">{m.text}</span>
-    <span class="sl-f"><span>{m.project}</span>{m.href ? <b>{m.where} →</b> : <b>[link to the section]</b>}</span>
-  </>;
-  return <li class={`slip${m.href ? '' : ' ph'}`} data-kind={m.kind} style={`--c:${k.color};--r:${tilt(i)}deg`}>
-    {m.href ? <a href={m.href}>{inner}</a> : <div aria-label="placeholder">{inner}</div>}
-  </li>;
-})}
-</ul>
-</section>
 
-<section class="wk-browse" aria-labelledby="browse-h">
-<p class="wk-k" id="browse-h">or browse the projects</p>
-<ul class="wk-projects">
-{projects.map((p, i) => (
-<li class={`proj${p.href ? '' : ' ph'}`} style={`--r:${tilt(i + 2)}deg`}>
-<span class="pin" aria-hidden="true"></span>
-{p.href
-  ? <a class="proj-cover" href={p.href} aria-label={`Open the case study: ${p.title}`}><svg viewBox="0 0 320 170" aria-hidden="true"><rect width="320" height="170" fill="#141416"></rect><path d="M0 0 H320 M0 17 H320 M0 34 H320 M0 51 H320 M0 68 H320 M0 85 H320 M0 102 H320 M0 119 H320 M0 136 H320 M0 153 H320 M16 0 V170 M48 0 V170 M80 0 V170 M112 0 V170 M144 0 V170 M176 0 V170 M208 0 V170 M240 0 V170 M272 0 V170 M304 0 V170" stroke="rgba(169,175,185,.08)"></path><rect x="24" y="22" width="78" height="52" fill="#BFD4EA" transform="rotate(-2 63 48)"></rect><rect x="118" y="20" width="84" height="58" fill="#F4F3EF" transform="rotate(1.5 160 49)"></rect><rect x="222" y="26" width="74" height="46" fill="#F4B9B2" transform="rotate(-1.5 259 49)"></rect><rect x="40" y="98" width="96" height="50" fill="#F4F3EF" transform="rotate(1 88 123)"></rect><rect x="172" y="100" width="110" height="46" fill="#B8E2C2" transform="rotate(-1 227 123)"></rect><path d="M290 30 C 310 70, 120 70, 88 100 M136 124 C 150 124, 160 124, 172 124" fill="none" stroke="#C2423A" stroke-width="2"></path></svg></a>
-  : <div class="proj-cover ph-cover">[cover]</div>}
-<p class="proj-meta">{p.role} · {p.when}</p>
-<h2>{p.href ? <a href={p.href}>{p.title}</a> : p.title}</h2>
-<p class="proj-what">{p.what}</p>
-<p class="proj-doors-k">ways in</p>
-<ul class="proj-doors">
-{p.doors.map((d) => <li>{d.href ? <a href={d.href}>{d.label} →</a> : <span>{d.label}</span>}</li>)}
-</ul>
+<ul class="wk-cards" id="wk-cards">
+{numbered.map((f) => (
+<li class="wk-card" data-file={f.id} data-tags={f.tags.join(' ')} hidden={!f.tags.includes('owned')}>
+<a href={f.href ?? '#'} data-file={f.id} class={f.href ? '' : 'soon'}>
+<span class="wc-meta">{f.where}</span>
+<span class="wc-title">{f.title}</span>
+<span class="wc-foot"><b>{f.href ? 'View →' : 'Being written'}</b></span>
+</a>
 </li>
 ))}
 </ul>
-</section>
-
 </div>
+
+<aside class="wk-cab" aria-label="The file cabinet">
+<p class="wk-phone">The cabinet opens best on a desktop. Here are the files.</p>
+<div class="cab">
+<svg class="pl pl-money" viewBox="0 0 120 110" overflow="visible" aria-hidden="true">
+<path d="M34 76 C30 58 40 44 52 40 M60 76 C62 56 72 44 86 40 M48 76 C44 62 30 54 18 56" fill="none" stroke="#4A6B2F" stroke-width="2"/>
+<g class="lf" style="--d:-0.7s;--t:4.8s"><use href="#pothos" transform="translate(52 42) rotate(-20) scale(1.25)" fill="#3F7A36"/></g>
+<g class="lf" style="--d:-1.4s;--t:5.4s"><use href="#pothos" transform="translate(86 42) rotate(30) scale(1.15)" fill="#5C9447"/></g>
+<g class="lf" style="--d:-2.1s;--t:6.0s"><use href="#pothos" transform="translate(18 58) rotate(-70) scale(1.1)" fill="#4E8A3E"/></g>
+<g class="lf" style="--d:-2.8s;--t:4.2s"><use href="#pothos" transform="translate(70 56) rotate(10) scale(1)" fill="#2F6A2C"/></g>
+<path d="M22 74 H98 L92 110 H28 Z" fill="#E6E3DC"/><path d="M22 74 H98 V80 H22 Z" fill="#D4D1C9"/><path d="M80 80 L92 80 L88 110 H76 Z" fill="#CFCBC2"/>
+</svg>
+<svg class="pl pl-lily" viewBox="0 0 140 170" overflow="visible" aria-hidden="true">
+<path d="M70 132 C70 100 62 70 52 38 M74 132 C78 104 88 78 98 50 M72 132 C72 96 74 60 76 26" fill="none" stroke="#3E6B34" stroke-width="2"/>
+<g class="lf" style="--d:-1.2s;--t:5.2s"><g transform="translate(52 38) rotate(-14) scale(1)"><path d="M0 0 C-17 -6 -21 -30 -4 -48 C3 -41 19 -31 15 -12 C13 -4 6 0 0 0Z" fill="#F6F5EF"/><path d="M-1 -2 C-8 -14 -8 -30 -4 -42" stroke="#DCD9CC" stroke-width="1" fill="none"/><path d="M1 -5 C3 -13 4 -21 3 -29" stroke="#E6D486" stroke-width="5" stroke-linecap="round" fill="none"/></g></g>
+<g class="lf" style="--d:-3.1s;--t:5.8s"><g transform="translate(98 50) rotate(16) scale(0.9)"><path d="M0 0 C-17 -6 -21 -30 -4 -48 C3 -41 19 -31 15 -12 C13 -4 6 0 0 0Z" fill="#F6F5EF"/><path d="M-1 -2 C-8 -14 -8 -30 -4 -42" stroke="#DCD9CC" stroke-width="1" fill="none"/><path d="M1 -5 C3 -13 4 -21 3 -29" stroke="#E6D486" stroke-width="5" stroke-linecap="round" fill="none"/></g></g>
+<g class="lf" style="--d:-2.2s;--t:4.9s"><g transform="translate(76 26) rotate(2) scale(1.05)"><path d="M0 0 C-17 -6 -21 -30 -4 -48 C3 -41 19 -31 15 -12 C13 -4 6 0 0 0Z" fill="#F6F5EF"/><path d="M-1 -2 C-8 -14 -8 -30 -4 -42" stroke="#DCD9CC" stroke-width="1" fill="none"/><path d="M1 -5 C3 -13 4 -21 3 -29" stroke="#E6D486" stroke-width="5" stroke-linecap="round" fill="none"/></g></g>
+<g class="lf" style="--d:-3.5s;--t:4.8s"><use href="#lily" transform="translate(70 134) rotate(-58) scale(.9)" fill="#2C5A2E"/></g>
+<g class="lf" style="--d:-4.2s;--t:5.4s"><use href="#lily" transform="translate(70 134) rotate(-30) scale(1.05)" fill="#356A35"/></g>
+<g class="lf" style="--d:-4.9s;--t:6.0s"><use href="#lily" transform="translate(70 134) rotate(-6) scale(.8)" fill="#2C5A2E"/></g>
+<g class="lf" style="--d:-0.7s;--t:4.2s"><use href="#lily" transform="translate(70 134) rotate(22) scale(1)" fill="#3B7038"/></g>
+<g class="lf" style="--d:-1.4s;--t:4.8s"><use href="#lily" transform="translate(70 134) rotate(52) scale(.88)" fill="#2C5A2E"/></g>
+<path d="M36 128 H104 L98 170 H42 Z" fill="#8FA1B1"/><path d="M36 128 H104 V134 H36 Z" fill="#7F92A3"/><path d="M86 134 H98 L94 170 H82 Z" fill="#7F92A3"/>
+</svg>
+<svg class="pl pl-cactus" viewBox="0 0 70 110" overflow="visible" aria-hidden="true">
+<path d="M24 82 V40 C24 26 46 26 46 40 V82 Z" fill="#5F8B57"/>
+<path d="M30 80 V38 M35 80 V33 M40 80 V38" stroke="#4A7344" stroke-width="1.4"/>
+<path d="M24 62 H16 C10 62 10 48 14 46 C18 44 20 48 20 52 V56 H24 Z" fill="#5F8B57"/>
+<path d="M46 54 H53 C59 54 59 42 55 40 C51 38 49 42 49 46 V48 H46 Z" fill="#5F8B57"/>
+<g fill="#DCE3C8"><circle cx="28" cy="50" r=".9"/><circle cx="42" cy="60" r=".9"/><circle cx="32" cy="68" r=".9"/><circle cx="40" cy="46" r=".9"/><circle cx="14" cy="52" r=".9"/><circle cx="55" cy="46" r=".9"/></g>
+<path d="M22 38 C22 22 48 22 48 38 Z" fill="#D2453F"/><path d="M21 36 H49 V41 H21 Z" fill="#B53A35"/><path d="M27 36 V41 M33 36 V41 M39 36 V41 M45 36 V41" stroke="#9E322E" stroke-width="1"/><circle cx="35" cy="22" r="4.5" fill="#F1EEE6"/>
+<path d="M16 82 H54 L50 110 H20 Z" fill="#B97357"/><path d="M14 80 H56 V87 H14 Z" fill="#A9654B"/>
+</svg>
+<svg class="pl pl-monstera" viewBox="0 0 300 260" overflow="visible" aria-hidden="true">
+<path d="M84 214 C84 160 82 110 80 66 M92 214 C100 170 120 130 150 104 M100 214 C130 186 170 166 222 156 M96 214 C120 204 180 204 262 206" fill="none" stroke="#3B6B32" stroke-width="3"/>
+<g class="lf" style="--d:-2.1s;--t:5.4s"><use href="#mleaf" transform="translate(80 66) rotate(-8) scale(.8)"/></g>
+<g class="lf" style="--d:-2.8s;--t:6.0s"><use href="#mleaf" transform="translate(150 104) rotate(30) scale(1)"/></g>
+<g class="lf" style="--d:-3.5s;--t:4.2s"><use href="#mleaf" transform="translate(222 156) rotate(66) scale(1.1)"/></g>
+<g class="lf" style="--d:-4.2s;--t:4.8s"><use href="#mleaf" transform="translate(262 206) rotate(98) scale(1.15)"/></g>
+<path d="M50 210 H134 L124 260 H60 Z" fill="#9C9A94"/><path d="M48 208 H136 V216 H48 Z" fill="#8C8A84"/><path d="M110 216 H128 L120 260 H104 Z" fill="#8C8A84"/>
+</svg>
+<svg class="vines" aria-hidden="true"></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<path id="pothos" d="M0 0 C-10 -2 -13 -13 -7 -18 C-4 -20 -1 -21 0 -25 C1 -21 4 -20 7 -18 C13 -13 10 -2 0 0Z M0 -2 L0 -22" stroke="#2A4F24" stroke-width=".8"/>
+<path id="lily" d="M0 0 C-9 -24 -10 -60 0 -92 C10 -60 9 -24 0 0Z M0 -4 L0 -86" stroke="#4E8446" stroke-width="1"/>
+<g id="mleaf"><path d="M0 0 C-30 -6 -58 -30 -56 -64 C-54 -98 -26 -122 0 -118 C26 -122 54 -98 56 -64 C58 -30 30 -6 0 0Z" fill="#2E5E2C"/><path d="M0 0 C30 -6 58 -30 56 -64 C54 -98 26 -122 0 -118Z" fill="#3A7034"/><path d="M0 -2 Q3 -60 0 -116" stroke="#5C9447" stroke-width="2" fill="none"/><g stroke="#141416" stroke-width="5" stroke-linecap="round"><path d="M-57 -62 L-24 -58"/><path d="M-50 -92 L-20 -80"/><path d="M-46 -34 L-20 -40"/><path d="M57 -60 L24 -58"/><path d="M50 -90 L20 -82"/><path d="M44 -32 L20 -38"/></g><g fill="#141416"><ellipse cx="-12" cy="-70" rx="3" ry="6"/><ellipse cx="12" cy="-50" rx="3" ry="6"/><ellipse cx="-10" cy="-30" rx="2.5" ry="5"/></g></g>
+</defs></svg>
+{years.map((y) => (
+<div class="shelf">
+<span class="shelf-y">{y} <span aria-hidden="true">↓</span></span>
+<div class="shelf-row">
+{numbered.filter((f) => f.year === y).map((f) => (
+<a class={`file${f.href ? ' real' : ''}`} href={f.href ?? '#'} data-file={f.id} style={`--w:${H[f.id % 8]}%;--o:${O[f.id % 8]}px;--t:${T[f.id % 8]}px;--s:${S[f.id % 8]}`} aria-label={`File ${f.no}: ${f.title}${f.href ? '' : ' (being written)'}`}>
+<span class="file-tab" aria-hidden="true"></span>
+<span class="file-name">{f.title}</span>
+</a>
+))}
+</div>
+<span class="shelf-board" aria-hidden="true"></span>
+</div>
+))}
+</div>
+</aside>
+</div>
+
+<div class="fly" id="fly" hidden>
+<div class="fly-veil"></div>
+<div class="cover" id="cover">
+<div class="cv-inside"><p class="cv-soon">This file is still being written.<br><span>Check back soon.</span></p><a class="cv-go" target="_blank" rel="noopener" hidden>Open the case study ↗</a></div>
+<div class="cv-front">
+<span class="cv-tab" id="cv-tab"></span>
+<span class="cv-label">
+<span class="cv-meta" id="cv-meta"></span>
+<span class="cv-title" id="cv-title"></span>
+<span class="cv-tags" id="cv-tags"></span>
+</span>
+<span class="cv-mark" aria-hidden="true"><i></i><i></i></span>
+</div>
+</div>
+</div>
+
+<script type="application/json" id="wk-data" set:html={JSON.stringify(numbered.map((f) => ({ no: f.no, title: f.title, where: f.where, year: f.year, href: f.href || '', tags: f.tags.map(tagLabel) })))}></script>
 </Base>
 
-<style is:global>
-.sky,.sky a,.sky button{cursor:auto}
-</style>
-
 <style>
-.wk{min-height:100vh;padding:28px 24px 120px;color:#EFEFEE;font-family:'Commissioner',system-ui,sans-serif;background-color:#141416;background-image:linear-gradient(rgba(169,175,185,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(169,175,185,.075) 1px,transparent 1px);background-size:18px 18px;background-position:-1px -1px}
-.wk > *{max-width:1200px;margin-left:auto;margin-right:auto}
-.wk-back{display:inline-block;margin-bottom:48px;color:#A9AFB9;font-size:13px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none}
-.wk-back:hover,.wk-back:focus-visible{color:#EFEFEE}
-.wk-head h1{margin:0;font-weight:500;font-size:clamp(56px,9vw,120px);line-height:.95;letter-spacing:-.04em}
-.wk-hand,.wk-ask{margin:14px 0 0;font-family:'Kalam',cursive;font-weight:300;font-size:clamp(22px,2.4vw,28px);letter-spacing:1px;color:#C9CDD5}
-.wk-k{margin:88px 0 0;font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#D2453F}
-.wk-ask{margin-top:6px;color:#EFEFEE}
+.wk{--bg:#141416;--fg:#EFEFEE;--mute:#A9AFB9;--line:rgba(169,175,185,.22);--red:#D2453F;display:grid;grid-template-columns:minmax(0,60fr) minmax(0,40fr);gap:56px;box-sizing:border-box;height:100svh;overflow:hidden;grid-template-rows:minmax(0,1fr);padding:28px max(24px,calc((100% - 1280px) / 2)) 0;color:var(--fg);font-family:'Commissioner',system-ui,sans-serif;background-color:var(--bg);background-image:linear-gradient(rgba(169,175,185,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(169,175,185,.075) 1px,transparent 1px);background-size:18px 18px;background-position:-1px -1px}
+.wk-back{display:inline-block;margin-bottom:32px;color:var(--mute);font-size:var(--t-caps);font-weight:500;letter-spacing:.18em;text-transform:uppercase;text-decoration:none}
+.wk-back:hover,.wk-back:focus-visible{color:var(--fg)}
+.wk h1{margin:0;font-size:var(--t-display);font-weight:500;letter-spacing:-.02em;line-height:1}
 
-.wk-tabs{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 30px}
-.wk-tab{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 16px;border:1px solid #34343A;border-radius:10px 10px 4px 4px;background:rgba(6,6,6,.6);color:#C9CDD5;font:inherit;font-size:14px;cursor:pointer;transition:background-color .2s ease,color .2s ease,transform .2s ease}
-.wk-tab::before{content:"";width:10px;height:10px;border-radius:2px;background:var(--c,#EFEFEE)}
-.wk-tab[data-kind="all"]::before{display:none}
-.wk-tab:hover{transform:translateY(-2px)}
-.wk-tab[aria-pressed="true"]{background:var(--c,#EFEFEE);border-color:transparent;color:#1E1E24;transform:translateY(-3px)}
-.wk-tab[aria-pressed="true"]::before{background:#1E1E24}
-.wk-tab:focus-visible,.slip a:focus-visible,.proj a:focus-visible{outline:2px solid #EFEFEE;outline-offset:3px}
-.wk-n{min-width:22px;padding:1px 6px;border-radius:999px;background:rgba(239,239,238,.12);font-size:12px;text-align:center}
-.wk-tab[aria-pressed="true"] .wk-n{background:rgba(30,30,36,.15)}
+.wk-tabs{flex:none;display:flex;flex-wrap:wrap;gap:4px;margin:40px 0 0;border-bottom:1px solid var(--line)}
+.wk-tab{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 16px;margin-bottom:-1px;border:1px solid transparent;border-radius:8px 8px 0 0;background:none;color:var(--mute);font:inherit;font-size:var(--t-body);cursor:pointer;transition:color .2s ease,background-color .2s ease}
+.wk-tab:hover{color:var(--fg)}
+.wk-tab[aria-selected="true"]{color:var(--fg);background:var(--bg);border-color:var(--line);border-bottom-color:var(--bg)}
+.wk-tab:focus-visible,.wk-card a:focus-visible,.file:focus-visible{outline:2px solid var(--fg);outline-offset:3px}
 
-.wk-slips{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:34px 26px;margin:0;padding:0;list-style:none}
-.slip{transform:rotate(var(--r));transition:opacity .3s ease,transform .3s ease}
-.slip[hidden]{display:none}
-.slip > a,.slip > div{position:relative;display:flex;flex-direction:column;gap:12px;height:100%;box-sizing:border-box;padding:26px 24px 20px;background:var(--c);color:#1E1E24;text-decoration:none;box-shadow:0 2px 0 rgba(0,0,0,.08),0 14px 28px rgba(0,0,0,.45);transition:transform .25s ease,box-shadow .25s ease}
-.slip > a:hover{transform:translateY(-4px) rotate(calc(var(--r) * -1));box-shadow:0 2px 0 rgba(0,0,0,.08),0 22px 36px rgba(0,0,0,.5)}
-.tape{position:absolute;left:50%;top:-11px;width:84px;height:22px;margin-left:-42px;background:rgba(239,239,238,.45);transform:rotate(-2deg)}
-.sl-k{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(30,30,36,.6)}
-.sl-t{font-family:'Kalam',cursive;font-weight:300;font-size:23px;line-height:1.25;letter-spacing:1px}
-.sl-f{display:flex;flex-direction:column;gap:2px;margin-top:auto;padding-top:12px;border-top:1px dashed rgba(30,30,36,.25);font-size:13px;color:rgba(30,30,36,.7)}
-.sl-f b{font-weight:600;color:#1E1E24}
-.slip.ph > div{background:transparent;border:2px dashed #3A3A42;box-shadow:none;color:#8A8D96}
-.slip.ph .sl-k,.slip.ph .sl-f,.slip.ph .sl-f b{color:#8A8D96;border-color:#3A3A42}
-.slip.ph .tape{display:none}
+/* One fold: the page never scrolls; if a tab has more cards than fit, only the card list scrolls. */
+.wk-main{display:flex;flex-direction:column;min-height:0}
+.wk-cards{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#34343A transparent;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;gap:16px;margin:0;padding:24px 4px 28px 0;list-style:none}
+.wk-card[hidden]{display:none}
+.wk-card a{position:relative;display:flex;flex-direction:column;gap:10px;height:100%;box-sizing:border-box;padding:18px 20px 14px;border:1px solid var(--line);border-radius:6px;background:#18181C;color:var(--fg);text-decoration:none;transition:border-color .2s ease,transform .25s cubic-bezier(.2,.8,.2,1)}
+.wk-card a:hover,.wk-card a.on{border-color:rgba(210,69,63,.7);transform:translateY(-3px)}
+.wc-meta{font-size:var(--t-caps);font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--mute)}
+.wc-title{font-size:var(--t-h3);font-weight:500;line-height:1.25;letter-spacing:-.01em}
+.wc-foot{display:flex;align-items:flex-end;justify-content:flex-end;gap:12px;margin-top:auto;padding-top:14px;border-top:1px dashed var(--line);font-size:var(--t-small)}
+.wc-foot b{flex:none;font-weight:400;color:var(--mute)}
+.wk-card a:not(.soon) .wc-foot b{text-decoration:underline;text-underline-offset:4px;transition:color .2s ease}
+.wk-card a:not(.soon):hover .wc-foot b,.wk-card a:not(.soon):focus-visible .wc-foot b{color:var(--red)}
+.wk-card a.soon .wc-foot b{color:var(--mute);font-weight:400}
 
-.wk-projects{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:40px 30px;margin:26px 0 0;padding:0;list-style:none}
-.proj{position:relative;display:flex;flex-direction:column;gap:10px;padding:14px 14px 22px;background:#F4F3EF;color:#1E1E24;box-shadow:0 14px 28px rgba(0,0,0,.45);transform:rotate(var(--r))}
-.pin{position:absolute;left:50%;top:-11px;width:22px;height:22px;margin-left:-11px;border-radius:50%;background:#D2453F;box-shadow:0 4px 8px rgba(0,0,0,.45),inset -3px -3px 0 rgba(0,0,0,.18)}
-.proj-cover{display:block;border:1px solid #DADAD4}
-.proj-cover svg{display:block;width:100%;height:auto}
-.ph-cover{display:flex;align-items:center;justify-content:center;aspect-ratio:320/170;color:#8A8D96;font-size:13px;letter-spacing:.14em;text-transform:uppercase;background:repeating-linear-gradient(135deg,#ECEBE5 0 1px,transparent 1px 12px)}
-.proj-meta{margin:6px 4px 0;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#5A5A62}
-.proj h2{margin:0 4px;font-size:22px;font-weight:600;line-height:1.2;letter-spacing:-.01em}
-.proj h2 a{color:inherit;text-decoration:none}
-.proj h2 a:hover{text-decoration:underline;text-decoration-color:#D2453F;text-underline-offset:4px}
-.proj-what{margin:0 4px;font-size:15px;line-height:1.5;color:#3A3A42}
-.proj-doors-k{margin:8px 4px 0;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#D2453F}
-.proj-doors{display:flex;flex-direction:column;gap:6px;margin:0 4px;padding:0;list-style:none;font-family:'Kalam',cursive;font-weight:300;font-size:21px;letter-spacing:1px}
-.proj-doors a{color:#2457B8;text-decoration:none}
-.proj-doors a:hover{text-decoration:underline}
-.proj-doors span{color:#8A8D96}
-.proj.ph{background:transparent;border:2px dashed #3A3A42;box-shadow:none;color:#8A8D96}
-.proj.ph .pin{display:none}
-.proj.ph h2,.proj.ph .proj-what,.proj.ph .proj-meta{color:#8A8D96}
-.proj.ph .ph-cover{background:repeating-linear-gradient(135deg,#1C1C20 0 1px,transparent 1px 12px);border-color:#3A3A42}
-@media (prefers-reduced-motion:reduce){.slip,.slip > a,.wk-tab{transition:none}}
+/* The cabinet */
+.wk-cab{position:sticky;top:28px;align-self:start;display:flex;flex-direction:column;box-sizing:border-box;height:calc(100svh - 28px);padding-top:var(--cab-top,180px);padding-bottom:28px}
+.wk-phone{display:none}
+/* A plain white bookcase, see-through, plants on top, files lying in stacks */
+.cab{--wood:#F4F3EF;--edge:#DCDBD5;position:relative;flex:1;display:flex;flex-direction:column;min-height:0;border:14px solid var(--wood);border-bottom:0;border-radius:2px;box-shadow:0 0 0 1px var(--edge),0 26px 22px -14px rgba(0,0,0,.6)}
+.pl{position:absolute;bottom:calc(100% + 14px);height:auto;overflow:visible;z-index:2;pointer-events:none}
+.pl-money{left:-6px;width:110px}
+.pl-lily{left:22%;width:120px}
+.pl-cactus{left:47%;width:62px}
+.pl-monstera{right:-70px;width:300px}
+.lf{transform-box:fill-box;transform-origin:50% 100%;animation:sway var(--t,4.8s) ease-in-out var(--d,0s) infinite}
+@keyframes sway{0%,100%{transform:rotate(-2.2deg)}50%{transform:rotate(2.6deg)}}
+@media (prefers-reduced-motion:reduce){.lf{animation:none}}
+.vines{position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible;z-index:2;pointer-events:none}
+.wk{overflow-x:clip}
+.shelf{position:relative;flex:1;display:flex;flex-direction:column;min-height:0;padding:30px 30px 0 20px}
+.shelf-y{position:absolute;top:-17px;right:22px;z-index:1;padding:4px 9px 3px;background:var(--red);color:#fff;font-size:var(--t-caps);font-weight:600;letter-spacing:.16em;transform:rotate(-2deg);box-shadow:0 2px 4px rgba(0,0,0,.25)}
+.shelf-row{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;gap:2px}
+.shelf-board{display:block;flex:none;height:14px;margin:0 -30px 0 -20px;background:var(--wood);box-shadow:0 0 0 1px var(--edge)}
+/* The base: a deeper bottom board on two short feet, so the bookcase stands on the floor */
+.shelf:last-of-type .shelf-board{height:30px;margin-bottom:0;border-top:1px solid var(--edge)}
+.cab::after{content:"";position:absolute;left:-14px;right:-14px;bottom:-8px;height:8px;background:linear-gradient(90deg,var(--wood) 0 18px,transparent 18px calc(100% - 18px),var(--wood) calc(100% - 18px))}
 
-/* Frozen type scale (see global.css) */
-.wk-back,.wk-k,.wk-n,.sl-k,.ph-cover,.proj-meta,.proj-doors-k{font-size:var(--t-caps);font-weight:500;letter-spacing:.18em}
-.wk-head h1{font-size:var(--t-display);font-weight:500;letter-spacing:-.02em;line-height:1}
-.wk-tab{font-size:var(--t-body)}
-.sl-f{font-size:var(--t-small)}
-.proj h2{font-size:var(--t-h3);font-weight:500;letter-spacing:-.01em;line-height:1.2}
-.proj-what{font-size:var(--t-body);line-height:1.6}
-.wk-hand,.wk-ask,.sl-t,.proj-doors{font-size:var(--h-note);font-weight:300;letter-spacing:.5px}
+.file{position:relative;flex:none;display:flex;align-items:center;width:calc(var(--w) - var(--o));height:40px;margin-left:var(--o);box-sizing:border-box;padding:0 16px;border:1px solid rgba(30,30,36,.2);border-radius:2px;background:var(--s);color:#1E1E24;text-decoration:none;box-shadow:0 2px 0 rgba(0,0,0,.25);transition:opacity .3s ease,border-color .2s ease,box-shadow .2s ease}
+.file-tab{position:absolute;left:100%;top:var(--t);width:9px;height:16px;border:1px solid rgba(30,30,36,.2);border-left:0;border-radius:0 3px 3px 0;background:var(--s)}
+.file-name{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:var(--t-small);font-weight:500}
+.file:hover,.file.on{border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red),0 2px 0 rgba(0,0,0,.25)}
+.file:hover .file-tab,.file.on .file-tab{border-color:var(--red)}
+.file.gone{visibility:hidden}
+
+/* File to the front */
+.fly{--bg:#141416;--fg:#EFEFEE;--mute:#A9AFB9;--line:rgba(169,175,185,.22);--red:#D2453F;position:fixed;inset:0;z-index:80;font-family:"Commissioner",system-ui,sans-serif;color:var(--fg)}
+.fly[hidden]{display:none}
+.fly-veil{position:absolute;inset:0;background:rgba(8,8,8,.78);opacity:0}
+.cover{position:absolute;perspective:1800px;transform-origin:0 0}
+.cv-front,.cv-inside{position:absolute;inset:0;box-sizing:border-box;border-radius:4px 10px 10px 10px}
+.cv-inside{display:flex;align-items:center;justify-content:center;background-color:var(--bg);background-image:linear-gradient(rgba(169,175,185,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(169,175,185,.075) 1px,transparent 1px);background-size:18px 18px;border:1px solid rgba(169,175,185,.32)}
+.cv-soon{margin:0;padding:0 32px;font-size:var(--t-h3);font-weight:500;line-height:1.4;text-align:center;opacity:0}
+.cv-go{display:inline-flex;align-items:center;min-height:48px;padding:0 22px;border-radius:999px;background:#EFEFEE;color:#1E1E24;font-size:var(--t-body);font-weight:500;text-decoration:none}
+.cv-go[hidden]{display:none}
+.cv-soon span{font-family:'Kalam',cursive;font-weight:300;font-size:var(--h-note);letter-spacing:.5px;color:#C9CDD5}
+.cv-front{display:flex;flex-direction:column;padding:30px 28px;background:#F4F3EF;border:1px solid #CFCEC7;transform-origin:0 50%;backface-visibility:hidden;box-shadow:0 30px 60px rgba(0,0,0,.6)}
+.cv-tab{position:absolute;bottom:100%;left:-1px;width:120px;height:22px;border:1px solid #CFCEC7;border-bottom:0;border-radius:8px 8px 0 0;background:#F4F3EF}
+.cv-label{display:flex;flex-direction:column;gap:14px;margin-top:auto;padding:22px;background:#FFFFFF;color:#1E1E24;border:1px solid #DCDBD5;border-radius:2px;transform:rotate(-1.2deg)}
+.cv-meta{font-size:var(--t-caps);font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#5A5A62}
+.cv-title{font-size:var(--t-h2);font-weight:500;line-height:1.2;letter-spacing:-.01em}
+.cv-tags{display:flex;flex-wrap:wrap;gap:6px;font-size:var(--t-small)}
+.cv-tags span{padding:2px 8px;border:1px solid rgba(30,30,36,.25);border-radius:999px;color:#3A3A42}
+.cv-mark{position:absolute;top:28px;right:28px;width:44px;height:28px}
+.cv-mark i{position:absolute;top:0;width:28px;height:28px;border:1.5px solid #1E1E24;border-radius:50%;box-sizing:border-box}
+.cv-mark i:first-child{left:0}
+.cv-mark i:last-child{right:0;background:radial-gradient(circle at 0 50%,var(--red) 0 13px,transparent 13.5px)}
+.cv-front > *{opacity:0}
+
+@media (max-width:900px){
+  .wk{grid-template-columns:1fr;gap:0;height:auto;overflow:visible;grid-template-rows:none;padding-bottom:64px}
+  .wk-main{display:block}
+  .wk-tabs,.wk-cards{display:none}
+  .wk-phone{display:block;margin:40px 0 0;padding:12px 14px;border:1px dashed var(--line);border-radius:6px;font-size:var(--t-small);color:var(--mute)}
+  .wk-cab{position:static;height:auto;padding-top:0}
+  .pl,.vines{display:none}
+  .cab{margin-top:28px;border-bottom:14px solid var(--wood)}
+  .shelf:last-of-type .shelf-board{display:block;height:0}
+  .shelf{padding:34px 12px 0}
+  .shelf-board{margin:0 -12px}
+  .shelf-row{flex-direction:column;align-items:stretch;gap:8px;height:auto;padding-bottom:14px}
+  .file{width:100%;height:auto;margin-left:0;padding:12px 14px}
+  .file-tab{display:none}
+  .file-name{white-space:normal}
+}
+@media (prefers-reduced-motion:reduce){.file,.wk-card a{transition:none}}
 </style>
 
 <script>
-  // Tabs filter the moments to one kind; "everything" shows them all.
+  type F = { no: string; title: string; where: string; year: number; href: string; tags: string[] };
+  const data: F[] = JSON.parse(document.getElementById('wk-data')!.textContent || '[]');
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const narrow = () => matchMedia('(max-width: 900px)').matches;
   const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('.wk-tab'));
-  const slips = Array.from(document.querySelectorAll<HTMLElement>('.slip'));
-  tabs.forEach((t) => t.addEventListener('click', () => {
-    const kind = t.dataset.kind!;
-    tabs.forEach((b) => b.setAttribute('aria-pressed', String(b === t)));
-    slips.forEach((s) => { s.hidden = kind !== 'all' && s.dataset.kind !== kind; });
-  }));
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('.wk-card'));
+  const files = Array.from(document.querySelectorAll<HTMLAnchorElement>('.file'));
+  const fileOf = (id: string) => files.find((f) => f.dataset.file === id)!;
+  const cardOf = (id: string) => document.querySelector<HTMLAnchorElement>(`.wk-card a[data-file="${id}"]`);
+
+  // Filters: show matching cards.
+  const pick = (t: HTMLButtonElement) => {
+    const id = t.dataset.tab!;
+    tabs.forEach((b) => b.setAttribute('aria-selected', String(b === t)));
+    cards.forEach((c) => { c.hidden = !c.dataset.tags!.split(' ').includes(id); });
+  };
+  tabs.forEach((t) => t.addEventListener('click', () => pick(t)));
+  pick(tabs[0]);
+
+  // The bookcase starts level with the tabs and runs to the bottom of the screen.
+  const cab = document.querySelector<HTMLElement>('.wk-cab')!;
+  const align = () => {
+    if (narrow()) return;
+    const t = tabs[0].getBoundingClientRect().top - document.querySelector('.wk-main')!.getBoundingClientRect().top;
+    cab.style.setProperty('--cab-top', Math.max(0, Math.round(t)) + 'px');
+  };
+  // The money plant: one strand hangs down the bookcase's left side to half its height,
+  // the other trails left to the middle of the line under the tabs.
+  const vines = document.querySelector<SVGSVGElement>('.vines')!;
+  const cabBox = document.querySelector<HTMLElement>('.cab')!;
+  const tabLine = document.querySelector<HTMLElement>('.wk-tabs')!;
+  const VG = ['#3F7A36', '#5C9447', '#2F6A2C', '#4E8A3E'];
+  // Leaves along a strand. Sway phase is taken from the clock, so redrawing on scroll doesn't make them jump.
+  const leaves = (d: string, side: number, onLine?: (x: number, y: number) => boolean) => {
+    let out = `<path d="${d}" fill="none" stroke="#4A6B2F" stroke-width="1.8" stroke-linecap="round"/>`;
+    const tmp = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    tmp.setAttribute('d', d);
+    vines.appendChild(tmp);
+    const L = tmp.getTotalLength(), now = performance.now() / 1000;
+    for (let s = 16, i = 0; s < L - 4; i++) {
+      const p = tmp.getPointAtLength(s), q = tmp.getPointAtLength(Math.min(L, s + 1));
+      const line = !!onLine && onLine(p.x, p.y);
+      const ang = Math.atan2(q.y - p.y, q.x - p.x) * 180 / Math.PI + (i % 2 ? 60 : 120) + side;
+      const sc = (line ? 0.7 : 0.9) + ((i * 37) % 5) * 0.07, T = 4 + (i % 3) * 0.7;
+      out += `<g class="lf" style="--d:-${((now + i * 0.9) % T).toFixed(2)}s;--t:${T.toFixed(1)}s"><use href="#pothos" transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${ang.toFixed(0)}) scale(${sc.toFixed(2)})" fill="${VG[i % 4]}"/></g>`;
+      s += line ? 34 : 19;
+    }
+    tmp.remove();
+    return out;
+  };
+  let downHTML = '', slackLen = 0;
+  const grow = () => {
+    if (narrow()) { vines.innerHTML = ''; return; }
+    const a = vines.getBoundingClientRect(), c = cabBox.getBoundingClientRect(), t = tabLine.getBoundingClientRect();
+    // Both strands grow out of the money plant's pot: from the soil just inside the rim, up and over its left edge.
+    const ox = c.left - a.left + 46, oy = c.top - a.top - 35, rim = c.left - a.left + 27, ex = c.left - a.left - 7;
+    // Down the side: a loose, wavy strand to three quarters of the bookcase. The bookcase doesn't scroll, so this is drawn once.
+    if (!downHTML) {
+      const bottom = c.top - a.top + c.height * 0.78;
+      let down = `M${ox} ${oy} C${ox - 8} ${oy - 16} ${rim - 4} ${oy - 12} ${rim - 6} ${oy + 6} C${rim - 8} ${oy + 22} ${ex - 2} ${oy + 30} ${ex} ${oy + 60}`;
+      for (let y = oy + 60, k = 0; y < bottom; y += 46, k++) down += ` Q${ex + (k % 2 ? 7 : -9)} ${y + 23} ${ex} ${Math.min(bottom, y + 46)}`;
+      downHTML = leaves(down, 180);
+    }
+    // Across: twisted around the line under the tabs, from its right end to its middle. It is tied to the line, so as the
+    // page scrolls the coil moves with the line and the stretch back to the pot hangs with some slack.
+    const R = t.right - a.left - 6, mid = t.left + t.width / 2 - a.left, ty = t.bottom - a.top;
+    const sx = rim - 8, sy = oy + 2, dist = Math.hypot(R - sx, ty - sy);
+    if (!slackLen) slackLen = dist + 160;
+    const sag = Math.max(24, (slackLen - dist) * 0.55);
+    let across = `M${ox - 6} ${oy} C${ox - 12} ${oy - 20} ${rim - 2} ${oy - 18} ${sx} ${sy} C${sx - 40} ${Math.max(sy, ty) + sag} ${R + 70} ${Math.max(sy, ty) + sag * 0.6} ${R} ${ty}`;
+    const P = 16, crosses: number[] = [];
+    for (let x = R, k = 0; x - P >= mid; x -= P, k++) { across += ` Q${x - P / 2} ${ty + (k % 2 ? 7 : -7)} ${x - P} ${ty}`; crosses.push(x - P); }
+    let out = downHTML + leaves(across, 0, (x, y) => Math.abs(y - ty) < 9 && x <= R);
+    // Where the strand passes behind the line, the line is drawn over it, so it reads as twisting around.
+    crosses.forEach((x, k) => { if (k % 2 === 0) out += `<path d="M${x - 5} ${ty} H${x + 5}" stroke="#3B3C42" stroke-width="1.4"/>`; });
+    vines.innerHTML = out;
+  };
+  let vraf = 0;
+  addEventListener('scroll', () => { if (!vraf) vraf = requestAnimationFrame(() => { vraf = 0; grow(); }); }, { passive: true });
+  const layout = () => { align(); downHTML = ''; slackLen = 0; grow(); };
+  layout();
+  addEventListener('resize', layout);
+  document.fonts?.ready.then(layout);
+
+  // Card and file light each other up.
+  const hover = (id: string, on: boolean) => {
+    fileOf(id).classList.toggle('on', on);
+    cardOf(id)?.classList.toggle('on', on);
+  };
+  [...files, ...document.querySelectorAll<HTMLAnchorElement>('.wk-card a')].forEach((el) => {
+    const id = el.dataset.file!;
+    el.addEventListener('pointerenter', () => hover(id, true));
+    el.addEventListener('pointerleave', () => hover(id, false));
+    el.addEventListener('focus', () => hover(id, true));
+    el.addEventListener('blur', () => hover(id, false));
+    el.addEventListener('click', (e) => { if (narrow() && data[+id].href) return; e.preventDefault(); open(id); });
+  });
+
+
+  // File to the front: slide up off the shelf, fly to the middle as its cover, rest there 10s, open,
+  // and the case study opens in a new tab. Then the file goes back on its shelf, ready for the next pick.
+  const fly = document.getElementById('fly')!;
+  const veil = fly.querySelector<HTMLElement>('.fly-veil')!;
+  const cover = document.getElementById('cover')!;
+  const front = cover.querySelector<HTMLElement>('.cv-front')!;
+  const soon = cover.querySelector<HTMLElement>('.cv-soon')!;
+  const go = cover.querySelector<HTMLAnchorElement>('.cv-go')!;
+  const tabEl = document.getElementById('cv-tab')!;
+  const HOLD = 10000;
+  let opening = false, token = 0, current: HTMLElement | null = null;
+  // A click on the cover before the 10s are up opens it straight away.
+  let skipHold: (() => void) | null = null, wantOpen = false, opened = false;
+  const run = (el: Element, k: Keyframe[], o: KeyframeAnimationOptions) => el.animate(k, { fill: 'forwards', ...o }).finished.catch(() => {});
+  const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+  let geo = { x: 0, y: 0, W: 0, H: 0 };
+  const fromFile = (file: HTMLElement) => {
+    const r = file.getBoundingClientRect();
+    return `translate(${r.left - geo.x}px, ${r.top - geo.y}px) scale(${r.width / geo.W}, ${r.height / geo.H})`;
+  };
+
+  async function open(id: string) {
+    if (opening) return;
+    opening = true;
+    const tok = ++token;
+    const alive = () => tok === token;
+    const d = data[+id], file = fileOf(id);
+    current = file;
+    document.getElementById('cv-meta')!.textContent = `${d.where} · ${d.year}`;
+    document.getElementById('cv-title')!.textContent = d.title;
+    document.getElementById('cv-tags')!.innerHTML = d.tags.map((t) => `<span>${t}</span>`).join('');
+    go.href = d.href || '#';
+    const col = getComputedStyle(file).getPropertyValue('--s').trim();
+    front.style.background = col; tabEl.style.background = col;
+    const W = Math.min(460, innerWidth * 0.8), H = Math.min(W * 1.32, innerHeight * 0.78);
+    geo = { x: (innerWidth - W) / 2, y: (innerHeight - H) / 2 + 12, W, H };
+    Object.assign(cover.style, { left: geo.x + 'px', top: geo.y + 'px', width: W + 'px', height: H + 'px' });
+    file.classList.remove('on');
+
+    if (RM) {
+      fly.hidden = false;
+      Array.from(front.children).forEach((c) => ((c as HTMLElement).style.opacity = '1'));
+      veil.style.opacity = '1';
+      file.classList.add('gone');
+    } else {
+      // 1. it slides out of the stack
+      await run(file, [{ transform: 'translateX(0)' }, { transform: 'translateX(-80px)' }], { duration: 520, easing: 'cubic-bezier(.4,0,.2,1)' });
+      if (!alive()) return;
+      const from = fromFile(file);
+      // The cover only appears now, already sitting where the file is, so the file is seen leaving once.
+      cover.animate([{ transform: from }], { fill: 'forwards' });
+      fly.hidden = false;
+      file.classList.add('gone');
+      // 2. it glides to the front, growing into the cover
+      run(veil, [{ opacity: 0 }, { opacity: 1 }], { duration: 900, easing: 'ease-out' });
+      await run(cover, [{ transform: from }, { transform: 'none' }], { duration: 1050, easing: 'cubic-bezier(.22,1,.36,1)' });
+      if (!alive()) return;
+      // 3. the cover reads
+      await Promise.all(Array.from(front.children).map((c, i) => run(c, [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 600, delay: i * 160, easing: 'cubic-bezier(.22,1,.36,1)' })));
+    }
+    // 4. it rests on the cover (a click on the cover cuts this short)
+    if (!wantOpen) await new Promise<void>((r) => { skipHold = r; setTimeout(r, HOLD); });
+    skipHold = null; wantOpen = false;
+    if (!alive()) return;
+    // 5. the cover turns open
+    if (RM) front.style.visibility = 'hidden';
+    else await run(front, [{ transform: 'rotateY(0)' }, { transform: 'rotateY(-165deg)' }], { duration: 1300, easing: 'cubic-bezier(.65,0,.35,1)' });
+    if (!alive()) return;
+    opened = true;
+    if (!d.href) { run(soon, [{ opacity: 0 }, { opacity: 1 }], { duration: 500 }); return; }
+    // 6. inside waits a button that opens the case study in a new tab (browsers block tabs that open on their own)
+    soon.style.display = 'none'; go.hidden = false; run(go, [{ opacity: 0 }, { opacity: 1 }], { duration: 500 });
+  }
+
+  // The file goes back to its shelf: the cover closes, shrinks back into the file, and the file slides down into place.
+  async function putBack() {
+    const file = current;
+    if (!file || fly.hidden) return;
+    const tok = ++token;
+    if (!RM) {
+      const opened = getComputedStyle(front).transform;
+      run(soon, [{ opacity: 0 }], { duration: 300 });
+      run(go, [{ opacity: 0 }], { duration: 300 });
+      await run(front, [{ transform: opened === 'none' ? 'rotateY(0)' : opened }, { transform: 'rotateY(0)' }], { duration: 900, easing: 'cubic-bezier(.65,0,.35,1)' });
+      if (tok !== token) return;
+      Array.from(front.children).forEach((c) => run(c, [{ opacity: 0 }], { duration: 300 }));
+      run(veil, [{ opacity: 0 }], { duration: 900, easing: 'ease-in' });
+      await run(cover, [{ transform: 'none' }, { transform: fromFile(file) }], { duration: 900, easing: 'cubic-bezier(.65,0,.35,1)' });
+      if (tok !== token) return;
+    }
+    reset();
+    file.classList.remove('gone');
+    if (!RM) await run(file, [{ transform: 'translateX(-80px)' }, { transform: 'translateX(0)' }], { duration: 520, easing: 'cubic-bezier(.4,0,.2,1)' });
+    file.getAnimations().forEach((a) => a.cancel());
+  }
+  function reset() {
+    fly.hidden = true;
+    [veil, cover, front, soon, go, ...Array.from(front.children)].forEach((el) => { el.getAnimations().forEach((a) => a.cancel()); (el as HTMLElement).style.opacity = ''; (el as HTMLElement).style.visibility = ''; });
+    soon.style.display = '';
+    go.hidden = true;
+    opening = false; opened = false; wantOpen = false; skipHold = null;
+  }
+  go.addEventListener('click', (e) => { e.stopPropagation(); setTimeout(putBack, 300); });
+  cover.addEventListener('click', (e) => {
+    if (opened || !opening) return;
+    e.stopPropagation();
+    if (skipHold) skipHold(); else wantOpen = true;
+  });
+  fly.addEventListener('click', () => putBack());
+  addEventListener('keydown', (e) => { if (e.key === 'Escape') putBack(); });
+  // Coming back with the browser's back button: put the cabinet back as it was.
+  addEventListener('pageshow', (e) => {
+    if (!e.persisted) return;
+    token++;
+    reset();
+    files.forEach((f) => { f.getAnimations().forEach((a) => a.cancel()); f.classList.remove('gone'); });
+  });
 </script>
