@@ -92,7 +92,7 @@ const S = ['#FFFFFF', '#F4F3EF', '#ECEBE5', '#FAFAF7', '#F0EFEA', '#FFFFFF', '#E
 <div class="fly" id="fly" hidden>
 <div class="fly-veil"></div>
 <div class="cover" id="cover">
-<div class="cv-inside"><p class="cv-soon">This file is still being written.<br><span>Check back soon.</span></p></div>
+<div class="cv-inside"><p class="cv-soon">This file is still being written.<br><span>Check back soon.</span></p><a class="cv-go" target="_blank" rel="noopener" hidden>Open the case study ↗</a></div>
 <div class="cv-front">
 <span class="cv-tab" id="cv-tab"></span>
 <span class="cv-label">
@@ -164,6 +164,8 @@ const S = ['#FFFFFF', '#F4F3EF', '#ECEBE5', '#FAFAF7', '#F0EFEA', '#FFFFFF', '#E
 .cv-front,.cv-inside{position:absolute;inset:0;box-sizing:border-box;border-radius:4px 10px 10px 10px}
 .cv-inside{display:flex;align-items:center;justify-content:center;background-color:var(--bg);background-image:linear-gradient(rgba(169,175,185,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(169,175,185,.075) 1px,transparent 1px);background-size:18px 18px;border:1px solid rgba(169,175,185,.32)}
 .cv-soon{margin:0;padding:0 32px;font-size:var(--t-h3);font-weight:500;line-height:1.4;text-align:center;opacity:0}
+.cv-go{display:inline-flex;align-items:center;min-height:48px;padding:0 22px;border-radius:999px;background:#EFEFEE;color:#1E1E24;font-size:var(--t-body);font-weight:500;text-decoration:none}
+.cv-go[hidden]{display:none}
 .cv-soon span{font-family:'Kalam',cursive;font-weight:300;font-size:var(--h-note);letter-spacing:.5px;color:#C9CDD5}
 .cv-front{display:flex;flex-direction:column;padding:30px 28px;background:#F4F3EF;border:1px solid #CFCEC7;transform-origin:0 50%;backface-visibility:hidden;box-shadow:0 30px 60px rgba(0,0,0,.6)}
 .cv-tab{position:absolute;bottom:100%;left:-1px;width:120px;height:22px;border:1px solid #CFCEC7;border-bottom:0;border-radius:8px 8px 0 0;background:#F4F3EF}
@@ -247,81 +249,105 @@ const S = ['#FFFFFF', '#F4F3EF', '#ECEBE5', '#FAFAF7', '#F0EFEA', '#FFFFFF', '#E
   // The newest file sits half-pulled, an invitation.
   setTimeout(() => fileOf(peekId).classList.add('peek'), RM ? 0 : 900);
 
-  // File to the front: slide up off the shelf, fly to the middle as its cover, open, go inside.
+  // File to the front: slide up off the shelf, fly to the middle as its cover, rest there 10s, open,
+  // and the case study opens in a new tab. Then the file goes back on its shelf, ready for the next pick.
   const fly = document.getElementById('fly')!;
   const veil = fly.querySelector<HTMLElement>('.fly-veil')!;
   const cover = document.getElementById('cover')!;
   const front = cover.querySelector<HTMLElement>('.cv-front')!;
   const soon = cover.querySelector<HTMLElement>('.cv-soon')!;
-  let opening = false, shut: (() => void) | null = null;
-  const run = (el: Element, k: Keyframe[], o: KeyframeAnimationOptions) => el.animate(k, { fill: 'forwards', ...o }).finished;
+  const go = cover.querySelector<HTMLAnchorElement>('.cv-go')!;
+  const HOLD = 10000;
+  let opening = false, token = 0, current: HTMLElement | null = null;
+  const run = (el: Element, k: Keyframe[], o: KeyframeAnimationOptions) => el.animate(k, { fill: 'forwards', ...o }).finished.catch(() => {});
   const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+  let geo = { x: 0, y: 0, W: 0, H: 0 };
+  const fromFile = (file: HTMLElement) => {
+    const r = file.getBoundingClientRect();
+    return `translate(${r.left - geo.x}px, ${r.top - geo.y}px) scale(${r.width / geo.W}, ${r.height / geo.H})`;
+  };
 
   async function open(id: string) {
     if (opening) return;
     opening = true;
+    const tok = ++token;
+    const alive = () => tok === token;
     const d = data[+id], file = fileOf(id);
-    
+    current = file;
     document.getElementById('cv-meta')!.textContent = `${d.where} · ${d.year}`;
     document.getElementById('cv-title')!.textContent = d.title;
     document.getElementById('cv-tags')!.innerHTML = d.tags.map((t) => `<span>${t}</span>`).join('');
-    cover.classList.toggle('real', !!d.href);
-    const W = Math.min(460, innerWidth * 0.8), Hh = Math.min(W * 1.32, innerHeight * 0.78);
-    const x = (innerWidth - W) / 2, y = (innerHeight - Hh) / 2 + 12;
-    Object.assign(cover.style, { left: x + 'px', top: y + 'px', width: W + 'px', height: Hh + 'px' });
+    go.href = d.href || '#';
+    const W = Math.min(460, innerWidth * 0.8), H = Math.min(W * 1.32, innerHeight * 0.78);
+    geo = { x: (innerWidth - W) / 2, y: (innerHeight - H) / 2 + 12, W, H };
+    Object.assign(cover.style, { left: geo.x + 'px', top: geo.y + 'px', width: W + 'px', height: H + 'px' });
     fly.hidden = false;
+    file.classList.remove('peek', 'on');
 
     if (RM) {
-      front.querySelectorAll<HTMLElement>(':scope > *').forEach((c) => (c.style.opacity = '1'));
-      await run(fly, [{ opacity: 0 }, { opacity: 1 }], { duration: 1 });
+      Array.from(front.children).forEach((c) => ((c as HTMLElement).style.opacity = '1'));
       veil.style.opacity = '1';
-    } else {
-      // 1. lift off the shelf
-      file.classList.remove('peek', 'on');
-      await run(file, [{ transform: 'translateY(-90px)' }], { duration: 260, easing: 'cubic-bezier(.3,0,.2,1)' });
-      const r = file.getBoundingClientRect();
       file.classList.add('gone');
-      // 2. fly to the front, growing into the cover
-      const from = `translate(${r.left - x}px, ${r.top - y}px) scale(${r.width / W}, ${r.height / Hh})`;
-      run(veil, [{ opacity: 0 }, { opacity: 1 }], { duration: 520 });
-      await run(cover, [{ transform: from }, { transform: 'translate(0,0) scale(1) rotate(-1.5deg)', offset: 0.8 }, { transform: 'none' }], { duration: 640, easing: 'cubic-bezier(.2,.8,.2,1)' });
+    } else {
+      // 1. it slides up off the shelf
+      await run(file, [{ transform: 'translateY(0)' }, { transform: 'translateY(-90px)' }], { duration: 520, easing: 'cubic-bezier(.4,0,.2,1)' });
+      if (!alive()) return;
+      const from = fromFile(file);
+      file.classList.add('gone');
+      // 2. it glides to the front, growing into the cover
+      run(veil, [{ opacity: 0 }, { opacity: 1 }], { duration: 900, easing: 'ease-out' });
+      await run(cover, [{ transform: from }, { transform: 'none' }], { duration: 1050, easing: 'cubic-bezier(.22,1,.36,1)' });
+      if (!alive()) return;
       // 3. the cover reads
-      await Promise.all(Array.from(front.children).map((c, i) => run(c, [{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: 260, delay: i * 70 })));
+      await Promise.all(Array.from(front.children).map((c, i) => run(c, [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 600, delay: i * 160, easing: 'cubic-bezier(.22,1,.36,1)' })));
     }
-    await wait(RM ? 600 : 520);
-    // 4. it opens
-    if (!RM) await run(front, [{ transform: 'rotateY(0)' }, { transform: 'rotateY(-165deg)' }], { duration: 620, easing: 'cubic-bezier(.5,0,.2,1)' });
-    else front.style.visibility = 'hidden';
-    if (d.href) {
-      // 5. the inside fills the screen and you're in
-      const k = Math.max(innerWidth / W, innerHeight / Hh) * 1.1;
-      front.style.visibility = 'hidden';
-      await run(cover, [{ transform: 'none' }, { transform: `translate(${innerWidth / 2 - x - W / 2}px, ${innerHeight / 2 - y - Hh / 2}px) scale(${k})` }], { duration: RM ? 1 : 420, easing: 'cubic-bezier(.5,0,.3,1)', });
-      location.href = d.href;
-      return;
-    }
-    run(soon, [{ opacity: 0 }, { opacity: 1 }], { duration: 300 });
-    shut = () => close(file);
+    // 4. it rests on the cover
+    await wait(HOLD);
+    if (!alive()) return;
+    // 5. the cover turns open
+    if (RM) front.style.visibility = 'hidden';
+    else await run(front, [{ transform: 'rotateY(0)' }, { transform: 'rotateY(-165deg)' }], { duration: 1300, easing: 'cubic-bezier(.65,0,.35,1)' });
+    if (!alive()) return;
+    if (!d.href) { run(soon, [{ opacity: 0 }, { opacity: 1 }], { duration: 500 }); return; }
+    // 6. inside waits a button that opens the case study in a new tab (browsers block tabs that open on their own)
+    soon.style.display = 'none'; go.hidden = false; run(go, [{ opacity: 0 }, { opacity: 1 }], { duration: 500 });
   }
 
-  async function close(file: HTMLElement) {
-    shut = null;
-    await run(fly, [{ opacity: 1 }, { opacity: 0 }], { duration: RM ? 1 : 260 });
+  // The file goes back to its shelf: the cover closes, shrinks back into the file, and the file slides down into place.
+  async function putBack() {
+    const file = current;
+    if (!file || fly.hidden) return;
+    const tok = ++token;
+    if (!RM) {
+      const opened = getComputedStyle(front).transform;
+      run(soon, [{ opacity: 0 }], { duration: 300 });
+      run(go, [{ opacity: 0 }], { duration: 300 });
+      await run(front, [{ transform: opened === 'none' ? 'rotateY(0)' : opened }, { transform: 'rotateY(0)' }], { duration: 900, easing: 'cubic-bezier(.65,0,.35,1)' });
+      if (tok !== token) return;
+      Array.from(front.children).forEach((c) => run(c, [{ opacity: 0 }], { duration: 300 }));
+      run(veil, [{ opacity: 0 }], { duration: 900, easing: 'ease-in' });
+      await run(cover, [{ transform: 'none' }, { transform: fromFile(file) }], { duration: 900, easing: 'cubic-bezier(.65,0,.35,1)' });
+      if (tok !== token) return;
+    }
     reset();
-    file.getAnimations().forEach((a) => a.cancel());
     file.classList.remove('gone');
+    if (!RM) await run(file, [{ transform: 'translateY(-90px)' }, { transform: 'translateY(0)' }], { duration: 520, easing: 'cubic-bezier(.4,0,.2,1)' });
+    file.getAnimations().forEach((a) => a.cancel());
   }
   function reset() {
     fly.hidden = true;
-    [fly, veil, cover, front, soon, ...Array.from(front.children)].forEach((el) => { el.getAnimations().forEach((a) => a.cancel()); (el as HTMLElement).style.opacity = ''; (el as HTMLElement).style.visibility = ''; });
-    veil.style.opacity = '';
+    [veil, cover, front, soon, go, ...Array.from(front.children)].forEach((el) => { el.getAnimations().forEach((a) => a.cancel()); (el as HTMLElement).style.opacity = ''; (el as HTMLElement).style.visibility = ''; });
+    soon.style.display = '';
+    go.hidden = true;
     opening = false;
   }
-  fly.addEventListener('click', () => shut?.());
-  addEventListener('keydown', (e) => { if (e.key === 'Escape') shut?.(); });
+  go.addEventListener('click', (e) => { e.stopPropagation(); setTimeout(putBack, 300); });
+  fly.addEventListener('click', () => putBack());
+  addEventListener('keydown', (e) => { if (e.key === 'Escape') putBack(); });
   // Coming back with the browser's back button: put the cabinet back as it was.
   addEventListener('pageshow', (e) => {
     if (!e.persisted) return;
+    token++;
     reset();
     files.forEach((f) => { f.getAnimations().forEach((a) => a.cancel()); f.classList.remove('gone'); });
     fileOf(peekId).classList.add('peek');
