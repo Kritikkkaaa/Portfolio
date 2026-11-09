@@ -266,42 +266,54 @@ const S = ['#A9B9C8', '#D6B79C', '#BFC995', '#A9C6B4', '#D2AAA4', '#D6B79C', '#A
   const cabBox = document.querySelector<HTMLElement>('.cab')!;
   const tabLine = document.querySelector<HTMLElement>('.wk-tabs')!;
   const VG = ['#3F7A36', '#5C9447', '#2F6A2C', '#4E8A3E'];
+  // Leaves along a strand. Sway phase is taken from the clock, so redrawing on scroll doesn't make them jump.
+  const leaves = (d: string, side: number, onLine?: (x: number, y: number) => boolean) => {
+    let out = `<path d="${d}" fill="none" stroke="#4A6B2F" stroke-width="1.8" stroke-linecap="round"/>`;
+    const tmp = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    tmp.setAttribute('d', d);
+    vines.appendChild(tmp);
+    const L = tmp.getTotalLength(), now = performance.now() / 1000;
+    for (let s = 16, i = 0; s < L - 4; i++) {
+      const p = tmp.getPointAtLength(s), q = tmp.getPointAtLength(Math.min(L, s + 1));
+      const line = !!onLine && onLine(p.x, p.y);
+      const ang = Math.atan2(q.y - p.y, q.x - p.x) * 180 / Math.PI + (i % 2 ? 60 : 120) + side;
+      const sc = (line ? 0.7 : 0.9) + ((i * 37) % 5) * 0.07, T = 4 + (i % 3) * 0.7;
+      out += `<g class="lf" style="--d:-${((now + i * 0.9) % T).toFixed(2)}s;--t:${T.toFixed(1)}s"><use href="#pothos" transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${ang.toFixed(0)}) scale(${sc.toFixed(2)})" fill="${VG[i % 4]}"/></g>`;
+      s += line ? 34 : 19;
+    }
+    tmp.remove();
+    return out;
+  };
+  let downHTML = '', slackLen = 0;
   const grow = () => {
     if (narrow()) { vines.innerHTML = ''; return; }
     const a = vines.getBoundingClientRect(), c = cabBox.getBoundingClientRect(), t = tabLine.getBoundingClientRect();
     // Both strands grow out of the money plant's pot: from the soil just inside the rim, up and over its left edge.
     const ox = c.left - a.left + 46, oy = c.top - a.top - 35, rim = c.left - a.left + 27, ex = c.left - a.left - 7;
-    const bottom = c.top - a.top + c.height * 0.78;
-    // Down the side: a loose, wavy strand to three quarters of the bookcase.
-    let down = `M${ox} ${oy} C${ox - 8} ${oy - 16} ${rim - 4} ${oy - 12} ${rim - 6} ${oy + 6} C${rim - 8} ${oy + 22} ${ex - 2} ${oy + 30} ${ex} ${oy + 60}`;
-    for (let y = oy + 60, k = 0; y < bottom; y += 46, k++) down += ` Q${ex + (k % 2 ? 7 : -9)} ${y + 23} ${ex} ${Math.min(bottom, y + 46)}`;
-    // Across: droops from the pot to the right end of the line under the tabs, then twists around the line to its middle.
+    // Down the side: a loose, wavy strand to three quarters of the bookcase. The bookcase doesn't scroll, so this is drawn once.
+    if (!downHTML) {
+      const bottom = c.top - a.top + c.height * 0.78;
+      let down = `M${ox} ${oy} C${ox - 8} ${oy - 16} ${rim - 4} ${oy - 12} ${rim - 6} ${oy + 6} C${rim - 8} ${oy + 22} ${ex - 2} ${oy + 30} ${ex} ${oy + 60}`;
+      for (let y = oy + 60, k = 0; y < bottom; y += 46, k++) down += ` Q${ex + (k % 2 ? 7 : -9)} ${y + 23} ${ex} ${Math.min(bottom, y + 46)}`;
+      downHTML = leaves(down, 180);
+    }
+    // Across: twisted around the line under the tabs, from its right end to its middle. It is tied to the line, so as the
+    // page scrolls the coil moves with the line and the stretch back to the pot hangs with some slack.
     const R = t.right - a.left - 6, mid = t.left + t.width / 2 - a.left, ty = t.bottom - a.top;
-    let across = `M${ox - 6} ${oy} C${ox - 12} ${oy - 20} ${rim - 2} ${oy - 18} ${rim - 8} ${oy + 2} C${rim - 40} ${oy + 30} ${R + 70} ${ty + 34} ${R} ${ty}`;
+    const sx = rim - 8, sy = oy + 2, dist = Math.hypot(R - sx, ty - sy);
+    if (!slackLen) slackLen = dist + 160;
+    const sag = Math.max(24, (slackLen - dist) * 0.55);
+    let across = `M${ox - 6} ${oy} C${ox - 12} ${oy - 20} ${rim - 2} ${oy - 18} ${sx} ${sy} C${sx - 40} ${Math.max(sy, ty) + sag} ${R + 70} ${Math.max(sy, ty) + sag * 0.6} ${R} ${ty}`;
     const P = 16, crosses: number[] = [];
     for (let x = R, k = 0; x - P >= mid; x -= P, k++) { across += ` Q${x - P / 2} ${ty + (k % 2 ? 7 : -7)} ${x - P} ${ty}`; crosses.push(x - P); }
-    let out = '';
-    [down, across].forEach((d, k) => {
-      out += `<path d="${d}" fill="none" stroke="#4A6B2F" stroke-width="1.8" stroke-linecap="round"/>`;
-      const tmp = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      tmp.setAttribute('d', d);
-      vines.appendChild(tmp);
-      const L = tmp.getTotalLength();
-      for (let s = 16, i = 0; s < L - 4; i++) {
-        const p = tmp.getPointAtLength(s), q = tmp.getPointAtLength(Math.min(L, s + 1));
-        const onLine = k === 1 && Math.abs(p.y - ty) < 9 && p.x <= R;
-        const ang = Math.atan2(q.y - p.y, q.x - p.x) * 180 / Math.PI + (i % 2 ? 60 : 120) + (k ? 0 : 180);
-        const sc = (onLine ? 0.7 : 0.9) + ((i * 37) % 5) * 0.07;
-        out += `<g class="lf" style="--d:-${((i * 0.9) % 5).toFixed(1)}s;--t:${(4 + (i % 3) * 0.7).toFixed(1)}s"><use href="#pothos" transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${ang.toFixed(0)}) scale(${sc.toFixed(2)})" fill="${VG[i % 4]}"/></g>`;
-        s += onLine ? 34 : 19;
-      }
-      tmp.remove();
-    });
+    let out = downHTML + leaves(across, 0, (x, y) => Math.abs(y - ty) < 9 && x <= R);
     // Where the strand passes behind the line, the line is drawn over it, so it reads as twisting around.
     crosses.forEach((x, k) => { if (k % 2 === 0) out += `<path d="M${x - 5} ${ty} H${x + 5}" stroke="#3B3C42" stroke-width="1.4"/>`; });
     vines.innerHTML = out;
   };
-  const layout = () => { align(); grow(); };
+  let vraf = 0;
+  addEventListener('scroll', () => { if (!vraf) vraf = requestAnimationFrame(() => { vraf = 0; grow(); }); }, { passive: true });
+  const layout = () => { align(); downHTML = ''; slackLen = 0; grow(); };
   layout();
   addEventListener('resize', layout);
   document.fonts?.ready.then(layout);
