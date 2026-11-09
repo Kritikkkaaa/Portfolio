@@ -28,16 +28,15 @@ const years = [2026, 2025, 2024];
 const numbered = files.map((f, i) => ({ ...f, id: i, no: String(i + 1).padStart(2, '0') }));
 const tagLabel = (t: string) => tabs.find((x) => x.id === t)!.label;
 // Small, fixed variety so the shelves don't look stamped out: heights, tab positions, shades.
-const H = [184, 170, 190, 176, 164, 188, 172, 180];
+const H = [156, 144, 162, 150, 140, 160, 146, 154];
 const T = [10, 24, 6, 18, 12, 28, 8, 20];
-const S = ['#1E1D24', '#26252D', '#1A1A20', '#2B2A33', '#222128', '#1C1B22', '#28272F', '#202026'];
+const S = ['#FFFFFF', '#F4F3EF', '#ECEBE5', '#FAFAF7', '#F0EFEA', '#FFFFFF', '#E8E7E1', '#F6F5F1'];
 ---
 <Base title="work · Kritika Upadhyay" description="Case studies, filed by year. Filter by the work i owned, how i use data, or how i work with users.">
 <div class="wk">
 <div class="wk-main">
 <a class="wk-back" href="/">← back</a>
-<h1>work</h1>
-<p class="wk-lead">Every project, filed by the year it happened. Filter by what you came to see, or pull a file from the cabinet.</p>
+<h1>Work</h1>
 
 <div class="wk-tabs" role="tablist" aria-label="Filter the work">
 {tabs.map((t, i) => <button type="button" role="tab" class="wk-tab" data-tab={t.id} aria-selected={i === 0 ? 'true' : 'false'}>{t.label}<span class="wk-n">{files.filter((f) => f.tags.includes(t.id)).length}</span></button>)}
@@ -47,7 +46,6 @@ const S = ['#1E1D24', '#26252D', '#1A1A20', '#2B2A33', '#222128', '#1C1B22', '#2
 {numbered.map((f) => (
 <li class="wk-card" data-file={f.id} data-tags={f.tags.join(' ')} hidden={!f.tags.includes('owned')}>
 <a href={f.href ?? '#'} data-file={f.id} class={f.href ? '' : 'soon'}>
-<span class="wc-tab">{f.year}</span>
 <span class="wc-meta">File {f.no} · {f.where}</span>
 <span class="wc-title">{f.title}</span>
 <span class="wc-line">{f.line}</span>
@@ -59,7 +57,6 @@ const S = ['#1E1D24', '#26252D', '#1A1A20', '#2B2A33', '#222128', '#1C1B22', '#2
 </div>
 
 <aside class="wk-cab" aria-label="The file cabinet">
-<p class="wk-note" aria-hidden="true">pull a file <svg viewBox="0 0 60 30"><path d="M2 8 C 18 2, 36 4, 52 20 M44 21 L53 21 L51 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></p>
 <p class="wk-phone">The cabinet opens best on a desktop. Here are the files.</p>
 <div class="cab">
 <span class="cab-top" aria-hidden="true"></span>
@@ -69,7 +66,7 @@ const S = ['#1E1D24', '#26252D', '#1A1A20', '#2B2A33', '#222128', '#1C1B22', '#2
 <div class="shelf-row">
 {numbered.filter((f) => f.year === y).map((f) => (
 <a class={`file${f.href ? ' real' : ''}`} href={f.href ?? '#'} data-file={f.id} style={`--h:${H[f.id % 8]}px;--t:${T[f.id % 8]}px;--s:${S[f.id % 8]}`} aria-label={`File ${f.no}: ${f.title}${f.href ? '' : ' (being written)'}`}>
-<span class="file-tab" aria-hidden="true">{f.no}</span>
+<span class="file-tab" aria-hidden="true"></span>
 <span class="file-name">{f.title}</span>
 <span class="file-where" aria-hidden="true">{f.where}</span>
 </a>
@@ -107,7 +104,6 @@ const S = ['#1E1D24', '#26252D', '#1A1A20', '#2B2A33', '#222128', '#1C1B22', '#2
 .wk-back{display:inline-block;margin-bottom:48px;color:var(--mute);font-size:var(--t-caps);font-weight:500;letter-spacing:.18em;text-transform:uppercase;text-decoration:none}
 .wk-back:hover,.wk-back:focus-visible{color:var(--fg)}
 .wk h1{margin:0;font-size:var(--t-display);font-weight:500;letter-spacing:-.02em;line-height:1}
-.wk-lead{max-width:34em;margin:18px 0 0;font-size:var(--t-lead);line-height:1.5;color:#C9CDD5}
 
 .wk-tabs{display:flex;flex-wrap:wrap;gap:4px;margin:56px 0 0;border-bottom:1px solid var(--line)}
 .wk-tab{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 16px;margin-bottom:-1px;border:1px solid transparent;border-radius:8px 8px 0 0;background:none;color:var(--mute);font:inherit;font-size:var(--t-body);cursor:pointer;transition:color .2s ease,background-color .2s ease}
@@ -119,10 +115,8 @@ const S = ['#1E1D24', '#26252D', '#1A1A20', '#2B2A33', '#222128', '#1C1B22', '#2
 
 .wk-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:36px 20px;margin:44px 0 0;padding:0;list-style:none}
 .wk-card[hidden]{display:none}
-.wk-card a{position:relative;display:flex;flex-direction:column;gap:10px;height:100%;box-sizing:border-box;padding:22px 22px 18px;border:1px solid var(--line);border-radius:0 6px 6px 6px;background:#18181C;color:var(--fg);text-decoration:none;transition:border-color .2s ease,transform .25s cubic-bezier(.2,.8,.2,1)}
+.wk-card a{position:relative;display:flex;flex-direction:column;gap:10px;height:100%;box-sizing:border-box;padding:22px 22px 18px;border:1px solid var(--line);border-radius:6px;background:#18181C;color:var(--fg);text-decoration:none;transition:border-color .2s ease,transform .25s cubic-bezier(.2,.8,.2,1)}
 .wk-card a:hover,.wk-card a.on{border-color:rgba(210,69,63,.7);transform:translateY(-3px)}
-.wc-tab{position:absolute;left:-1px;bottom:100%;padding:3px 12px 2px;border:1px solid var(--line);border-bottom:0;border-radius:6px 6px 0 0;background:#18181C;color:var(--mute);font-size:var(--t-caps);font-weight:500;letter-spacing:.18em;transition:border-color .2s ease,color .2s ease}
-.wk-card a:hover .wc-tab,.wk-card a.on .wc-tab{border-color:rgba(210,69,63,.7);color:var(--fg)}
 .wc-meta{font-size:var(--t-caps);font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--mute)}
 .wc-title{font-size:var(--t-h3);font-weight:500;line-height:1.25;letter-spacing:-.01em}
 .wc-line{font-size:var(--t-body);line-height:1.6;color:#C9CDD5}
@@ -134,28 +128,24 @@ const S = ['#1E1D24', '#26252D', '#1A1A20', '#2B2A33', '#222128', '#1C1B22', '#2
 
 /* The cabinet */
 .wk-cab{position:relative}
-.wk-note{position:absolute;top:8px;left:-8px;display:flex;align-items:flex-start;gap:4px;margin:0;font-family:'Kalam',cursive;font-weight:300;font-size:var(--h-note);letter-spacing:.5px;color:#C9CDD5;transform:rotate(-4deg)}
-.wk-note svg{width:52px;height:26px;margin-top:10px;color:var(--red)}
 .wk-phone{display:none}
-.cab{position:sticky;top:72px;margin-top:52px;padding:0 22px;border:1.5px solid rgba(169,175,185,.5);border-top:0;border-bottom:0;background:rgba(11,10,15,.55)}
-.cab-top,.cab-foot{position:absolute;left:-12px;right:-12px;height:14px;border:1.5px solid rgba(169,175,185,.5);background:#0B0A0F;border-radius:3px}
-.cab-top{top:-14px}
-.cab-foot{bottom:-14px}
-.shelf{position:relative;padding-top:56px}
-.shelf-y{position:absolute;top:18px;left:0;font-size:var(--t-caps);font-weight:500;letter-spacing:.18em;color:var(--mute)}
-.shelf-row{display:flex;align-items:flex-end;gap:12px;height:196px}
-.shelf-board{display:block;height:10px;margin:0 -22px;border-top:1.5px solid rgba(169,175,185,.5);border-bottom:1.5px solid rgba(169,175,185,.5);background:#0B0A0F}
-.shelf:last-of-type .shelf-board{border-bottom:0}
+/* A plain white bookcase: frame, grey back panel, three shelves, a plinth */
+.cab{--wood:#F4F3EF;--edge:#DCDBD5;--back:#E3E2DC;position:sticky;top:72px;margin-top:92px;padding:14px 14px 0;background:var(--wood);border:1px solid var(--edge);border-radius:2px;box-shadow:0 30px 60px rgba(0,0,0,.45)}
+.cab-top,.cab-foot{display:none}
+.shelf{position:relative;padding:44px 20px 0;background:var(--back);box-shadow:inset 0 14px 18px -10px rgba(0,0,0,.22),inset 10px 0 14px -10px rgba(0,0,0,.12)}
+.shelf-y{position:absolute;top:16px;left:20px;font-size:var(--t-caps);font-weight:500;letter-spacing:.18em;color:#8A8D96}
+.shelf-row{display:flex;align-items:flex-end;gap:10px;height:166px}
+.shelf-board{display:block;height:14px;margin:0 -20px;background:var(--wood);border-top:1px solid var(--edge);border-bottom:1px solid var(--edge)}
+.shelf:last-of-type .shelf-board{height:26px;border-bottom:0}
 
-.file{position:relative;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;width:78px;height:var(--h);box-sizing:border-box;padding:16px 0 10px;border:1px solid rgba(169,175,185,.32);border-bottom:0;border-radius:3px 3px 0 0;background:var(--s);color:var(--fg);text-decoration:none;transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .3s ease,border-color .2s ease}
-.file-tab{position:absolute;bottom:100%;left:var(--t);padding:2px 6px 1px;border:1px solid rgba(169,175,185,.32);border-bottom:0;border-radius:4px 4px 0 0;background:var(--s);font-size:10px;font-weight:600;letter-spacing:.08em;color:var(--mute)}
-.file.real .file-tab{background:var(--red);border-color:var(--red);color:#fff}
+.file{position:relative;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;width:88px;height:var(--h);box-sizing:border-box;padding:16px 0 10px;border:1px solid #CFCEC7;border-bottom:0;border-radius:2px 2px 0 0;background:var(--s);color:#1E1E24;text-decoration:none;box-shadow:2px 0 0 rgba(0,0,0,.05);transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .3s ease,border-color .2s ease,box-shadow .2s ease}
+.file-tab{position:absolute;bottom:100%;left:var(--t);width:24px;height:9px;border:1px solid #CFCEC7;border-bottom:0;border-radius:3px 3px 0 0;background:var(--s)}
 .file-name{flex:1;overflow:hidden;writing-mode:vertical-rl;transform:rotate(180deg);font-size:var(--t-small);font-weight:500;line-height:1.15;text-align:left;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
-.file-where{margin-top:8px;writing-mode:vertical-rl;transform:rotate(180deg);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);white-space:nowrap;overflow:hidden;max-height:64px}
-.file:hover,.file.on{transform:translateY(-22px);border-color:rgba(210,69,63,.75)}
-.file.peek{transform:translateY(-58px)}
-.file.peek:hover{transform:translateY(-66px)}
-.file.dim{opacity:.28}
+.file-where{margin-top:8px;writing-mode:vertical-rl;transform:rotate(180deg);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#5A5A62;white-space:nowrap;overflow:hidden;max-height:64px}
+.file:hover,.file.on{border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red)}
+.file:hover .file-tab,.file.on .file-tab{border-color:var(--red)}
+.file.peek{transform:translateY(-44px)}
+.file.dim{opacity:.35}
 .file.gone{visibility:hidden}
 
 /* File to the front */
@@ -167,31 +157,32 @@ const S = ['#1E1D24', '#26252D', '#1A1A20', '#2B2A33', '#222128', '#1C1B22', '#2
 .cv-inside{display:flex;align-items:center;justify-content:center;background-color:var(--bg);background-image:linear-gradient(rgba(169,175,185,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(169,175,185,.075) 1px,transparent 1px);background-size:18px 18px;border:1px solid rgba(169,175,185,.32)}
 .cv-soon{margin:0;padding:0 32px;font-size:var(--t-h3);font-weight:500;line-height:1.4;text-align:center;opacity:0}
 .cv-soon span{font-family:'Kalam',cursive;font-weight:300;font-size:var(--h-note);letter-spacing:.5px;color:#C9CDD5}
-.cv-front{display:flex;flex-direction:column;padding:30px 28px;background:#26252D;border:1px solid rgba(169,175,185,.4);transform-origin:0 50%;backface-visibility:hidden;box-shadow:0 30px 60px rgba(0,0,0,.6)}
-.cv-tab{position:absolute;bottom:100%;left:-1px;padding:5px 16px 4px;border:1px solid rgba(169,175,185,.4);border-bottom:0;border-radius:8px 8px 0 0;background:#26252D;font-size:var(--t-caps);font-weight:600;letter-spacing:.18em;color:var(--fg)}
-.cover.real .cv-tab{background:var(--red);border-color:var(--red)}
-.cv-label{display:flex;flex-direction:column;gap:14px;margin-top:auto;padding:22px;background:#EFEFEE;color:#1E1E24;border-radius:2px;transform:rotate(-1.2deg)}
+.cv-front{display:flex;flex-direction:column;padding:30px 28px;background:#F4F3EF;border:1px solid #CFCEC7;transform-origin:0 50%;backface-visibility:hidden;box-shadow:0 30px 60px rgba(0,0,0,.6)}
+.cv-tab{position:absolute;bottom:100%;left:-1px;width:120px;height:22px;border:1px solid #CFCEC7;border-bottom:0;border-radius:8px 8px 0 0;background:#F4F3EF}
+.cv-label{display:flex;flex-direction:column;gap:14px;margin-top:auto;padding:22px;background:#FFFFFF;color:#1E1E24;border:1px solid #DCDBD5;border-radius:2px;transform:rotate(-1.2deg)}
 .cv-meta{font-size:var(--t-caps);font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#5A5A62}
 .cv-title{font-size:var(--t-h2);font-weight:500;line-height:1.2;letter-spacing:-.01em}
 .cv-tags{display:flex;flex-wrap:wrap;gap:6px;font-size:var(--t-small)}
 .cv-tags span{padding:2px 8px;border:1px solid rgba(30,30,36,.25);border-radius:999px;color:#3A3A42}
 .cv-mark{position:absolute;top:28px;right:28px;width:44px;height:28px}
-.cv-mark i{position:absolute;top:0;width:28px;height:28px;border:1.5px solid var(--fg);border-radius:50%;box-sizing:border-box}
+.cv-mark i{position:absolute;top:0;width:28px;height:28px;border:1.5px solid #1E1E24;border-radius:50%;box-sizing:border-box}
 .cv-mark i:first-child{left:0}
 .cv-mark i:last-child{right:0;background:radial-gradient(circle at 0 50%,var(--red) 0 13px,transparent 13.5px)}
 .cv-front > *{opacity:0}
 
 @media (max-width:900px){
   .wk{grid-template-columns:1fr;gap:0}
-  .wk-tabs,.wk-cards,.wk-note{display:none}
+  .wk-tabs,.wk-cards{display:none}
   .wk-phone{display:block;margin:40px 0 0;padding:12px 14px;border:1px dashed var(--line);border-radius:6px;font-size:var(--t-small);color:var(--mute)}
-  .cab{position:static;margin-top:40px;padding:0 14px}
+  .cab{position:static;margin-top:28px}
+  .shelf{padding:44px 12px 0}
+  .shelf-board{margin:0 -12px}
   .shelf-row{flex-direction:column;align-items:stretch;gap:8px;height:auto;padding-bottom:14px}
-  .file{flex-direction:row;align-items:center;gap:12px;width:auto;height:auto;padding:12px 14px;border-bottom:1px solid rgba(169,175,185,.32);border-radius:3px}
-  .file-tab{position:static;flex:none;border-bottom:1px solid rgba(169,175,185,.32);border-radius:3px}
+  .file{flex-direction:row;align-items:center;gap:12px;width:auto;height:auto;padding:12px 14px;border-bottom:1px solid #CFCEC7;border-radius:2px}
+  .file-tab{display:none}
   .file-name,.file-where{writing-mode:horizontal-tb;transform:none;-webkit-line-clamp:3}
   .file-where{margin:0 0 0 auto;max-height:none;white-space:normal;text-align:right;max-width:30%}
-  .file:hover,.file.on,.file.peek,.file.peek:hover{transform:none}
+  .file.peek{transform:none}
   .file.dim{opacity:1}
 }
 @media (prefers-reduced-motion:reduce){.file,.wk-card a{transition:none}}
@@ -223,7 +214,6 @@ const S = ['#1E1D24', '#26252D', '#1A1A20', '#2B2A33', '#222128', '#1C1B22', '#2
   const hover = (id: string, on: boolean) => {
     fileOf(id).classList.toggle('on', on);
     cardOf(id)?.classList.toggle('on', on);
-    if (id !== peekId) fileOf(peekId).classList.toggle('peek', !on && !opening);
   };
   [...files, ...document.querySelectorAll<HTMLAnchorElement>('.wk-card a')].forEach((el) => {
     const id = el.dataset.file!;
@@ -251,8 +241,8 @@ const S = ['#1E1D24', '#26252D', '#1A1A20', '#2B2A33', '#222128', '#1C1B22', '#2
     if (opening) return;
     opening = true;
     const d = data[+id], file = fileOf(id);
-    document.getElementById('cv-tab')!.textContent = `${d.year} · File ${d.no}`;
-    document.getElementById('cv-meta')!.textContent = d.where;
+    
+    document.getElementById('cv-meta')!.textContent = `${d.where} · ${d.year}`;
     document.getElementById('cv-title')!.textContent = d.title;
     document.getElementById('cv-tags')!.innerHTML = d.tags.map((t) => `<span>${t}</span>`).join('');
     cover.classList.toggle('real', !!d.href);
