@@ -656,31 +656,14 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .fx-note{position:absolute;margin:0;white-space:nowrap;font-family:'Kalam',cursive;font-weight:300;font-size:var(--h-hint);letter-spacing:.5px;line-height:1.2;color:#D8C9A3;opacity:.9}
 .fx-note.a{left:0;top:-26px;transform:rotate(-3deg);transform-origin:left bottom}
 .fx-note.b{right:0;bottom:-30px;transform:rotate(-2deg);transform-origin:right top}
-.fx-ctas{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:68px}
+.fx-ctas{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:0}
 .fx-cta{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border-radius:10px;font-size:var(--t-body);font-weight:500;line-height:1;text-decoration:none;border:1px solid rgba(169,175,185,.2);color:#EFEFEE;transition:border-color .2s,background-color .2s,color .2s}
 .fx-cta svg{width:16px;height:16px;flex:none}
 .fx-cta.p{background:#EFEFEE;border-color:#EFEFEE;color:#111}
 .fx-cta.p:hover{background:#D8C9A3;border-color:#D8C9A3}
 .fx-cta.s:hover{border-color:#D8C9A3;color:#D8C9A3}
 .fx-cta:focus-visible,.fx-soc a:focus-visible{outline:2px solid #D8C9A3;outline-offset:3px}
-.fx-duo{width:100%;max-width:1120px;margin-top:64px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 20px;align-items:center}
-.fx-svg{grid-column:1/-1;grid-row:1;width:100%;max-width:520px;height:auto;margin:0 auto;display:block}
-.fx-lst{display:flex;flex-direction:column;gap:14px}
-.fx-lst h3{margin:0;font-size:var(--t-caps);font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#8A8D96}
-.fx-lst ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
-.fx-lst li{font-size:var(--t-body);font-weight:500;line-height:1.35;color:#C9CDD5}
-.fx-lst li.hw{font-family:'Kalam',cursive;font-weight:300;font-size:var(--h-note);letter-spacing:.5px;color:#D8C9A3}
-@media (min-width:1100px){
-.fx-duo{grid-template-columns:minmax(240px,1fr) minmax(300px,520px) minmax(240px,1fr)}
-.fx-svg{grid-column:2;grid-row:1}
-.fx-lst{gap:0}
-.fx-lst.l{grid-column:1;grid-row:1;justify-self:end}
-.fx-lst.r{grid-column:3;grid-row:1;justify-self:start}
-.fx-lst h3{line-height:36px}
-.fx-lst ul{gap:0}
-.fx-lst li{height:36px;line-height:36px;white-space:nowrap}
-}
-.fx-rm{margin:18px 0 0;font-size:var(--t-h2);font-weight:500;text-align:center}
+.fx-svg{width:100%;max-width:760px;height:auto;margin:0 auto 40px;display:block;overflow:visible}
 .fx-base{width:100%;max-width:1180px;box-sizing:border-box;margin-top:64px;padding:18px 24px 22px;border-top:1px solid rgba(169,175,185,.2);display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:14px 24px;font-size:var(--t-small);line-height:1.4;color:#8A8D96}
 .fx-base .loc{justify-self:start}
 .fx-base .cred{justify-self:end;text-align:right}
@@ -691,7 +674,7 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .fx-soc a svg{width:20px;height:20px}
 .fx-soc a:hover{color:#D8C9A3}
 @media (max-width:760px){.fx-base{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center}.fx-soc{order:-1}.fx-base .loc,.fx-base .cred{justify-self:center;text-align:center}}
-@media (max-width:600px){.fx{padding-top:64px}.fx-note{position:static;transform:none;display:block}.fx-note.b{text-align:right;margin-top:10px}.fx-note.a{margin-bottom:10px}.fx-ctas{margin-top:36px;flex-wrap:nowrap;gap:10px}.fx-cta{padding:12px 16px;gap:8px;white-space:nowrap}}
+@media (max-width:600px){.fx{padding-top:64px}.fx-note{position:static;transform:none;display:block}.fx-note.b{text-align:right;margin-top:10px}.fx-note.a{margin-bottom:10px}.fx-ctas{margin-top:0;flex-wrap:nowrap;gap:10px}.fx-svg{margin-bottom:28px;max-width:420px}.fx-cta{padding:12px 16px;gap:8px;white-space:nowrap}}
 /* Open nav sits on a dark band; footer base row on the same dark; footer is its own full screen */
 .mk-bar{position:fixed;top:0;left:0;right:0;height:76px;background:#0B0A0F;border-bottom:1px solid rgba(169,175,185,.14);opacity:0;pointer-events:none;transition:opacity .25s ease}
 .mk-nav.open .mk-bar{opacity:1;pointer-events:auto}
@@ -699,7 +682,7 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .mk-menu,.mk-menu.on{position:fixed}
 .fx{min-height:100svh;box-sizing:border-box;padding-bottom:0}
 .fx-base{margin-top:auto;background:#0B0A0F;box-shadow:0 0 0 100vmax #0B0A0F;clip-path:inset(0 -100vmax -100vmax);border-top-color:rgba(169,175,185,.14)}
-.fx-duo{margin-bottom:64px}
+.fx-ctas{margin-bottom:64px}
 /* Scenic route, zoomed out: the river view */
 .tl-scroller[hidden],.rv[hidden]{display:none !important}
 .tl-scroller,.rv{transition:opacity .22s ease}

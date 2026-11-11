@@ -1,39 +1,22 @@
 ---
-// Footer, "the ask" (from the "kritikal marks" sheet): headline with margin notes, two pills, two hand-drawn circles
-// that slide together into one red disc which writes "Hire your unfair advantage!", a list on each side, and a base row.
-// The animation is a slow 17.2s loop that only runs while the footer is on screen; reduced motion shows it still.
+// Footer, "the ask": six hand-drawn bubbles (what working together looks like)
+// that drift into one red circle saying "Let's work together", which fades and leaves "you give me a problem, i solve it for good!", with the two pills under it.
+// Loops every 17s while the footer is on screen (the last line holds ~3.5s, then fades); pauses off screen. Reduced motion shows the last line.
 const LINKEDIN = 'https://www.linkedin.com/in/kritika-upadhyay-2001/?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
 const RESUME = 'https://drive.google.com/file/d/1IPT2eeox1bCwBc_nGS3Vlu_2IADxWtbV?utm_source=portfolio&utm_medium=footer&utm_campaign=hunt-2026&utm_id=kritikal-work';
 const INSTAGRAM = 'https://www.instagram.com/verykritikal/?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
 const TWITTER = 'https://x.com/verykritikal?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
 const SUBSTACK = 'https://substack.com/@verykritikal/posts?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
-const left = ['crunch numbers', 'brainstorm new direction', 'argue over the specifics', 'execute together'];
-const right = ['Ownership', 'Taste and eye for detail', 'E-t-E execution', 'Results'];
 ---
 <footer class="fx" id="coffee">
-<div class="fx-ask">
-<p class="fx-note a">you bring me problems</p>
-<h2>Let's work together!</h2>
-<p class="fx-note b">i will work on the solution</p>
-</div>
+<h2 class="sr-only">Let's work together</h2>
+
+<svg class="fx-svg" id="fx-svg" viewBox="0 0 760 380" role="img" aria-label="Six bubbles, brainstorm new ideas, argue over specifics, end-to-end execution, customer empathy, silly jokes and a whole lot of coffee, drift together into one circle that says: Let's work together. The circle fades and leaves: you give me a problem, i solve it for good!"></svg>
 
 <div class="fx-ctas">
-<a class="fx-cta p" href={LINKEDIN} target="_blank" rel="noopener">Let's connect on LinkedIn <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M6 4.5h5.5V10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-<a class="fx-cta s" href={RESUME} target="_blank" rel="noopener">See resume <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M6 4.5h5.5V10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+<a class="fx-cta p" href={LINKEDIN} target="_blank" rel="noopener">Let's connect on LinkedIn</a>
+<a class="fx-cta s" href={RESUME} target="_blank" rel="noopener">See resume</a>
 </div>
-
-<div class="fx-duo">
-<div class="fx-lst l">
-<h3>what i am looking for</h3>
-<ul>{left.map((t) => <li>{t}</li>)}<li class="hw">Make an Impact!</li></ul>
-</div>
-<svg class="fx-svg" id="fx-svg" viewBox="0 0 520 290" role="img" aria-label="Two circles, what i am looking for and what you need, slide together and merge into one red disc that says: Hire your unfair advantage!"></svg>
-<div class="fx-lst r">
-<h3>what you need</h3>
-<ul>{right.map((t) => <li>{t}</li>)}<li class="hw">Silly jokes are complimentary</li></ul>
-</div>
-</div>
-<p class="fx-rm" id="fx-rm" hidden>Hire your unfair advantage!</p>
 
 <div class="fx-base">
 <span class="loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg>Bengaluru, India</span>
@@ -50,96 +33,125 @@ const right = ['Ownership', 'Taste and eye for detail', 'E-t-E execution', 'Resu
 <script>
   const C = { fg: '#efefee', red: '#d2453f', gold: '#d8c9a3', cool: '#c9cdd5' };
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const MQ = matchMedia('(max-width: 600px)');
   const f = (n: number) => Math.round(n * 100) / 100;
   const svg = document.getElementById('fx-svg') as unknown as SVGSVGElement;
-  const FR = 112, FD0 = 258, FCX = 260, FCY = 140, T = 17.2, SWEEP = 372 * Math.PI / 180;
-  const FL = ['Hire your', 'unfair', 'advantage!'];
-  const lensD = (r: number, d: number) => {
-    const h = Math.sqrt(Math.max(r * r - (d / 2) * (d / 2), 0));
-    return `M0 ${f(-h)}A${f(r)} ${f(r)} 0 0 1 0 ${f(h)}A${f(r)} ${f(r)} 0 0 1 0 ${f(-h)}Z`;
+  const T_END = 12.2, LOOP = 17;
+  const WORDS = [['brainstorm', 'new ideas'], ['argue over', 'specifics'], ['end-to-end', 'execution'], ['customer', 'empathy'], ['silly jokes'], ['a whole lot', 'of coffee']];
+  // Two layouts: a wide scatter for desktop, a 2 x 3 scatter for phones (same 1:1 text size on a ~360px screen).
+  const L = {
+    wide: { w: 760, h: 380, cx: 380, cy: 190, r: 66, R: 122, fs: 15.5, big: 36, end: 34,
+      pos: [[120, 135], [285, 80], [465, 85], [640, 140], [240, 282], [530, 280]] },
+    narrow: { w: 360, h: 470, cx: 180, cy: 235, r: 60, R: 122, fs: 14.5, big: 34, end: 30,
+      pos: [[90, 78], [268, 96], [96, 240], [264, 254], [90, 398], [270, 392]] }
   };
-  // A hand-drawn circle: starts at the top, goes clockwise, overshoots a little and wobbles by about 1%.
-  const wob = (seed: number, u: number) => {
-    const th = -Math.PI / 2 + u * SWEEP;
-    const rr = FR * (1 + 0.011 * Math.sin(3 * th + seed) + 0.007 * Math.sin(5 * th + seed * 2.3) + 0.01 * (u - 0.5));
-    return [rr * Math.cos(th), rr * Math.sin(th)];
-  };
-  const path = (seed: number) => {
+  type Lay = typeof L.wide;
+
+  // A hand-drawn ring: starts at the top, goes clockwise, overshoots a little and wobbles by about 1%.
+  const SWEEP = 372 * Math.PI / 180;
+  const ringPath = (r: number, seed: number) => {
     let s = '';
-    for (let i = 0; i <= 140; i++) { const p = wob(seed, i / 140); s += (i ? 'L' : 'M') + f(p[0]) + ' ' + f(p[1]); }
+    for (let i = 0; i <= 120; i++) {
+      const u = i / 120, th = -Math.PI / 2 + u * SWEEP;
+      const rr = r * (1 + 0.012 * Math.sin(3 * th + seed) + 0.008 * Math.sin(5 * th + seed * 2.3) + 0.01 * (u - 0.5));
+      s += (i ? 'L' : 'M') + f(rr * Math.cos(th)) + ' ' + f(rr * Math.sin(th));
+    }
     return s;
   };
-  const ring = `fill="none" stroke="${C.cool}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"`;
-  svg.innerHTML = '<defs>' + FL.map((_, j) => `<clipPath id="fx-cl${j}"><rect id="fx-cr${j}" x="${FCX - 130}" y="${114 + 34 * j - 30}" width="0" height="46"/></clipPath>`).join('') + '</defs>' +
-    `<g id="fx-gl"><circle r="${FR}" fill="rgba(201,205,213,0.06)"/></g><g id="fx-gr"><circle r="${FR}" fill="rgba(201,205,213,0.06)"/></g>` +
-    `<path id="fx-lens" fill="${C.red}" transform="translate(${FCX} ${FCY})"/>` +
-    `<g id="fx-ol"><path d="${path(0.6)}" ${ring}/></g><g id="fx-or"><path d="${path(2.1)}" ${ring}/></g>` +
-    `<circle id="fx-pen" r="3.4" fill="${C.gold}" opacity="0"/>` +
-    FL.map((s, j) => `<g clip-path="url(#fx-cl${j})"><text id="fx-ct${j}" x="${FCX}" y="${114 + 34 * j}" text-anchor="middle" font-family="Kalam, cursive" font-weight="300" font-size="28" letter-spacing=".5" fill="${C.fg}" opacity="0">${s}</text></g>`).join('') +
-    `<path id="fx-ul" d="M204 197C222 191 244 201 262 196S302 193 318 197" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" fill="none" stroke="${C.fg}" stroke-width="1.6" stroke-linecap="round" opacity="0"/>`;
-  const g = (id: string) => document.getElementById(id) as unknown as SVGElement;
-  const E = {
-    gl: g('fx-gl'), gr: g('fx-gr'), lens: g('fx-lens'), ol: g('fx-ol'), or: g('fx-or'), pen: g('fx-pen'), ul: g('fx-ul'),
-    t: [g('fx-ct0'), g('fx-ct1'), g('fx-ct2')], c: [g('fx-cr0'), g('fx-cr1'), g('fx-cr2')]
-  };
-  const pl = E.ol.firstChild as SVGPathElement, pr = E.or.firstChild as SVGPathElement;
   const sm = (a: number, b: number, x: number) => { const t = Math.min(Math.max((x - a) / (b - a), 0), 1); return t * t * (3 - 2 * t); };
-  const ease = (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+  const ease = (x: number) => { x = Math.min(Math.max(x, 0), 1); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
   const set = (el: Element, k: string, v: string | number) => el.setAttribute(k, String(v));
+  const ring = (d: string) => `<path d="${d}" fill="none" stroke="${C.cool}" stroke-width="1.5" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>`;
+  // Text that writes itself in left to right: a clip rect whose width grows.
+  const wipe = (id: string, x: number, y: number, size: number, fill: string, txt: string) =>
+    `<clipPath id="${id}c"><rect id="${id}r" x="${x - 300}" y="${y - size * 1.1}" width="0" height="${size * 1.6}"/></clipPath>` +
+    `<text id="${id}" clip-path="url(#${id}c)" x="${x}" y="${y}" text-anchor="middle" font-family="Kalam, cursive" font-weight="300" font-size="${size}" letter-spacing=".5" fill="${fill}">${txt}</text>`;
 
-  const draw = (t: number, still: boolean) => {
-    let d: number, pulse = 0, d1 = 1, d2 = 1, fa = 1, ao = 1, tf = 1;
-    if (still) d = FR * 1.1;
-    else {
-      d1 = sm(0.3, 2.0, t); d2 = sm(1.1, 2.8, t);
-      fa = sm(2.4, 3.2, t); ao = 1 - sm(16.0, 16.8, t); fa *= ao;
-      if (t < 5.4) d = FD0 - 14 * sm(3.6, 5.4, t);
-      else if (t < 8.0) d = (FD0 - 14) * (1 - ease((t - 5.4) / 2.6));
-      else if (t < 14.2) d = 0;
-      else if (t < 16.4) d = FD0 * ease((t - 14.2) / 2.2);
-      else d = FD0;
-      pulse = 0.07 * Math.sin(Math.PI * Math.min(Math.max((t - 7.9) / 0.7, 0), 1));
-      tf = 1 - sm(14.0, 14.6, t);
-    }
-    const dd = Math.max(d, 0.01), s = 1 + pulse, r = FR * s, so = Math.min(d / (0.35 * FR), 1) * ao;
-    const xl = FCX - dd / 2, xr = FCX + dd / 2;
-    set(E.gl, 'transform', `translate(${f(xl)} ${FCY}) scale(${f(s)})`);
-    set(E.gr, 'transform', `translate(${f(xr)} ${FCY}) scale(${f(s)})`);
-    set(E.ol, 'transform', `translate(${f(xl)} ${FCY}) scale(${f(s)})`);
-    set(E.or, 'transform', `translate(${f(xr)} ${FCY}) scale(${f(s)})`);
-    set(E.gl.firstChild as Element, 'fill-opacity', f(fa)); set(E.gr.firstChild as Element, 'fill-opacity', f(fa));
-    set(pl, 'stroke-dashoffset', f(1 - d1)); set(pr, 'stroke-dashoffset', f(1 - d2));
-    set(pl, 'stroke-opacity', d1 > 0.004 ? f(0.75 * so) : 0); set(pr, 'stroke-opacity', d2 > 0.004 ? f(0.75 * so) : 0);
-    set(E.lens, 'd', dd < 2 * r ? lensD(r, dd) : '');
-    let pu = 0, px = xl, seed = 0.6;
-    if (!still && d1 > 0.004 && d1 < 0.998) pu = d1;
-    else if (!still && d2 > 0.004 && d2 < 0.998) { pu = d2; px = xr; seed = 2.1; }
-    if (pu > 0) { const pp = wob(seed, pu); set(E.pen, 'cx', f(px + pp[0])); set(E.pen, 'cy', f(FCY + pp[1])); set(E.pen, 'opacity', 1); }
-    else set(E.pen, 'opacity', 0);
-    for (let j = 0; j < 3; j++) {
-      const p = still ? 0 : sm(8.2 + 0.7 * j, 9.0 + 0.7 * j, t);
-      set(E.c[j], 'width', f(260 * p)); set(E.t[j], 'opacity', p > 0 ? f(tf) : 0);
-    }
-    const up = still ? 0 : sm(10.2, 10.9, t);
-    set(E.ul, 'stroke-dashoffset', f(1 - up)); set(E.ul, 'opacity', up > 0.004 ? f(tf) : 0);
+  let lay: Lay, E: { b: SVGGElement[]; br: SVGPathElement[]; bf: SVGCircleElement[]; bt: SVGTextElement[]; big: SVGGElement; bigR: SVGPathElement; bigF: SVGCircleElement; w: { t: Element; r: Element }[]; ul: SVGPathElement };
+
+  const build = () => {
+    lay = MQ.matches ? L.narrow : L.wide;
+    const { w, h, cx, cy, r, R, fs, big, end } = lay;
+    set(svg, 'viewBox', `0 0 ${w} ${h}`);
+    let s = '';
+    WORDS.forEach((ln, i) => {
+      const y0 = -((ln.length - 1) * fs * 1.25) / 2 + fs * 0.36;
+      s += `<g id="fx-b${i}" opacity="0"><circle r="${r}" fill="${C.cool}" fill-opacity=".06"/>${ring(ringPath(r, 0.6 + i * 1.3))}` +
+        `<text text-anchor="middle" font-family="Commissioner, system-ui, sans-serif" font-weight="500" font-size="${fs}" fill="${C.cool}">` +
+        ln.map((t, j) => `<tspan x="0" y="${f(y0 + j * fs * 1.25)}">${t}</tspan>`).join('') + `</text></g>`;
+    });
+    s += `<g id="fx-big" opacity="0"><circle r="${R}" fill="${C.red}"/>${ring(ringPath(R, 2.1))}</g>`;
+    s += wipe('fx-w0', cx, cy - big * 0.2, big, C.fg, "Let's work") + wipe('fx-w1', cx, cy + big * 1.0, big, C.fg, 'together');
+    s += wipe('fx-w2', cx, cy - end * 0.35, end, C.gold, 'you give me a problem,') + wipe('fx-w3', cx, cy + end * 0.95, end, C.gold, 'i solve it for good!');
+    const uy = cy + end * 1.3, ux = cx - end * 2.6;
+    s += `<path id="fx-ul" d="M${ux} ${uy}c${f(end * 1.2)} -5 ${f(end * 2.8)} 5 ${f(end * 5.2)} -2" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" fill="none" stroke="${C.gold}" stroke-width="1.6" stroke-linecap="round" opacity="0"/>`;
+    svg.innerHTML = s;
+    const q = <T,>(id: string) => document.getElementById(id) as unknown as T;
+    const b = WORDS.map((_, i) => q<SVGGElement>('fx-b' + i));
+    const bg = q<SVGGElement>('fx-big');
+    E = {
+      b, br: b.map((g) => g.querySelector('path')!), bf: b.map((g) => g.querySelector('circle')!), bt: b.map((g) => g.querySelector('text')!),
+      big: bg, bigR: bg.querySelector('path')!, bigF: bg.querySelector('circle')!,
+      w: [0, 1, 2, 3].map((j) => ({ t: q<Element>('fx-w' + j), r: q<Element>('fx-w' + j + 'r') })), ul: q<SVGPathElement>('fx-ul')
+    };
   };
 
-  if (RM) {
-    draw(0, true);
-    (document.getElementById('fx-rm') as HTMLElement).hidden = false;
-  } else {
-    draw(0, false);
-    let acc = 0, last = 0, raf = 0, vis = false;
-    const frame = (now: number) => {
-      const dt = Math.min((now - last) / 1000, 0.05); last = now;
-      acc += dt;
-      draw(acc % T, false);
+  // Timeline (seconds): 0-4 bubbles pop in one by one and bob; 4.6-6.6 they drift to the middle and shrink;
+  // 5.8-7 one red circle grows out of them; 7-8.2 "Let's work together" writes in; 9.4-10.4 the circle fades;
+  // 10-12.2 "you give me a problem, i solve it for good!" writes in, with an underline; 15.8-16.6 it fades; 17 starts over.
+  const draw = (t: number) => {
+    const { cx, cy } = lay;
+    for (let i = 0; i < 6; i++) {
+      const a = 0.3 + 0.55 * i;
+      const draw1 = sm(a, a + 1.0, t), fill = sm(a + 0.2, a + 0.8, t);
+      const m = ease((t - (4.6 + 0.1 * i)) / 1.9);
+      const bob = 1 - m;
+      const [px, py] = lay.pos[i];
+      const x = px + (cx - px) * m + 4 * Math.sin(t * 0.9 + i * 1.7) * bob;
+      const y = py + (cy - py) * m + 5 * Math.sin(t * 0.7 + i * 2.3) * bob;
+      const sc = (0.85 + 0.15 * sm(a, a + 0.6, t)) * (1 - 0.45 * m);
+      set(E.b[i], 'transform', `translate(${f(x)} ${f(y)}) scale(${f(sc)})`);
+      set(E.b[i], 'opacity', draw1 > 0.002 ? f(1 - sm(6.0, 6.7, t)) : 0);
+      set(E.br[i], 'stroke-dashoffset', f(1 - draw1));
+      set(E.br[i], 'stroke-opacity', '.75');
+      set(E.bf[i], 'fill-opacity', f(0.06 * fill));
+      set(E.bt[i], 'opacity', f(fill * (1 - sm(5.3, 6.0, t))));
+    }
+    const g = sm(5.8, 7.0, t), out = sm(9.4, 10.4, t);
+    const pulse = 0.05 * Math.sin(Math.PI * Math.min(Math.max((t - 6.9) / 0.6, 0), 1));
+    const bs = (0.5 + 0.5 * g) * (1 + pulse) * (1 + 0.08 * out);
+    set(E.big, 'transform', `translate(${cx} ${cy}) scale(${f(bs)})`);
+    set(E.big, 'opacity', g > 0.002 ? f(1 - out) : 0);
+    set(E.bigF, 'fill-opacity', f(0.92 * sm(6.0, 6.9, t)));
+    set(E.bigR, 'stroke-dashoffset', f(1 - sm(5.9, 7.0, t)));
+    set(E.bigR, 'stroke-opacity', '.75');
+    const wipeTo = (j: number, a: number, b: number, o: number) => {
+      const p = sm(a, b, t);
+      set(E.w[j].r, 'width', f(600 * p));
+      set(E.w[j].t, 'opacity', p > 0 ? f(o) : 0);
+    };
+    wipeTo(0, 7.0, 7.7, 1 - out); wipeTo(1, 7.5, 8.2, 1 - out);
+    const gone = 1 - sm(15.8, 16.6, t);
+    wipeTo(2, 10.0, 10.9, gone); wipeTo(3, 10.6, 11.5, gone);
+    const up = sm(11.6, 12.2, t);
+    set(E.ul, 'stroke-dashoffset', f(1 - up)); set(E.ul, 'opacity', up > 0.004 ? f(gone) : 0);
+  };
+
+  build();
+  let now = RM ? T_END : 0;
+  draw(now);
+  MQ.addEventListener('change', () => { build(); draw(now); });
+  if (!RM) {
+    let last = 0, raf = 0, vis = false;
+    const frame = (ts: number) => {
+      now = (now + Math.min((ts - last) / 1000, 0.05)) % LOOP; last = ts;
+      draw(now);
       raf = vis ? requestAnimationFrame(frame) : 0;
     };
     new IntersectionObserver((es) => {
       const v = es[0].isIntersecting;
-      if (v && !vis) { acc = 0; last = performance.now(); vis = true; if (!raf) raf = requestAnimationFrame(frame); }
+      if (v && !vis) { vis = true; last = performance.now(); if (!raf) raf = requestAnimationFrame(frame); }
       else if (!v) vis = false;
-    }, { threshold: 0.25 }).observe(svg);
+    }, { threshold: 0.35 }).observe(svg);
   }
 </script>
