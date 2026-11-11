@@ -663,7 +663,7 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .fx-cta.p:hover{background:#D8C9A3;border-color:#D8C9A3}
 .fx-cta.s:hover{border-color:#D8C9A3;color:#D8C9A3}
 .fx-cta:focus-visible,.fx-soc a:focus-visible{outline:2px solid #D8C9A3;outline-offset:3px}
-.fx-svg{width:100%;max-width:760px;height:auto;margin:56px auto 0;display:block;overflow:visible}
+.fx-svg{width:100%;max-width:760px;height:auto;margin:0 auto 40px;display:block;overflow:visible}
 .fx-base{width:100%;max-width:1180px;box-sizing:border-box;margin-top:64px;padding:18px 24px 22px;border-top:1px solid rgba(169,175,185,.2);display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:14px 24px;font-size:var(--t-small);line-height:1.4;color:#8A8D96}
 .fx-base .loc{justify-self:start}
 .fx-base .cred{justify-self:end;text-align:right}
@@ -674,7 +674,7 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .fx-soc a svg{width:20px;height:20px}
 .fx-soc a:hover{color:#D8C9A3}
 @media (max-width:760px){.fx-base{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center}.fx-soc{order:-1}.fx-base .loc,.fx-base .cred{justify-self:center;text-align:center}}
-@media (max-width:600px){.fx{padding-top:64px}.fx-note{position:static;transform:none;display:block}.fx-note.b{text-align:right;margin-top:10px}.fx-note.a{margin-bottom:10px}.fx-ctas{margin-top:0;flex-wrap:nowrap;gap:10px}.fx-svg{margin-top:36px;max-width:420px}.fx-cta{padding:15px 18px;gap:8px;white-space:nowrap}}
+@media (max-width:600px){.fx{padding-top:64px}.fx-note{position:static;transform:none;display:block}.fx-note.b{text-align:right;margin-top:10px}.fx-note.a{margin-bottom:10px}.fx-ctas{margin-top:0;flex-wrap:nowrap;gap:10px}.fx-svg{margin-bottom:28px;max-width:420px}.fx-cta{padding:15px 18px;gap:8px;white-space:nowrap}}
 /* Open nav sits on a dark band; footer base row on the same dark; footer is its own full screen */
 .mk-bar{position:fixed;top:0;left:0;right:0;height:76px;background:#0B0A0F;border-bottom:1px solid rgba(169,175,185,.14);opacity:0;pointer-events:none;transition:opacity .25s ease}
 .mk-nav.open .mk-bar{opacity:1;pointer-events:auto}
@@ -682,7 +682,7 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .mk-menu,.mk-menu.on{position:fixed}
 .fx{min-height:100svh;box-sizing:border-box;padding-bottom:0}
 .fx-base{margin-top:auto;background:#0B0A0F;box-shadow:0 0 0 100vmax #0B0A0F;clip-path:inset(0 -100vmax -100vmax);border-top-color:rgba(169,175,185,.14)}
-.fx-svg{margin-bottom:64px}
+.fx-ctas{margin-bottom:64px}
 /* Scenic route, zoomed out: the river view */
 .tl-scroller[hidden],.rv[hidden]{display:none !important}
 .tl-scroller,.rv{transition:opacity .22s ease}

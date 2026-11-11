@@ -1,6 +1,6 @@
 ---
-// Footer, "the ask": two pills, then six hand-drawn bubbles (what working together looks like)
-// that drift into one red circle saying "Let's work together", which fades and leaves "you give me a problem, i solve it for good!".
+// Footer, "the ask": six hand-drawn bubbles (what working together looks like)
+// that drift into one red circle saying "Let's work together", which fades and leaves "you give me a problem, i solve it for good!", with the two pills under it.
 // Loops every 17s while the footer is on screen (the last line holds ~3.5s, then fades); pauses off screen. Reduced motion shows the last line.
 const LINKEDIN = 'https://www.linkedin.com/in/kritika-upadhyay-2001/?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
 const RESUME = 'https://drive.google.com/file/d/1IPT2eeox1bCwBc_nGS3Vlu_2IADxWtbV?utm_source=portfolio&utm_medium=footer&utm_campaign=hunt-2026&utm_id=kritikal-work';
@@ -10,12 +10,13 @@ const SUBSTACK = 'https://substack.com/@verykritikal/posts?utm_source=Portfolio&
 ---
 <footer class="fx" id="coffee">
 <h2 class="sr-only">Let's work together</h2>
+
+<svg class="fx-svg" id="fx-svg" viewBox="0 0 760 380" role="img" aria-label="Six bubbles, brainstorm new ideas, argue over specifics, end-to-end execution, customer empathy, silly jokes and a whole lot of coffee, drift together into one circle that says: Let's work together. The circle fades and leaves: you give me a problem, i solve it for good!"></svg>
+
 <div class="fx-ctas">
 <a class="fx-cta p" href={LINKEDIN} target="_blank" rel="noopener">Let's connect on LinkedIn</a>
 <a class="fx-cta s" href={RESUME} target="_blank" rel="noopener">See resume</a>
 </div>
-
-<svg class="fx-svg" id="fx-svg" viewBox="0 0 760 380" role="img" aria-label="Six bubbles, brainstorm new ideas, argue over specifics, end-to-end execution, customer empathy, silly jokes and a whole lot of coffee, drift together into one circle that says: Let's work together. The circle fades and leaves: you give me a problem, i solve it for good!"></svg>
 
 <div class="fx-base">
 <span class="loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg>Bengaluru, India</span>
