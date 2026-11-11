@@ -656,7 +656,7 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .fx-note{position:absolute;margin:0;white-space:nowrap;font-family:'Kalam',cursive;font-weight:300;font-size:var(--h-hint);letter-spacing:.5px;line-height:1.2;color:#D8C9A3;opacity:.9}
 .fx-note.a{left:0;top:-26px;transform:rotate(-3deg);transform-origin:left bottom}
 .fx-note.b{right:0;bottom:-30px;transform:rotate(-2deg);transform-origin:right top}
-.fx-ctas{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:68px}
+.fx-ctas{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:0}
 .fx-cta{display:inline-flex;align-items:center;gap:10px;padding:18px 30px;border-radius:999px;font-size:var(--t-body);font-weight:500;line-height:1;text-decoration:none;border:1px solid rgba(169,175,185,.2);color:#EFEFEE;transition:border-color .2s,background-color .2s,color .2s}
 .fx-cta svg{width:16px;height:16px;flex:none}
 .fx-cta.p{background:#EFEFEE;border-color:#EFEFEE;color:#111}
@@ -674,7 +674,7 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .fx-soc a svg{width:20px;height:20px}
 .fx-soc a:hover{color:#D8C9A3}
 @media (max-width:760px){.fx-base{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center}.fx-soc{order:-1}.fx-base .loc,.fx-base .cred{justify-self:center;text-align:center}}
-@media (max-width:600px){.fx{padding-top:64px}.fx-note{position:static;transform:none;display:block}.fx-note.b{text-align:right;margin-top:10px}.fx-note.a{margin-bottom:10px}.fx-ctas{margin-top:36px;flex-wrap:nowrap;gap:10px}.fx-svg{margin-top:36px;max-width:420px}.fx-cta{padding:15px 18px;gap:8px;white-space:nowrap}}
+@media (max-width:600px){.fx{padding-top:64px}.fx-note{position:static;transform:none;display:block}.fx-note.b{text-align:right;margin-top:10px}.fx-note.a{margin-bottom:10px}.fx-ctas{margin-top:0;flex-wrap:nowrap;gap:10px}.fx-svg{margin-top:36px;max-width:420px}.fx-cta{padding:15px 18px;gap:8px;white-space:nowrap}}
 /* Open nav sits on a dark band; footer base row on the same dark; footer is its own full screen */
 .mk-bar{position:fixed;top:0;left:0;right:0;height:76px;background:#0B0A0F;border-bottom:1px solid rgba(169,175,185,.14);opacity:0;pointer-events:none;transition:opacity .25s ease}
 .mk-nav.open .mk-bar{opacity:1;pointer-events:auto}
