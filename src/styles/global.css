@@ -613,7 +613,7 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .tl-head .tl-cta{top:auto;left:auto}
 /* Round 7: cards above the road sit higher on a longer pole; the CTA anchors the fold and stays in view */
 .tl-item.road.up .tl-card.up{padding-bottom:110px}
-.tl-cta,.tl-head .tl-cta{position:sticky;top:auto;left:auto;bottom:28px;transform:none;margin:0 auto;padding:0;width:max-content;z-index:5;display:flex;flex-direction:column;align-items:center;gap:10px}
+.tl-cta,.tl-head .tl-cta{position:static;top:auto;left:auto;bottom:auto;transform:none;margin:0 auto;padding:12px 0 0;width:max-content;z-index:5;display:flex;flex-direction:column;align-items:center;gap:10px}
 .tl-cta .ft-secondary{min-height:54px;padding:0 30px;font-size:16px;border-color:#D8C9A3;background:rgba(11,10,15,.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .tl-cta .ft-secondary:hover,.tl-cta .ft-secondary:focus-visible{background:#D8C9A3;color:#0B0A0F}
 .tl-cta .tl-resume{position:static;margin:0}
