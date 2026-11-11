@@ -528,7 +528,7 @@ const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; cons
 .ic-ctrls{position:fixed;left:50%;bottom:18px;z-index:40;display:flex;align-items:center;gap:10px;transform:translate(-50%,16px);opacity:0;pointer-events:none;transition:opacity .35s ease,transform .35s ease}
 .ic-ctrls.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
 .ic-round,.ic-progress{border:1px solid #2A2A2E;background:rgba(10,10,12,.88);backdrop-filter:blur(8px)}
-.ic-round{display:inline-flex;align-items:center;justify-content:center;flex:none;width:48px;height:48px;padding:0;border-radius:50%;color:#A9AFB9;cursor:pointer;transition:color .2s ease,border-color .2s ease}
+.ic-round{display:inline-flex;align-items:center;justify-content:center;flex:none;width:48px;height:48px;padding:0;border-radius:10px;color:#A9AFB9;cursor:pointer;transition:color .2s ease,border-color .2s ease}
 .ic-round:hover,.ic-round:focus-visible{color:#EFEFEE;border-color:#4A4A50}
 .ic-round:focus-visible,.ic-step:focus-visible{outline:2px solid #EFEFEE;outline-offset:3px}
 .ic-round.in .zoom-plus{display:none}
