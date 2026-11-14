@@ -169,7 +169,10 @@ import Nav from '../../components/Nav.astro';
 
   let pos = 0, target = 0, active = -1, idle = 0;
 
-  const rows = ITEMS.map((it, i) => {
+  // Titles repeat like the prints do (at least four in the loop), so the next one always peeks out behind the card.
+  const RN = N * Math.ceil(4 / N);
+  const rows = Array.from({ length: RN }, (_, j) => {
+    const i = j % N, it = ITEMS[i];
     const el = document.createElement('div');
     el.className = 'ww-row';
     el.innerHTML = `<span class="ww-num">${pad2(i + 1)}</span><h2 class="ww-title">${it.title}</h2>`;
@@ -229,12 +232,13 @@ import Nav from '../../components/Nav.astro';
     const rowTop = h1.getBoundingClientRect().bottom + Math.max(22, H * 0.04);
     const titleH = Math.max(...rows.map((r) => r.offsetHeight));
     const free0 = rowTop + titleH + 22, free1 = H - 56;
-    const sC = Math.max(0.7, Math.min(1.34, (free1 - free0) / printH));
+    // 0.86: the centre print sits a little smaller than the free space, with room around it
+    const sC = Math.max(0.7, Math.min(1.34, (free1 - free0) / printH) * 0.86);
     const sSide = Math.min(sC, 1) * 0.96;
     const cy = (free0 + free1) / 2 + R;
 
     rows.forEach((el, i) => {
-      const d = wrap(i - pos, N);
+      const d = wrap(i - pos, RN);
       const near = Math.min(1, Math.abs(d));
       el.style.transform = `translate3d(0, ${rowTop + d * rowH}px, 0)`;
       el.style.opacity = (1 - near * 0.8).toFixed(3);
