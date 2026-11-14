@@ -2,12 +2,10 @@
 // who nexus is for: the second telling of the ICP-Nexus case study. Built from the board on
 // /work/icp-positioning-messaging-nexus (same cover, fold, skills, dark board, pinned notes, number badges,
 // handwritten captions, controls and start over), with new copy and five board sections under four chapter chips.
-// Opens by direct url only: it is not on the /work wheel.
+// It is print 01 on the /work wheel.
 // Desktop: scrolling moves a camera across the board and pins each piece up in order; readers can also drag and zoom.
 // Phones: the board is laid out as one column; it opens zoomed out, tap a section to zoom in, then drag.
 // Copy is rendered exactly as written: no text-transform anywhere on this page.
-import fs from 'node:fs';
-import path from 'node:path';
 import Base from '../../layouts/Base.astro';
 import Nav from '../../components/Nav.astro';
 
@@ -18,8 +16,8 @@ const descParas = [
 ];
 const description = descParas.join(' ');
 const questions = ['who uses nexus?', 'who should we target?', 'what should we say?'];
-const coverCaption = 'three posts nexus has published. here is how we got to what they say.';
-const closing = 'i came for a one-pager. i left with a list of people to say no to.';
+const coverCaption = 'how we come to this messaging?';
+const closing = 'behind every uninstall was someone who hoped nexus would work for them. i still think about them.';
 
 const skills = [
   { id: 'research', label: 'customer and audience research' },
@@ -28,27 +26,15 @@ const skills = [
 ];
 const chips = ['what i knew', 'what they get', 'why nexus', 'what changed'];
 
-// The three LinkedIn posts on the cover. Drop the files into public/work/who-nexus-is-for/ and they show up
-// with their real size (read from the PNG header, so the browser reserves the right space and nothing shifts).
-// Until a file is there, a placeholder of the expected shape stands in.
+// The two LinkedIn posts on the cover, from public/work/who-nexus-is-for/. Their pixel sizes are given so the
+// browser reserves the right space before they load and nothing shifts.
 const POSTS_DIR = '/work/who-nexus-is-for/';
-const pngSize = (file: string) => {
-  try {
-    const b = fs.readFileSync(path.join(process.cwd(), 'public', POSTS_DIR, file));
-    return { w: b.readUInt32BE(16), h: b.readUInt32BE(20) };
-  } catch { return null; }
-};
 const posts = [
-  { file: 'nexus-linkedin-1-sellers-not-jobs.png', ratio: [2, 1], r: -1.6,
+  { file: 'nexus-linkedin-1-sellers-not-jobs.jpg', iw: 1920, ih: 943, r: -1.6,
     alt: 'nexus linkedin post: "you wanted more sellers. not more jobs." five painters each painting a strip of one wall a different colour.' },
-  { file: 'nexus-linkedin-2-messy-to-organised.png', ratio: [2, 1], r: 1.2,
-    alt: 'nexus linkedin post: a crowded, messy table of people on laptops beside one calm person on an empty bench. "messy. chaotic. disordered." versus "organised. structured. streamlined."' },
-  { file: 'nexus-linkedin-3-try-paintball.png', ratio: [1, 1], r: -1,
-    alt: 'nexus linkedin post for try paintball: "this is how nexus powers sports booking marketplaces", with responsive technical support, independent seller dashboard, digital product listing and transparent order management.' }
-].map((p) => {
-  const size = pngSize(p.file);
-  return { ...p, src: POSTS_DIR + p.file, found: !!size, iw: size?.w ?? p.ratio[0] * 1000, ih: size?.h ?? p.ratio[1] * 1000, skills: ['linkedin'] };
-});
+  { file: 'nexus-linkedin-2-messy-to-organised.jpg', iw: 1920, ih: 943, r: 1.2,
+    alt: 'nexus linkedin post: a crowded, messy table of people on laptops beside one calm person on an empty bench. "messy. chaotic. disordered." versus "organised. structured. streamlined."' }
+].map((p) => ({ ...p, src: POSTS_DIR + p.file, skills: ['linkedin'] }));
 
 // The board. Five sections stacked down it, each read top to bottom, column by column.
 // Every item has a desktop position (section-local x, y); on phones the same items stack in reading order.
@@ -74,8 +60,9 @@ const sectionsRaw: Sec[] = [
       items: ['who installs nexus, and who pays?', 'who did the founders build it for?', 'what do those customers need handled?', 'who do we speak to first?'] }
   ] },
   { title: 'who gets the most value?', chip: 0, slug: 'who-gets-the-most-value', items: [
-    { id: 's2-ctx', kind: 'note', x: 40, y: 130, w: 480, h: 440, r: -1.2, skills: ['research', 'positioning'],
-      text: 'with the co-founder, i defined who gets the most value from nexus. i read why merchants uninstalled and what they asked for on intercom. the answer was specific: established brands with their own catalogue, who need vendors, orders and payouts handled in one place. choosing who to serve meant naming who not to.' },
+    { id: 's2-ctx', kind: 'note', x: 40, y: 130, w: 480, h: 410, r: -1.2, skills: ['research', 'positioning'],
+      items: ['i defined who gets the most value from nexus.', 'i read why merchants uninstalled and what they asked for on intercom.',
+        'the answer was specific: established brands with their own catalogue, who need vendors, orders and payouts handled in one place.'] },
     { id: 's2-icp', kind: 'shot', with: 's2-ctx', x: 560, y: 130, w: 520, r: -1, src: '/case/icp-nexus/icp-table.png', iw: 1084, ih: 660,
       alt: 'The Nexus ideal customer profile: business, Shopify plan, region, trigger moment and job to be done, each with its evidence.',
       caption: 'final ICP!', skills: ['research', 'positioning'], color: '#BCE5CF' },
@@ -85,9 +72,7 @@ const sectionsRaw: Sec[] = [
     { id: 's2-where', kind: 'shot', with: 's2-ctx', x: 1120, y: 440, w: 440, r: -1, src: '/case/icp-nexus/where-they-gather.png', iw: 896, ih: 252,
       alt: 'Where they gather: Shopify App Store search, about 48% of discovery; Google, about 11%; AI assistants and the listicles they cite; other platforms such as Product Hunt and G2.',
       caption: 'where they hang out', skills: ['research', 'positioning'], color: '#BCE5CF' },
-    { id: 's2-held', kind: 'note', x: 560, y: 580, w: 480, h: 140, r: 0.8, skills: ['research'],
-      text: 'held against that profile, 18% of installs fit. 82% did not.' },
-    { id: 's2-pie', kind: 'page', chart: 'pie', x: 1080, y: 690, w: 520, h: 350, r: -0.5, skills: ['research'] }
+    { id: 's2-pie', kind: 'page', chart: 'pie', x: 560, y: 570, w: 520, h: 350, r: -0.5, skills: ['research'] }
   ] },
   { title: 'what value do they get?', chip: 1, slug: 'what-they-get', items: [
     { id: 's3-ctx', kind: 'note', x: 40, y: 130, w: 520, h: 170, r: -1.2, skills: ['positioning'],
@@ -137,8 +122,8 @@ const sections = sectionsRaw.map((s) => {
   return sec;
 });
 const last = sections.length - 1;
-const END_Y = sections[last].y + sections[last].h + 140, WORLD_W = SEC_W, WORLD_H = END_Y + 420;
-const M_END_Y = sections[last].my + sections[last].mh + 120, M_WORLD_H = M_END_Y + 520;
+const END_Y = sections[last].y + sections[last].h + 140, WORLD_W = SEC_W, WORLD_H = END_Y + 560;
+const M_END_Y = sections[last].my + sections[last].mh + 120, M_WORLD_H = M_END_Y + 640;
 
 // Every item in world coordinates for both layouts; cards get story-wide step numbers, documents do not.
 let storyStep = 0;
@@ -228,15 +213,13 @@ const cls: Record<string, string> = { note: 'note slot-ctx', learnt: 'note slot-
 <div class="ic">
 
 <figure class="ic-cover">
-<a class="ic-return ic-home" href="/">← BACK</a>
+<a class="ic-return ic-home" href="/work">← BACK</a>
 <ul class="cv-qs">{questions.map((q) => <li>{q}</li>)}</ul>
 <div class="cv-row cv-posts">
 {posts.map((p, i) => (
 <div class={`cv-cut cv-post${i === 1 ? ' cv-mid' : ''}`} data-skills={p.skills.join(' ')} style={`--r:${p.r}deg;--a:${(p.iw / p.ih).toFixed(4)}`}>
 <span class="pin" aria-hidden="true"></span>
-{p.found
-  ? <img src={p.src} alt={p.alt} width={p.iw} height={p.ih} decoding="async">
-  : <div class="cv-miss" role="img" aria-label={p.alt} style={`aspect-ratio:${p.iw} / ${p.ih}`}><span>image missing</span><span>{p.file}</span></div>}
+<img src={p.src} alt={p.alt} width={p.iw} height={p.ih} decoding="async">
 </div>
 ))}
 </div>
@@ -284,7 +267,9 @@ const cls: Record<string, string> = { note: 'note slot-ctx', learnt: 'note slot-
   style={`${pos(p)}width:${p.w}px;${p.kind === 'page' || p.kind === 'place' ? `height:${p.h}px;` : `min-height:${p.h}px;`}--r:${p.r ?? 0}deg`}>
 <span class="pc-step" aria-hidden="true">{p.step}</span>
 {lastIds.includes(p.id) && <span class="pin" aria-hidden="true"></span>}
-{p.kind === 'note' && <div class="note-b">{p.text!.split('\n\n').map((t) => <p class="note-t">{t}</p>)}</div>}
+{p.kind === 'note' && <div class="note-b">{p.items
+  ? <ul class="note-ul">{p.items.map((t) => <li class="note-t">{t}</li>)}</ul>
+  : p.text!.split('\n\n').map((t) => <p class="note-t">{t}</p>)}</div>}
 {p.kind === 'learnt' && <div class="note-b"><p class="pos-k">{p.label}</p><p class="note-t">{p.text}</p></div>}
 {p.kind === 'place' && <p class="vp-hole">{p.text}</p>}
 {p.kind === 'check' && <ul class="ck-list">
@@ -342,7 +327,7 @@ const cls: Record<string, string> = { note: 'note slot-ctx', learnt: 'note slot-
 <div class="ic-finale" style={`--y:${END_Y - 18}px;--my:${M_END_Y - 18}px;--fw:${SEC_W}px;--mfw:${MW}px`}>
 <span class="end-dot" aria-hidden="true"></span>
 <p class="end-t">{closing}</p>
-<button type="button" class="end-cta" id="restart">START OVER</button>
+<div class="end-btns"><a class="end-btn primary" href="/work">← Back to Work</a><button type="button" class="end-btn quiet" id="restart">Start over</button></div>
 </div>
 </div>
 <p class="ic-hint" id="hint" hidden>exploring · scroll to pick the story back up</p>
@@ -358,7 +343,7 @@ const cls: Record<string, string> = { note: 'note slot-ctx', learnt: 'note slot-
 </ol>
 <button type="button" class="ic-chip" id="chip" hidden></button>
 </nav>
-<button type="button" class="ic-round" id="close" aria-label="Back to the home page">
+<button type="button" class="ic-round" id="close" aria-label="Back to work">
 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6 L18 18 M18 6 L6 18"></path></svg>
 </button>
 </div>
@@ -384,13 +369,11 @@ const cls: Record<string, string> = { note: 'note slot-ctx', learnt: 'note slot-
 .ic-home{position:absolute;top:22px;left:max(24px,calc((100% - 1200px) / 2 + 24px));z-index:1;color:#1E1E24;font-weight:500}
 .ic-home:hover,.ic-home:focus-visible{color:#000}
 /* The three guiding questions, under the back link. */
-.cv-qs{display:flex;flex-wrap:wrap;gap:6px 36px;max-width:1200px;margin:0 auto 40px;padding:0;list-style:none;font-family:'Kalam',cursive;font-size:var(--h-note);font-weight:300;letter-spacing:.5px;line-height:1.2;color:#1E1E24}
+.cv-qs{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 36px;max-width:1200px;margin:0 auto 40px;padding:0;list-style:none;font-family:'Kalam',cursive;font-size:var(--h-note);font-weight:300;letter-spacing:.5px;line-height:1.2;color:#1E1E24}
 /* The three posts: pinned cards in one row, sized by their own shape so they share a height and nothing is cropped. */
 .cv-posts .cv-post{position:relative;flex:var(--a) 1 0;min-width:0;max-width:none;padding:12px}
-.cv-post img,.cv-miss{display:block;width:100%;height:auto}
+.cv-post img{display:block;width:100%;height:auto}
 .cv-post .pin{right:auto;left:50%;margin-left:-12px;top:-12px}
-.cv-miss{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-sizing:border-box;border:2px dashed #B9B9C0;background:#F4F3EF;color:#5A5A62;font-size:13px;text-align:center;padding:12px;overflow-wrap:anywhere}
-.cv-miss span:first-child{font-weight:600;color:#D2453F}
 .cv-note{max-width:1200px;margin:26px auto 0;padding:0;text-align:center}
 .cv-post.hl{box-shadow:0 0 0 4px #D8C9A3,0 0 40px rgba(216,201,163,.55),0 18px 30px rgba(60,48,20,.28)}
 .ic-fold{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,340px);gap:28px 64px;align-items:center;max-width:1200px;margin:0 auto;padding:48px 24px 56px}
@@ -409,7 +392,7 @@ const cls: Record<string, string> = { note: 'note slot-ctx', learnt: 'note slot-
 .ic-skill:focus-visible,.ic-step:focus-visible{outline:2px solid #EFEFEE;outline-offset:3px}
 @media (max-width:760px){
 .ic-fold{grid-template-columns:1fr}.ic-cover{padding:64px 16px 28px}
-.cv-qs{flex-direction:column;margin-bottom:32px}
+.cv-qs{flex-direction:column;align-items:center;margin-bottom:32px}
 .cv-posts{flex-direction:column;gap:30px}
 .cv-posts .cv-post{flex:none;width:min(100%,calc(300px * var(--a)));box-sizing:border-box}
 .cv-mid{margin-top:0}
@@ -440,6 +423,8 @@ const cls: Record<string, string> = { note: 'note slot-ctx', learnt: 'note slot-
 .slot-learnt .pos-k{margin-bottom:12px}
 .note-t{margin:0;font-family:'Kalam',cursive;font-weight:300;font-size:27px;line-height:1.22}
 .note-t + .note-t{margin-top:12px}
+.note-ul{margin:0;padding:0 0 0 26px;list-style:disc}
+.note-ul li::marker{font-size:.8em}
 .cv-cap,.cv-qs,.sk-more,.note-t,.ck-list li,.qa-a,.pc-shot figcaption,.end-t,.vp-hole{letter-spacing:1px}
 .pc-shot > img{display:block;width:100%;height:auto;border:1px solid #DADAD4}
 .pos{display:flex;flex-direction:column;align-items:flex-start;gap:6px;height:100%;justify-content:center}
@@ -514,9 +499,14 @@ const cls: Record<string, string> = { note: 'note slot-ctx', learnt: 'note slot-
 .ic-finale{position:absolute;left:0;top:var(--y);width:var(--fw);display:flex;flex-direction:column;align-items:center;gap:44px;text-align:center}
 .end-dot{width:36px;height:36px;border-radius:50%;background:#D2453F;box-shadow:0 0 0 10px rgba(210,69,63,.18)}
 .end-t{max-width:1300px;margin:0;font-family:'Kalam',cursive;font-size:100px;font-weight:400;line-height:1;color:#EFEFEE}
-.end-cta{padding:10px 8px;border:0;background:none;color:#A9AFB9;font:inherit;font-size:30px;letter-spacing:.2em;cursor:pointer;transition:color .2s ease}
-.end-cta:hover,.end-cta:focus-visible{color:#EFEFEE}
-.end-cta:focus-visible{outline:4px solid #EFEFEE;outline-offset:6px}
+/* The two buttons at the end, as on the Plane Twitter case study, sized in board units. */
+.end-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:22px}
+.end-btn{display:inline-flex;align-items:center;gap:12px;padding:18px 30px;border:2px solid transparent;border-radius:12px;font:inherit;font-size:26px;font-weight:600;text-decoration:none;cursor:pointer;transition:background .2s ease,color .2s ease,border-color .2s ease}
+.end-btn.primary{background:#EFEFEE;color:#1E1E24}
+.end-btn.primary:hover,.end-btn.primary:focus-visible{background:#D8C9A3;outline:none}
+.end-btn.quiet{background:none;color:#A9AFB9;border-color:rgba(169,175,185,.3)}
+.end-btn.quiet:hover,.end-btn.quiet:focus-visible{color:#EFEFEE;border-color:#A9AFB9;outline:none}
+.end-btn:focus-visible{box-shadow:0 0 0 4px #141416,0 0 0 7px #EFEFEE}
 
 /* Phones and touch screens: the board is one screen tall, laid out as one column, opens zoomed out,
    and the reader explores it directly. */
@@ -714,8 +704,8 @@ const cls: Record<string, string> = { note: 'note slot-ctx', learnt: 'note slot-
 
   steps.forEach((b) => b.addEventListener('click', () => goSection(firstSecOf(Number(b.dataset.chip)))));
   zoomBtn.addEventListener('click', () => out ? zoomIn() : zoomOut());
-  // Close: back to the home page.
-  closeBtn.addEventListener('click', () => { window.location.href = '/'; });
+  // Close: back to the work page.
+  closeBtn.addEventListener('click', () => { window.location.href = '/work'; });
 
   // Start over: back to the top of the case study.
   document.getElementById('restart')?.addEventListener('click', () => {
