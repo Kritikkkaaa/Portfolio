@@ -45,6 +45,10 @@ const nodeX = (s: Stop) => (s.kind === 'road' ? NODE : Math.round(s.width * 0.1)
 <div class="tl-head">
 <h2>My journey so far!</h2>
 <span class="hd-note">it was never a straight line</span>
+<div class="tl-cta">
+<a class="ft-secondary" href="/work">See my work<span aria-hidden="true">→</span></a>
+<a class="tl-resume" href="https://drive.google.com/file/d/1IPT2eeox1bCwBc_nGS3Vlu_2IADxWtbV?utm_source=portfolio&utm_medium=scenic-route&utm_campaign=hunt-2026&utm_id=kritikal-work" target="_blank" rel="noopener">See resume</a>
+</div>
 </div>
 <div class="tl-scroller" tabindex="0" role="region" aria-roledescription="timeline" aria-label="Timeline. Use the left and right arrow keys to move between milestones.">
 <div class="tl-track">
@@ -93,10 +97,6 @@ const nodeX = (s: Stop) => (s.kind === 'road' ? NODE : Math.round(s.width * 0.1)
 {numbered.map((s, i) => s.cards.map((c, k) => <div class="rv-card" data-stop={i} data-k={k} data-kind={s.kind}><Milestone c={c} /></div>))}
 <p class="rv-close">Every detour i took brought me back to <em>Creativity, people, and stories!</em></p>
 </div>
-<div class="tl-cta">
-<a class="ft-secondary" href="/work">See my work<span aria-hidden="true">→</span></a>
-<a class="tl-resume" href="https://drive.google.com/file/d/1IPT2eeox1bCwBc_nGS3Vlu_2IADxWtbV?utm_source=portfolio&utm_medium=scenic-route&utm_campaign=hunt-2026&utm_id=kritikal-work" target="_blank" rel="noopener">See resume</a>
-</div>
 </section>
 
 <script>
@@ -112,7 +112,7 @@ const nodeX = (s: Stop) => (s.kind === 'road' ? NODE : Math.round(s.width * 0.1)
 
   // On short windows the timeline shrinks a little (never below 80%) so the heading, the route and the buttons fit together.
   const fit = () => {
-    const z = innerWidth < 900 ? 1 : Math.max(0.8, Math.min(1, (innerHeight - 250) / 640));
+    const z = innerWidth < 900 ? 1 : Math.max(0.8, Math.min(1, (innerHeight - 170) / 640));
     scroller.style.setProperty('zoom', z === 1 ? '' : String(z));
   };
   fit();
