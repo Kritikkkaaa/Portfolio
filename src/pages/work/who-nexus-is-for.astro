@@ -1,0 +1,823 @@
+---
+// who nexus is for: the second telling of the ICP-Nexus case study. Built from the board on
+// /work/icp-positioning-messaging-nexus (same cover, fold, skills, dark board, pinned notes, number badges,
+// handwritten captions, controls and start over), with new copy and five board sections under four chapter chips.
+// It is print 01 on the /work wheel.
+// Desktop: scrolling moves a camera across the board and pins each piece up in order; readers can also drag and zoom.
+// Phones: the board is laid out as one column; it opens zoomed out, tap a section to zoom in, then drag.
+// Copy is rendered exactly as written: no text-transform anywhere on this page.
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+
+const title = 'who nexus is for, and how i got there';
+const descParas = [
+  "knowing who uses your product doesn't tell you who to target. it tells you even less about what to say to them. that takes research, care and more research.",
+  "follow along to see how i brought a product manager's understanding of users into nexus's ideal customer profile and positioning."
+];
+const description = descParas.join(' ');
+const questions = ['who uses nexus?', 'who should we target?', 'what should we say?'];
+const coverCaption = 'how we come to this messaging?';
+const closing = 'behind every uninstall was someone who hoped nexus would work for them. i still think about them.';
+
+const skills = [
+  { id: 'research', label: 'customer and audience research' },
+  { id: 'positioning', label: 'positioning and messaging' },
+  { id: 'linkedin', label: 'linkedin distribution' }
+];
+const chips = ['what i knew', 'what they get', 'why nexus', 'what changed'];
+
+// The two LinkedIn posts on the cover, from public/work/who-nexus-is-for/. Their pixel sizes are given so the
+// browser reserves the right space before they load and nothing shifts.
+const POSTS_DIR = '/work/who-nexus-is-for/';
+const posts = [
+  { file: 'nexus-linkedin-1-sellers-not-jobs.jpg', iw: 1920, ih: 943, r: -1.6,
+    alt: 'nexus linkedin post: "you wanted more sellers. not more jobs." five painters each painting a strip of one wall a different colour.' },
+  { file: 'nexus-linkedin-2-messy-to-organised.jpg', iw: 1920, ih: 943, r: 1.2,
+    alt: 'nexus linkedin post: a crowded, messy table of people on laptops beside one calm person on an empty bench. "messy. chaotic. disordered." versus "organised. structured. streamlined."' }
+].map((p) => ({ ...p, src: POSTS_DIR + p.file, skills: ['linkedin'] }));
+
+// The board. Five sections stacked down it, each read top to bottom, column by column.
+// Every item has a desktop position (section-local x, y); on phones the same items stack in reading order.
+// Kinds: note (blue sticky), check (list card), page (white sheet with a chart or the positioning),
+// place (empty placeholder sheet), learnt (green sticky), shot and qa (documents pinned to a card, tied to it
+// by a dotted thread), label (a column heading written on the board).
+type Kind = 'note' | 'check' | 'page' | 'place' | 'learnt' | 'shot' | 'qa' | 'label';
+type Item = {
+  id: string; kind: Kind; x: number; y: number; w: number; h?: number; r?: number; skills?: string[];
+  text?: string; label?: string; items?: string[]; chart?: 'donut' | 'pie' | 'pos';
+  src?: string; iw?: number; ih?: number; alt?: string; caption?: string; qa?: [string, string][];
+  with?: string; color?: string;
+};
+type Sec = { title: string; chip: number; slug: string; items: Item[] };
+const sectionsRaw: Sec[] = [
+  { title: 'what i knew, and what i didn\'t', chip: 0, slug: 'what-i-knew', items: [
+    { id: 'k-l1', kind: 'label', x: 40, y: 130, w: 520, h: 40, text: 'things i knew' },
+    { id: 's1-chart', kind: 'page', chart: 'donut', x: 40, y: 190, w: 520, h: 400, r: -0.5, skills: ['research'] },
+    { id: 's1-fact', kind: 'note', x: 40, y: 650, w: 520, h: 140, r: -1.2, skills: ['research'],
+      text: '17 stores pay for nexus today. 8 of them run 10+ sellers.' },
+    { id: 'k-l2', kind: 'label', x: 640, y: 130, w: 520, h: 40, text: 'open questions' },
+    { id: 's1-q', kind: 'check', x: 640, y: 190, w: 520, h: 300, r: 1.2, skills: ['research'],
+      items: ['who installs nexus, and who pays?', 'who did the founders build it for?', 'what do those customers need handled?', 'who do we speak to first?'] }
+  ] },
+  { title: 'who gets the most value?', chip: 0, slug: 'who-gets-the-most-value', items: [
+    { id: 's2-ctx', kind: 'note', x: 40, y: 130, w: 480, h: 410, r: -1.2, skills: ['research', 'positioning'],
+      items: ['i defined who gets the most value from nexus.', 'i read why merchants uninstalled and what they asked for on intercom.',
+        'the answer was specific: established brands with their own catalogue, who need vendors, orders and payouts handled in one place.'] },
+    { id: 's2-icp', kind: 'shot', with: 's2-ctx', x: 560, y: 130, w: 520, r: -1, src: '/case/icp-nexus/icp-table.png', iw: 1084, ih: 660,
+      alt: 'The Nexus ideal customer profile: business, Shopify plan, region, trigger moment and job to be done, each with its evidence.',
+      caption: 'final ICP!', skills: ['research', 'positioning'], color: '#BCE5CF' },
+    { id: 's2-notfor', kind: 'shot', with: 's2-ctx', x: 1120, y: 150, w: 440, r: 1.2, src: '/case/icp-nexus/not-for.png', iw: 1106, ih: 488,
+      alt: 'Who Nexus is not for: stores syncing to Etsy, Amazon or Walmart, vendors looking to join a marketplace, agencies testing on dev stores, and large enterprises needing a custom build.',
+      caption: 'guardrails aka, who we do not serve', skills: ['positioning'], color: '#BCE5CF' },
+    { id: 's2-where', kind: 'shot', with: 's2-ctx', x: 1120, y: 440, w: 440, r: -1, src: '/case/icp-nexus/where-they-gather.png', iw: 896, ih: 252,
+      alt: 'Where they gather: Shopify App Store search, about 48% of discovery; Google, about 11%; AI assistants and the listicles they cite; other platforms such as Product Hunt and G2.',
+      caption: 'where they hang out', skills: ['research', 'positioning'], color: '#BCE5CF' },
+    { id: 's2-pie', kind: 'page', chart: 'pie', x: 560, y: 570, w: 520, h: 350, r: -0.5, skills: ['research'] }
+  ] },
+  { title: 'what value do they get?', chip: 1, slug: 'what-they-get', items: [
+    { id: 's3-ctx', kind: 'note', x: 40, y: 130, w: 520, h: 170, r: -1.2, skills: ['positioning'],
+      text: 'once i knew who they were, i asked what they actually get from nexus.' },
+    { id: 's3-vp', kind: 'place', x: 600, y: 130, w: 520, h: 260, r: 0.8, skills: ['positioning'],
+      text: 'value proposition goes here. i will send it. no invented copy.' }
+  ] },
+  { title: 'why build nexus at all?', chip: 2, slug: 'why-nexus', items: [
+    { id: 's4-ctx', kind: 'note', x: 40, y: 130, w: 520, h: 320, r: -1.2, skills: ['research', 'positioning'],
+      text: 'then i asked the founder why he built nexus when competitors already exist. another chance to practise the mom test: ask for stories and trade-offs, not opinions on my own ideas. three of his six answers came back to simple or easy.' },
+    { id: 's4-qa', kind: 'qa', with: 's4-ctx', x: 600, y: 120, w: 520, r: 0.8, iw: 520, ih: 640, color: '#8FB3DA', skills: ['research'],
+      alt: 'Interview questions and answers.',
+      qa: [
+        ['a year in, what should a brand tell a friend?', 'simple to use, to find users, to configure, to decide.'],
+        ['if nexus were a car or a person?', 'powerful, yet so simple to use.'],
+        ['which merchant would you turn away?', 'people who don’t respect software, or want a custom build.'],
+        ['what should nexus never feel like?', 'unstable or unreliable.'],
+        ['which merchant story makes you proudest?', 'erica from art therapy.'],
+        ['if we showed one thing, what would it be?', 'how easy nexus is to use.']
+      ] }
+  ] },
+  { title: 'what changed', chip: 3, slug: 'what-changed', items: [
+    { id: 's5-ctx', kind: 'note', x: 40, y: 130, w: 520, h: 240, r: -1.2, skills: ['positioning'],
+      text: 'free to start became simple to start, manage and grow a marketplace. the promise moved from what it costs to what it takes.' },
+    { id: 's5-pos', kind: 'page', chart: 'pos', x: 600, y: 130, w: 520, h: 380, r: -0.5, skills: ['positioning'] },
+    { id: 's5-learnt', kind: 'learnt', x: 1160, y: 130, w: 400, h: 240, r: 1.4, skills: ['positioning'],
+      label: 'WHAT I LEARNT', text: 'users show you what they do. you decide who you\'re for, and what you\'re best at.' }
+  ] }
+];
+
+const isDoc = (it: Item) => it.kind === 'shot' || it.kind === 'qa';
+const hOf = (it: Item) => isDoc(it) ? Math.round(it.w * it.ih! / it.iw!) + 60 : it.h!;
+
+// Desktop: sections stacked down a 1600 wide board. Phones: a 600 wide column, items stacked in reading order.
+const SEC_W = 1600, GAP = 300, MW = 600, MGAP = 220;
+let dy = 0, my = 0;
+const sections = sectionsRaw.map((s) => {
+  const h = Math.max(...s.items.map((it) => it.y + hOf(it))) + 60;
+  let at = 210;
+  const items = s.items.map((it) => {
+    const m = { mx: 40 + (520 - it.w) / 2, my: at };
+    at += hOf(it) + (it.kind === 'label' ? 16 : 64);
+    return { ...it, ...m };
+  });
+  const sec = { ...s, items, y: dy, h, my, mh: at };
+  dy += h + GAP; my += at + MGAP;
+  return sec;
+});
+const last = sections.length - 1;
+const END_Y = sections[last].y + sections[last].h + 140, WORLD_W = SEC_W, WORLD_H = END_Y + 560;
+const M_END_Y = sections[last].my + sections[last].mh + 120, M_WORLD_H = M_END_Y + 640;
+
+// Every item in world coordinates for both layouts; cards get story-wide step numbers, documents do not.
+let storyStep = 0;
+const all = sections.flatMap((s, i) => s.items.map((it) => ({
+  ...it, sec: i, ax: it.x, ay: s.y + it.y, amx: it.mx, amy: s.my + it.my, hh: hOf(it), skills: it.skills ?? [],
+  step: isDoc(it) || it.kind === 'label' ? 0 : ++storyStep
+})));
+const labels = all.filter((it) => it.kind === 'label');
+const pieces = all.filter((it) => !isDoc(it) && it.kind !== 'label');
+const docs = all.filter(isDoc);
+const lastIds = sections.map((_, i) => pieces.filter((p) => p.sec === i).at(-1)!.id);
+
+// Dotted threads from a card to the documents pinned with it, in both layouts.
+const tie = (fx: number, fy: number, tx: number, ty: number) => { const m = (fy + ty) / 2; return `M ${fx} ${fy} C ${fx} ${m}, ${tx} ${m}, ${tx} ${ty}`; };
+const ties = docs.map((a) => {
+  const o = all.find((p) => p.id === a.with)!;
+  return { for: a.id, color: a.color,
+    d: tie(o.ax + o.w - 20, o.ay + 40, a.ax + a.w / 2, a.ay + 4),
+    m: tie(o.amx + o.w / 2, o.amy + o.hh - 10, a.amx + a.w / 2, a.amy + 4) };
+});
+
+// The camera frames each section on its content: heading, labels, cards and documents, plus a margin.
+const view = (i: number) => {
+  const boxes = [...all.filter((p) => p.sec === i).map((p) => ({ x: p.ax, y: p.ay, w: p.w, h: p.hh })), { x: 30, y: sections[i].y, w: 900, h: 80 }];
+  const x0 = Math.min(...boxes.map((b) => b.x)), y0 = Math.min(...boxes.map((b) => b.y));
+  const x1 = Math.max(...boxes.map((b) => b.x + b.w)), y1 = Math.max(...boxes.map((b) => b.y + b.h));
+  return { x: x0 - 20, y: y0 - 20, w: x1 - x0 + 40, h: y1 - y0 + 40 };
+};
+// Where the camera looks, and which pieces get pinned up. The first frame is the snapshot: every piece at once.
+// The last stop: the end of the final section, the string running down, and the ending under it.
+type Area = { x: number; y: number; w: number; h: number };
+const endView: Area = { x: 0, y: sections[last].y + 200, w: SEC_W, h: WORLD_H - (sections[last].y + 200) };
+const frames: { cam: number | Area; sec: number; show: string[] }[] = [{ cam: -1, sec: -1, show: [...pieces, ...docs].map((p) => p.id) }];
+sections.forEach((_, i) => pieces.filter((p) => p.sec === i).forEach((p) => {
+  frames.push({ cam: view(i), sec: i, show: [p.id, ...docs.filter((a) => a.with === p.id).map((a) => a.id)] });
+}));
+frames.push({ cam: endView, sec: last, show: [] });
+
+// A pin beside each heading; the string leaves from each section's last card and lands on the next heading pin,
+// travelling through the gutter to the right of the board so it never crosses a piece.
+const bridge = ([x, y]: number[], bottom: number, [tx, ty]: number[], rx: number) =>
+  ` M ${x} ${y} C ${rx} ${y}, ${rx} ${y + 130}, ${rx} ${bottom} C ${rx} ${bottom + 200}, ${tx} ${ty - 220}, ${tx} ${ty}`;
+const lay = (m: boolean) => {
+  const pins = sections.map((s) => [40, (m ? s.my : s.y) + 44]);
+  const knots = sections.map((_, i) => { const q = pieces.find((p) => p.id === lastIds[i])!; return m ? [q.amx + q.w - 22, q.amy + 10] : [q.ax + q.w - 22, q.ay + 10]; });
+  const segs = knots.map((k, i) => bridge(k, m ? sections[i].my + sections[i].mh : sections[i].y + sections[i].h,
+    i < last ? pins[i + 1] : [(m ? MW : SEC_W) / 2, m ? M_END_Y : END_Y], m ? MW + 40 : SEC_W + 100));
+  return { pins, knots, segs };
+};
+const layers = [{ k: 'd', L: lay(false), w: WORLD_W, h: WORLD_H }, { k: 'm', L: lay(true), w: MW, h: M_WORLD_H }];
+
+const secRects = sections.map((s) => ({ x: 0, y: s.y, w: SEC_W, h: s.h }));
+const mSecRects = sections.map((s) => ({ x: 0, y: s.my, w: MW, h: s.mh }));
+// Skill counts are computed: every card, document and cover post tagged with the skill.
+const skillCount = (id: string) => [...pieces, ...docs, ...posts].filter((p) => p.skills.includes(id)).length;
+// Read time from the word count of everything written on the page, at 230 words a minute.
+const words = [title, description, ...questions, coverCaption, ...sections.map((s) => s.title), closing,
+  ...all.flatMap((p) => [p.text ?? '', p.label ?? '', ...(p.items ?? []), ...(p.qa ?? []).flat()]),
+  'current segmentation of users', 'current installs with primary ICP', 'previous positioning free to start current positioning simple to start, manage and grow a marketplace'
+].join(' ').split(/\s+/).filter(Boolean).length;
+const readMins = Math.max(1, Math.round(words / 230));
+const published = '14 NOV 2026 · 19:48 IST';
+
+// Section 1's number: store status across the 240 classified stores (growth and launch plans counted together as paying).
+const DONUT_C = 2 * Math.PI * 84;
+const donutRaw = [
+  { label: 'trial expired', stores: 211, share: '87.9%', color: '#B9B9C0' },
+  { label: 'paying', stores: 19, share: '7.9%', color: '#E08A4C' },
+  { label: 'on trial', stores: 10, share: '4.2%', color: '#8FB3DA' }
+];
+// Section 2's number: the share of current installs that match the primary ICP, as a pie with that slice pulled out.
+const PIE = { cx: 110, cy: 110, r: 100, share: 0.18 };
+const pieStart = -Math.PI / 2, pieEnd = pieStart + PIE.share * 2 * Math.PI, pieMid = (pieStart + pieEnd) / 2;
+const pieOff = [Math.cos(pieMid) * 10, Math.sin(pieMid) * 10];
+const pt = (a: number, dx = 0, dy = 0) => `${(PIE.cx + dx + PIE.r * Math.cos(a)).toFixed(2)} ${(PIE.cy + dy + PIE.r * Math.sin(a)).toFixed(2)}`;
+const pieSlice = `M ${PIE.cx + pieOff[0]} ${PIE.cy + pieOff[1]} L ${pt(pieStart, pieOff[0], pieOff[1])} A ${PIE.r} ${PIE.r} 0 0 1 ${pt(pieEnd, pieOff[0], pieOff[1])} Z`;
+const pieRest = `M ${PIE.cx} ${PIE.cy} L ${pt(pieEnd)} A ${PIE.r} ${PIE.r} 0 1 1 ${pt(pieStart)} Z`;
+let donutAt = 0;
+const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; const seg = { ...d, len: Math.max(len - 3, 1), off: donutAt }; donutAt += len; return seg; });
+
+const pos = (p: { ax: number; ay: number; amx: number; amy: number }) => `--x:${p.ax}px;--y:${p.ay}px;--mx:${p.amx}px;--my:${p.amy}px;`;
+const cls: Record<string, string> = { note: 'note slot-ctx', learnt: 'note slot-learnt', check: 'check', page: 'page', place: 'page pc-place' };
+---
+<Base title="who nexus is for, and how i got there · Kritika Upadhyay" description={description}>
+<Nav />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kalam:wght@300&family=Commissioner:wght@400;500;600;700&display=swap">
+<div class="ic">
+
+<figure class="ic-cover">
+<a class="ic-return ic-home" href="/work">← BACK</a>
+<ul class="cv-qs">{questions.map((q) => <li>{q}</li>)}</ul>
+<div class="cv-row cv-posts">
+{posts.map((p, i) => (
+<div class={`cv-cut cv-post${i === 1 ? ' cv-mid' : ''}`} data-skills={p.skills.join(' ')} style={`--r:${p.r}deg;--a:${(p.iw / p.ih).toFixed(4)}`}>
+<span class="pin" aria-hidden="true"></span>
+<img src={p.src} alt={p.alt} width={p.iw} height={p.ih} decoding="async">
+</div>
+))}
+</div>
+<figcaption class="cv-cap cv-note">{coverCaption}</figcaption>
+</figure>
+
+<section class="ic-fold">
+<h1 class="ic-title">{title}</h1>
+<div class="ic-intro">
+{descParas.map((t) => <p class="ic-desc">{t}</p>)}
+<p class="ic-date">PUBLISHED {published} · {readMins} MIN READ</p>
+</div>
+<div class="ic-skillbox">
+<p class="ic-skills-h">SKILLS</p>
+<ul class="ic-skills" aria-label="Skills shown in this case study. Choose one to see it on the board.">
+{skills.map((sk, i) => (
+<li><button class="ic-skill" type="button" data-skill={sk.id} aria-pressed="false"><span class="sk-n">0{i + 1}</span><span class="sk-l">{sk.label}</span><span class="sk-more">{skillCount(sk.id)} on the board →</span></button></li>
+))}
+</ul>
+</div>
+</section>
+
+<section class="ic-board" id="board" data-frames={JSON.stringify(frames)} data-secs={JSON.stringify(secRects)} data-msecs={JSON.stringify(mSecRects)}
+  data-world={JSON.stringify({ w: WORLD_W, h: WORLD_H })} data-mworld={JSON.stringify({ w: MW, h: M_WORLD_H })}
+  data-slugs={JSON.stringify(sections.map((s) => s.slug))} data-chips={JSON.stringify(sections.map((s) => s.chip))}>
+<div class="ic-view" id="view">
+<div class="ic-world" id="world" style={`--ww:${WORLD_W}px;--wh:${WORLD_H}px;--mww:${MW}px;--mwh:${M_WORLD_H}px`}>
+{layers.map(({ k, L, w, h }) => (
+<svg class={`ic-lines lay-${k}`} width={w} height={h} aria-hidden="true">
+<g class="ic-string"><path d={L.segs.join('')} class="th-base"></path></g>
+{L.segs.map((d, i) => <path d={d} class="th-fill" data-seg={i} pathLength="1"></path>)}
+{L.pins.map(([x, y]) => <circle cx={x} cy={y} r="11" class="ic-pin"></circle>)}
+{L.knots.map(([x, y]) => <circle cx={x} cy={y} r="7" class="ic-pin"></circle>)}
+{ties.map((t) => <path d={k === 'd' ? t.d : t.m} class="ic-tie" data-for={t.for} stroke={t.color}></path>)}
+</svg>
+))}
+
+{sections.map((s, i) => (
+<h2 class="ic-sec-h" style={`--x:80px;--y:${s.y + 8}px;--mx:80px;--my:${s.my + 8}px`} data-sec={i}>{s.title}</h2>
+))}
+{labels.map((l) => <p class="ic-col-k" style={`${pos(l)}width:${l.w}px`}>{l.text}</p>)}
+
+{pieces.map((p) => (
+<div class={`pc pc-${cls[p.kind]}`} id={p.id} data-skills={p.skills.join(' ')}
+  style={`${pos(p)}width:${p.w}px;${p.kind === 'page' || p.kind === 'place' ? `height:${p.h}px;` : `min-height:${p.h}px;`}--r:${p.r ?? 0}deg`}>
+<span class="pc-step" aria-hidden="true">{p.step}</span>
+{lastIds.includes(p.id) && <span class="pin" aria-hidden="true"></span>}
+{p.kind === 'note' && <div class="note-b">{p.items
+  ? <ul class="note-ul">{p.items.map((t) => <li class="note-t">{t}</li>)}</ul>
+  : p.text!.split('\n\n').map((t) => <p class="note-t">{t}</p>)}</div>}
+{p.kind === 'learnt' && <div class="note-b"><p class="pos-k">{p.label}</p><p class="note-t">{p.text}</p></div>}
+{p.kind === 'place' && <p class="vp-hole">{p.text}</p>}
+{p.kind === 'check' && <ul class="ck-list">
+{p.items!.map((it) => <li><span class="ck-q" aria-hidden="true">?</span><span>{it}</span></li>)}
+</ul>}
+
+{p.chart === 'donut' && <>
+<p class="pg-k">current segmentation of users</p>
+<div class="dn">
+<svg class="dn-chart" viewBox="0 0 220 220" role="img" aria-label="Current segmentation of users: trial expired 87.9%, paying 7.9%, on trial 4.2%.">
+{donut.map((d) => <circle cx="110" cy="110" r="84" class="dn-seg" stroke={d.color} stroke-dasharray={`${d.len} ${DONUT_C - d.len}`} stroke-dashoffset={-d.off}></circle>)}
+<text x="110" y="108" class="dn-n">7.9%</text>
+<text x="110" y="134" class="dn-l">paying</text>
+</svg>
+<ul class="dn-legend">
+{donut.map((d) => <li><i style={`background:${d.color}`}></i><span>{d.label}</span><b>{d.share}</b></li>)}
+</ul>
+</div>
+</>}
+
+{p.chart === 'pie' && <>
+<p class="pg-k">current installs with primary ICP</p>
+<div class="dn">
+<svg class="pie" viewBox="-10 -10 240 240" role="img" aria-label="18% of current installs match the primary ICP; 82% are other installs.">
+<path d={pieRest} fill="#C9C9CF"></path>
+<path d={pieSlice} fill="#E08A4C"></path>
+</svg>
+<ul class="dn-legend">
+<li><i style="background:#E08A4C"></i><span>primary ICP</span><b>18%</b></li>
+<li class="muted"><i style="background:#C9C9CF"></i><span>other installs</span><b>82%</b></li>
+</ul>
+</div>
+</>}
+
+{p.chart === 'pos' && <>
+<div class="pos">
+<p class="pos-k">PREVIOUS POSITIONING</p>
+<p class="pos-old">free to start</p>
+<p class="pos-ar" aria-hidden="true">↓</p>
+<p class="pos-k">CURRENT POSITIONING</p>
+<p class="pos-new">simple to start, manage and grow a marketplace</p>
+</div>
+</>}
+</div>
+))}
+{docs.map((a, k) => (
+<figure class="pc pc-shot" id={a.id} data-skills={a.skills.join(' ')} style={`${pos(a)}width:${a.w}px;--r:${a.r}deg;--delay:${(k % 3) * 0.12}s`}>
+<span class="pin" aria-hidden="true"></span>
+{a.qa
+  ? <ol class="qa">{a.qa.map(([q, ans]) => <li><span class="qa-q">{q}</span><span class="qa-a">{ans}</span></li>)}</ol>
+  : <img src={a.src} alt={a.alt} width={a.iw} height={a.ih}>}
+{a.caption && <figcaption>{a.caption}</figcaption>}
+</figure>
+))}
+<div class="ic-finale" style={`--y:${END_Y - 18}px;--my:${M_END_Y - 18}px;--fw:${SEC_W}px;--mfw:${MW}px`}>
+<span class="end-dot" aria-hidden="true"></span>
+<p class="end-t">{closing}</p>
+<div class="end-btns"><a class="end-btn primary" href="/work">← Back to Work</a><button type="button" class="end-btn quiet" id="restart">Start over</button></div>
+</div>
+</div>
+<p class="ic-hint" id="hint" hidden>exploring · scroll to pick the story back up</p>
+</div>
+
+<div class="ic-ctrls" id="ctrls">
+<button type="button" class="ic-round" id="zoom" aria-label="Zoom in to read a section">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5 L20.5 20.5 M7.5 10.5 H13.5"></path><path class="zoom-plus" d="M10.5 7.5 V13.5"></path></svg>
+</button>
+<nav class="ic-progress" aria-label="Chapters of the case study">
+<ol>
+{chips.map((c, i) => <li><button type="button" class="ic-step" data-chip={i}><span class="st-l">{c}</span><span class="st-track"><i class="st-fill"></i></span></button></li>)}
+</ol>
+<button type="button" class="ic-chip" id="chip" hidden></button>
+</nav>
+<button type="button" class="ic-round" id="close" aria-label="Back to work">
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6 L18 18 M18 6 L6 18"></path></svg>
+</button>
+</div>
+</section>
+
+</div>
+</Base>
+
+<style is:global>
+.sky,.sky a,.sky button{cursor:auto}
+</style>
+
+<style>
+.ic{position:relative;font-family:'Commissioner',system-ui,sans-serif;color:#EFEFEE;background-color:#141416;background-image:linear-gradient(rgba(169,175,185,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(169,175,185,.075) 1px,transparent 1px);background-size:18px 18px;background-position:-1px -1px}
+.ic-return{color:#A9AFB9;font-size:13px;letter-spacing:.12em;text-decoration:none}
+.ic-return:hover,.ic-return:focus-visible{color:#EFEFEE}
+
+.ic-cover{position:relative;margin:0;padding:84px 24px 44px;background-color:#E3D6AE;background-image:radial-gradient(rgba(30,30,36,.1) 1px,transparent 1.2px);background-size:7px 7px;overflow:hidden}
+.cv-row{display:flex;justify-content:center;align-items:center;gap:clamp(16px,3.4vw,56px);max-width:1280px;margin:0 auto}
+.cv-cut{flex:1 1 0;max-width:400px;padding:12px 12px 0;background:#FFFFFF;box-shadow:0 2px 0 rgba(0,0,0,.06),0 18px 30px rgba(60,48,20,.28);transform:rotate(var(--r))}
+.cv-mid{margin-top:-28px}
+.cv-cap{margin:0;padding:12px 6px 16px;font-family:'Kalam',cursive;font-size:clamp(15px,1.72vw,24px);font-weight:400;line-height:1.1;color:#1E1E24}
+.ic-home{position:absolute;top:22px;left:max(24px,calc((100% - 1200px) / 2 + 24px));z-index:1;color:#1E1E24;font-weight:500}
+.ic-home:hover,.ic-home:focus-visible{color:#000}
+/* The three guiding questions, under the back link. */
+.cv-qs{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 36px;max-width:1200px;margin:0 auto 40px;padding:0;list-style:none;font-family:'Kalam',cursive;font-size:var(--h-note);font-weight:300;letter-spacing:.5px;line-height:1.2;color:#1E1E24}
+/* The three posts: pinned cards in one row, sized by their own shape so they share a height and nothing is cropped. */
+.cv-posts .cv-post{position:relative;flex:var(--a) 1 0;min-width:0;max-width:none;padding:12px}
+.cv-post img{display:block;width:100%;height:auto}
+.cv-post .pin{right:auto;left:50%;margin-left:-12px;top:-12px}
+.cv-note{max-width:1200px;margin:26px auto 0;padding:0;text-align:center}
+.cv-post.hl{box-shadow:0 0 0 4px #D8C9A3,0 0 40px rgba(216,201,163,.55),0 18px 30px rgba(60,48,20,.28)}
+.ic-fold{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,340px);gap:28px 64px;align-items:center;max-width:1200px;margin:0 auto;padding:48px 24px 56px}
+.ic-skills-h{margin:0 0 10px;font-size:11px;letter-spacing:.18em;color:#8A8D96}
+.ic-title{grid-column:1/-1;margin:0;font-weight:500;font-size:clamp(38px,6vw,92px);line-height:1;letter-spacing:-.03em}
+.ic-desc{max-width:640px;margin:0 0 18px;font-size:18px;line-height:1.6;color:#C9CDD5}
+.ic-date{margin:0;font-size:11px;letter-spacing:.16em;color:#8A8D96}
+.ic-skills{margin:0;padding:0;list-style:none;border-top:1px solid #2E2E34}
+.ic-skill{display:grid;grid-template-columns:28px 1fr;align-items:baseline;width:100%;padding:14px 0;border:0;border-bottom:1px solid #2E2E34;background:none;color:#C9CDD5;font:inherit;text-align:left;cursor:pointer}
+.sk-n{font-size:11px;letter-spacing:.12em;color:#5E5E66;transition:color .25s ease}
+.sk-l{font-size:13px;letter-spacing:.14em;transition:color .25s ease}
+.sk-more{grid-column:2;max-height:0;overflow:hidden;opacity:0;font-family:'Kalam',cursive;font-size:17px;color:#D8C9A3;transition:max-height .3s ease,opacity .3s ease,margin .3s ease}
+.ic-skill:hover .sk-l,.ic-skill:focus-visible .sk-l,.ic-skill[aria-pressed="true"] .sk-l{color:#EFEFEE}
+.ic-skill:hover .sk-n,.ic-skill:focus-visible .sk-n,.ic-skill[aria-pressed="true"] .sk-n{color:#D8C9A3}
+.ic-skill:hover .sk-more,.ic-skill:focus-visible .sk-more,.ic-skill[aria-pressed="true"] .sk-more{max-height:30px;opacity:1;margin-top:4px}
+.ic-skill:focus-visible,.ic-step:focus-visible{outline:2px solid #EFEFEE;outline-offset:3px}
+@media (max-width:760px){
+.ic-fold{grid-template-columns:1fr}.ic-cover{padding:64px 16px 28px}
+.cv-qs{flex-direction:column;align-items:center;margin-bottom:32px}
+.cv-posts{flex-direction:column;gap:30px}
+.cv-posts .cv-post{flex:none;width:min(100%,calc(300px * var(--a)));box-sizing:border-box}
+.cv-mid{margin-top:0}
+}
+
+.ic-board{position:relative;height:1200vh}
+.ic-view{position:sticky;top:0;height:100vh;overflow:hidden;touch-action:pan-y}
+.ic-world{position:absolute;left:0;top:0;width:var(--ww);height:var(--wh);transform-origin:0 0;will-change:transform}
+.ic-world.anim{transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+.ic-world:not(.inside){cursor:zoom-in}
+.ic-lines{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
+.ic.touch .lay-d,.ic:not(.touch) .lay-m{display:none}
+.ic-string{opacity:.35}
+.ic-string path{fill:none;stroke-linecap:round}
+.th-base{stroke:#9A4A44;stroke-width:2}
+.th-fill{fill:none;stroke:#E2574C;stroke-width:2.4;stroke-linecap:round;stroke-dasharray:1 1;stroke-dashoffset:1}
+.ic-pin{fill:#D2453F;stroke:#141416;stroke-width:3}
+.ic-sec-h{position:absolute;left:var(--x);top:var(--y);margin:0;font-size:60px;font-weight:500;line-height:1.1;letter-spacing:-.02em;color:#EFEFEE;white-space:nowrap}
+.ic-col-k{position:absolute;left:var(--x);top:var(--y);box-sizing:border-box;margin:0;padding:0 4px;font-size:24px;font-weight:600;letter-spacing:.06em;line-height:40px;color:#A9AFB9}
+
+.pc{position:absolute;left:var(--x);top:var(--y);box-sizing:border-box;pointer-events:none;transform:translateY(28px) rotate(calc(var(--r) + 2deg)) scale(.96);opacity:0;visibility:hidden;transition:opacity .55s ease,transform .7s cubic-bezier(.2,.7,.2,1),visibility 0s linear .7s,box-shadow .3s ease,filter .3s ease}
+.pc.on{opacity:1;visibility:visible;transform:rotate(var(--r));transition:opacity .55s ease,transform .7s cubic-bezier(.2,.7,.2,1),visibility 0s,box-shadow .3s ease,filter .3s ease}
+.pc-step{position:absolute;left:-14px;top:-14px;display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:#141416;border:2px solid #4A4A50;color:#C9CDD5;font-size:15px;font-weight:500}
+
+.pc-note{padding:30px 30px 26px;color:#1E1E24;box-shadow:0 2px 0 rgba(0,0,0,.08),0 14px 28px rgba(0,0,0,.45);background-image:linear-gradient(to bottom,rgba(255,255,255,.18),transparent 40%)}
+.slot-ctx{background-color:#BFD4EA}
+.slot-learnt{background-color:#B8E2C2}
+.slot-learnt .pos-k{margin-bottom:12px}
+.note-t{margin:0;font-family:'Kalam',cursive;font-weight:300;font-size:27px;line-height:1.22}
+.note-t + .note-t{margin-top:12px}
+.note-ul{margin:0;padding:0 0 0 26px;list-style:disc}
+.note-ul li::marker{font-size:.8em}
+.cv-cap,.cv-qs,.sk-more,.note-t,.ck-list li,.qa-a,.pc-shot figcaption,.end-t,.vp-hole{letter-spacing:1px}
+.pc-shot > img{display:block;width:100%;height:auto;border:1px solid #DADAD4}
+.pos{display:flex;flex-direction:column;align-items:flex-start;gap:6px;height:100%;justify-content:center}
+.pos-k{margin:0;font-size:15px;font-weight:600;letter-spacing:.14em;color:#5A5A62}
+.pos-old{margin:0 0 4px;font-size:29px;color:#8A8A92;text-decoration:line-through;text-decoration-color:#D2453F;text-decoration-thickness:2px}
+.pos-ar{margin:2px 0 6px;font-size:34px;line-height:1;color:#E08A4C}
+.pos-new{margin:0;font-size:38px;font-weight:600;line-height:1.15;letter-spacing:-.01em;color:#1E1E24}
+.pin{position:absolute;right:10px;top:-2px;width:24px;height:24px;border-radius:50%;background:#D2453F;box-shadow:0 4px 8px rgba(0,0,0,.45),inset -3px -3px 0 rgba(0,0,0,.18)}
+
+.pc-check{padding:28px 28px 22px;background:#F4F3EF;color:#1E1E24;box-shadow:0 14px 28px rgba(0,0,0,.45)}
+.pc-check::before{content:"";position:absolute;left:50%;top:-12px;width:96px;height:24px;margin-left:-48px;background:rgba(188,229,207,.75);transform:rotate(-2deg)}
+.ck-list{display:flex;flex-direction:column;gap:14px;margin:0;padding:0;list-style:none}
+.ck-list li{display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:start;font-family:'Kalam',cursive;font-weight:300;font-size:27px;line-height:1.15}
+.pie{flex:none;width:180px;height:180px}
+.dn-legend li.muted{color:#5A5A62}
+.ck-q{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;margin-top:2px;border:2px solid #1E1E24;border-radius:50%;box-sizing:border-box;font-family:'Commissioner',system-ui,sans-serif;font-size:15px;font-weight:600;color:#D2453F}
+.qa{display:flex;flex-direction:column;gap:18px;margin:0;padding:22px 26px 26px;list-style:none;background:#FFFFFF;border:1px solid #DADAD4}
+.qa li{display:flex;flex-direction:column;gap:2px}
+.qa-q{font-size:19px;font-weight:500;color:#1E1E24}
+.qa-a{font-family:'Kalam',cursive;font-weight:300;font-size:27px;line-height:1.1;color:#2457B8}
+.pc-page .pin{right:10px;top:-2px;z-index:1}
+.pc.pc-shot.on{transition-delay:var(--delay,0s)}
+.pc-shot{margin:0;padding:10px 10px 0;background:#FFFFFF;box-shadow:0 14px 28px rgba(0,0,0,.45)}
+.pc-shot img{display:block;width:100%;height:auto;border:1px solid #DADAD4}
+.pc-shot figcaption{padding:8px 4px 10px;font-family:'Kalam',cursive;font-size:20px;color:#5A5A62}
+.pc-shot .pin{right:auto;left:50%;margin-left:-12px;top:-12px}
+.ic-tie{fill:none;stroke-width:3;stroke-linecap:round;stroke-dasharray:8 7;opacity:0;transition:opacity .6s ease}
+.ic-tie.on{opacity:.9}
+.dn{display:flex;align-items:center;gap:28px}
+.dn-chart{flex:none;width:180px;height:180px;transform:rotate(-90deg)}
+.dn-seg{fill:none;stroke-width:34}
+.dn-n,.dn-l{transform:rotate(90deg);transform-origin:110px 110px;text-anchor:middle;fill:#1E1E24}
+.dn-n{font-size:36px;font-weight:600}
+.dn-l{font-size:15px;fill:#5A5A62}
+.dn-legend{flex:1;display:flex;flex-direction:column;gap:16px;margin:0;padding:0;list-style:none;font-size:19px}
+.dn-legend li{display:grid;grid-template-columns:14px 1fr auto;align-items:center;gap:12px}
+.dn-legend i{width:14px;height:14px;border-radius:3px}
+.dn-legend b{font-size:22px}
+
+.pc-page{padding:30px 34px;background:#FFFFFF;color:#1E1E24;box-shadow:0 14px 28px rgba(0,0,0,.45)}
+.pc-page::before,.pc-page::after{content:"";position:absolute;top:10px;width:14px;height:14px;border-radius:50%;background:#9A9AA2;box-shadow:inset -2px -2px 0 rgba(0,0,0,.2)}
+.pc-page::before{left:10px}.pc-page::after{right:10px}
+.pg-k{margin:0 0 24px;font-size:32px;font-weight:600;letter-spacing:-.01em}
+/* The value proposition is still to come: an empty sheet with a dashed outline says so. */
+.pc-place{display:flex;align-items:center;justify-content:center;padding:34px 40px;background:rgba(255,255,255,.06);border:3px dashed #8A8D96;box-shadow:none;color:#C9CDD5}
+.pc-place::before,.pc-place::after{display:none}
+.vp-hole{margin:0;font-family:'Kalam',cursive;font-weight:300;font-size:30px;line-height:1.2;text-align:center}
+
+.ic-world.filtering .pc{filter:saturate(.3) brightness(.55)}
+.ic-world.filtering .pc.hl{filter:none;box-shadow:0 0 0 4px #D8C9A3,0 0 40px rgba(216,201,163,.55),0 14px 28px rgba(0,0,0,.45)}
+
+/* One control bar, fixed to the bottom of the screen from the moment the board starts. */
+.ic-ctrls{position:fixed;left:50%;bottom:18px;z-index:40;display:flex;align-items:center;gap:10px;transform:translate(-50%,16px);opacity:0;pointer-events:none;transition:opacity .35s ease,transform .35s ease}
+.ic-ctrls.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.ic-round,.ic-progress{border:1px solid #2A2A2E;background:rgba(10,10,12,.88);backdrop-filter:blur(8px)}
+.ic-round{display:inline-flex;align-items:center;justify-content:center;flex:none;width:40px;height:40px;padding:0;border-radius:10px;color:#A9AFB9;cursor:pointer;transition:color .2s ease,border-color .2s ease}
+.ic-round:hover,.ic-round:focus-visible{color:#EFEFEE;border-color:#4A4A50}
+.ic-round:focus-visible,.ic-step:focus-visible{outline:2px solid #EFEFEE;outline-offset:3px}
+.ic-round.in .zoom-plus{display:none}
+.ic-progress{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 18px 12px;border-radius:16px}
+.ic-progress ol{display:flex;gap:14px;margin:0;padding:0;list-style:none}
+.ic-step{display:flex;flex-direction:column;justify-content:center;min-width:72px;min-height:36px;padding:0;border:0;background:none;color:#8A8D96;font:inherit;font-size:12px;letter-spacing:.06em;text-align:left;cursor:pointer;transition:color .2s ease}
+.st-l{display:block;margin-bottom:6px;white-space:nowrap}
+.st-track{display:block;height:3px;border-radius:3px;background:#2A2A2E;overflow:hidden}
+.st-fill{display:block;width:0;height:100%;background:#D2453F;transition:width .25s ease}
+.ic-step:hover,.ic-step.on{color:#EFEFEE}
+.ic-chip{padding:2px 0 0;border:0;background:none;color:#D8C9A3;font:inherit;font-size:12px;cursor:pointer}
+.ic-chip[hidden]{display:none}
+.ic-hint{position:absolute;left:50%;bottom:100px;z-index:5;margin:0;transform:translateX(-50%);font-size:12px;letter-spacing:.08em;color:#8A8D96;white-space:nowrap}
+
+/* The end sits on the board, under the last section: one red dot, the closing line, and a way back to the top. */
+.ic-finale{position:absolute;left:0;top:var(--y);width:var(--fw);display:flex;flex-direction:column;align-items:center;gap:44px;text-align:center}
+.end-dot{width:36px;height:36px;border-radius:50%;background:#D2453F;box-shadow:0 0 0 10px rgba(210,69,63,.18)}
+.end-t{max-width:1300px;margin:0;font-family:'Kalam',cursive;font-size:100px;font-weight:400;line-height:1;color:#EFEFEE}
+/* The two buttons at the end, as on the Plane Twitter case study, sized in board units. */
+.end-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:22px}
+.end-btn{display:inline-flex;align-items:center;gap:12px;padding:18px 30px;border:2px solid transparent;border-radius:12px;font:inherit;font-size:26px;font-weight:600;text-decoration:none;cursor:pointer;transition:background .2s ease,color .2s ease,border-color .2s ease}
+.end-btn.primary{background:#EFEFEE;color:#1E1E24}
+.end-btn.primary:hover,.end-btn.primary:focus-visible{background:#D8C9A3;outline:none}
+.end-btn.quiet{background:none;color:#A9AFB9;border-color:rgba(169,175,185,.3)}
+.end-btn.quiet:hover,.end-btn.quiet:focus-visible{color:#EFEFEE;border-color:#A9AFB9;outline:none}
+.end-btn:focus-visible{box-shadow:0 0 0 4px #141416,0 0 0 7px #EFEFEE}
+
+/* Phones and touch screens: the board is one screen tall, laid out as one column, opens zoomed out,
+   and the reader explores it directly. */
+.ic.touch .ic-board{height:auto}
+.ic.touch .ic-view{position:relative;height:100svh}
+.ic.touch .ic-view.zoomed{touch-action:none}
+.ic.touch .ic-world{width:var(--mww);height:var(--mwh)}
+.ic.touch .pc,.ic.touch .ic-sec-h,.ic.touch .ic-col-k{left:var(--mx);top:var(--my)}
+.ic.touch .ic-sec-h{width:500px;white-space:normal}
+.ic.touch .ic-finale{top:var(--my);width:var(--mfw)}
+.ic.touch .end-t{max-width:540px;font-size:64px}
+@media (max-width:760px){
+.ic-step{flex:none;width:60px;min-width:0}
+.st-l{white-space:normal;font-size:11px;line-height:1.15;letter-spacing:.02em}
+.ic-progress{padding:8px 8px 10px}
+.ic-progress ol{gap:6px}
+.ic-ctrls{gap:6px}
+.ic-round{width:36px;height:36px}
+}
+@media (prefers-reduced-motion:reduce){.pc,.ic-world.anim,.ic-ctrls{transition:none}}
+
+/* Frozen type scale (see global.css) for everything around the board; text on the board is sized in board units */
+.ic-return,.ic-skills-h,.ic-date,.sk-n,.sk-l{font-size:var(--t-caps);font-weight:500;letter-spacing:.18em}
+.ic-title{font-size:var(--t-display);font-weight:500;letter-spacing:-.02em;line-height:1}
+.ic-desc{font-size:var(--t-lead);line-height:1.6}
+.ic-step,.ic-chip,.ic-hint{font-size:var(--t-small)}
+.cv-cap{font-size:var(--h-note);font-weight:300;letter-spacing:.5px}
+.sk-more{font-size:var(--h-hint);font-weight:300;letter-spacing:.5px}
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('.ic')!;
+  const board = document.getElementById('board')!;
+  const view = document.getElementById('view')!;
+  const world = document.getElementById('world')!;
+  const touch = window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (touch) root.classList.add('touch');
+  // Phones use the one-column layout of the board, with its own string and threads.
+  const lay = touch ? 'm' : 'd';
+  const threads = Array.from(world.querySelectorAll<SVGPathElement>(`.lay-${lay} .th-fill`));
+  const ties = Array.from(world.querySelectorAll<SVGPathElement>(`.lay-${lay} .ic-tie`));
+  const hint = document.getElementById('hint')!;
+  const ctrls = document.getElementById('ctrls')!;
+  const zoomBtn = document.getElementById('zoom') as HTMLButtonElement;
+  const closeBtn = document.getElementById('close') as HTMLButtonElement;
+  const chip = document.getElementById('chip') as HTMLButtonElement;
+  const steps = Array.from(document.querySelectorAll<HTMLButtonElement>('.ic-step'));
+  const fills = steps.map((b) => b.querySelector<HTMLElement>('.st-fill')!);
+  type Area = { x: number; y: number; w: number; h: number };
+  const frames: { cam: number | Area; sec: number; show: string[] }[] = JSON.parse(board.dataset.frames!);
+  const secs: Area[] = JSON.parse(touch ? board.dataset.msecs! : board.dataset.secs!);
+  const W = JSON.parse(touch ? board.dataset.mworld! : board.dataset.world!);
+  // Five board sections under four chapter chips: the first chip covers the first two sections.
+  const chipOf: number[] = JSON.parse(board.dataset.chips!);
+  const firstSecOf = (c: number) => chipOf.indexOf(c);
+  const lastSecOf = (c: number) => chipOf.lastIndexOf(c);
+  const pieces = Array.from(world.querySelectorAll<HTMLElement>('.pc'));
+  const covers = Array.from(document.querySelectorAll<HTMLElement>('.cv-post'));
+
+  type Cam = { tx: number; ty: number; s: number };
+  const BAR = 96;
+  const all = { x: -60, y: -60, w: W.w + 240, h: W.h + 100 };
+  const rectFor = (cam: number | Area) => typeof cam === 'object' ? cam : cam < 0 ? all : secs[cam];
+  const fit = (r: Area): Cam => {
+    const vw = view.clientWidth, vh = view.clientHeight - BAR;
+    const s = Math.min(vw / (r.w * 1.08), vh / (r.h * 1.08));
+    return { tx: vw / 2 - (r.x + r.w / 2) * s, ty: vh / 2 - (r.y + r.h / 2) * s, s };
+  };
+  // On phones a section is a tall column: zoom to its width and start at its top.
+  const fitTop = (r: Area): Cam => {
+    const vw = view.clientWidth;
+    const s = Math.min(1.2, vw / (r.w * 1.04));
+    return { tx: vw / 2 - (r.x + r.w / 2) * s, ty: 16 - r.y * s, s };
+  };
+  const put = (c: Cam, animate = false) => {
+    world.classList.toggle('anim', animate && !calm);
+    world.style.transform = `translate(${c.tx.toFixed(1)}px, ${c.ty.toFixed(1)}px) scale(${c.s.toFixed(4)})`;
+  };
+  const ease = (t: number) => (1 - Math.cos(Math.PI * t)) / 2;
+  const firstFrameOf = (sec: number) => frames.findIndex((f) => f.sec === sec);
+  const lastFrameOf = (sec: number) => frames.length - 1 - [...frames].reverse().findIndex((f) => f.sec === sec);
+
+  // Frame 0 is the snapshot with every piece up. After that, pieces go up one by one as the story reaches them.
+  const show = (upTo: number) => {
+    const on = new Set<string>();
+    if (upTo <= 0) frames[0].show.forEach((id) => on.add(id));
+    else frames.forEach((f, k) => { if (k > 0 && k <= upTo) f.show.forEach((id) => on.add(id)); });
+    pieces.forEach((p) => p.classList.toggle('on', on.has(p.id)));
+    ties.forEach((t) => t.classList.toggle('on', on.has(t.dataset.for!)));
+  };
+  // The progress bar: the current chapter is marked, and each track fills as its pieces go up.
+  const progress = (sec: number, reach: number) => {
+    steps.forEach((b, c) => b.classList.toggle('on', sec >= 0 && c === chipOf[sec]));
+    fills.forEach((f, c) => {
+      const a = firstFrameOf(firstSecOf(c)), z = lastFrameOf(lastSecOf(c));
+      f.style.width = `${Math.max(0, Math.min(1, (reach - a + 1) / (z - a + 1))) * 100}%`;
+    });
+  };
+  // Zoom has two states: reading a section, or seeing the whole board. The icon shows the one it will switch to.
+  const setOut = (out: boolean) => {
+    world.classList.toggle('inside', !out);
+    zoomBtn.classList.toggle('in', !out);
+    zoomBtn.setAttribute('aria-label', out ? 'Zoom in to read a section' : 'Zoom out to see all four sections');
+  };
+
+  let exploring = touch;
+  let cam: Cam = fit(all);
+  let current = -1;
+  let out = true;
+
+  // Guided mode (desktop): the scroll position inside the tall board section drives the camera.
+  const unit = () => window.innerHeight * 0.55;
+  const camKey = (c: number | Area) => JSON.stringify(c);
+  // Scroll needed to reach each frame from the one before: camera moves take 2.6 steps, pinning a card up takes one.
+  const gaps = frames.map((f, k) => k === 0 ? 0 : camKey(f.cam) === camKey(frames[k - 1].cam) ? 1 : 2.6);
+  const offsets = gaps.reduce<number[]>((acc, w, k) => (acc.push(k === 0 ? 0 : acc[k - 1] + w), acc), []);
+  const frameAt = (k: number) => offsets[k] * unit();
+  const boardTop = () => board.getBoundingClientRect().top + window.scrollY;
+  const size = () => { if (!touch) board.style.height = `${frameAt(frames.length - 1) + window.innerHeight}px`; };
+  // Where the reader is: the frame just passed, and how far (0–1) they are towards the next one.
+  const position = () => {
+    const y = Math.max(0, window.scrollY - boardTop()) / unit();
+    let i = 0;
+    while (i < frames.length - 1 && offsets[i + 1] <= y) i++;
+    const f = i < frames.length - 1 ? (y - offsets[i]) / (offsets[i + 1] - offsets[i]) : 0;
+    return { i, f };
+  };
+  // The thread between two sections fills in while the camera travels it, from a section's last card to the next section.
+  const fillThread = (y: number | null) => threads.forEach((p, k) => {
+    const lastCard = frames.findLastIndex((f) => f.sec === k && f.show.length > 0);
+    const from = offsets[lastCard], to = offsets[k + 1 < secs.length ? firstFrameOf(k + 1) : frames.length - 1];
+    const v = y === null ? 1 : Math.max(0, Math.min(1, (y - from) / (to - from)));
+    p.style.strokeDashoffset = `${1 - v}`;
+  });
+  const guided = () => {
+    const { i, f } = position();
+    fillThread(i + f >= 0 ? offsets[i] + f * ((offsets[i + 1] ?? offsets[i]) - offsets[i]) : 0);
+    const j = Math.min(i + 1, frames.length - 1);
+    const a = fit(rectFor(frames[i].cam)), b = fit(rectFor(frames[j].cam));
+    const t = ease(Math.max(0, Math.min(1, (f - 0.05) / 0.9)));
+    cam = { tx: a.tx + (b.tx - a.tx) * t, ty: a.ty + (b.ty - a.ty) * t, s: a.s + (b.s - a.s) * t };
+    put(cam);
+    const reach = f >= 0.7 ? j : i;
+    show(reach);
+    current = frames[f >= 0.5 ? j : i].sec;
+    progress(current, reach);
+    out = i === 0 && f < 0.5;
+    setOut(out);
+  };
+  const draw = () => { if (!exploring) guided(); };
+
+  const explore = (on: boolean) => {
+    if (touch) return;
+    exploring = on;
+    hint.hidden = !on;
+    if (on) { show(0); progress(current, frames.length); fillThread(null); } else draw();
+  };
+
+  // Moving between sections: on desktop, by scrolling the story there; on touch, by zooming the camera.
+  const touchGo = (sec: number) => {
+    current = sec;
+    view.classList.toggle('zoomed', sec >= 0);
+    cam = sec >= 0 ? fitTop(secs[sec]) : fit(all);
+    put(cam, true);
+    progress(sec, frames.length);
+    out = sec < 0;
+    setOut(out);
+  };
+  const goSection = (sec: number) => {
+    if (touch) return touchGo(sec);
+    explore(false);
+    window.scrollTo({ top: boardTop() + frameAt(firstFrameOf(sec)) + 2, behavior: calm ? 'auto' : 'smooth' });
+  };
+  const zoomOut = () => {
+    if (touch) return touchGo(-1);
+    explore(true);
+    out = true;
+    setOut(true);
+    cam = fit(all);
+    put(cam, true);
+  };
+  const zoomIn = () => {
+    if (touch) return touchGo(Math.max(0, current));
+    const { i, f } = position();
+    const s = i + f;
+    if (exploring && s >= 0.5) return explore(false);
+    goSection(Math.max(0, current));
+  };
+  const zoomAt = (px: number, py: number, k: number) => {
+    const s = Math.max(fit(all).s * 0.8, Math.min(1.6, cam.s * k));
+    cam = { tx: px - (px - cam.tx) * (s / cam.s), ty: py - (py - cam.ty) * (s / cam.s), s };
+    put(cam);
+  };
+
+  steps.forEach((b) => b.addEventListener('click', () => goSection(firstSecOf(Number(b.dataset.chip)))));
+  zoomBtn.addEventListener('click', () => out ? zoomIn() : zoomOut());
+  // Close: back to the work page.
+  closeBtn.addEventListener('click', () => { window.location.href = '/work'; });
+
+  // Start over: back to the top of the case study.
+  document.getElementById('restart')?.addEventListener('click', () => {
+    filter('');
+    if (!touch) explore(false); else touchGo(-1);
+    window.scrollTo({ top: 0, behavior: calm ? 'auto' : 'smooth' });
+  });
+
+  // The control bar stays fixed to the bottom of the screen while the board is on screen.
+  const bar = () => {
+    const r = board.getBoundingClientRect();
+    ctrls.classList.toggle('show', r.top < window.innerHeight * 0.75 && r.bottom > window.innerHeight * 0.3);
+  };
+
+  // Dragging pans the board; pinching (or ctrl + wheel on a trackpad) zooms around the fingers or pointer.
+  // A click or tap on a section from the whole board zooms into it.
+  const ptrs = new Map<number, { x: number; y: number }>();
+  let moved = 0, pinch = 0;
+  view.addEventListener('pointerdown', (e) => {
+    ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    moved = 0;
+    if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch = Math.hypot(a.x - b.x, a.y - b.y); }
+  });
+  view.addEventListener('pointermove', (e) => {
+    const p = ptrs.get(e.pointerId);
+    if (!p) return;
+    if (touch && !view.classList.contains('zoomed')) return;
+    const dx = e.clientX - p.x, dy = e.clientY - p.y;
+    ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    moved += Math.abs(dx) + Math.abs(dy);
+    if (ptrs.size === 2) {
+      const [a, b] = [...ptrs.values()];
+      const d = Math.hypot(a.x - b.x, a.y - b.y), box = view.getBoundingClientRect();
+      if (pinch) zoomAt((a.x + b.x) / 2 - box.left, (a.y + b.y) / 2 - box.top, d / pinch);
+      pinch = d;
+      return;
+    }
+    if (moved < 6) return;
+    if (!exploring) explore(true);
+    view.setPointerCapture(e.pointerId);
+    cam = { ...cam, tx: cam.tx + dx, ty: cam.ty + dy };
+    put(cam);
+  });
+  view.addEventListener('pointerup', (e) => {
+    const wasTap = ptrs.has(e.pointerId) && ptrs.size === 1 && moved < 6;
+    ptrs.delete(e.pointerId);
+    if (ptrs.size < 2) pinch = 0;
+    if (!wasTap || !out) return;
+    const box = view.getBoundingClientRect();
+    const wx = (e.clientX - box.left - cam.tx) / cam.s, wy = (e.clientY - box.top - cam.ty) / cam.s;
+    const hit = secs.findIndex((r) => wx >= r.x && wx <= r.x + r.w && wy >= r.y && wy <= r.y + r.h);
+    if (hit >= 0) goSection(hit);
+  });
+  view.addEventListener('pointercancel', (e) => { ptrs.delete(e.pointerId); pinch = 0; });
+  view.addEventListener('wheel', (e) => {
+    if (e.ctrlKey) {
+      e.preventDefault();
+      if (!exploring) explore(true);
+      const box = view.getBoundingClientRect();
+      zoomAt(e.clientX - box.left, e.clientY - box.top, Math.exp(-e.deltaY * 0.01));
+    } else if (exploring && !touch) {
+      explore(false);
+    }
+  }, { passive: false });
+
+  // Skill tags: light up every piece that shows the skill, and take the reader to the first one.
+  // linkedin distribution lives on the cover posts, so that one goes back up to the cover.
+  const tags = Array.from(document.querySelectorAll<HTMLButtonElement>('.ic-skill'));
+  let active = '';
+  const filter = (skill: string) => {
+    active = skill;
+    tags.forEach((t) => t.setAttribute('aria-pressed', String(t.dataset.skill === skill)));
+    world.classList.toggle('filtering', !!skill);
+    [...pieces, ...covers].forEach((p) => p.classList.toggle('hl', !!skill && p.dataset.skills!.split(' ').includes(skill)));
+    const tag = tags.find((t) => t.dataset.skill === skill);
+    chip.hidden = !skill;
+    chip.textContent = skill ? `showing: ${tag?.querySelector('.sk-l')?.textContent} ×` : '';
+  };
+  tags.forEach((t) => t.addEventListener('click', () => {
+    const skill = t.dataset.skill!;
+    if (active === skill) return filter('');
+    filter(skill);
+    const first = frames.findIndex((f, k) => k > 0 && f.show.some((id) => document.getElementById(id)?.classList.contains('hl')));
+    if (first < 0) {
+      window.scrollTo({ top: 0, behavior: calm ? 'auto' : 'smooth' });
+    } else if (touch) {
+      view.scrollIntoView({ behavior: calm ? 'auto' : 'smooth' });
+      touchGo(frames[first].sec);
+    } else {
+      explore(false);
+      window.scrollTo({ top: boardTop() + frameAt(first) + 2, behavior: calm ? 'auto' : 'smooth' });
+    }
+  }));
+  chip.addEventListener('click', () => filter(''));
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && active) filter(''); });
+
+  let queued = false;
+  window.addEventListener('scroll', () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => { queued = false; draw(); bar(); });
+  }, { passive: true });
+  window.addEventListener('resize', () => { size(); if (touch) touchGo(current); else draw(); bar(); });
+
+  size();
+  if (touch) { show(0); touchGo(-1); fillThread(null); } else draw();
+  // Deep links: #what-i-knew, #who-gets-the-most-value, #what-they-get, #why-nexus or #what-changed opens that section.
+  const slugs: string[] = JSON.parse(board.dataset.slugs!);
+  const deep = slugs.indexOf(location.hash.slice(1));
+  if (deep >= 0) {
+    if (touch) { view.scrollIntoView(); touchGo(deep); }
+    else window.scrollTo({ top: boardTop() + frameAt(firstFrameOf(deep)) + 2, behavior: 'auto' });
+  }
+  bar();
+</script>
