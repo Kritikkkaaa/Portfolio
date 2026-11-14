@@ -14,7 +14,7 @@ const boardTasks: [string, number][] = [['launch post', 0], ['case study', 0], [
 <div class="ms-text">
 {c.toy !== 'ticket' && c.date && <div class="ms-date">{c.date}</div>}
 <h3>{c.title}</h3>
-{c.learnt && <p set:html={c.learnt}></p>}
+{c.learnt && c.learnt.split('\n\n').map((t) => <p set:html={t}></p>)}
 {c.link && (c.link.href
   ? <a class="ms-link" href={c.link.href}>{c.link.text}<span aria-hidden="true"> →</span></a>
   : <span class="ms-soon">{c.link.text}</span>)}
