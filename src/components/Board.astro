@@ -1,0 +1,93 @@
+---
+// Hero board (from the "Kritikal Hero Board" artifact): her photo pinned to the page like a print, with five red pen lines
+// that grow out of it one at a time (a new one every 2.6s, 13s loop), each landing on a handwritten note.
+// The print hangs from its tack: it sways a little, can be dragged and swung, tilts toward the mouse and pushes in on hover.
+// Notes use the site's Kalam tokens (--h-note, --h-hint on narrow boards). Reduced motion shows all five notes, still.
+const notes = [
+  { c: 'bd-n1', t: '3+ years of experience with b2b products' },
+  { c: 'bd-n2', t: 'loves talking to customers' },
+  { c: 'bd-n3', t: 'friends with founders 👀' },
+  { c: 'bd-n4', t: 'functions on coffee' },
+  { c: 'bd-n5', t: 'writes personal <em>essays</em>' }
+];
+---
+<div class="bd" id="bd">
+<svg class="bd-ln" viewBox="0 0 500 680" aria-hidden="true">
+<path pathLength="1" style="--i:0" d="M150 208 C150 207.7 150 206.7 149.9 206 C149.9 205.4 150 204.7 149.9 204 C149.9 203.3 149.8 202.7 149.6 201.8 C149.4 201 148.7 200 148.7 199.2 C148.6 198.4 149.3 198 149.3 197.2 C149.4 196.4 149.2 195.3 149 194.5 C148.8 193.7 148.4 193.1 148.2 192.5 C148.1 191.9 148.2 191.4 148 190.7 C147.8 190 147.3 188.8 147.1 188.2 C146.9 187.5 147 187.5 147 186.8 C147 186 147.1 184.7 147.1 183.9 C147 183 146.9 182.5 146.7 181.8 C146.5 181 146.4 180.2 146.1 179.6 C145.8 179.1 145.2 179 145 178.3 C144.8 177.6 144.7 176.2 144.7 175.5 C144.7 174.8 145.2 174.7 145 174.1 C144.8 173.5 144 172.8 143.8 172.1 C143.5 171.4 143.7 170.5 143.5 169.8 C143.3 169.1 142.7 168.6 142.6 168 C142.4 167.3 142.6 166.7 142.5 165.9 C142.4 165.2 142.3 164.1 142.1 163.2 C141.8 162.4 141.2 161.8 140.9 161.1 C140.6 160.4 140.3 159.5 140 158.9 C139.8 158.3 139.8 158 139.5 157.5 C139.2 156.9 138.7 156.2 138.5 155.5 C138.3 154.8 138.5 154.2 138.1 153.1 C137.7 152.1 137.2 150.4 136.2 149.3 C135.1 148.2 133.3 147.3 131.9 146.6 C130.5 145.8 129.1 145.2 127.7 145 C126.3 144.9 124.8 145.1 123.4 145.7 C121.9 146.4 120.4 147.8 119.1 149 C117.9 150.1 116.4 151.3 115.6 152.7 C114.9 154 115 155.6 114.9 157 C114.8 158.4 114.8 159.6 115.2 161.1 C115.7 162.6 116.8 164.8 117.9 166 C118.9 167.3 120.1 168 121.6 168.6 C123.2 169.2 125.4 169.9 126.9 169.9 C128.5 169.9 129.6 169.1 131 168.6 C132.3 168 134.1 167.5 135.2 166.6 C136.2 165.6 136.8 164.1 137.5 162.8 C138.2 161.4 139.2 159.8 139.3 158.3 C139.3 156.8 138.2 155 137.8 153.8 C137.5 152.6 137.3 151.9 137.1 151.2 C137 150.5 137.1 150.3 136.9 149.8 C136.7 149.2 136.1 148.6 135.8 147.8 C135.6 147 135.5 146 135.2 145.2 C135 144.4 134.5 143.8 134.2 143.1 C133.8 142.4 133.3 141.6 133.1 141.1 C132.9 140.6 133.1 140.7 132.8 140 C132.5 139.4 131.7 137.9 131.4 137.1 C131.2 136.4 131.6 136.3 131.3 135.7 C131 135.1 130.2 134.1 129.8 133.5 C129.4 132.9 129.3 132.7 129 132.1 C128.7 131.5 128.3 130.4 127.9 129.8 C127.5 129.2 126.9 129 126.5 128.4 C126.1 127.8 125.7 126.9 125.5 126.1 C125.3 125.3 125.5 124.4 125.2 123.9 C125 123.3 124.5 123.3 124.1 122.8 C123.7 122.3 123.3 121.5 122.9 120.8 C122.4 120.1 121.7 119.2 121.2 118.5 C120.8 117.9 120.5 117.7 120.2 117.1 C119.8 116.5 119.4 115.5 119.2 114.9 C118.9 114.3 119 114 118.7 113.4 C118.4 112.8 118 111.8 117.5 111.2 C117 110.6 116.3 110.3 115.8 109.7 C115.3 109 114.9 108.1 114.5 107.4 C114.1 106.7 113.6 106 113.2 105.4 C112.8 104.9 112.2 104.2 112 104"/>
+<path pathLength="1" style="--i:1" d="M300 206 C300.5 205.8 302.1 205.3 303.2 204.8 C304.4 204.2 306 203.3 307.1 202.6 C308.2 201.9 308.9 201.2 309.8 200.5 C310.7 199.8 311.4 199.1 312.5 198.5 C313.5 197.9 315.1 197.7 316.2 197.1 C317.2 196.5 317.7 195.7 318.6 194.9 C319.6 194.2 320.9 193.4 321.9 192.7 C322.8 192 323.6 191.3 324.4 190.6 C325.3 189.8 326 189.1 326.8 188.3 C327.6 187.5 328.3 186.5 329.2 185.7 C330.1 184.9 331.3 184.3 332.1 183.5 C332.9 182.8 333.2 182.2 334 181.3 C334.7 180.5 335.9 179.4 336.5 178.4 C337.2 177.5 337.4 176.7 338 175.8 C338.7 175 339.6 174.1 340.3 173.3 C341 172.4 341.8 171.6 342.5 170.7 C343.1 169.8 343.9 168.9 344.5 167.9 C345 167 345.3 165.9 345.9 165 C346.5 164 347.4 163.2 347.9 162.3 C348.5 161.3 348.6 160.3 349.1 159.3 C349.6 158.3 350.5 157.2 351 156.2 C351.6 155.2 352.1 154.4 352.5 153.4 C352.9 152.3 353 150.9 353.3 149.8 C353.5 148.8 353.6 148 354 147 C354.5 145.9 355.4 144.5 355.8 143.4 C356.3 142.3 356.3 141.5 356.5 140.3 C356.8 139.2 357.1 137.6 357.4 136.5 C357.7 135.3 357.9 134.6 358.2 133.5 C358.4 132.4 358.5 131 358.7 129.9 C358.8 128.8 359 127.9 359.1 126.7 C359.3 125.6 359.5 124.4 359.6 123.1 C359.6 121.9 359.2 120.2 359.2 119 C359.3 117.8 359.7 117 359.9 115.8 C360 114.7 360 112.6 360 112"/>
+<path pathLength="1" style="--i:2" d="M434 330 C433.5 331 431.8 334.3 431 336.2 C430.2 338.1 429.9 339.6 429.3 341.5 C428.8 343.4 428.2 345.7 427.7 347.6 C427.2 349.6 426.6 351.5 426.3 353.4 C426 355.3 426.2 357.3 426.1 359.3 C426.1 361.2 425.9 362.9 426 364.9 C426.1 366.8 426.4 368.9 426.7 370.9 C427 372.9 427.4 374.9 427.7 376.8 C428 378.8 428.2 381 428.5 382.8 C428.8 384.6 429.2 386.1 429.7 387.9 C430.3 389.7 431.1 391.6 431.8 393.5 C432.4 395.4 432.9 397.7 433.6 399.5 C434.3 401.3 435.2 402.5 436.1 404.2 C436.9 406 437.8 407.9 438.6 409.8 C439.5 411.7 440.2 413.6 441 415.6 C441.9 417.6 442.7 419.8 443.6 421.7 C444.5 423.5 445.5 424.9 446.4 426.6 C447.3 428.4 448.2 430.6 449 432.3 C449.8 434.1 450.3 435.5 451.1 437.3 C451.9 439.1 452.8 441.3 453.7 443.2 C454.6 445.2 455.7 447.3 456.4 449.1 C457.2 450.9 457.6 452.3 458.3 454 C459 455.7 460 457.3 460.5 459.2 C461.1 461 461 463.4 461.5 465.2 C462 467.1 463 468.5 463.5 470.4 C464 472.3 464.4 474.8 464.7 476.7 C465 478.6 465.1 480 465.2 481.8 C465.4 483.6 465.3 485.4 465.5 487.3 C465.7 489.2 466.2 491 466.3 493 C466.3 495 466.1 497.4 465.8 499.2 C465.5 501.1 464.9 502.5 464.4 504.3 C464 506.2 463.9 508.4 463.3 510.3 C462.7 512.3 461.5 514 460.6 516 C459.8 517.9 458.4 521 458 522"/>
+<path pathLength="1" style="--i:3" d="M90 452 C90.1 452.3 90.4 453.1 90.3 453.7 C90.3 454.3 89.7 454.8 89.5 455.4 C89.3 456 89.2 456.7 89.1 457.3 C89.1 457.8 89.2 458 89.3 458.7 C89.3 459.3 89.6 460.3 89.4 460.9 C89.3 461.5 88.6 461.7 88.4 462.3 C88.3 462.9 88.4 463.9 88.4 464.4 C88.5 464.9 88.8 465 88.7 465.4 C88.6 465.8 88 466.4 87.9 467 C87.9 467.5 88.4 468.2 88.4 468.8 C88.3 469.4 87.8 470 87.7 470.6 C87.5 471.3 87.5 471.9 87.4 472.4 C87.3 472.9 87.3 473.1 87.2 473.6 C87.1 474.1 87 474.9 86.9 475.5 C86.7 476 86.5 476.6 86.3 477.1 C86.1 477.7 85.8 478.4 85.7 479 C85.5 479.5 85.5 479.9 85.4 480.5 C85.4 481 85.5 481.8 85.3 482.3 C85.1 482.9 84.4 483 84.2 483.6 C84 484.2 84.2 485.3 84.2 485.9 C84.2 486.5 84.4 486.6 84.1 487.2 C83.9 487.7 83 488.5 82.8 489 C82.6 489.6 82.8 489.9 82.7 490.4 C82.7 490.9 82.7 491.5 82.5 492.1 C82.4 492.7 82 493.5 81.8 494 C81.6 494.5 81.5 494.4 81.2 495 C80.8 495.7 80.6 497 79.9 497.9 C79.1 498.8 77.7 500.1 76.5 500.7 C75.4 501.3 74 501.6 72.9 501.6 C71.8 501.6 71.1 501.1 70.1 500.8 C69 500.4 67.4 500.2 66.6 499.4 C65.8 498.6 65.6 497 65.1 495.9 C64.6 494.9 63.9 494.1 63.7 493 C63.6 491.8 63.9 490.3 64.2 489.3 C64.5 488.2 64.8 487.4 65.6 486.5 C66.4 485.6 68 484.3 69 483.8 C70.1 483.3 70.7 483.6 71.9 483.6 C73 483.7 74.8 483.6 75.9 483.9 C76.9 484.3 77.3 484.9 78.2 485.7 C79.1 486.5 80.7 487.9 81.3 488.8 C81.9 489.7 81.9 490.2 81.9 491.2 C82 492.2 81.8 493.9 81.6 494.9 C81.4 495.9 81.1 496.6 80.9 497.1 C80.7 497.6 80.7 497.2 80.5 497.7 C80.2 498.2 79.8 499.4 79.5 500 C79.3 500.5 79 500.8 78.8 501.1 C78.7 501.5 78.7 501.7 78.6 502.1 C78.4 502.5 78.4 502.9 78.2 503.5 C78 504 77.4 504.8 77.1 505.2 C76.8 505.7 76.6 505.8 76.5 506.4 C76.4 506.9 76.4 508 76.4 508.5 C76.3 509 76.3 508.9 76.1 509.3 C75.8 509.7 75.2 510.4 75 510.9 C74.7 511.4 74.6 512 74.5 512.5 C74.4 513 74.5 513.3 74.2 513.8 C73.9 514.3 73 515 72.6 515.6 C72.3 516.1 72.2 516.4 72 516.9 C71.9 517.4 71.9 518.1 71.7 518.6 C71.5 519 71.3 519.3 71 519.7 C70.8 520.1 70.3 520.5 70 521 C69.7 521.5 69.5 522.2 69.3 522.6 C69.1 523 69 523 68.8 523.4 C68.5 523.8 68 524.5 67.7 525 C67.5 525.5 67.7 525.7 67.5 526.2 C67.3 526.7 67 527.5 66.7 528.1 C66.3 528.6 65.6 529.1 65.2 529.4 C64.9 529.8 64.6 529.8 64.4 530.3 C64.2 530.7 64.1 531.7 64 532"/>
+<path pathLength="1" style="--i:4" d="M252 462 C251.8 462.8 251.1 465.1 250.8 466.7 C250.5 468.4 250.4 470.2 250 472 C249.6 473.8 249 475.6 248.6 477.4 C248.2 479.1 247.8 480.8 247.6 482.3 C247.4 483.9 247.1 485.2 247.1 486.8 C247.2 488.5 247.8 490.8 247.7 492.5 C247.7 494.1 246.9 495.3 246.8 497 C246.8 498.7 247.5 500.9 247.6 502.6 C247.7 504.3 247.5 505.6 247.5 507.2 C247.5 508.9 247.6 510.8 247.6 512.6 C247.6 514.3 247.4 516 247.5 517.7 C247.6 519.4 248.1 521.1 248.3 522.8 C248.5 524.5 248.3 526 248.5 527.7 C248.7 529.5 249.3 531.6 249.5 533.4 C249.8 535.2 249.9 536.6 250.1 538.3 C250.3 540 250.6 541.8 250.7 543.5 C250.9 545.3 250.9 547 251.1 548.7 C251.3 550.4 251.7 552 251.9 553.7 C252 555.3 251.7 556.8 251.8 558.4 C251.9 560.1 252.2 561.8 252.5 563.5 C252.8 565.3 253.5 567.4 253.7 569.1 C254 570.8 254 571.9 254.1 573.7 C254.2 575.5 254.1 577.9 254.2 579.7 C254.3 581.4 254.6 582.7 254.7 584.3 C254.8 585.8 254.8 587.4 254.7 589 C254.7 590.7 254.5 592.4 254.5 594.1 C254.5 595.8 254.7 597.7 254.7 599.4 C254.8 601 255.2 602.5 255.1 604.1 C255 605.8 254.4 607.6 254.2 609.2 C253.9 610.9 253.8 612.5 253.6 614.2 C253.4 615.9 253.3 617.6 253 619.3 C252.7 621.1 252.2 623 251.9 624.7 C251.6 626.4 251.5 628 251.2 629.6 C250.9 631.1 250.2 633.3 250 634"/>
+</svg>
+<div class="bd-pin" id="bd-pin"><span class="bd-tack" aria-hidden="true"></span><div class="bd-print" id="bd-print" tabindex="0" role="img" aria-label="Kritika speaking into a mic under a tree of pink flowers, pinned to the page. Press enter to swing it."><div class="bd-ph"><img src="/kritika-board.jpg" alt="" width="1100" height="733" draggable="false" decoding="async" /><span class="bd-glare" aria-hidden="true"></span></div></div></div>
+{notes.map((n, i) => <p class={`bd-nt ${n.c}`} style={`--i:${i}`} set:html={n.t} />)}
+</div>
+
+<script>
+  const pin = document.getElementById('bd-pin') as HTMLElement;
+  const print = document.getElementById('bd-print') as HTMLElement;
+  const board = document.getElementById('bd') as HTMLElement;
+  const tack = pin.querySelector('.bd-tack') as HTMLElement;
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!RM) {
+    const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+    // The print hangs from the tack: a spring pendulum that follows a slow idle sway and settles after a swing.
+    let th = -1.6, w = 0, last = 0, dragging = false, touched = false, onscreen = true, zoomOn = false;
+    const K = 36, C = 3.1, MAXA = 38;
+    const rest = (t: number) => -1.25 + 0.65 * Math.sin((t / 1000) * 2 * Math.PI / 8);
+    const frame = (now: number) => {
+      if (!last) last = now;
+      const dt = Math.min(0.033, (now - last) / 1000); last = now;
+      if (onscreen && !document.hidden) {
+        if (!dragging) { const a = -K * (th - rest(now)) - C * w; w += a * dt; th += w * dt; }
+        th = Math.max(-MAXA, Math.min(MAXA, th));
+        pin.style.transform = `rotate(${th.toFixed(3)}deg)`;
+        board.classList.toggle('swing', Math.abs(th - rest(now)) > 3.2);
+      }
+      requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+    new IntersectionObserver((e) => { onscreen = e[0].isIntersecting; last = 0; }).observe(board);
+    const kick = (v: number) => { w += v; touched = true; };
+    // One small nudge so people see it moves, only if nobody has touched it yet.
+    setTimeout(() => { if (!touched) w += 15; }, 4200);
+
+    // Drag: grab it anywhere and swing it around the tack.
+    let pivot = { x: 0, y: 0 }, ang0 = 0, th0 = 0, px0 = 0, py0 = 0, t0 = 0, lastTh = 0, lastT = 0, moved = 0;
+    const angle = (e: PointerEvent) => Math.atan2(e.clientY - pivot.y, e.clientX - pivot.x) * 180 / Math.PI;
+    print.addEventListener('pointerdown', (e) => {
+      if (e.button > 0) return;
+      const r = tack.getBoundingClientRect(); pivot = { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+      dragging = true; moved = 0; touched = true; ang0 = angle(e); th0 = th; px0 = e.clientX; py0 = e.clientY; t0 = lastT = performance.now(); lastTh = th; w = 0;
+      print.classList.add('grab'); pin.classList.add('pressed'); print.style.setProperty('--rx', '0deg'); print.style.setProperty('--ry', '0deg');
+      try { print.setPointerCapture(e.pointerId); } catch { /* capture is optional */ }
+    });
+    print.addEventListener('pointermove', (e) => {
+      if (dragging) {
+        moved = Math.max(moved, Math.hypot(e.clientX - px0, e.clientY - py0));
+        let d = angle(e) - ang0; d = ((d + 540) % 360) - 180;
+        const nt = Math.max(-MAXA, Math.min(MAXA, th0 + d)), now = performance.now(), dt = Math.max(0.008, (now - lastT) / 1000);
+        w = w * 0.6 + ((nt - lastTh) / dt) * 0.4; lastTh = nt; lastT = now; th = nt;
+      } else if (fine && e.pointerType === 'mouse') {
+        // Hover: the print tilts toward the pointer, a soft shine follows it, and the picture pushes in.
+        const r = print.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        print.style.setProperty('--ry', ((x - 0.5) * 9).toFixed(2) + 'deg'); print.style.setProperty('--rx', ((0.5 - y) * 7).toFixed(2) + 'deg');
+        print.style.setProperty('--gx', (x * 100).toFixed(1) + '%'); print.style.setProperty('--gy', (y * 100).toFixed(1) + '%');
+      }
+    });
+    const end = (e: PointerEvent) => {
+      if (!dragging) return;
+      dragging = false; print.classList.remove('grab'); pin.classList.remove('pressed');
+      w = Math.max(-420, Math.min(420, w));
+      if (moved < 6 && performance.now() - t0 < 320) { // a tap or click gives it a push away from where it was hit
+        const r = print.getBoundingClientRect(); kick((e.clientX < r.left + r.width / 2 ? 1 : -1) * 13);
+        if (e.pointerType !== 'mouse') { zoomOn = !zoomOn; print.style.setProperty('--z', zoomOn ? '1.3' : '1'); }
+      }
+    };
+    print.addEventListener('pointerup', end); print.addEventListener('pointercancel', end);
+    print.addEventListener('pointerenter', (e) => { if (fine && e.pointerType === 'mouse') { print.classList.add('hot'); print.style.setProperty('--z', '1.3'); } });
+    print.addEventListener('pointerleave', () => { print.classList.remove('hot'); print.style.setProperty('--rx', '0deg'); print.style.setProperty('--ry', '0deg'); if (fine) print.style.setProperty('--z', '1'); });
+    print.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); kick(16); } });
+    print.addEventListener('dragstart', (e) => e.preventDefault());
+  }
+</script>
