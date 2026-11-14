@@ -105,11 +105,12 @@ import Nav from '../../components/Nav.astro';
 </style>
 
 <script>
-  type Item = { title: string; href: string | null; cover: 'icp' | 'onboarding' | 'twitter'; paper: string };
+  type Item = { title: string; href: string | null; cover: 'icp' | 'onboarding' | 'twitter' | 'campaign'; paper: string };
   // One line per case study. href: null shows "Being written".
   const ITEMS: Item[] = [
     { title: 'From user stories to an ICP, positioning and messaging', href: '/work/icp-positioning-messaging-nexus', cover: 'icp', paper: '#A9B9C8' },
-    { title: "What I learnt building Plane's Twitter from scratch!", href: '/work/grow-planes-twitter', cover: 'twitter', paper: '#D6B79C' }
+    { title: "What I learnt building Plane's Twitter from scratch!", href: '/work/grow-planes-twitter', cover: 'twitter', paper: '#D6B79C' },
+    { title: "How I planned the launch of Plane's paid plan", href: '/work/plane-one-campaign', cover: 'campaign', paper: '#BFC995' }
   ];
 
   /* covers, drawn in the site's own shelf colours */
@@ -152,6 +153,18 @@ import Nav from '../../components/Nav.astro';
           </g>
           <circle cx="212" cy="38" r="7" fill="${RED}"/>
         </g>
+      </svg>`;
+    },
+    // a price tag with a red dot: the paid plan
+    campaign(paper: string) {
+      return `<svg viewBox="0 0 200 250" aria-hidden="true">
+        <rect width="200" height="250" fill="${paper}"/>${gridLines()}
+        <g transform="rotate(-14 100 125)">
+          <path d="M52 70h70l40 55-40 55H52z" fill="${CREAM}" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>
+          <circle cx="132" cy="125" r="9" fill="${RED}" stroke="${INK}" stroke-width="3"/>
+          <path d="M70 105h42M70 125h30M70 145h38" fill="none" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>
+        </g>
+        <path d="M30 218c30-18 60-6 80-30s40-34 62-30" fill="none" stroke="${INK}" stroke-width="1.6" stroke-dasharray="3 4" stroke-linecap="round"/>
       </svg>`;
     },
     onboarding(paper: string) {

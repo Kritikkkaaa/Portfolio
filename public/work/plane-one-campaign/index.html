@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <base href="/work/plane-one-campaign/">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Plane One pricing campaign case study · Kritika Upadhyay</title>
+<title>How I planned the launch of Plane’s paid plan · Kritika Upadhyay</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@300;400;500;600;700&family=Kalam:wght@300;400&display=swap" rel="stylesheet">
@@ -196,7 +196,8 @@
     .story { padding-left: 44px; }
     .hero { grid-template-columns: 1fr; }
     .card.story-card, .card.why { grid-column: 1 / -1; }
-    .pair, .versus { grid-template-columns: 1fr; }
+    .pair, .trio, .versus, .tweets.four { grid-template-columns: 1fr; justify-content: stretch; }
+    .tweets.four .item.mid { align-self: start; }
     .lessons { grid-template-columns: 1fr; }
     .snaps { transform: translateY(30px); }
     .mk-menu { gap: 34px; }
@@ -210,19 +211,27 @@
   .item { display: grid; gap: 10px; align-content: start; }
   .item figcaption { display: flex; gap: 10px; align-items: baseline; }
   .item figcaption b { color: var(--red); font-weight: 600; }
+  .tweet { max-width: 340px; }
   .tweet.wide { max-width: none; }
   .tweet.light { background: #fff; border-color: transparent; }
-  .tweets.four { grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr)); }
+  .pair .tweets { justify-items: center; }
+  .tweets.four { grid-template-columns: repeat(3, minmax(0, 300px)); justify-content: center; gap: clamp(24px, 4vw, 56px); align-items: start; }
   .tweets.four .tweet { max-width: none; }
+  .tweets.four .item.mid { align-self: center; }
+
+  /* text on the left, two posts beside it */
+  .trio { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.25fr) repeat(2, minmax(0, 1fr)); gap: clamp(18px, 2.4vw, 28px); align-items: start; }
+  .trio .card.story-card { grid-column: auto; }
 
   /* the two threads, side by side */
-  .versus { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(18px, 3vw, 44px); align-items: start; }
+  .versus { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 340px)); justify-content: center; gap: clamp(28px, 6vw, 96px); align-items: start; }
   .versus .item { gap: 14px; }
   .stat { display: grid; gap: 4px; }
   .stat .num { font-size: clamp(44px, 6vw, 76px); font-weight: 500; line-height: 1; letter-spacing: -0.03em; }
   .stat .num small { font-size: .45em; letter-spacing: 0; margin-left: .15em; color: var(--muted); font-weight: 500; }
   .stat.hot .num { color: var(--red); }
   .versus .tweet { max-width: none; }
+  .story-card.one-col { grid-column: 1 / -1; max-width: 40em; }
 
   .lessons.long p { font-size: 19px; font-weight: 400; line-height: 1.5; letter-spacing: 0; text-wrap: pretty; }
   .lessons.long li + li { margin-top: 0; }
@@ -288,11 +297,10 @@
   </div>
 
   <header class="hero">
-    <h1>How I ran the pricing campaign for Plane's paid self-hosted plan</h1>
+    <h1>How I planned the launch of Plane's paid plan</h1>
     <div class="lead">
-      <p>Plane already had a free Community edition that teams could run on their own servers. With Plane One, we were asking those teams to consider a one-time payment for a plan that made self-hosting easier and added security and admin features.</p>
-      <p>The big question was simple: what would make someone who already had Plane for free decide to pay?</p>
-      <p>My head of marketing let me run this one solo. My first point of frustration: what the hell is a CLI?</p>
+      <p>Plane already had a free Community edition. Plane One asked those teams to pay once for easier, more secure self-hosting. What would make them pay?</p>
+      <p>My head of marketing let me run this one solo. My first frustration: what the hell is a CLI?</p>
       <span class="caps meta">Plane · 3 min read</span>
     </div>
     <div class="skills">
@@ -332,7 +340,7 @@
             <a class="tweet" href="https://x.com/planepowers/status/1786365087147847945" target="_blank" rel="noopener" aria-label="Open on X: Plane's tweet about Plane One installing in under three minutes"><img src="img/install.jpg" width="806" height="1568" alt="Plane's tweet showing Plane One installing in under three minutes, with a video and a quoted tweet, posted 3 May 2024." loading="lazy"></a>
             <figcaption class="caps"><b>The demo</b> what changed</figcaption>
           </figure>
-          <figure class="item rise">
+          <figure class="item mid rise">
             <a class="tweet light" href="https://plane.so/blog/streamlining-self-hosting-managing-100k-docker-44000-kubernetes-deploys-ease" target="_blank" rel="noopener" aria-label="Read the blog: How we made self-hosting Plane a breeze for 100,000+ Docker and 44,000 Kubernetes deploys"><img src="img/blog.webp" width="1200" height="630" alt="Cover of Plane's engineering blog: How we made self-hosting Plane a breeze for 100,000+ Docker and 44,000 Kubernetes deploys." loading="lazy"></a>
             <figcaption class="caps"><b>The blog</b> how we got there</figcaption>
           </figure>
@@ -347,12 +355,12 @@
     <section class="ch" id="quiet-discord" data-rail="Quiet Discord">
       <div class="ch-head"><span class="ch-num">02</span><h2>The posts were getting views. Discord was quiet.</h2></div>
       <div class="ch-body">
-        <div class="pair">
+        <div class="trio">
           <div class="card story-card rise">
             <p>People were seeing the posts, but I wasn't seeing the conversation I'd expected. I went back to my content plan. The reveal spoke to "serious self-hosters," and I'd given them plenty to look at: faster setup, more control over their servers, and better security. I'd spent less time connecting those features to the work that made people like Plane in the first place.</p>
             <p>The <a href="https://x.com/planepowers/status/1790751504108081167" target="_blank" rel="noopener">May 15 thread</a> was where I brought those stories together. I opened with what One meant for growing businesses and reused the demo to show how quickly they could get started. Then I pulled in posts about seeing all your active sprints in one place and sharing project views with clients. The thread gave admins a reason to care about the setup and gave the rest of the team a reason to care about the plan. It ended with the price and a deadline to preorder.</p>
           </div>
-          <div class="tweets">
+          <div class="tweets" style="display:contents">
             <a class="tweet rise" href="https://x.com/planepowers/status/1790751504108081167" target="_blank" rel="noopener" aria-label="Open on X: the May 15 thread, why Plane One is awesome for growing businesses"><img src="img/thread-1.jpg" width="750" height="956" alt="The opening post of Plane's May 15 thread: Why Plane One is awesome for growing businesses, quoting the Plane One announcement." loading="lazy"></a>
             <a class="tweet rise" href="https://x.com/planepowers/status/1790751576984006818" target="_blank" rel="noopener" aria-label="Open on X: a reply in the thread about sharing project views with clients"><img src="img/thread-clients.jpg" width="750" height="700" alt="A post in the thread: Brings customers closer to your everyday work, quoting the Plane Publish update for sharing custom project views with clients." loading="lazy"></a>
           </div>
@@ -363,7 +371,7 @@
     <section class="ch" id="what-happened" data-rail="What happened">
       <div class="ch-head"><span class="ch-num">03</span><h2>What happened.</h2></div>
       <div class="ch-body">
-        <div class="card story-card rise" style="grid-column: 1 / -1; max-width: 46em">
+        <div class="card story-card one-col rise">
           <p>The <a href="https://x.com/planepowers/status/1778468066327732595" target="_blank" rel="noopener">April 11 reveal</a> drew 8.1K views. The <a href="https://x.com/planepowers/status/1790751504108081167" target="_blank" rel="noopener">May 15 thread</a> drew 2.9K views. The reveal got more reach; I'd feature the thread because it best shows what I did with the content over the course of the campaign.</p>
         </div>
         <div class="versus">
