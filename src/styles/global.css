@@ -279,7 +279,7 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .hd-label.bl { left: 62px; bottom: 14px; }
 .hd-note { font-family: Kalam, cursive; font-size: 18px; line-height: 1.2; color: rgb(216,201,163); transform: rotate(-3deg); display: inline-block; white-space: nowrap; }
 .hd-pin { display: block; flex: none; }
-.hd-cta-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.hd-cta-row { display: flex; align-items: center; gap: 14px 40px; flex-wrap: wrap; }
 .hd-cta-row .hd-note { display: inline-flex; align-items: center; gap: 6px; }
 .hd-eyebrow { display: flex; align-items: center; gap: 12px; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: rgb(169,175,185); margin-bottom: -28px; }
 .hd-eyebrow-dot { width: 8px; height: 8px; border-radius: 50%; background: rgb(210,69,63); }
