@@ -841,3 +841,15 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .tl-close{left:96px;bottom:470px}
 .tl-next{left:96px;top:430px}
 @media (max-width:700px){.tl-tail{width:80vw}.tl-close{left:24px}.tl-next{left:24px}.tl-head .tl-cta{margin-right:0;flex-wrap:wrap}}
+/* Journey ending: one centre point. The road runs to a dot at the middle of the screen; the big line sits above it, the next gig below it. */
+.tl-tail{width:100vw;scroll-snap-align:end}
+.tl-tail::before{right:50%;border-top-style:solid;-webkit-mask-image:none;mask-image:none}
+.tl-tail::after{content:"";position:absolute;left:50%;right:0;top:349px;height:0;border-top:1.6px dashed var(--tl-red);-webkit-mask-image:linear-gradient(to right,#000,transparent);mask-image:linear-gradient(to right,#000,transparent)}
+.tl-end-node{left:50%;margin-left:-7px}
+.tl-close{left:50%;bottom:446px;transform:translateX(-50%);width:max-content;max-width:92vw;white-space:normal;text-align:center;font-size:clamp(32px,3.6vw,52px);line-height:1.15}
+.tl-close em{font-size:1.05em}
+.tl-next{left:50%;top:378px;transform:translateX(-50%)}
+.tl-next .ms{flex-direction:column;align-items:center;gap:16px}
+.tl-next .ms-text{flex:none;width:auto}
+.tl-next h3{white-space:nowrap;text-align:center}
+@media (max-width:700px){.tl-close{font-size:30px}.tl-next h3{white-space:normal;max-width:84vw}}
