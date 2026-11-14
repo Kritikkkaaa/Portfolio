@@ -12,9 +12,9 @@ const boardTasks: [string, number][] = [['launch post', 0], ['case study', 0], [
 ---
 <div class={`ms${c.toy === 'ticket' ? ' ms-stack' : ''}`}>
 <div class="ms-text">
-{c.toy !== 'ticket' && <div class="ms-date">{c.date}</div>}
+{c.toy !== 'ticket' && c.date && <div class="ms-date">{c.date}</div>}
 <h3>{c.title}</h3>
-<p set:html={c.learnt}></p>
+{c.learnt && <p set:html={c.learnt}></p>}
 {c.link && (c.link.href
   ? <a class="ms-link" href={c.link.href}>{c.link.text}<span aria-hidden="true"> →</span></a>
   : <span class="ms-soon">{c.link.text}</span>)}
@@ -67,6 +67,94 @@ const boardTasks: [string, number][] = [['launch post', 0], ['case study', 0], [
 <div class="toy-kanban" role="group" aria-label="Marketing board. Click a card, or drag it, to move it along.">
 {boardCols.map((n, k) => <span class="kb-col" style={`left: ${k * 88}px`}><i>{n}</i></span>)}
 {boardTasks.map(([t, col], k) => <button type="button" class="kb-card" data-col={col} style={`left: ${col * 88 + 4}px; top: 26px`}>{t}</button>)}
+</div>
+</>}
+
+{c.toy === 'kitchen' && <>
+<button type="button" class="toy-kt" aria-pressed="false" aria-label="A picture in six panels: chopping vegetables, a pot, an invite, writing, a table set for dinner and two glasses clinking. Click to pause or play.">
+<svg width="216" height="144" viewBox="0 0 240 160" aria-hidden="true">
+<rect x="1" y="1" width="238" height="158" rx="8" fill="#141319" stroke="#3A3842"></rect>
+<path d="M80 1V159M160 1V159M1 80H239" stroke="#3A3842"></path>
+<g class="kt-c" style="--d: 0s">
+<rect x="12" y="52" width="58" height="16" rx="3" fill="#1E1D25" stroke="#3A3842"></rect>
+<circle cx="24" cy="60" r="4.5" fill="none" stroke="#D8C9A3"></circle>
+<circle cx="35" cy="60" r="4.5" fill="none" stroke="#D8C9A3"></circle>
+<circle cx="46" cy="60" r="4.5" fill="none" stroke="#D8C9A3"></circle>
+<path d="M54 57 H66 a3 3 0 0 1 0 6 H54 Z" fill={RED} opacity=".85"></path>
+<g class="kt-knife"><rect x="30" y="14" width="22" height="18" rx="2" fill="#C9CDD5"></rect><rect x="52" y="20" width="14" height="6" rx="3" fill="#D8C9A3"></rect></g>
+</g>
+<g class="kt-c" style="--d: 1.3s">
+<path d="M100 54 H140 V70 a4 4 0 0 1 -4 4 H104 a4 4 0 0 1 -4 -4 Z" fill="#1E1D25" stroke="#C9CDD5" stroke-width="1.4"></path>
+<path d="M95 54 H145 M95 60 H100 M140 60 H145" stroke="#C9CDD5" stroke-width="1.4" stroke-linecap="round" fill="none"></path>
+<path class="kt-steam" d="M108 48 q-4 -6 0 -11 q4 -5 0 -10" fill="none" stroke="#8A8D96" stroke-width="1.3" stroke-linecap="round"></path>
+<path class="kt-steam s2" d="M120 48 q-4 -6 0 -11 q4 -5 0 -10" fill="none" stroke="#8A8D96" stroke-width="1.3" stroke-linecap="round"></path>
+<path class="kt-steam s3" d="M132 48 q-4 -6 0 -11 q4 -5 0 -10" fill="none" stroke="#8A8D96" stroke-width="1.3" stroke-linecap="round"></path>
+</g>
+<g class="kt-c" style="--d: 2.6s">
+<g class="kt-invite">
+<rect x="180" y="12" width="40" height="54" rx="3" fill="#E8EBF0"></rect>
+<text x="200" y="29" text-anchor="middle" font-family="Kalam, cursive" font-size="9" fill="#141319">you are</text>
+<text x="200" y="40" text-anchor="middle" font-family="Kalam, cursive" font-size="10" fill={RED}>invited!</text>
+<path d="M188 49 H212 M190 55 H210" stroke="#8A8D96" stroke-width="1.5" stroke-linecap="round"></path>
+</g>
+</g>
+<g class="kt-c" style="--d: 3.9s">
+<path class="kt-wr" style="--w: 0s" d="M14 98 H62" pathLength="1" stroke="#C9CDD5" stroke-width="2" stroke-linecap="round" fill="none"></path>
+<path class="kt-wr" style="--w: .5s" d="M14 108 H52" pathLength="1" stroke="#C9CDD5" stroke-width="2" stroke-linecap="round" fill="none"></path>
+<path class="kt-wr" style="--w: 1s" d="M14 118 H66" pathLength="1" stroke="#C9CDD5" stroke-width="2" stroke-linecap="round" fill="none"></path>
+<path class="kt-wr" style="--w: 1.6s" d="M14 128 q3 -4 6 0 t6 0 t6 0 t6 0 t6 0 t6 0" pathLength="1" stroke={RED} stroke-width="1.4" stroke-linecap="round" fill="none"></path>
+</g>
+<g class="kt-c" style="--d: 5.2s">
+<path d="M92 142 H148 M98 142 V154 M142 142 V154" stroke="#C9CDD5" stroke-width="1.6" stroke-linecap="round" fill="none"></path>
+<ellipse cx="119" cy="138" rx="13" ry="3.2" fill="#1E1D25" stroke="#C9CDD5"></ellipse>
+<rect x="92" y="137.5" width="7" height="3" rx="1" fill="#D8C9A3"></rect>
+<path d="M99 137.5 H107 Q109 139 107 140.5 H99 Z" fill="#C9CDD5"></path>
+<rect x="138" y="126" width="5" height="16" rx="1" fill="#E8EBF0"></rect>
+<circle class="kt-glow" cx="140.5" cy="120" r="9" fill="#D8C9A3"></circle>
+<path class="kt-flame" d="M140.5 114 q3 4 0 8 q-3 -4 0 -8 Z" fill="#D8C9A3"></path>
+</g>
+<g class="kt-c" style="--d: 6.5s">
+<g class="kt-g1"><path d="M184 100 H196 L194 126 H186 Z" fill="rgba(210,69,63,.25)" stroke="#C9CDD5" stroke-width="1.4" stroke-linejoin="round"></path></g>
+<g class="kt-g2"><path d="M204 100 H216 L214 126 H206 Z" fill="rgba(210,69,63,.25)" stroke="#C9CDD5" stroke-width="1.4" stroke-linejoin="round"></path></g>
+<path class="kt-spark" d="M200 90 V95 M193 92 l2 3 M207 92 l-2 3" stroke="#D8C9A3" stroke-width="1.4" stroke-linecap="round" fill="none"></path>
+</g>
+</svg>
+</button>
+</>}
+
+{c.toy === 'tabs' && <>
+<div class="toy-tabs">
+<div class="tb-strip" role="tablist" aria-label="The marketplace workspace">
+<button type="button" role="tab" class="tb-tab on" aria-selected="true">board</button>
+<button type="button" role="tab" class="tb-tab" aria-selected="false">slack</button>
+<button type="button" role="tab" class="tb-tab" aria-selected="false">docs</button>
+<button type="button" role="tab" class="tb-tab" aria-selected="false">notion</button>
+</div>
+<div class="tb-body">
+<div class="tb-pane on" role="tabpanel">
+<span class="tb-row hot"><b>P0</b>vendor payouts</span>
+<span class="tb-row"><b>P1</b>bulk upload</span>
+<span class="tb-row"><b>P2</b>dark mode</span>
+</div>
+<div class="tb-pane" role="tabpanel">
+<span class="tb-ch"># marketplace-launch</span>
+<span class="tb-msg"><i></i><span><b>a</b>payouts passed QA</span></span>
+<span class="tb-msg"><i></i><span><b>d</b>can we ship friday?</span></span>
+<span class="tb-msg"><i class="me"></i><span><b>k</b>yes. shipping.</span></span>
+</div>
+<div class="tb-pane" role="tabpanel">
+<span class="tb-h">Getting started</span>
+<span class="tb-ln w90"></span><span class="tb-ln w70"></span>
+<span class="tb-code">connect your store</span>
+<span class="tb-ln w80"></span>
+</div>
+<div class="tb-pane" role="tabpanel">
+<span class="tb-h">Launch plan</span>
+<span class="tb-ck done"><i></i>vendor payouts</span>
+<span class="tb-ck done"><i></i>docs</span>
+<span class="tb-ck"><i></i>go live</span>
+</div>
+</div>
 </div>
 </>}
 
@@ -133,7 +221,6 @@ const boardTasks: [string, number][] = [['launch post', 0], ['case study', 0], [
 <g fill="#8A8D96" font-size="8" letter-spacing="1" text-anchor="middle"><text x="60" y="22">N</text><text x="102" y="63">E</text><text x="60" y="106">S</text><text x="18" y="63">W</text></g>
 <g class="cp-needle"><path d="M60 24 L65 60 L55 60 Z" fill={RED}></path><path d="M60 96 L65 60 L55 60 Z" fill="#C9CDD5"></path><circle cx="60" cy="60" r="3" fill="#141319" stroke="#C9CDD5"></circle></g>
 </svg>
-<span class="cp-out">where next?</span>
 </button>
 </>}
 

@@ -26,7 +26,7 @@ const wander = (w: number, nd: number, dir: number) => {
   return d + ` C${x + (w - x) * 0.45} ${y} ${x + (w - x) * 0.55} 20 ${w} 20`;
 };
 
-type Toy = 'ticket' | 'phone' | 'plan' | 'ui' | 'kanban' | 'landing' | 'taste' | 'cart' | 'quote' | 'tokens' | 'priority' | 'compass';
+type Toy = 'ticket' | 'phone' | 'plan' | 'ui' | 'kanban' | 'landing' | 'kitchen' | 'tabs' | 'taste' | 'cart' | 'quote' | 'tokens' | 'priority' | 'compass';
 type Card = { date: string; title: string; learnt: string; toy: Toy; link?: { text: string; href?: string } };
 type Stop = { kind: 'road' | 'detour' | 'split'; side?: 'up' | 'down'; width: number; label: string; cards: Card[] };
 const stops: Stop[] = [
@@ -34,10 +34,9 @@ const stops: Stop[] = [
   { kind: 'road', side: 'down', width: 520, label: 'GTM intern', cards: [{ date: 'may 2022', title: 'GTM Intern making Cold calls', learnt: 'Found out that I am very good at understanding what people want and how to give it to them.', toy: 'phone' }] },
   { kind: 'road', side: 'up', width: 605, label: 'Plane', cards: [{ date: 'mar → jul 2023', title: 'First real job at Plane!', learnt: 'What is product? What is first principles thinking, and why does any of it matter?', toy: 'kanban' }] },
   { kind: 'road', side: 'down', width: 560, label: 'Product Marketing Engineer', cards: [{ date: 'aug 2023 → may 2024', title: 'Product Marketing Engineer', learnt: 'Everything from landing pages, documents, community management. I did my best work at Plane!', toy: 'landing' }] },
-  { kind: 'detour', side: 'down', width: 675, label: 'EA work', cards: [{ date: 'jun → dec 2025', title: 'EA to my previous boss, writing mails, managing his day to day indulgences', learnt: 'Learnt that i am not only a writer, but a good writer.', toy: 'quote' }] },
-  { kind: 'road', side: 'down', width: 560, label: 'Marmeto', cards: [{ date: 'apr → aug 2025', title: 'Built a product component library', learnt: 'Learnt how bigger systems work in silos. Understood the importance of processes and got to manage my first team. Tried my hand at design and experience without any in-house design team.', toy: 'tokens', link: { text: 'see my work on the design system · soon' } }] },
-  { kind: 'road', side: 'up', width: 540, label: 'Nexus', cards: [{ date: 'aug 2025 → sep 2026', title: 'Launched Nexus, a multi-vendor app on Shopify', learnt: 'Owned the product end to end: what to build, in what order, and why. Every demo became a requirement, every requirement a sprint.', toy: 'priority', link: { text: 'See how I found who Nexus is for', href: ICP } }] },
-  { kind: 'road', side: 'down', width: 520, label: 'Notice period', cards: [{ date: 'oct → nov 2026', title: 'Serving notice period', learnt: 'Building Nexus marketing and distribution strategy with the cofounder. I had missed marketing.', toy: 'compass' }] }
+  { kind: 'detour', side: 'up', width: 680, label: 'Freelancing', cards: [{ date: 'jun → dec 2025', title: 'Freelancing', learnt: 'I found out that I am a good writer with horrible grammar! Also that, bringing people together over food is an art I want to practice. Learnt to form not just thoughts, but opinions.', toy: 'kitchen' }] },
+  { kind: 'road', side: 'up', width: 560, label: 'Nexus', cards: [{ date: 'aug 2025 → sep 2026', title: 'Built a marketplace app from scratch!', learnt: 'Learnt how to care for opinions and egos, how to build a product magnified, why build scalable systems and manage my first team.', toy: 'tabs', link: { text: 'See how I found who Nexus is for', href: ICP } }] },
+  { kind: 'road', side: 'down', width: 480, label: 'Next gig', cards: [{ date: '', title: 'Making my next gig happen!', learnt: '', toy: 'compass' }] }
 ];
 let n = 0;
 const numbered = stops.map((s) => ({ ...s, nums: s.cards.map(() => String(++n).padStart(2, '0')) }));
@@ -46,9 +45,6 @@ const nodeX = (s: Stop) => (s.kind === 'road' ? NODE : Math.round(s.width * 0.1)
 <section id="work" class="tl-wrap" aria-label="My journey so far">
 <div class="tl-head">
 <h2>My journey so far!</h2>
-<button type="button" class="tl-zoom" aria-pressed="false" aria-label="Zoom out to see the whole route" title="See the whole route">
-<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5 L20.5 20.5 M7.5 10.5 H13.5"></path><path class="zoom-plus" d="M10.5 7.5 V13.5"></path></svg>
-</button>
 <span class="hd-note">it was never a straight line</span>
 </div>
 <div class="tl-scroller" tabindex="0" role="region" aria-roledescription="timeline" aria-label="Timeline. Use the left and right arrow keys to move between milestones.">
@@ -105,7 +101,7 @@ const nodeX = (s: Stop) => (s.kind === 'road' ? NODE : Math.round(s.width * 0.1)
   const wrap = document.querySelector('.tl-wrap') as HTMLElement;
   const scroller = wrap.querySelector('.tl-scroller') as HTMLElement;
   const lead = wrap.querySelector('.tl-lead') as HTMLElement;
-  const zoom = wrap.querySelector('.tl-zoom') as HTMLButtonElement;
+  const zoom = wrap.querySelector('.tl-zoom') as HTMLButtonElement | null;
   const items = Array.from(wrap.querySelectorAll<HTMLElement>('.tl-item'));
   const count = items.length;
   const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -228,9 +224,9 @@ const nodeX = (s: Stop) => (s.kind === 'road' ? NODE : Math.round(s.width * 0.1)
   };
   const setZoom = (on: boolean) => {
     zoomed = on;
-    zoom.classList.toggle('in', on);
-    zoom.setAttribute('aria-pressed', String(on));
-    zoom.setAttribute('aria-label', on ? 'Back to the timeline' : 'Zoom out to see the whole route');
+    zoom?.classList.toggle('in', on);
+    zoom?.setAttribute('aria-pressed', String(on));
+    zoom?.setAttribute('aria-label', on ? 'Back to the timeline' : 'Zoom out to see the whole route');
     const show = on ? river : scroller, hide = on ? scroller : river;
     hide.classList.add('fading');
     window.setTimeout(() => {
@@ -243,7 +239,7 @@ const nodeX = (s: Stop) => (s.kind === 'road' ? NODE : Math.round(s.width * 0.1)
       wrap.classList.toggle('zoomed', on);
     }, calm ? 0 : 220);
   };
-  zoom.addEventListener('click', () => setZoom(!zoomed));
+  zoom?.addEventListener('click', () => setZoom(!zoomed));
   window.addEventListener('resize', () => { if (zoomed) layoutRiver(); });
 
   const each = <T extends HTMLElement>(sel: string, fn: (el: T) => void) => wrap.querySelectorAll<T>(sel).forEach(fn);
@@ -321,6 +317,19 @@ const nodeX = (s: Stop) => (s.kind === 'road' ? NODE : Math.round(s.width * 0.1)
       });
     });
     paint();
+  });
+
+  // Freelancing: click to pause or play the six panel picture.
+  each<HTMLButtonElement>('.toy-kt', (b) => b.addEventListener('click', () => toggle(b, 'paused')));
+
+  // Marketplace app: tabs of the workspace (board, Slack, docs, Notion) switch on their own, or on a click.
+  each<HTMLElement>('.toy-tabs', (t) => {
+    const tabs = Array.from(t.querySelectorAll<HTMLButtonElement>('.tb-tab'));
+    const panes = Array.from(t.querySelectorAll<HTMLElement>('.tb-pane'));
+    tabs.forEach((b, i) => b.addEventListener('click', () => {
+      tabs.forEach((x, j) => { x.classList.toggle('on', j === i); x.setAttribute('aria-selected', String(j === i)); });
+      panes.forEach((x, j) => x.classList.toggle('on', j === i));
+    }));
   });
 
   // Product Marketing Engineer: a landing page wireframe fills in and becomes the real page.
@@ -402,10 +411,9 @@ const nodeX = (s: Stop) => (s.kind === 'road' ? NODE : Math.round(s.width * 0.1)
     paint();
   });
 
-  // Notice period: spin the compass.
+  // Next gig: spin the compass.
   each<HTMLButtonElement>('.toy-compass', (b) => {
     const needle = b.querySelector('.cp-needle') as SVGGElement;
-    const out = b.querySelector('.cp-out') as HTMLElement;
     const next = ['product', 'growth', 'GTM', 'positioning', 'somewhere new'];
     let turn = 0, last = -1;
     b.addEventListener('click', () => {
@@ -414,8 +422,6 @@ const nodeX = (s: Stop) => (s.kind === 'road' ? NODE : Math.round(s.width * 0.1)
       last = i;
       turn += 720 + i * 72;
       needle.style.transform = `rotate(${turn}deg)`;
-      out.textContent = '…';
-      window.setTimeout(() => { out.textContent = `next: ${next[i]}`; }, calm ? 0 : 1100);
     });
   });
 
@@ -427,6 +433,7 @@ const nodeX = (s: Stop) => (s.kind === 'road' ? NODE : Math.round(s.width * 0.1)
       '.toy-ticket': { every: 2800, step: (b) => press(b.querySelector('.toy-ticket')) },
       '.toy-phone': { every: 4200, step: (b) => press(b.querySelector('.toy-phone')) },
       '.toy-kanban': { every: 1700, step: (b, k) => { const c = b.querySelectorAll('.kb-card'); press(c[(k * 2) % c.length]); } },
+      '.toy-tabs': { every: 2600, step: (b, k) => { const t = b.querySelectorAll('.tb-tab'); press(t[(k + 1) % t.length]); } },
       '.toy-wf': { every: 3200, step: (b) => press(b.querySelector('.toy-wf')) },
       '.toy-taste': { every: 2600, step: (b) => press(b.querySelector('.toy-taste')) },
       '.toy-quote': { every: 3200, step: (b) => press(b.querySelector('.toy-quote')) },
