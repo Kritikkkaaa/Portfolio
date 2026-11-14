@@ -1,7 +1,7 @@
 ---
 // Footer, "the ask": six hand-drawn bubbles (what working together looks like)
 // that drift into one red circle saying "Let's work together", which fades and leaves "you give me a problem, i solve it for good!", with the two pills under it.
-// Loops every 17s while the footer is on screen (the last line holds ~3.5s, then fades); pauses off screen. Reduced motion shows the last line.
+// Loops every ~22s while the footer is on screen (the last line holds ~3.5s, then fades); pauses off screen. Reduced motion shows the last line.
 const LINKEDIN = 'https://www.linkedin.com/in/kritika-upadhyay-2001/?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
 const RESUME = 'https://drive.google.com/file/d/1IPT2eeox1bCwBc_nGS3Vlu_2IADxWtbV?utm_source=portfolio&utm_medium=footer&utm_campaign=hunt-2026&utm_id=kritikal-work';
 const INSTAGRAM = 'https://www.instagram.com/verykritikal/?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
@@ -36,7 +36,8 @@ const SUBSTACK = 'https://substack.com/@verykritikal/posts?utm_source=Portfolio&
   const MQ = matchMedia('(max-width: 600px)');
   const f = (n: number) => Math.round(n * 100) / 100;
   const svg = document.getElementById('fx-svg') as unknown as SVGSVGElement;
-  const T_END = 12.2, LOOP = 17;
+  const STEP = 1.5, D = 4.8; // bubbles start 1.5s apart (1s to draw + half a second to read before the next); everything after them waits D seconds
+  const T_END = 12.2 + D, LOOP = 17 + D;
   const WORDS = [['brainstorm', 'new ideas'], ['argue over', 'specifics'], ['end-to-end', 'execution'], ['customer', 'empathy'], ['silly jokes'], ['a whole lot', 'of coffee']];
   // Two layouts: a wide scatter for desktop, a 2 x 3 scatter for phones (same 1:1 text size on a ~360px screen).
   const L = {
@@ -100,40 +101,41 @@ const SUBSTACK = 'https://substack.com/@verykritikal/posts?utm_source=Portfolio&
   // 5.8-7 one red circle grows out of them; 7-8.2 "Let's work together" writes in; 9.4-10.4 the circle fades;
   // 10-12.2 "you give me a problem, i solve it for good!" writes in, with an underline; 15.8-16.6 it fades; 17 starts over.
   const draw = (t: number) => {
+    const u = t - D;
     const { cx, cy } = lay;
     for (let i = 0; i < 6; i++) {
-      const a = 0.3 + 0.55 * i;
+      const a = 0.3 + STEP * i;
       const draw1 = sm(a, a + 1.0, t), fill = sm(a + 0.2, a + 0.8, t);
-      const m = ease((t - (4.6 + 0.1 * i)) / 1.9);
+      const m = ease((u - (4.6 + 0.1 * i)) / 1.9);
       const bob = 1 - m;
       const [px, py] = lay.pos[i];
       const x = px + (cx - px) * m + 4 * Math.sin(t * 0.9 + i * 1.7) * bob;
       const y = py + (cy - py) * m + 5 * Math.sin(t * 0.7 + i * 2.3) * bob;
       const sc = (0.85 + 0.15 * sm(a, a + 0.6, t)) * (1 - 0.45 * m);
       set(E.b[i], 'transform', `translate(${f(x)} ${f(y)}) scale(${f(sc)})`);
-      set(E.b[i], 'opacity', draw1 > 0.002 ? f(1 - sm(6.0, 6.7, t)) : 0);
+      set(E.b[i], 'opacity', draw1 > 0.002 ? f(1 - sm(6.0, 6.7, u)) : 0);
       set(E.br[i], 'stroke-dashoffset', f(1 - draw1));
       set(E.br[i], 'stroke-opacity', '.75');
       set(E.bf[i], 'fill-opacity', f(0.06 * fill));
-      set(E.bt[i], 'opacity', f(fill * (1 - sm(5.3, 6.0, t))));
+      set(E.bt[i], 'opacity', f(fill * (1 - sm(5.3, 6.0, u))));
     }
-    const g = sm(5.8, 7.0, t), out = sm(9.4, 10.4, t);
-    const pulse = 0.05 * Math.sin(Math.PI * Math.min(Math.max((t - 6.9) / 0.6, 0), 1));
+    const g = sm(5.8, 7.0, u), out = sm(9.4, 10.4, u);
+    const pulse = 0.05 * Math.sin(Math.PI * Math.min(Math.max((u - 6.9) / 0.6, 0), 1));
     const bs = (0.5 + 0.5 * g) * (1 + pulse) * (1 + 0.08 * out);
     set(E.big, 'transform', `translate(${cx} ${cy}) scale(${f(bs)})`);
     set(E.big, 'opacity', g > 0.002 ? f(1 - out) : 0);
-    set(E.bigF, 'fill-opacity', f(0.92 * sm(6.0, 6.9, t)));
-    set(E.bigR, 'stroke-dashoffset', f(1 - sm(5.9, 7.0, t)));
+    set(E.bigF, 'fill-opacity', f(0.92 * sm(6.0, 6.9, u)));
+    set(E.bigR, 'stroke-dashoffset', f(1 - sm(5.9, 7.0, u)));
     set(E.bigR, 'stroke-opacity', '.75');
     const wipeTo = (j: number, a: number, b: number, o: number) => {
-      const p = sm(a, b, t);
+      const p = sm(a, b, u);
       set(E.w[j].r, 'width', f(600 * p));
       set(E.w[j].t, 'opacity', p > 0 ? f(o) : 0);
     };
     wipeTo(0, 7.0, 7.7, 1 - out); wipeTo(1, 7.5, 8.2, 1 - out);
-    const gone = 1 - sm(15.8, 16.6, t);
+    const gone = 1 - sm(15.8, 16.6, u);
     wipeTo(2, 10.0, 10.9, gone); wipeTo(3, 10.6, 11.5, gone);
-    const up = sm(11.6, 12.2, t);
+    const up = sm(11.6, 12.2, u);
     set(E.ul, 'stroke-dashoffset', f(1 - up)); set(E.ul, 'opacity', up > 0.004 ? f(gone) : 0);
   };
 
