@@ -822,3 +822,7 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .tb-ck i{flex:none;width:11px;height:11px;border:1px solid #6E717B;border-radius:3px}
 .tb-ck.done{color:#6E717B;text-decoration:line-through}.tb-ck.done i{background:var(--tl-red);border-color:var(--tl-red)}
 @media (prefers-reduced-motion: reduce){.tb-pane,.toy-tabs .tb-tab{transition:none}}
+/* Closing: the road runs through the middle, the line above it, the next gig and the compass below it */
+.tl-next{position:absolute;left:56px;top:392px}
+.tl-next .ms-text{flex:0 0 250px}
+.tl-next h3{margin:0;font-size:var(--t-h3);font-weight:500;line-height:1.2;letter-spacing:-0.01em;color:#E8EBF0}
