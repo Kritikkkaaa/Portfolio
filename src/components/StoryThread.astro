@@ -26,14 +26,14 @@ const wander = (w: number, nd: number, dir: number) => {
   return d + ` C${x + (w - x) * 0.45} ${y} ${x + (w - x) * 0.55} 20 ${w} 20`;
 };
 
-type Toy = 'ticket' | 'phone' | 'plan' | 'ui' | 'kanban' | 'taste' | 'cart' | 'quote' | 'tokens' | 'priority' | 'compass';
+type Toy = 'ticket' | 'phone' | 'plan' | 'ui' | 'kanban' | 'landing' | 'taste' | 'cart' | 'quote' | 'tokens' | 'priority' | 'compass';
 type Card = { date: string; title: string; learnt: string; toy: Toy; link?: { text: string; href?: string } };
 type Stop = { kind: 'road' | 'detour' | 'split'; side?: 'up' | 'down'; width: number; label: string; cards: Card[] };
 const stops: Stop[] = [
   { kind: 'road', side: 'up', width: 330, label: 'TEDx', cards: [{ date: 'jul 2021', title: 'Curated a 6 hour long TEDx event', learnt: '120 attendees, 9 speakers, 5.5 lacs in sponsorships and <em>10k steps</em> daily.', toy: 'ticket' }] },
   { kind: 'road', side: 'down', width: 520, label: 'GTM intern', cards: [{ date: 'may 2022', title: 'GTM Intern making Cold calls', learnt: 'Found out that I am very good at understanding what people want and how to give it to them.', toy: 'phone' }] },
   { kind: 'road', side: 'up', width: 605, label: 'Plane', cards: [{ date: 'mar → jul 2023', title: 'First real job at Plane!', learnt: 'What is product? What is first principles thinking, and why does any of it matter?', toy: 'kanban' }] },
-  { kind: 'road', side: 'down', width: 520, label: 'Product Marketing Engineer', cards: [{ date: 'aug 2023 → may 2024', title: 'Product Marketing Engineer', learnt: 'Everything from landing pages, documents, community management. I did my best work at Plane!', toy: 'taste' }] },
+  { kind: 'road', side: 'down', width: 560, label: 'Product Marketing Engineer', cards: [{ date: 'aug 2023 → may 2024', title: 'Product Marketing Engineer', learnt: 'Everything from landing pages, documents, community management. I did my best work at Plane!', toy: 'landing' }] },
   { kind: 'detour', side: 'down', width: 675, label: 'EA work', cards: [{ date: 'jun → dec 2025', title: 'EA to my previous boss, writing mails, managing his day to day indulgences', learnt: 'Learnt that i am not only a writer, but a good writer.', toy: 'quote' }] },
   { kind: 'road', side: 'down', width: 560, label: 'Marmeto', cards: [{ date: 'apr → aug 2025', title: 'Built a product component library', learnt: 'Learnt how bigger systems work in silos. Understood the importance of processes and got to manage my first team. Tried my hand at design and experience without any in-house design team.', toy: 'tokens', link: { text: 'see my work on the design system · soon' } }] },
   { kind: 'road', side: 'up', width: 540, label: 'Nexus', cards: [{ date: 'aug 2025 → sep 2026', title: 'Launched Nexus, a multi-vendor app on Shopify', learnt: 'Owned the product end to end: what to build, in what order, and why. Every demo became a requirement, every requirement a sprint.', toy: 'priority', link: { text: 'See how I found who Nexus is for', href: ICP } }] },
@@ -323,6 +323,9 @@ const nodeX = (s: Stop) => (s.kind === 'road' ? NODE : Math.round(s.width * 0.1)
     paint();
   });
 
+  // Product Marketing Engineer: a landing page wireframe fills in and becomes the real page.
+  each<HTMLButtonElement>('.toy-wf', (b) => b.addEventListener('click', () => toggle(b, 'built')));
+
   // Product Marketing Engineer: the same headline, with more taste each click.
   each<HTMLButtonElement>('.toy-taste', (b) => {
     const lines = ['Project management software for teams.', 'Plan, track and ship, together.', 'The open-source alternative to Jira.'];
@@ -424,6 +427,7 @@ const nodeX = (s: Stop) => (s.kind === 'road' ? NODE : Math.round(s.width * 0.1)
       '.toy-ticket': { every: 2800, step: (b) => press(b.querySelector('.toy-ticket')) },
       '.toy-phone': { every: 4200, step: (b) => press(b.querySelector('.toy-phone')) },
       '.toy-kanban': { every: 1700, step: (b, k) => { const c = b.querySelectorAll('.kb-card'); press(c[(k * 2) % c.length]); } },
+      '.toy-wf': { every: 3200, step: (b) => press(b.querySelector('.toy-wf')) },
       '.toy-taste': { every: 2600, step: (b) => press(b.querySelector('.toy-taste')) },
       '.toy-quote': { every: 3200, step: (b) => press(b.querySelector('.toy-quote')) },
       '.toy-compass': { every: 4600, step: (b) => press(b.querySelector('.toy-compass')) },
