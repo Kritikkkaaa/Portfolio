@@ -105,10 +105,11 @@ import Nav from '../../components/Nav.astro';
 </style>
 
 <script>
-  type Item = { title: string; href: string | null; cover: 'icp' | 'onboarding'; paper: string };
+  type Item = { title: string; href: string | null; cover: 'icp' | 'onboarding' | 'twitter'; paper: string };
   // One line per case study. href: null shows "Being written".
   const ITEMS: Item[] = [
-    { title: 'From user stories to an ICP, positioning and messaging', href: '/work/icp-positioning-messaging-nexus', cover: 'icp', paper: '#A9B9C8' }
+    { title: 'From user stories to an ICP, positioning and messaging', href: '/work/icp-positioning-messaging-nexus', cover: 'icp', paper: '#A9B9C8' },
+    { title: "What I learnt building Plane's Twitter from scratch!", href: '/work/grow-planes-twitter', cover: 'twitter', paper: '#D6B79C' }
   ];
 
   /* covers, drawn in the site's own shelf colours */
@@ -135,6 +136,22 @@ import Nav from '../../components/Nav.astro';
         <circle cx="100" cy="125" r="29" fill="none" stroke="${INK}" stroke-width="1.6"/>
         <circle cx="100" cy="125" r="10" fill="${RED}"/>
         ${notes.map((n) => note(...n)).join('')}
+      </svg>`;
+    },
+    // the megaphone from the Plane Twitter case study's own cover
+    twitter(paper: string) {
+      return `<svg viewBox="0 0 200 250" aria-hidden="true">
+        <rect width="200" height="250" fill="${paper}"/>${gridLines()}
+        <g transform="translate(-4 52) scale(0.86)">
+          <g fill="none" stroke="${INK}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+            <path d="M52 78v22l22 4 54 26V48L74 74z" fill="${INK}"/>
+            <path d="M74 104l8 30h14l-6-26"/>
+            <path d="M142 70c8 6 8 32 0 38M154 58c16 12 16 50 0 62"/>
+            <rect x="172" y="34" width="46" height="58" rx="3" fill="${CREAM}"/>
+            <path d="M181 48h28M181 60h28M181 72h18"/>
+          </g>
+          <circle cx="212" cy="38" r="7" fill="${RED}"/>
+        </g>
       </svg>`;
     },
     onboarding(paper: string) {
