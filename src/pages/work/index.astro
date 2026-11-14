@@ -17,8 +17,7 @@ import Nav from '../../components/Nav.astro';
 <div class="ww-wheel" id="ww-wheel"></div>
 
 <div class="ww-bottom">
-<div class="ww-ticks" id="ww-ticks" role="group" aria-label="Case studies"></div>
-<span class="ww-caps" aria-hidden="true">Scroll</span>
+<span class="ww-caps" id="ww-count"></span>
 </div>
 <p class="ww-sr" aria-live="polite" id="ww-live"></p>
 </div>
@@ -54,12 +53,6 @@ import Nav from '../../components/Nav.astro';
     display: flex; justify-content: center; align-items: center; gap: 18px;
     padding: 20px var(--ww-pad); pointer-events: none;
   }
-  .ww-ticks { display: flex; gap: 6px; pointer-events: auto; }
-  .ww-ticks:has(button:only-child) { display: none; }
-  .ww-ticks button { width: 22px; height: 22px; padding: 0; background: none; border: 0; cursor: pointer; display: grid; place-items: center; }
-  .ww-ticks button::before { content: ""; width: 100%; height: 2px; background: var(--ww-muted); opacity: .35; transition: opacity .25s, background-color .25s; }
-  .ww-ticks button[aria-current="true"]::before { background: var(--ww-red); opacity: 1; }
-  .ww-ticks button:focus-visible { outline: 1px solid var(--ww-muted); outline-offset: 2px; }
 
   .ww-rows { position: absolute; inset: 0; z-index: 1; }
   .ww-row {
@@ -186,7 +179,7 @@ import Nav from '../../components/Nav.astro';
   const STEP = 22.5;            // degrees between prints
   const SLOTS = 360 / STEP;     // 16 prints fill the ring, items repeat
   const $ = (id: string) => document.getElementById(id) as HTMLElement;
-  const rowsEl = $('ww-rows'), wheelEl = $('ww-wheel'), ticksEl = $('ww-ticks'), live = $('ww-live'), h1 = $('ww-h1');
+  const rowsEl = $('ww-rows'), wheelEl = $('ww-wheel'), countEl = $('ww-count'), live = $('ww-live'), h1 = $('ww-h1');
 
   // Back retraces the visitor's steps when they came from this site; Home is the fallback for a direct visit.
   $('ww-back').addEventListener('click', (e) => {
@@ -243,14 +236,7 @@ import Nav from '../../components/Nav.astro';
     prints.push(el);
   }
 
-  const ticks = ITEMS.map((it, i) => {
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.setAttribute('aria-label', `Go to ${pad2(i + 1)}. ${it.title}`);
-    b.addEventListener('click', () => { target = Math.round(pos + wrap(i - pos, N)); });
-    ticksEl.appendChild(b);
-    return b;
-  });
+  countEl.textContent = `${N} case ${N === 1 ? 'study' : 'studies'} published`;
 
   function render() {
     const W = innerWidth, H = innerHeight;
@@ -294,7 +280,6 @@ import Nav from '../../components/Nav.astro';
     const now = ((Math.round(pos) % N) + N) % N;
     if (now !== active) {
       active = now;
-      ticks.forEach((t, i) => t.setAttribute('aria-current', i === now ? 'true' : 'false'));
       live.textContent = `${pad2(now + 1)} of ${pad2(N)}. ${ITEMS[now].title}`;
     }
   }
