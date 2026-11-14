@@ -832,3 +832,12 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .tl-tail{width:max(70vw,1040px)}
 .tl-close{width:max-content;max-width:none;white-space:nowrap}
 @media (max-width:700px){.tl-tail{width:70vw}.tl-close{width:min(80vw,360px);white-space:normal}}
+/* Journey, round 2: heading and buttons on one line; the route can be scrolled to its very end; a calmer ending */
+.tl-head{align-items:center}
+.tl-head .tl-cta{flex-direction:row;align-items:center;align-self:center;gap:12px;margin:0 64px 0 auto}
+.tl-head .tl-cta .ft-secondary{border-color:#3A3842;background:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+.tl-head .tl-cta .ft-secondary:hover,.tl-head .tl-cta .ft-secondary:focus-visible{border-color:#D8C9A3;color:#D8C9A3;background:none}
+.tl-tail{width:max(70vw,1160px);scroll-snap-align:end}
+.tl-close{left:96px;bottom:470px}
+.tl-next{left:96px;top:430px}
+@media (max-width:700px){.tl-tail{width:80vw}.tl-close{left:24px}.tl-next{left:24px}.tl-head .tl-cta{margin-right:0;flex-wrap:wrap}}
