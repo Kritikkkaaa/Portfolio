@@ -7,10 +7,12 @@ const RED = 'rgb(210,69,63)';
 const swatches = ['#E8EBF0', '#D8C9A3', '#9FB0C8', 'rgb(210,69,63)', '#3A3842'];
 const quote = 'thinking and expressing what i think are two different things.'.split(' ');
 const tickets = ['vendor payouts', 'bulk upload', 'dark mode'];
+const boardCols = ['to do', 'in progress', 'done'];
+const boardTasks: [string, number][] = [['launch post', 0], ['case study', 0], ['email drip', 1], ['blog draft', 1], ['changelog', 2]];
 ---
-<div class="ms">
+<div class={`ms${c.toy === 'ticket' ? ' ms-stack' : ''}`}>
 <div class="ms-text">
-<div class="ms-date">{c.date}</div>
+{c.toy !== 'ticket' && <div class="ms-date">{c.date}</div>}
 <h3>{c.title}</h3>
 <p set:html={c.learnt}></p>
 {c.link && (c.link.href
@@ -29,7 +31,7 @@ const tickets = ['vendor payouts', 'bulk upload', 'dark mode'];
 
 {c.toy === 'phone' && <>
 <button type="button" class="toy-phone" aria-label="Ring the phone">
-<span class="ph-bubble" aria-live="polite">hello, i am kritika</span>
+<span class="ph-bubble" aria-live="polite">Hello! How are you doing?</span>
 <svg class="ph-set" width="96" height="80" viewBox="0 0 96 80" aria-hidden="true">
 <path d="M14 30 C14 14 82 14 82 30 L74 38 C70 34 64 33 60 34 L58 26 C52 24 44 24 38 26 L36 34 C32 33 26 34 22 38 Z" fill="#141319" stroke="#C9CDD5" stroke-width="1.5" stroke-linejoin="round"></path>
 <path d="M24 44 L72 44 L80 72 L16 72 Z" fill="#141319" stroke="#C9CDD5" stroke-width="1.5" stroke-linejoin="round"></path>
@@ -64,14 +66,12 @@ const tickets = ['vendor payouts', 'bulk upload', 'dark mode'];
 <span class="toy-hint">step back</span>
 </>}
 
-{c.toy === 'ui' && <>
-<button type="button" class="toy-ui" aria-pressed="false" aria-label="Turn the wireframe into a product">
-<span class="ui-bar"><i></i><i></i><i></i><b>plane</b></span>
-<span class="ui-line l1"><b>issues, sprints, pages</b></span>
-<span class="ui-line l2"><b>for teams who ship</b></span>
-<span class="ui-btns"><span class="ui-btn">start</span><span class="ui-btn ghost">docs</span></span>
-</button>
-<span class="toy-hint">ship the wireframe</span>
+{c.toy === 'kanban' && <>
+<div class="toy-kanban" role="group" aria-label="Marketing board. Click a card, or drag it, to move it along.">
+{boardCols.map((n, k) => <span class="kb-col" style={`left: ${k * 88}px`}><i>{n}</i></span>)}
+{boardTasks.map(([t, col], k) => <button type="button" class="kb-card" data-col={col} style={`left: ${col * 88 + 4}px; top: 26px`}>{t}</button>)}
+</div>
+<span class="toy-hint">move the cards</span>
 </>}
 
 {c.toy === 'taste' && <>
@@ -132,4 +132,5 @@ const tickets = ['vendor payouts', 'bulk upload', 'dark mode'];
 </>}
 
 </div>
+{c.toy === 'ticket' && <div class="ms-date ms-date-end">{c.date}</div>}
 </div>
