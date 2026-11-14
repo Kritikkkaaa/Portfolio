@@ -460,7 +460,7 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 @media (prefers-reduced-motion: reduce){.qw,.tt-stub,.tt-stamp,.lp-arrow,.cp-needle,.tl-track{transition:none}}
 /* Scenic route, round 3: tighter fold, smaller opener, split strands and new toys */
 .tl-wrap{--tl-pad:max(24px,3vw)}
-.tl-head{margin-top:24px}
+.tl-head{margin-top:24px;margin-bottom:56px}
 .tl-scroller{--tl-h:680px;height:var(--tl-h)}
 .tl-track{margin-top:-20px}
 .tl-wrap.zoomed .tl-track{margin-top:0}

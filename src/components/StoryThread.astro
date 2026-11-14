@@ -32,13 +32,9 @@ type Stop = { kind: 'road' | 'detour' | 'split'; side?: 'up' | 'down'; width: nu
 const stops: Stop[] = [
   { kind: 'road', side: 'up', width: 560, label: 'TEDx', cards: [{ date: 'jul 2021', title: 'Curated a TEDx event as organizer', learnt: '120 attendees, 9 speakers, 5.5 lacs of sponsorship and <em>10k steps</em> daily.', toy: 'ticket' }] },
   { kind: 'road', side: 'down', width: 560, label: 'Sales intern', cards: [{ date: 'may 2022', title: 'Sales intern making 50 cold calls a day', learnt: 'Learned that I am good at understanding what people want and how to give it to them.', toy: 'phone' }] },
-  { kind: 'detour', side: 'up', width: 700, label: 'AutoCAD and Revit', cards: [{ date: 'aug 2021 → jan 2022', title: 'Learnt architecture tools like AutoCAD and Revit', learnt: 'Dad wanted me to, and i love design and any chance to play. What stayed with me: see the whole plan from a bird’s eye view before getting stuck in its nuances.', toy: 'plan' }] },
   { kind: 'road', side: 'down', width: 520, label: 'Plane', cards: [{ date: 'mar → jul 2023', title: 'Sales and Marketing Intern, Plane', learnt: 'What is product? What is first principles thinking, and why does any of it matter?', toy: 'ui', link: { text: 'case study · soon' } }] },
   { kind: 'road', side: 'up', width: 520, label: 'Product Marketing Engineer', cards: [{ date: 'aug 2023 → may 2024', title: 'Product Marketing Engineer', learnt: 'Everything from website, to distribution, to competitive research, to community. Did my best work there.', toy: 'taste' }] },
-  { kind: 'split', width: 740, label: 'Shopify agency and EA work', cards: [
-    { date: 'jun → dec 2025', title: 'Project Manager for a small Shopify agency run by my school senior', learnt: 'Learnt about the world of e-commerce and Shopify. Toby is a genius.', toy: 'cart' },
-    { date: 'jun → dec 2025', title: 'EA to my previous boss, writing mails, managing his day to day indulgences', learnt: 'Learnt that i am not only a writer, but a good writer.', toy: 'quote' }
-  ] },
+  { kind: 'detour', side: 'down', width: 620, label: 'EA work', cards: [{ date: 'jun → dec 2025', title: 'EA to my previous boss, writing mails, managing his day to day indulgences', learnt: 'Learnt that i am not only a writer, but a good writer.', toy: 'quote' }] },
   { kind: 'road', side: 'down', width: 560, label: 'Marmeto', cards: [{ date: 'apr → aug 2025', title: 'Built a product component library', learnt: 'Learnt how bigger systems work in silos. Understood the importance of processes and got to manage my first team. Tried my hand at design and experience without any in-house design team.', toy: 'tokens', link: { text: 'see my work on the design system · soon' } }] },
   { kind: 'road', side: 'up', width: 540, label: 'Nexus', cards: [{ date: 'aug 2025 → sep 2026', title: 'Launched Nexus, a multi-vendor app on Shopify', learnt: 'Owned the product end to end: what to build, in what order, and why. Every demo became a requirement, every requirement a sprint.', toy: 'priority', link: { text: 'See how I found who Nexus is for', href: ICP } }] },
   { kind: 'road', side: 'down', width: 520, label: 'Notice period', cards: [{ date: 'oct → nov 2026', title: 'Serving notice period', learnt: 'Building Nexus marketing and distribution strategy with the cofounder. I had missed marketing.', toy: 'compass' }] }
@@ -47,9 +43,9 @@ let n = 0;
 const numbered = stops.map((s) => ({ ...s, nums: s.cards.map(() => String(++n).padStart(2, '0')) }));
 const nodeX = (s: Stop) => (s.kind === 'road' ? NODE : Math.round(s.width * 0.1));
 ---
-<section id="work" class="tl-wrap" aria-label="My scenic route">
+<section id="work" class="tl-wrap" aria-label="My journey so far">
 <div class="tl-head">
-<h2>My scenic route<span style="color: var(--tl-red)">.</span></h2>
+<h2>My journey so far<span style="color: var(--tl-red)">!</span></h2>
 <button type="button" class="tl-zoom" aria-pressed="false" aria-label="Zoom out to see the whole route" title="See the whole route">
 <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5 L20.5 20.5 M7.5 10.5 H13.5"></path><path class="zoom-plus" d="M10.5 7.5 V13.5"></path></svg>
 </button>
@@ -360,4 +356,41 @@ const nodeX = (s: Stop) => (s.kind === 'road' ? NODE : Math.round(s.width * 0.1)
       window.setTimeout(() => { out.textContent = `next: ${next[i]}`; }, calm ? 0 : 1100);
     });
   });
+
+  // Idle demos: while a toy is on screen it plays its own trick on a slow loop, like a short video, so it is clear it can be played with.
+  // It stops for good the moment someone touches that toy, waits while the pointer is over it, and stays still with reduced motion.
+  if (!calm) {
+    const press = (el: Element | null) => (el as HTMLElement | null)?.click();
+    const demos: Record<string, { every: number; step: (box: HTMLElement, k: number) => void }> = {
+      '.toy-ticket': { every: 2800, step: (b) => press(b.querySelector('.toy-ticket')) },
+      '.toy-phone': { every: 4200, step: (b) => press(b.querySelector('.toy-phone')) },
+      '.toy-ui': { every: 3000, step: (b) => press(b.querySelector('.toy-ui')) },
+      '.toy-taste': { every: 2600, step: (b) => press(b.querySelector('.toy-taste')) },
+      '.toy-quote': { every: 3200, step: (b) => press(b.querySelector('.toy-quote')) },
+      '.toy-compass': { every: 4600, step: (b) => press(b.querySelector('.toy-compass')) },
+      '.toy-tokens': { every: 1500, step: (b, k) => {
+        const sw = b.querySelectorAll('.tk-sw'), sp = b.querySelectorAll('.tk-sp');
+        press(k % 2 ? sp[(k >> 1) % sp.length] : sw[(k >> 1) % sw.length]);
+      } },
+      '.toy-priority': { every: 2400, step: (b) => {
+        const lowest = Array.from(b.querySelectorAll<HTMLElement>('.pr-ticket')).sort((x, y) => parseInt(y.style.top) - parseInt(x.style.top))[0];
+        press(lowest);
+      } },
+    };
+    wrap.querySelectorAll<HTMLElement>('.ms-toy').forEach((box) => {
+      const sel = Object.keys(demos).find((s) => box.querySelector(s));
+      if (!sel) return;
+      const demo = demos[sel];
+      let timer = 0, first = 0, k = 0, over = false, done = false;
+      const tick = () => { if (!over && !done && !document.hidden) demo.step(box, k++); };
+      const stop = () => { window.clearInterval(timer); window.clearTimeout(first); timer = first = 0; };
+      const start = () => { if (timer || done) return; first = window.setTimeout(tick, 900); timer = window.setInterval(tick, demo.every); };
+      new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0.6 }).observe(box);
+      box.addEventListener('pointerenter', () => { over = true; });
+      box.addEventListener('pointerleave', () => { over = false; });
+      const touched = (e: Event) => { if (e.isTrusted) { done = true; stop(); } };
+      box.addEventListener('pointerdown', touched);
+      box.addEventListener('keydown', touched);
+    });
+  }
 </script>
