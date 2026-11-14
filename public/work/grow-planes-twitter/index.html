@@ -172,6 +172,8 @@
   /* reply stack */
   .village { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(18px, 3vw, 44px); align-items: start; }
   .village .card.story-card { grid-column: auto; }
+  /* the reply arrows sit under the text card, so they stay put while the stack changes height */
+  .village-side { display: grid; gap: 22px; }
   .stack-wrap { display: grid; justify-items: center; gap: 22px; }
   .stack { position: relative; width: 100%; transition: height .4s cubic-bezier(.3, .7, .3, 1); }
   .reply {
@@ -364,8 +366,15 @@
       <div class="ch-head"><span class="ch-num">04</span><h2>To have a village, you must be willing to be a villager.</h2></div>
       <div class="ch-body">
         <div class="village">
-          <div class="card story-card rise">
-            <p>I had so much fun building Plane's Twitter. Talking to its community was the best part.</p>
+          <div class="village-side">
+            <div class="card story-card rise">
+              <p>I had so much fun building Plane's Twitter. Talking to its community was the best part.</p>
+            </div>
+            <div class="stack-ctl">
+              <button type="button" id="prev" aria-label="Previous reply">←</button>
+              <span class="caps" id="count" aria-live="polite">1 / 5</span>
+              <button type="button" id="next" aria-label="Next reply">→</button>
+            </div>
           </div>
           <div class="stack-wrap rise">
             <div class="stack" id="stack">
@@ -374,11 +383,6 @@
               <figure class="reply" data-w="1100" data-h="1272"><img src="img/r3.jpg" alt="Alex Walter asks for file attachments in comments. Plane replies with a preview of a whole Drive feature, coming soon." loading="lazy"></figure>
               <figure class="reply" data-w="1100" data-h="1450"><img src="img/r4.jpg" alt="Didier Lopes asks whether Plane has a Confluence replacement. Plane replies with Pages and asks for his feedback." loading="lazy"></figure>
               <figure class="reply" data-w="1100" data-h="334"><img src="img/r5.jpg" alt="Lorenzo De Nobili asks if Plane is Italian. Plane replies, no signore, just global and a little too Internet." loading="lazy"></figure>
-            </div>
-            <div class="stack-ctl">
-              <button type="button" id="prev" aria-label="Previous reply">←</button>
-              <span class="caps" id="count" aria-live="polite">1 / 5</span>
-              <button type="button" id="next" aria-label="Next reply">→</button>
             </div>
           </div>
         </div>
