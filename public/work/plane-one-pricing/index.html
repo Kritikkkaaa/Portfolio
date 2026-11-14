@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<base href="/work/plane-one-pricing/">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plane One pricing campaign case study · Kritika Upadhyay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@300;400;500;600;700&family=Kalam:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #141416;
+    --grid: rgba(169, 175, 185, 0.075);
+    --text: #EFEFEE;
+    --muted: #A9AFB9;
+    --ink: #1E1E24;
+    --cream: #F1EEE6;
+    --red: #D2453F;
+    --gold: #D8C9A3;
+    --blue: #A9B9C8;
+    --tan: #D6B79C;
+    --sage: #BFC995;
+    --mint: #A9C6B4;
+    --pad: max(56px, calc((100vw - 1180px) / 2 + 24px));
+    --t-display: clamp(40px, 6.2vw, 76px);
+    --t-h1: clamp(28px, 3.7vw, 54px);
+    --t-lead: 20px;
+    --t-body: 17px;
+    --t-caps: 11px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: #080808; scroll-behavior: smooth; }
+  body {
+    font-family: Commissioner, system-ui, sans-serif;
+    font-size: var(--t-body); line-height: 1.55;
+    color: var(--text);
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 18px 18px, 18px 18px;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a { color: inherit; }
+  img { display: block; max-width: 100%; }
+  .caps {
+    font-size: var(--t-caps); font-weight: 500; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--muted); text-decoration: none;
+  }
+  .page { position: relative; }
+
+  /* ---------- global nav, copied from kritikal.work ---------- */
+  .mk-nav { position: fixed; top: 10px; right: max(16px, env(safe-area-inset-right, 0px)); z-index: 40; }
+  .mk-bar {
+    position: fixed; top: 0; left: 0; right: 0; height: 76px;
+    background: #0B0A0F; border-bottom: 1px solid rgba(169, 175, 185, 0.14);
+    opacity: 0; pointer-events: none; transition: opacity .25s;
+  }
+  .mk-nav.open .mk-bar { opacity: 1; pointer-events: auto; }
+  .mk-btn {
+    position: relative; z-index: 1; display: grid; place-items: center; width: 56px; height: 56px;
+    padding: 0; margin: 0; border: 0; border-radius: 10px; background: transparent; cursor: pointer;
+  }
+  .mk-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 0; }
+  .mk-btn svg { display: block; }
+  .mk-menu {
+    position: fixed; z-index: 1; top: 38px; left: 50%; transform: translate(-50%, -50%);
+    margin: 0; padding: 0; list-style: none;
+    display: flex; align-items: center; gap: 56px;
+    visibility: hidden; transition: visibility 0s linear .3s;
+  }
+  .mk-menu.on { visibility: visible; transition-delay: 0s; }
+  .mk-menu li { opacity: 0; transform: translate(60px); transition: opacity .22s, transform .22s; }
+  .mk-menu.on li {
+    opacity: 1; transform: none;
+    transition: opacity .3s ease, transform .45s cubic-bezier(.3, .7, .3, 1);
+    transition-delay: calc(var(--i) * 70ms + 60ms);
+  }
+  .mk-menu a { display: block; white-space: nowrap; padding: 6px 0; font: 500 15px/1 Commissioner, system-ui, sans-serif; color: #C9CDD5; text-decoration: none; }
+  .mk-menu a:hover, .mk-menu a:focus-visible { color: var(--text); }
+
+  /* ---------- hero ---------- */
+  .hero-band {
+    position: relative;
+    background-color: #E4DAB2;
+    background-image: radial-gradient(rgba(30, 30, 36, 0.13) 1px, transparent 1.4px);
+    background-size: 7px 7px;
+    padding: 22px var(--pad) 0;
+  }
+  .hero-band .back { color: var(--ink); display: inline-block; }
+  .hero-band .back:hover, .hero-band .back:focus-visible { color: var(--red); }
+  .snaps {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 3vw, 44px);
+    align-items: end; max-width: 1040px; margin: 22px auto 0;
+    transform: translateY(46px); margin-bottom: 0;
+  }
+  .snap {
+    background: #fff; padding: 5% 5% 0; border-radius: 2px;
+    box-shadow: 0 16px 34px rgba(30, 30, 36, 0.28);
+    color: var(--ink);
+  }
+  .snap:nth-child(1) { transform: rotate(-3deg) translateY(10px); }
+  .snap:nth-child(2) { transform: rotate(1.5deg) translateY(-8px); }
+  .snap:nth-child(3) { transform: rotate(3.5deg) translateY(12px); }
+  .snap svg { display: block; width: 100%; height: auto; background: #EFEDE6; }
+  .snap figcaption {
+    font-family: Kalam, cursive; font-weight: 300; font-size: clamp(13px, 1.7vw, 20px); line-height: 1;
+    padding: 0.85em 0.2em 0.9em;
+  }
+  .hero {
+    padding: clamp(84px, 11vw, 120px) var(--pad) clamp(56px, 8vw, 96px);
+    display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); column-gap: clamp(28px, 6vw, 96px); row-gap: 28px;
+  }
+  .hero h1 {
+    grid-column: 1 / -1;
+    font-size: var(--t-display); font-weight: 500; line-height: 1.04; letter-spacing: -0.02em;
+    text-wrap: balance; max-width: 16em;
+  }
+  .hero .lead { font-size: var(--t-lead); line-height: 1.5; max-width: 34em; }
+  .hero .lead p + p { margin-top: 0.7em; }
+  .hero .meta { margin-top: 22px; display: block; }
+  .skills h2 { margin-bottom: 6px; }
+  .skills ol { list-style: none; }
+  .skills li {
+    display: flex; gap: 14px; align-items: baseline;
+    padding: 13px 0; border-bottom: 1px solid rgba(169, 175, 185, 0.16);
+    font-size: var(--t-caps); font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+  }
+  .skills li span { color: var(--muted); font-weight: 500; font-variant-numeric: tabular-nums; }
+
+  /* ---------- story ---------- */
+  .story { position: relative; padding: 0 var(--pad); }
+  .thread { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: visible; }
+  .thread .ghost { fill: none; stroke: rgba(169, 175, 185, 0.16); stroke-width: 1.5; stroke-dasharray: 2 7; stroke-linecap: round; }
+  .thread .line { fill: none; stroke: var(--red); stroke-width: 2.5; stroke-linecap: round; }
+  .thread .node { fill: var(--bg); stroke: rgba(169, 175, 185, 0.4); stroke-width: 2; transition: fill .3s, stroke .3s; }
+  .thread .node.on { fill: var(--red); stroke: var(--red); }
+  .flyer { position: absolute; left: 0; top: 0; width: 40px; height: 40px; margin: -20px 0 0 -20px; z-index: 3; pointer-events: none; will-change: transform; }
+  .flyer svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+  .ch { position: relative; z-index: 2; padding: clamp(110px, 21vh, 210px) 0 0; }
+  .ch-head { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: clamp(14px, 2.4vw, 30px); align-items: baseline; max-width: 22em; font-size: var(--t-h1); }
+  .ch-num { font-size: 15px; font-weight: 500; letter-spacing: 0.1em; color: var(--red); font-variant-numeric: tabular-nums; }
+  .ch-head h2 { font-size: var(--t-h1); font-weight: 500; line-height: 1.08; letter-spacing: -0.02em; text-wrap: balance; }
+  .ch-body { margin-top: clamp(26px, 4vw, 48px); display: grid; gap: clamp(18px, 2.4vw, 28px); grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: start; }
+
+  .card { border-radius: 4px 10px 10px 10px; padding: clamp(20px, 2.6vw, 30px); color: var(--ink); box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35); }
+  .card h3 { font-size: var(--t-caps); font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 14px; opacity: .7; }
+  .card p + p { margin-top: 0.9em; }
+  .card.story-card { background: var(--cream); grid-column: span 7; font-size: 19px; line-height: 1.5; }
+  .card.why { background: var(--blue); grid-column: span 5; transform: rotate(0.8deg); }
+  .card.why ol { list-style: none; counter-reset: w; display: grid; gap: 14px; }
+  .card.why li { counter-increment: w; display: grid; grid-template-columns: 1.6em 1fr; }
+  .card.why li::before { content: counter(w); font-weight: 700; }
+
+  /* tweets: the picture or clip is the link. The live site can swap these for real embeds. */
+  .tweets { grid-column: 1 / -1; display: grid; gap: clamp(14px, 2vw, 22px); grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); align-items: start; }
+  .tweet {
+    display: block; width: 100%; max-width: 420px;
+    background: #000; border: 1px solid rgba(169, 175, 185, 0.22); border-radius: 14px; overflow: hidden;
+    transition: border-color .2s, transform .25s;
+  }
+  .tweet:hover, .tweet:focus-visible { border-color: var(--gold); transform: translateY(-3px); outline: none; }
+  .tweet img, .tweet video { display: block; width: 100%; height: auto; }
+
+  .pair { grid-column: 1 / -1; display: grid; gap: clamp(18px, 2.4vw, 28px); grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start; }
+  .pair .card.story-card { grid-column: auto; }
+  .pair .tweets { grid-column: auto; grid-template-columns: 1fr; }
+
+  /* lessons */
+  .lessons { grid-column: 1 / -1; list-style: none; display: grid; gap: clamp(18px, 2.4vw, 28px); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lessons li { border-radius: 4px 10px 10px 10px; padding: clamp(22px, 3vw, 36px); color: var(--ink); box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35); }
+  .lessons li:nth-child(1) { background: var(--sage); transform: rotate(-0.8deg); }
+  .lessons li:nth-child(2) { background: var(--tan); transform: rotate(0.9deg); }
+  .lessons b { display: block; font-size: 15px; letter-spacing: 0.1em; margin-bottom: 12px; }
+  .lessons p { font-size: clamp(21px, 2.3vw, 30px); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; text-wrap: balance; }
+
+  .end { position: relative; z-index: 2; display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; padding: clamp(90px, 18vh, 180px) var(--pad) 90px; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 12px 18px; border-radius: 8px; font-size: 15px; font-weight: 600; text-decoration: none; border: 1px solid transparent; cursor: pointer; font-family: inherit; }
+  .btn.primary { background: var(--text); color: var(--ink); }
+  .btn.primary:hover, .btn.primary:focus-visible { background: var(--gold); outline: none; }
+  .btn.quiet { background: none; color: var(--muted); border-color: rgba(169, 175, 185, 0.3); }
+  .btn.quiet:hover, .btn.quiet:focus-visible { color: var(--text); border-color: var(--muted); outline: none; }
+
+  /* entrance */
+  .js .rise { opacity: 0; transform: translateY(22px); transition: opacity .6s ease, transform .7s cubic-bezier(.3, .7, .3, 1); }
+  .js .rise.in { opacity: 1; transform: none; }
+  .js .card.why.rise.in { transform: rotate(0.8deg); }
+  .js .lessons li.rise.in:nth-child(1) { transform: rotate(-0.8deg); }
+  .js .lessons li.rise.in:nth-child(2) { transform: rotate(0.9deg); }
+
+  @media (max-width: 820px) {
+    :root { --pad: 20px; --t-lead: 18px; }
+    .story { padding-left: 44px; }
+    .hero { grid-template-columns: 1fr; }
+    .card.story-card, .card.why { grid-column: 1 / -1; }
+    .pair, .versus { grid-template-columns: 1fr; }
+    .lessons { grid-template-columns: 1fr; }
+    .snaps { transform: translateY(30px); }
+    .mk-menu { gap: 34px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .js .rise { opacity: 1; transform: none; transition: none; }
+    .mk-menu, .mk-menu li, .mk-bar, .reply, .stack { transition: none !important; }
+  }
+
+  .item { display: grid; gap: 10px; align-content: start; }
+  .item figcaption { display: flex; gap: 10px; align-items: baseline; }
+  .item figcaption b { color: var(--red); font-weight: 600; }
+  .tweet.wide { max-width: none; }
+  .tweet.light { background: #fff; border-color: transparent; }
+  .tweets.four { grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr)); }
+  .tweets.four .tweet { max-width: none; }
+
+  /* the two threads, side by side */
+  .versus { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(18px, 3vw, 44px); align-items: start; }
+  .versus .item { gap: 14px; }
+  .stat { display: grid; gap: 4px; }
+  .stat .num { font-size: clamp(44px, 6vw, 76px); font-weight: 500; line-height: 1; letter-spacing: -0.03em; }
+  .stat .num small { font-size: .45em; letter-spacing: 0; margin-left: .15em; color: var(--muted); font-weight: 500; }
+  .stat.hot .num { color: var(--red); }
+  .versus .tweet { max-width: none; }
+
+  .lessons.long p { font-size: 19px; font-weight: 400; line-height: 1.5; letter-spacing: 0; text-wrap: pretty; }
+  .lessons.long li + li { margin-top: 0; }
+  .lessons.long p strong { font-weight: 600; }
+  .card a { text-underline-offset: 3px; }
+  .card.story-card a:hover { color: var(--red); }
+</style>
+</head>
+<body>
+<div class="page" id="page">
+
+  <nav class="mk-nav" id="mk-nav" aria-label="Main">
+    <span class="mk-bar" aria-hidden="true"></span>
+    <button class="mk-btn" id="mk-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mk-menu"><svg viewBox="0 0 64 64" width="48" height="48" aria-hidden="true"><g transform="translate(32 32)"><path d="M0 -15.26A17 17 0 0 1 0 15.26A17 17 0 0 1 0 -15.26Z" fill="#d2453f"></path><circle cx="-7.5" cy="0" r="17" fill="none" stroke="#efefee" stroke-width="3.2"></circle><circle cx="7.5" cy="0" r="17" fill="none" stroke="#efefee" stroke-width="3.2"></circle></g></svg></button>
+    <ul class="mk-menu" id="mk-menu">
+      <li style="--i: 2"><a href="/" tabindex="-1">Home</a></li>
+      <li style="--i: 1"><a href="/work" tabindex="-1">Work</a></li>
+      <li style="--i: 0"><a href="https://substack.com/@verykritikal/posts?utm_source=Portfolio&amp;utm_medium=Nav&amp;utm_campaign=Portfolio+launch&amp;utm_id=kritikal-work" tabindex="-1" target="_blank" rel="noopener">Writing</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero-band">
+    <a class="caps back" id="back" href="/work">← Back</a>
+    <div class="snaps">
+      <figure class="snap">
+        <svg viewBox="0 0 240 170" role="img" aria-label="A terminal window with a prompt and a blinking cursor">
+          <g stroke="#1E1E24" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+            <rect x="32" y="26" width="176" height="118" rx="8" fill="#fff"/>
+            <path d="M32 52h176" fill="none"/>
+            <path d="M54 82l16 12-16 12M82 108h34" fill="none"/>
+          </g>
+          <circle cx="48" cy="39" r="4.5" fill="#D2453F"/><circle cx="64" cy="39" r="4.5" fill="#1E1E24"/><circle cx="80" cy="39" r="4.5" fill="#1E1E24"/>
+          <rect x="124" y="99" width="12" height="16" fill="#D2453F"/>
+        </svg>
+        <figcaption>what the hell is a CLI?</figcaption>
+      </figure>
+      <figure class="snap">
+        <svg viewBox="0 0 240 170" role="img" aria-label="Three pieces of content joined by a line: a demo, a blog and a letter">
+          <g fill="none" stroke="#1E1E24" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+            <path d="M62 62h116M62 62v56M178 62v56" stroke-dasharray="2 7"/>
+            <rect x="38" y="40" width="48" height="40" rx="4" fill="#fff"/><path d="M52 52l16 8-16 8z" fill="#1E1E24"/>
+            <rect x="154" y="40" width="48" height="40" rx="4" fill="#fff"/><path d="M164 52h28M164 62h28M164 72h16"/>
+            <rect x="38" y="100" width="48" height="40" rx="4" fill="#fff"/><path d="M48 112h28M48 122h28M48 132h14"/>
+            <rect x="154" y="100" width="48" height="40" rx="4" fill="#fff"/><path d="M164 112c10 12 18-12 28 0" />
+          </g>
+          <circle cx="120" cy="90" r="9" fill="#D2453F" stroke="#1E1E24" stroke-width="3"/>
+        </svg>
+        <figcaption>one story, three pieces.</figcaption>
+      </figure>
+      <figure class="snap">
+        <svg viewBox="0 0 240 170" role="img" aria-label="A tall bar for views next to a flat line for conversation">
+          <g fill="none" stroke="#1E1E24" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+            <path d="M30 140h180"/>
+            <rect x="54" y="52" width="34" height="88" fill="#fff"/>
+            <rect x="106" y="86" width="34" height="54" fill="#fff"/>
+            <path d="M158 126h40" stroke-dasharray="2 7"/>
+          </g>
+          <circle cx="178" cy="118" r="7" fill="#D2453F"/>
+        </svg>
+        <figcaption>views, but a quiet Discord.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <header class="hero">
+    <h1>How I ran the pricing campaign for Plane's paid self-hosted plan</h1>
+    <div class="lead">
+      <p>Plane already had a free Community edition that teams could run on their own servers. With Plane One, we were asking those teams to consider a one-time payment for a plan that made self-hosting easier and added security and admin features.</p>
+      <p>The big question was simple: what would make someone who already had Plane for free decide to pay?</p>
+      <p>My head of marketing let me run this one solo. My first point of frustration: what the hell is a CLI?</p>
+      <span class="caps meta">Plane · 3 min read</span>
+    </div>
+    <div class="skills">
+      <h2 class="caps">Skills</h2>
+      <ol>
+        <li><span>01</span>Campaign planning</li>
+        <li><span>02</span>Explaining technical products</li>
+        <li><span>03</span>Measuring what works</li>
+      </ol>
+    </div>
+  </header>
+
+  <main class="story" id="story">
+    <svg class="thread" id="thread" aria-hidden="true"><path class="ghost" id="ghost"/><path class="line" id="line"/><g id="nodes"></g></svg>
+    <div class="flyer" id="flyer" aria-hidden="true">
+      <svg viewBox="-17 -17 34 34"><path d="M15 0L-13 -11L-7 0L-13 11Z" fill="#F1EEE6" stroke="#1E1E24" stroke-width="1.6" stroke-linejoin="round"/><path d="M15 0L-7 0" stroke="#1E1E24" stroke-width="1.4"/></svg>
+    </div>
+
+    <section class="ch" id="user-first" data-rail="Start with the user">
+      <div class="ch-head"><span class="ch-num">01</span><h2>Start with what the user is trying to do.</h2></div>
+      <div class="ch-body">
+        <div class="pair">
+          <div class="card story-card rise">
+            <p>I went to Product to understand what we'd built and why. Then I broke the setup into steps: what does someone trying to run Plane on their own server actually have to do? Where does it get easier?</p>
+            <p>That's usually where I start hearing the posts I want to write. A command-line tool is a feature. <a href="https://x.com/planepowers/status/1786365087147847945" target="_blank" rel="noopener">Getting Plane running in under three minutes</a> is something you can show. And all the things we got wrong on the way to making self-hosting easier? That's a <a href="https://plane.so/blog/streamlining-self-hosting-managing-100k-docker-44000-kubernetes-deploys-ease" target="_blank" rel="noopener">developer blog</a> I'd actually want to read.</p>
+            <p>I chose the CLI demo, the engineering blog, and the <a href="https://plane.so/one/why-plane-one" target="_blank" rel="noopener">founders' letter</a> as pieces of the campaign, then repurposed them for Twitter. The demo showed what changed. The blog explained how we got there. The letter answered why we'd chosen a one-time license in the first place.</p>
+          </div>
+          <div class="tweets">
+            <figure class="item rise">
+              <a class="tweet" href="https://x.com/planepowers/status/1778468066327732595" target="_blank" rel="noopener" aria-label="Open on X: Plane's reveal of Plane One"><img src="img/reveal.jpg" width="750" height="1010" alt="Plane's tweet revealing One, a new plan for serious self-hosters: one-click deployments, new security and governance features, better tracking and progress management, unlimited users and projects. Posted 11 April 2024." loading="lazy"></a>
+              <figcaption class="caps"><b>The reveal</b> what's in One</figcaption>
+            </figure>
+          </div>
+        </div>
+        <div class="tweets four">
+          <figure class="item rise">
+            <a class="tweet" href="https://x.com/planepowers/status/1786365087147847945" target="_blank" rel="noopener" aria-label="Open on X: Plane's tweet about Plane One installing in under three minutes"><img src="img/install.jpg" width="806" height="1568" alt="Plane's tweet showing Plane One installing in under three minutes, with a video and a quoted tweet, posted 3 May 2024." loading="lazy"></a>
+            <figcaption class="caps"><b>The demo</b> what changed</figcaption>
+          </figure>
+          <figure class="item rise">
+            <a class="tweet light" href="https://plane.so/blog/streamlining-self-hosting-managing-100k-docker-44000-kubernetes-deploys-ease" target="_blank" rel="noopener" aria-label="Read the blog: How we made self-hosting Plane a breeze for 100,000+ Docker and 44,000 Kubernetes deploys"><img src="img/blog.webp" width="1200" height="630" alt="Cover of Plane's engineering blog: How we made self-hosting Plane a breeze for 100,000+ Docker and 44,000 Kubernetes deploys." loading="lazy"></a>
+            <figcaption class="caps"><b>The blog</b> how we got there</figcaption>
+          </figure>
+          <figure class="item rise">
+            <a class="tweet" href="https://x.com/planepowers/status/1791479812298817719" target="_blank" rel="noopener" aria-label="Open on X: Plane's #WhyPlaneOne tweet, a letter from our founders"><img src="img/letter.jpg" width="900" height="1139" alt="Plane's #WhyPlaneOne tweet with the founders' letter attached, posted 17 May 2024." loading="lazy"></a>
+            <figcaption class="caps"><b>The letter</b> why a one-time license</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="ch" id="quiet-discord" data-rail="Quiet Discord">
+      <div class="ch-head"><span class="ch-num">02</span><h2>The posts were getting views. Discord was quiet.</h2></div>
+      <div class="ch-body">
+        <div class="pair">
+          <div class="card story-card rise">
+            <p>People were seeing the posts, but I wasn't seeing the conversation I'd expected. I went back to my content plan. The reveal spoke to "serious self-hosters," and I'd given them plenty to look at: faster setup, more control over their servers, and better security. I'd spent less time connecting those features to the work that made people like Plane in the first place.</p>
+            <p>The <a href="https://x.com/planepowers/status/1790751504108081167" target="_blank" rel="noopener">May 15 thread</a> was where I brought those stories together. I opened with what One meant for growing businesses and reused the demo to show how quickly they could get started. Then I pulled in posts about seeing all your active sprints in one place and sharing project views with clients. The thread gave admins a reason to care about the setup and gave the rest of the team a reason to care about the plan. It ended with the price and a deadline to preorder.</p>
+          </div>
+          <div class="tweets">
+            <a class="tweet rise" href="https://x.com/planepowers/status/1790751504108081167" target="_blank" rel="noopener" aria-label="Open on X: the May 15 thread, why Plane One is awesome for growing businesses"><img src="img/thread-1.jpg" width="750" height="956" alt="The opening post of Plane's May 15 thread: Why Plane One is awesome for growing businesses, quoting the Plane One announcement." loading="lazy"></a>
+            <a class="tweet rise" href="https://x.com/planepowers/status/1790751576984006818" target="_blank" rel="noopener" aria-label="Open on X: a reply in the thread about sharing project views with clients"><img src="img/thread-clients.jpg" width="750" height="700" alt="A post in the thread: Brings customers closer to your everyday work, quoting the Plane Publish update for sharing custom project views with clients." loading="lazy"></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ch" id="what-happened" data-rail="What happened">
+      <div class="ch-head"><span class="ch-num">03</span><h2>What happened.</h2></div>
+      <div class="ch-body">
+        <div class="card story-card rise" style="grid-column: 1 / -1; max-width: 46em">
+          <p>The <a href="https://x.com/planepowers/status/1778468066327732595" target="_blank" rel="noopener">April 11 reveal</a> drew 8.1K views. The <a href="https://x.com/planepowers/status/1790751504108081167" target="_blank" rel="noopener">May 15 thread</a> drew 2.9K views. The reveal got more reach; I'd feature the thread because it best shows what I did with the content over the course of the campaign.</p>
+        </div>
+        <div class="versus">
+          <figure class="item rise">
+            <div class="stat hot"><span class="num">8.1K<small>views</small></span><span class="caps">April 11 · the reveal</span></div>
+            <a class="tweet" href="https://x.com/planepowers/status/1778468066327732595" target="_blank" rel="noopener" aria-label="Open on X: the April 11 reveal"><img src="img/reveal.jpg" width="750" height="1010" alt="The April 11 reveal tweet, 8,155 views." loading="lazy"></a>
+          </figure>
+          <figure class="item rise">
+            <div class="stat"><span class="num">2.9K<small>views</small></span><span class="caps">May 15 · the thread</span></div>
+            <a class="tweet" href="https://x.com/planepowers/status/1790751504108081167" target="_blank" rel="noopener" aria-label="Open on X: the May 15 thread"><img src="img/thread-1.jpg" width="750" height="956" alt="The May 15 thread opener, 2,949 views." loading="lazy"></a>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="ch" id="differently" data-rail="Differently">
+      <div class="ch-head"><span class="ch-num">04</span><h2>What I'd do differently.</h2></div>
+      <div class="ch-body">
+        <ol class="lessons long">
+          <li class="rise"><b>1</b><p><strong>I'd add a "What does this post answer?" column to my content calendar.</strong> How long does setup take? What changes for my team? Why is this a one-time payment? That gives every post a job and makes it easier to see which questions I'm repeating and which ones I've left unanswered.</p></li>
+          <li class="rise"><b>2</b><p><strong>I'd decide what success looks like before the reveal.</strong> I'd track views, pricing-page visits, and license purchases separately, with tagged links for each post. A quiet Discord tells me something about the conversation. It doesn't tell me whether people are considering or buying the plan.</p></li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <div class="end" id="end">
+    <a class="btn primary" href="/work">← Back to Work</a>
+    <button class="btn quiet" type="button" id="again">Start over</button>
+  </div>
+
+</div>
+<script>
+(() => {
+  document.documentElement.classList.add("js");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const $ = (id) => document.getElementById(id);
+
+  /* ---------- global nav ---------- */
+  const nav = $("mk-nav"), navBtn = $("mk-btn"), menu = $("mk-menu");
+  const setNav = (open) => {
+    nav.classList.toggle("open", open); menu.classList.toggle("on", open);
+    navBtn.setAttribute("aria-expanded", String(open));
+    menu.querySelectorAll("a").forEach(a => { a.tabIndex = open ? 0 : -1; });
+  };
+  navBtn.addEventListener("click", () => setNav(!nav.classList.contains("open")));
+  addEventListener("keydown", (e) => { if (e.key === "Escape") setNav(false); });
+
+  /* Back retraces the visitor's steps. /work is the fallback for a direct visit. */
+  $("back").addEventListener("click", (e) => {
+    let fromSite = false;
+    try { fromSite = !!document.referrer && new URL(document.referrer).hostname === location.hostname; } catch (_) {}
+    if (fromSite && history.length > 1) { e.preventDefault(); history.back(); }
+  });
+  $("again").addEventListener("click", () => scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" }));
+
+  /* ---------- entrances ---------- */
+  const rises = [...document.querySelectorAll(".rise")];
+  if ("IntersectionObserver" in window && !reduce) {
+    const io = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -8% 0px" });
+    rises.forEach(el => io.observe(el));
+  } else rises.forEach(el => el.classList.add("in"));
+
+  /* ---------- a soft ding as the line sets off ----------
+     Browsers only let a page make sound after the visitor has clicked or tapped, so this stays silent otherwise. */
+  let actx = null;
+  const prime = () => {
+    try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); if (actx.state === "suspended") actx.resume().catch(() => {}); } catch (_) {}
+  };
+  ["pointerdown", "keydown", "touchend"].forEach(ev => addEventListener(ev, prime, { passive: true }));
+  function ding() {
+    try {
+      prime(); if (!actx) return;
+      const go = () => {
+        const t = actx.currentTime;
+        [[880, 0.05], [1320, 0.022]].forEach(([f, g]) => {
+          const o = actx.createOscillator(), a = actx.createGain();
+          o.type = "sine"; o.frequency.value = f;
+          a.gain.setValueAtTime(0.0001, t); a.gain.exponentialRampToValueAtTime(g, t + 0.012); a.gain.exponentialRampToValueAtTime(0.0001, t + 0.7);
+          o.connect(a); a.connect(actx.destination); o.start(t); o.stop(t + 0.75);
+        });
+      };
+      if (actx.state === "running") go();
+      else actx.resume().then(() => { if (actx.state === "running") go(); }).catch(() => {});
+    } catch (_) {}
+  }
+
+  /* ---------- the red thread and its paper plane ---------- */
+  const story = $("story"), svg = $("thread"), line = $("line"), ghost = $("ghost"), nodesG = $("nodes"), flyer = $("flyer");
+  const chapters = [...document.querySelectorAll(".ch")];
+  let total = 0, nodes = [], nodeLens = [], storyTop = 0, startY = 0, rung = false;
+
+  function build() {
+    const sr = story.getBoundingClientRect();
+    storyTop = sr.top + scrollY;
+    const W = sr.width;
+    const first = chapters[0].querySelector(".ch-head").getBoundingClientRect();
+    const gL = Math.max(12, first.left - sr.left - 26);
+    const gR = W - gL;
+    const oneSide = innerWidth <= 820;                 // on phones the line keeps to the left edge
+    const sideX = (i) => (oneSide || i % 2 === 0) ? gL : gR;
+    const pts = [], stops = [];
+    chapters.forEach((ch, i) => {
+      const head = ch.querySelector(".ch-head").getBoundingClientRect();
+      const r = ch.getBoundingClientRect();
+      const x = sideX(i), top = head.top - sr.top - 30, bottom = r.bottom - sr.top - 6;
+      pts.push([x, top]); stops.push([x, top]);        // the line starts at the first dot and ends at the last
+      if (i < chapters.length - 1) pts.push([x, bottom]);
+    });
+    const endY = pts[pts.length - 1][1];
+    startY = pts[0][1];
+
+    let d = `M${pts[0][0]} ${pts[0][1]}`;
+    for (let i = 1; i < pts.length; i++) {
+      const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], my = (y0 + y1) / 2;
+      d += x0 === x1 ? ` L${x1} ${y1}` : ` C${x0} ${my} ${x1} ${my} ${x1} ${y1}`;
+    }
+    svg.setAttribute("viewBox", `0 0 ${W} ${endY + 40}`);
+    svg.style.height = (endY + 40) + "px";
+    line.setAttribute("d", d); ghost.setAttribute("d", d);
+    total = line.getTotalLength();
+    line.style.strokeDasharray = `${total} ${total}`;
+
+    nodesG.innerHTML = "";
+    nodes = stops.map(([x, y]) => {
+      const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      c.setAttribute("cx", x); c.setAttribute("cy", y); c.setAttribute("r", 6); c.setAttribute("class", "node");
+      nodesG.appendChild(c); return c;
+    });
+    nodeLens = stops.map(([, y]) => lenAtY(y));
+    update();
+  }
+
+  // the path only ever travels downward, so a binary search finds the length for a given y
+  function lenAtY(y) {
+    let lo = 0, hi = total;
+    for (let i = 0; i < 18; i++) {
+      const mid = (lo + hi) / 2;
+      if (line.getPointAtLength(mid).y < y) lo = mid; else hi = mid;
+    }
+    return (lo + hi) / 2;
+  }
+
+  let shown = 0, wanted = 0, raf = 0;
+  function update() {
+    if (!total) return;
+    const y = scrollY + innerHeight * 0.58 - storyTop;
+    wanted = y <= startY ? 0 : lenAtY(y);
+    if (reduce) { shown = wanted; paint(); }
+    else if (!raf) raf = requestAnimationFrame(tick);
+  }
+  function tick() {
+    raf = 0;
+    const diff = wanted - shown;
+    shown += Math.abs(diff) < 0.5 ? diff : diff * 0.16;
+    paint();
+    if (shown !== wanted) raf = requestAnimationFrame(tick);
+  }
+  function paint() {
+    if (shown > 2 && !rung) { rung = true; ding(); }
+    line.style.strokeDashoffset = String(total - shown);
+    const p = line.getPointAtLength(shown), q = line.getPointAtLength(Math.min(total, shown + 3));
+    const ang = shown >= total - 3 ? 90 : Math.atan2(q.y - p.y, q.x - p.x) * 180 / Math.PI;
+    flyer.style.transform = `translate3d(${p.x}px, ${p.y}px, 0) rotate(${ang}deg)`;
+    flyer.style.opacity = shown < 2 ? "0" : "1";
+    nodes.forEach((n, i) => n.classList.toggle("on", shown >= nodeLens[i] - 1));
+  }
+
+  /* ---------- wiring ---------- */
+  let rz = 0;
+  const relayout = () => { build(); };
+  addEventListener("scroll", update, { passive: true });
+  addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(relayout, 120); });
+  addEventListener("load", relayout);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(relayout);
+  relayout();
+  if (reduce) document.querySelectorAll(".tweet video").forEach(v => { v.removeAttribute("autoplay"); v.pause(); });
+  // the story changes height as images load, so the thread is re-measured whenever it resizes
+  if ("ResizeObserver" in window) {
+    let ro = 0;
+    new ResizeObserver(() => { cancelAnimationFrame(ro); ro = requestAnimationFrame(build); }).observe(story);
+  }
+})();
+</script>
+</body>
+</html>
