@@ -1,7 +1,7 @@
 ---
 import Board from './Board.astro';
 // First fold: a typed greeting, a short intro and the pinned photo board (Board.astro).
-const greeting = 'Hello! I am Kritika!';
+const greeting = 'Hello, I am Kritika';
 ---
 <section id="top" aria-labelledby="hello" style="display: flex; flex-wrap: wrap; gap: 48px 56px; align-items: center; align-content: center; box-sizing: border-box; min-height: calc(100svh - 24px); padding-bottom: 24px">
 <div style="flex: 6 1 0; min-width: min(100%, 420px); display: flex; flex-direction: column; gap: 36px">
@@ -51,7 +51,7 @@ const greeting = 'Hello! I am Kritika!';
 
 <script>
   // Typed greeting: types out, holds, deletes, starts over. Reduced motion keeps it still.
-  const text = 'Hello! I am Kritika!';
+  const text = 'Hello, I am Kritika';
   const out = document.getElementById('tp-text') as HTMLElement;
   const caret = document.getElementById('tp-caret') as HTMLElement;
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
