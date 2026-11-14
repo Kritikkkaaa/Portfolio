@@ -1,5 +1,5 @@
 ---
-// Footer, "the ask": six hand-drawn bubbles (what working together looks like)
+// Footer, "the ask": a white board (left) where six hand-drawn bubbles (what working together looks like)
 // that drift into one red circle saying "Let's work together", which fades and leaves "you give me a problem, i solve it for good!", with the two pills under it.
 // Loops every ~22s while the footer is on screen (the last line holds ~3.5s, then fades); pauses off screen. Reduced motion shows the last line.
 const LINKEDIN = 'https://www.linkedin.com/in/kritika-upadhyay-2001/?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
@@ -11,7 +11,18 @@ const SUBSTACK = 'https://substack.com/@verykritikal/posts?utm_source=Portfolio&
 <footer class="fx" id="coffee">
 <h2 class="sr-only">Let's work together</h2>
 
-<svg class="fx-svg" id="fx-svg" viewBox="0 0 760 380" role="img" aria-label="Six bubbles, brainstorm new ideas, argue over specifics, end-to-end execution, customer empathy, silly jokes and a whole lot of coffee, drift together into one circle that says: Let's work together. The circle fades and leaves: you give me a problem, i solve it for good!"></svg>
+<div class="fx-stage">
+<div class="fx-board">
+<div class="fx-surface"><svg class="fx-svg" id="fx-svg" viewBox="0 0 760 380" role="img" aria-label="Six bubbles, brainstorm new ideas, argue over specifics, end-to-end execution, customer empathy, silly jokes and a whole lot of coffee, drift together into one circle that says: Let's work together. The circle fades and leaves: you give me a problem, i solve it for good!"></svg></div>
+<div class="fx-tray" aria-hidden="true"><i style="background: #D2453F"></i><i style="background: #2B2A31"></i><i style="background: #3F6FB5"></i></div>
+</div>
+<dl class="fx-faq">
+<div><dt>When can you join us?</dt><dd>After Christmas!</dd></div>
+<div><dt>What do you want to do now?</dt><dd>Build fun brands, tell good stories, get more customers to notice us.</dd></div>
+<div><dt>How much do we pay you?</dt><dd>Now, now. Those are intimate conversations that will happen in due time.</dd></div>
+<div><dt>What's the downside of hiring you?</dt><dd>I ask a lot of whys and that can be uncomfortable for some people.</dd></div>
+</dl>
+</div>
 
 <div class="fx-ctas">
 <a class="fx-cta p" href={LINKEDIN} target="_blank" rel="noopener">Let's connect on LinkedIn</a>
@@ -30,8 +41,24 @@ const SUBSTACK = 'https://substack.com/@verykritikal/posts?utm_source=Portfolio&
 </div>
 </footer>
 
+<style is:global>
+.fx-stage{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:56px;align-items:center;width:100%;max-width:1180px;margin:0 auto 48px}
+.fx-board{border-radius:14px;background:#CFCDC7;padding:8px 8px 0;box-shadow:0 18px 40px rgba(0,0,0,.45)}
+.fx-surface{border-radius:8px;background:#F6F4EF;padding:20px}
+.fx-board .fx-svg{max-width:none;margin:0}
+.fx-tray{display:flex;gap:10px;justify-content:center;padding:7px 0 8px}
+.fx-tray i{display:block;width:34px;height:6px;border-radius:3px}
+.fx-faq{margin:0;display:flex;flex-direction:column}
+.fx-faq>div{padding:20px 0;border-top:1px solid rgba(169,175,185,.18)}
+.fx-faq>div:first-child{border-top:0;padding-top:0}
+.fx-faq>div:last-child{padding-bottom:0}
+.fx-faq dt{margin:0 0 6px;font-size:var(--t-h3);font-weight:500;line-height:1.25;letter-spacing:-0.01em;color:#EFEFEE}
+.fx-faq dd{margin:0;font-family:'Kalam',cursive;font-weight:300;font-size:var(--h-note);line-height:1.35;letter-spacing:.5px;color:#D8C9A3}
+@media (max-width:900px){.fx-stage{grid-template-columns:minmax(0,1fr);gap:36px}}
+</style>
+
 <script>
-  const C = { fg: '#efefee', red: '#d2453f', gold: '#d8c9a3', cool: '#c9cdd5' };
+  const C = { fg: '#ffffff', red: '#d2453f', gold: '#8f6e22', cool: '#2b2a31' }; // marker colours for the white board
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const MQ = matchMedia('(max-width: 600px)');
   const f = (n: number) => Math.round(n * 100) / 100;
