@@ -555,6 +555,34 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .tl-cta{display:flex;flex-direction:column;align-items:center;gap:14px;padding:8px 24px 0}
 .tl-resume{font-size:14px;color:#C9CDD5;text-decoration:underline;text-underline-offset:4px;text-decoration-color:rgba(201,205,213,.45)}
 .tl-resume:hover{color:#E8EBF0;text-decoration-color:#E8EBF0}
+/* Hero board: photo pinned like a print, pen lines grow out of it one at a time (13s loop) onto handwritten notes */
+.bd{position:relative;width:min(100%,500px);margin:0 auto;aspect-ratio:500/680;container-type:inline-size;--slot:2.6s}
+.bd-ln{position:absolute;inset:0;width:100%;height:100%;z-index:0;overflow:visible;transition:opacity .3s ease}
+.bd.swing .bd-ln{opacity:.18}
+.bd-ln path{fill:none;stroke:#D2453F;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;animation:bd-pen calc(var(--slot)*5) cubic-bezier(.45,.1,.3,1) infinite both;animation-delay:calc(.6s + var(--i)*var(--slot))}
+@keyframes bd-pen{0%{stroke-dashoffset:1}10%{stroke-dashoffset:0}38%{stroke-dashoffset:0}48%,100%{stroke-dashoffset:1}}
+.bd-nt{position:absolute;z-index:2;margin:0;font-family:'Kalam',cursive;font-weight:300;font-size:var(--h-note);letter-spacing:.5px;line-height:1.2;color:#D8C9A3;transform:rotate(var(--r,0deg));opacity:0;text-wrap:balance;animation:bd-say calc(var(--slot)*5) ease infinite both;animation-delay:calc(.6s + var(--i)*var(--slot))}
+@keyframes bd-say{0%,6%{opacity:0;filter:blur(4px)}12%{opacity:1;filter:none}36%{opacity:1;filter:none}42%,100%{opacity:0;filter:blur(4px)}}
+.bd-nt em{font-style:normal;border-bottom:2px solid #D2453F;padding-bottom:1px}
+.bd-nt.bd-n1{left:2%;top:5.3%;width:46%;--r:-2deg}
+.bd-nt.bd-n2{left:56%;top:8.5%;width:42%;--r:1.5deg}
+.bd-nt.bd-n3{left:58%;top:78.6%;width:40%;--r:-1.5deg;text-align:right}
+.bd-nt.bd-n4{left:2%;top:81.6%;width:40%;--r:2deg}
+.bd-nt.bd-n5{left:22%;top:95.4%;width:56%;--r:-1deg;text-align:center}
+@container (max-width:420px){.bd-nt{font-size:var(--h-hint)}}
+.bd-pin{position:absolute;left:9%;top:27.9%;width:82%;z-index:1;transform-origin:50% 0;transform:rotate(-1.6deg);will-change:transform}
+.bd-print{position:relative;display:block;padding:2.1%;background:#ECE6D6;border-radius:2px;cursor:grab;touch-action:pan-y;-webkit-tap-highlight-color:transparent;outline:none;box-shadow:0 18px 34px rgba(0,0,0,.65),0 2px 0 rgba(255,255,255,.05) inset;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .35s ease-out,box-shadow .35s ease-out}
+.bd-print:focus-visible{box-shadow:0 0 0 2px #D8C9A3,0 18px 34px rgba(0,0,0,.65)}
+.bd-print.hot{box-shadow:0 26px 46px rgba(0,0,0,.7),0 2px 0 rgba(255,255,255,.05) inset}
+.bd-print.grab{cursor:grabbing}
+.bd-ph{position:relative;overflow:hidden;line-height:0}
+.bd-ph img{display:block;width:100%;height:auto;transform:scale(var(--z,1));transform-origin:41% 66%;transition:transform .8s cubic-bezier(.2,.7,.2,1);user-select:none;-webkit-user-select:none;-webkit-user-drag:none}
+.bd-glare{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .35s ease;background:radial-gradient(circle 46% at var(--gx,50%) var(--gy,40%),rgba(255,255,255,.24),rgba(255,255,255,.06) 45%,transparent 70%);mix-blend-mode:soft-light}
+.bd-print.hot .bd-glare{opacity:1}
+.bd-tack{position:absolute;left:50%;top:-9px;width:18px;height:18px;margin-left:-9px;border-radius:50%;z-index:2;transition:transform .2s ease,box-shadow .2s ease;background:radial-gradient(circle at 34% 30%,#F08D86 0 14%,#D2453F 42%,#7D211D 100%);box-shadow:0 5px 7px rgba(0,0,0,.6),0 0 0 1px rgba(0,0,0,.35)}
+.bd-pin:hover .bd-tack{transform:scale(1.12)}
+.bd-pin.pressed .bd-tack{transform:translateY(1px) scale(.92);box-shadow:0 2px 3px rgba(0,0,0,.6),0 0 0 1px rgba(0,0,0,.35)}
+@media (prefers-reduced-motion:reduce){.bd-print,.bd-ph img,.bd-ln,.bd-tack{transition:none}.bd-glare{display:none}.bd-ln path{animation:none;stroke-dashoffset:0}.bd-nt{animation:none;opacity:1}}
 /* Kritikal marks: overlap cursor, hero Venn, reading-meter nav */
 .ov-cursor{position:fixed;inset:0;width:100vw;height:100vh;z-index:2147483000;pointer-events:none;overflow:visible}
 @media (hover: hover) and (pointer: fine){html.ov-on,html.ov-on *{cursor:none !important}html.ov-on input:not([type=range]):not([type=button]):not([type=submit]),html.ov-on textarea,html.ov-on [contenteditable]{cursor:text !important}}

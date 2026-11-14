@@ -1,6 +1,6 @@
 ---
-import Venn from './Venn.astro';
-// First fold: a typed greeting, a short intro and the listens / thinks / solves Venn diagram.
+import Board from './Board.astro';
+// First fold: a typed greeting, a short intro and the pinned photo board (Board.astro).
 const greeting = 'Hello! I am Kritika!';
 ---
 <section id="top" aria-labelledby="hello" style="display: flex; flex-wrap: wrap; gap: 48px 56px; align-items: center; align-content: center; box-sizing: border-box; min-height: calc(100svh - 24px); padding-bottom: 24px">
@@ -15,7 +15,7 @@ const greeting = 'Hello! I am Kritika!';
 
 <div class="fade" style="animation-delay: 0.4s; flex: 4 1 0; min-width: 300px; display: flex; justify-content: center">
 <div style="width: 100%; max-width: 500px">
-<Venn />
+<Board />
 </div>
 </div>
 {/* The crystal orb used to live here. It now sits in the footer (Footer.astro); its markup is kept below for reference.
