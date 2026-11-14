@@ -730,7 +730,8 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .ms-stack .ms-toy{flex:none}
 .ms-stack .ms-date-end{margin:0}
 .tl-item.road.up[aria-label="TEDx"] .tl-card.up{padding-bottom:30px}
-.toy-kanban{position:relative;width:264px;height:154px}
+.tl-item.road.up[aria-label="Plane"] .tl-card.up{padding-bottom:30px}
+.toy-kanban{position:relative;width:264px;height:146px}
 .kb-col{position:absolute;top:0;width:84px;height:100%;box-sizing:border-box;border:1px dashed #2C2B33;border-radius:8px}
 .kb-col i{position:absolute;top:5px;left:8px;font-style:normal;font-size:var(--t-caps);letter-spacing:.04em;color:#6E717B;white-space:nowrap}
 .kb-card{position:absolute;width:76px;height:26px;box-sizing:border-box;padding:0 7px;border:1px solid #3A3842;border-radius:6px;background:#141319;color:#C9CDD5;font-size:var(--t-caps);text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:grab;touch-action:none;user-select:none;transition:left .45s cubic-bezier(.3,.7,.3,1),top .45s cubic-bezier(.3,.7,.3,1),border-color .3s ease,color .3s ease}
