@@ -460,7 +460,7 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 @media (prefers-reduced-motion: reduce){.qw,.tt-stub,.tt-stamp,.lp-arrow,.cp-needle,.tl-track{transition:none}}
 /* Scenic route, round 3: tighter fold, smaller opener, split strands and new toys */
 .tl-wrap{--tl-pad:max(24px,3vw)}
-.tl-head{margin-top:24px;margin-bottom:56px}
+.tl-head{margin-top:24px;margin-bottom:36px}
 .tl-scroller{--tl-h:680px;height:var(--tl-h)}
 .tl-track{margin-top:-20px}
 .tl-wrap.zoomed .tl-track{margin-top:0}
@@ -477,10 +477,10 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .ph-set{display:block}
 .ph-bubble{position:absolute;top:0;left:50%;white-space:nowrap;padding:5px 12px;border-radius:14px 14px 14px 4px;background:#E8EBF0;color:#141319;font-family:Kalam,cursive;font-size:14px;transform:translate(-20%,6px) scale(.6);transform-origin:0 100%;opacity:0;transition:opacity .25s ease,transform .35s cubic-bezier(.3,1.4,.5,1)}
 .toy-phone.said .ph-bubble{opacity:1;transform:translate(-20%,0) scale(1)}
-.toy-phone.ring .ph-set{animation:ph-buzz .6s linear}
+.toy-phone.ring .ph-set{animation:ph-buzz .6s linear 4}
 .ph-waves{position:absolute;left:50%;top:44px;width:0;height:0}
 .ph-waves i{position:absolute;left:-60px;top:-6px;width:120px;height:60px;border-radius:50%;border:1px solid rgba(210,69,63,.6);opacity:0}
-.toy-phone.ring .ph-waves i{animation:ph-wave .9s ease-out}
+.toy-phone.ring .ph-waves i{animation:ph-wave .9s ease-out 3}
 .toy-phone.ring .ph-waves i+i{animation-delay:.2s}
 @keyframes ph-buzz{0%,100%{transform:none}10%,30%,50%,70%,90%{transform:translateX(-3px) rotate(-3deg)}20%,40%,60%,80%{transform:translateX(3px) rotate(3deg)}}
 @keyframes ph-wave{0%{opacity:.9;transform:scale(.6)}100%{opacity:0;transform:scale(1.25)}}

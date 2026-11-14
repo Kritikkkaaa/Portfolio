@@ -30,10 +30,10 @@ type Toy = 'ticket' | 'phone' | 'plan' | 'ui' | 'kanban' | 'taste' | 'cart' | 'q
 type Card = { date: string; title: string; learnt: string; toy: Toy; link?: { text: string; href?: string } };
 type Stop = { kind: 'road' | 'detour' | 'split'; side?: 'up' | 'down'; width: number; label: string; cards: Card[] };
 const stops: Stop[] = [
-  { kind: 'road', side: 'up', width: 350, label: 'TEDx', cards: [{ date: 'jul 2021', title: 'Curated a 6 hour long TEDx event', learnt: '120 attendees, 9 speakers, 5.5 lacs in sponsorships and <em>10k steps</em> daily.', toy: 'ticket' }] },
+  { kind: 'road', side: 'up', width: 330, label: 'TEDx', cards: [{ date: 'jul 2021', title: 'Curated a 6 hour long TEDx event', learnt: '120 attendees, 9 speakers, 5.5 lacs in sponsorships and <em>10k steps</em> daily.', toy: 'ticket' }] },
   { kind: 'road', side: 'down', width: 520, label: 'GTM intern', cards: [{ date: 'may 2022', title: 'GTM Intern making Cold calls', learnt: 'Found out that I am very good at understanding what people want and how to give it to them.', toy: 'phone' }] },
-  { kind: 'road', side: 'down', width: 605, label: 'Plane', cards: [{ date: 'mar → jul 2023', title: 'First real job at Plane!', learnt: 'What is product? What is first principles thinking, and why does any of it matter?', toy: 'kanban', link: { text: 'case study · soon' } }] },
-  { kind: 'road', side: 'up', width: 520, label: 'Product Marketing Engineer', cards: [{ date: 'aug 2023 → may 2024', title: 'Product Marketing Engineer', learnt: 'Everything from website, to distribution, to competitive research, to community. Did my best work there.', toy: 'taste' }] },
+  { kind: 'road', side: 'up', width: 605, label: 'Plane', cards: [{ date: 'mar → jul 2023', title: 'First real job at Plane!', learnt: 'What is product? What is first principles thinking, and why does any of it matter?', toy: 'kanban', link: { text: 'case study · soon' } }] },
+  { kind: 'road', side: 'down', width: 520, label: 'Product Marketing Engineer', cards: [{ date: 'aug 2023 → may 2024', title: 'Product Marketing Engineer', learnt: 'Everything from website, to distribution, to competitive research, to community. Did my best work there.', toy: 'taste' }] },
   { kind: 'detour', side: 'down', width: 675, label: 'EA work', cards: [{ date: 'jun → dec 2025', title: 'EA to my previous boss, writing mails, managing his day to day indulgences', learnt: 'Learnt that i am not only a writer, but a good writer.', toy: 'quote' }] },
   { kind: 'road', side: 'down', width: 560, label: 'Marmeto', cards: [{ date: 'apr → aug 2025', title: 'Built a product component library', learnt: 'Learnt how bigger systems work in silos. Understood the importance of processes and got to manage my first team. Tried my hand at design and experience without any in-house design team.', toy: 'tokens', link: { text: 'see my work on the design system · soon' } }] },
   { kind: 'road', side: 'up', width: 540, label: 'Nexus', cards: [{ date: 'aug 2025 → sep 2026', title: 'Launched Nexus, a multi-vendor app on Shopify', learnt: 'Owned the product end to end: what to build, in what order, and why. Every demo became a requirement, every requirement a sprint.', toy: 'priority', link: { text: 'See how I found who Nexus is for', href: ICP } }] },
@@ -45,7 +45,7 @@ const nodeX = (s: Stop) => (s.kind === 'road' ? NODE : Math.round(s.width * 0.1)
 ---
 <section id="work" class="tl-wrap" aria-label="My journey so far">
 <div class="tl-head">
-<h2>My journey so far<span style="color: var(--tl-red)">!</span></h2>
+<h2>My journey so far!</h2>
 <button type="button" class="tl-zoom" aria-pressed="false" aria-label="Zoom out to see the whole route" title="See the whole route">
 <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5 L20.5 20.5 M7.5 10.5 H13.5"></path><path class="zoom-plus" d="M10.5 7.5 V13.5"></path></svg>
 </button>
@@ -111,6 +111,14 @@ const nodeX = (s: Stop) => (s.kind === 'road' ? NODE : Math.round(s.width * 0.1)
   const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let active = 0;
   let zoomed = false;
+
+  // On short windows the timeline shrinks a little (never below 80%) so the heading, the route and the buttons fit together.
+  const fit = () => {
+    const z = innerWidth < 900 ? 1 : Math.max(0.8, Math.min(1, (innerHeight - 250) / 640));
+    scroller.style.setProperty('zoom', z === 1 ? '' : String(z));
+  };
+  fit();
+  window.addEventListener('resize', fit);
 
   const left = (i: number) => items[i].offsetLeft - lead.offsetWidth;
   const goTo = (i: number) => scroller.scrollTo({ left: left(Math.max(0, Math.min(count - 1, i))), behavior: calm ? 'auto' : 'smooth' });
@@ -249,11 +257,16 @@ const nodeX = (s: Stop) => (s.kind === 'road' ? NODE : Math.round(s.width * 0.1)
   each<HTMLButtonElement>('.toy-ticket', (b) => b.addEventListener('click', () => toggle(b, 'torn')));
 
   // Sales intern: the phone rings and says hello.
-  each<HTMLButtonElement>('.toy-phone', (b) => b.addEventListener('click', () => {
-    b.classList.remove('ring');
-    void b.offsetWidth;
-    b.classList.add('ring', 'said');
-  }));
+  each<HTMLButtonElement>('.toy-phone', (b) => {
+    let hang = 0;
+    b.addEventListener('click', () => {
+      window.clearTimeout(hang);
+      b.classList.remove('ring', 'said');
+      void b.offsetWidth;
+      b.classList.add('ring', 'said');
+      hang = window.setTimeout(() => b.classList.remove('ring', 'said'), calm ? 2400 : 2700);
+    });
+  });
 
   // AutoCAD: start in the nuances, step back to the bird's eye view.
   each<HTMLButtonElement>('.toy-plan', (b) => b.addEventListener('click', () => {
