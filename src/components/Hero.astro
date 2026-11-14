@@ -1,20 +1,12 @@
 ---
 import Venn from './Venn.astro';
-// First fold: name, dropping role words, short intro, skill links and the listens / thinks / solves Venn diagram.
-const first = 'content marketer';
-const firstLetters = first.split('').map((ch, i) => ({ ch: ch === ' ' ? ' ' : ch, d: (0.35 + i * 0.05).toFixed(3) }));
+// First fold: a typed greeting, a short intro and the listens / thinks / solves Venn diagram.
+const greeting = 'Hello! I am Kritika!';
 ---
 <section id="top" aria-labelledby="hello" style="display: flex; flex-wrap: wrap; gap: 48px 56px; align-items: center; align-content: center; box-sizing: border-box; min-height: calc(100svh - 24px); padding-bottom: 24px">
 <div style="flex: 6 1 0; min-width: min(100%, 420px); display: flex; flex-direction: column; gap: 20px">
-<h1 id="hello" class="rise" style="animation-delay: 0.3s; margin: 0; font-family: 'Commissioner', system-ui, sans-serif; font-weight: 500; font-size: var(--t-display); line-height: 1; letter-spacing: -0.02em">Kritika Upadhyay<span class="roles" aria-hidden="true" style="font-family: 'Kalam', cursive; font-weight: 400; letter-spacing: 0; font-style: normal; font-size: 0.72em; color: #D8C9A3"><span class="wstack"><span class="wlayer" id="w-out"></span><span class="wlayer" id="w-in">{firstLetters.map((l) => <span class="lt ia" style={`animation-delay: ${l.d}s`}>{l.ch}</span>)}</span></span></span><span class="sr-only">, content marketer, storyteller, product manager and growth marketer</span></h1>
-<p class="rise" style="animation-delay: 0.42s; margin: 0; max-width: 560px; font-size: var(--t-lead); line-height: 1.6; color: #C9CDD5; text-wrap: pretty">grew up in product startups. i've done marketing, product, content and support. i'm at my best where deep user empathy meets product teardowns, and then i tweet about it.</p>
-<nav class="skills rise" aria-label="What i do" style="animation-delay: 0.54s; margin-left: -6px">
-<a class="skill" href="#work">product management</a><span class="dot" aria-hidden="true">·</span>
-<a class="skill" href="#work">positioning and messaging</a><span class="dot" aria-hidden="true">·</span>
-<a class="skill" href="#work">GTM</a><span class="dot" aria-hidden="true">·</span>
-<a class="skill" href="#work">events</a><span class="dot" aria-hidden="true">·</span>
-<a class="skill" href="#work">growth</a>
-</nav>
+<h1 id="hello" class="rise" aria-label={greeting} style="animation-delay: 0.3s; margin: 0; font-family: 'Commissioner', system-ui, sans-serif; font-weight: 500; font-size: var(--t-display); line-height: 1; letter-spacing: -0.02em"><span class="tp" aria-hidden="true"><span class="tp-ghost">{greeting}</span><span class="tp-live"><span id="tp-text">{greeting}</span><span class="tp-caret" id="tp-caret"></span></span></span></h1>
+<p class="rise" style="animation-delay: 0.42s; margin: 0; max-width: 560px; font-size: var(--t-lead); line-height: 1.6; color: #C9CDD5; text-wrap: pretty">After 3 years in B2B SaaS, i have found my sweet spot at the intersection of creativity, storytelling and people. In my free time, i read under the sun, so i can talk about it when i meet people next.</p>
 <div class="hd-cta-row">
 <a class="ft-primary rise" href="/work" style="animation-delay: 0.66s; align-self: flex-start">See my work<span aria-hidden="true">→</span></a>
 <span class="hd-note"><span style="font-size: 20px" aria-hidden="true">←</span> start here</span>
@@ -55,29 +47,28 @@ const firstLetters = first.split('').map((ch, i) => ({ ch: ch === ' ' ? ' ' : c
 </section>
 
 <script>
-  // Role words: letters drop in from a soft blur, the old word lifts away.
-  const words = ['content marketer', 'storyteller', 'product manager', 'growth marketer'];
-  const wIn = document.getElementById('w-in') as HTMLElement;
-  const wOut = document.getElementById('w-out') as HTMLElement;
-  const build = (host: HTMLElement, word: string, n: number, kind: 'i' | 'o') => {
-    host.textContent = '';
-    const cls = 'lt ' + kind + (n % 2 ? 'b' : 'a');
-    const step = kind === 'i' ? 0.05 : 0.025;
-    const lead = kind === 'i' ? 0.35 : 0;
-    word.split('').forEach((ch, i) => {
-      const s = document.createElement('span');
-      s.className = cls;
-      s.style.animationDelay = (lead + i * step).toFixed(3) + 's';
-      s.textContent = ch === ' ' ? ' ' : ch;
-      host.appendChild(s);
-    });
-  };
-  let ri = 0;
-  setInterval(() => {
-    const prev = words[ri];
-    ri = (ri + 1) % words.length;
-    build(wOut, prev, ri, 'o');
-    build(wIn, words[ri], ri, 'i');
-  }, 8000);
-
+  // Typed greeting: types out, holds, deletes, starts over. Reduced motion keeps it still.
+  const text = 'Hello! I am Kritika!';
+  const out = document.getElementById('tp-text') as HTMLElement;
+  const caret = document.getElementById('tp-caret') as HTMLElement;
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    const run = async () => {
+      out.textContent = '';
+      await sleep(900);
+      for (;;) {
+        caret.classList.add('typing');
+        for (let i = 1; i <= text.length; i++) { out.textContent = text.slice(0, i); await sleep(80 + Math.random() * 55); }
+        caret.classList.remove('typing');
+        await sleep(2400);
+        caret.classList.add('typing');
+        for (let i = text.length - 1; i >= 0; i--) { out.textContent = text.slice(0, i); await sleep(38); }
+        caret.classList.remove('typing');
+        await sleep(600);
+      }
+    };
+    run();
+  } else {
+    caret.style.display = 'none';
+  }
 </script>
