@@ -26,7 +26,6 @@ const boardTasks: [string, number][] = [['launch post', 0], ['case study', 0], [
 <span class="tt-main"><small>admit one</small><b>TEDx</b><span class="tt-stamp">admitted</span></span>
 <span class="tt-stub">no. 001</span>
 </button>
-<span class="toy-hint">tear the stub</span>
 </>}
 
 {c.toy === 'phone' && <>
@@ -40,7 +39,6 @@ const boardTasks: [string, number][] = [['launch post', 0], ['case study', 0], [
 </svg>
 <span class="ph-waves" aria-hidden="true"><i></i><i></i></span>
 </button>
-<span class="toy-hint">pick up the phone</span>
 </>}
 
 {c.toy === 'plan' && <>
@@ -63,7 +61,6 @@ const boardTasks: [string, number][] = [['launch post', 0], ['case study', 0], [
 </svg>
 <span class="plan-cap">1:20</span>
 </button>
-<span class="toy-hint">step back</span>
 </>}
 
 {c.toy === 'kanban' && <>
@@ -71,7 +68,6 @@ const boardTasks: [string, number][] = [['launch post', 0], ['case study', 0], [
 {boardCols.map((n, k) => <span class="kb-col" style={`left: ${k * 88}px`}><i>{n}</i></span>)}
 {boardTasks.map(([t, col], k) => <button type="button" class="kb-card" data-col={col} style={`left: ${col * 88 + 4}px; top: 26px`}>{t}</button>)}
 </div>
-<span class="toy-hint">move the cards</span>
 </>}
 
 {c.toy === 'taste' && <>
@@ -80,7 +76,6 @@ const boardTasks: [string, number][] = [['launch post', 0], ['case study', 0], [
 <span class="ta-meter"><span class="ta-fill"></span></span>
 <span class="ta-label">taste: <b>bland</b></span>
 </button>
-<span class="toy-hint">add taste</span>
 </>}
 
 {c.toy === 'cart' && <>
@@ -89,14 +84,12 @@ const boardTasks: [string, number][] = [['launch post', 0], ['case study', 0], [
 <button type="button" class="ct-add">add to cart</button></div>
 <span class="ct-bag" aria-live="polite"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C9CDD5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8 H19 L18 20 H6 Z"></path><path d="M9 8 V6 a3 3 0 0 1 6 0 V8"></path></svg><b class="ct-count">0</b></span>
 </div>
-<span class="toy-hint">add to cart</span>
 </>}
 
 {c.toy === 'quote' && <>
 <button type="button" class="toy-quote" aria-pressed="false" aria-label="Thinking and expressing what i think are two different things. Click to put the words in order.">
 {quote.map((w, k) => <span class="qw" style={`--qx: ${((k * 37) % 70) - 30}px; --qy: ${((k * 53) % 46) - 20}px; --qr: ${((k * 29) % 40) - 20}deg`}>{w}</span>)}
 </button>
-<span class="toy-hint">click to express it</span>
 </>}
 
 {c.toy === 'tokens' && <>
@@ -109,14 +102,12 @@ const boardTasks: [string, number][] = [['launch post', 0], ['case study', 0], [
 </div>
 <div class="tk-preview" style="--tk: rgb(210,69,63); --sp: 12px"><span class="tk-chip">button</span><span class="tk-chip ghost">button</span></div>
 </div>
-<span class="toy-hint">pick a token</span>
 </>}
 
 {c.toy === 'priority' && <>
 <div class="toy-priority" role="list" aria-label="Backlog. Click a ticket to make it the top priority.">
 {tickets.map((t, k) => <button type="button" role="listitem" class="pr-ticket" style={`top: ${k * 40}px`} data-k={k}><b class="pr-p">P{k}</b>{t}</button>)}
 </div>
-<span class="toy-hint">click to prioritise</span>
 </>}
 
 {c.toy === 'compass' && <>
@@ -128,7 +119,6 @@ const boardTasks: [string, number][] = [['launch post', 0], ['case study', 0], [
 </svg>
 <span class="cp-out">where next?</span>
 </button>
-<span class="toy-hint">spin it</span>
 </>}
 
 </div>
