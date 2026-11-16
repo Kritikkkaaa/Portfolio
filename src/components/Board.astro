@@ -2,7 +2,7 @@
 // Hero board (from the "Kritikal Hero Board" artifact): her photo pinned to the page like a print, with five red pen lines
 // that grow out of it one at a time (a new one every 2.6s, 13s loop), each landing on a handwritten note.
 // The print hangs from its tack: it sways a little, can be dragged and swung, tilts toward the mouse and pushes in on hover.
-// Notes use the site's Kalam tokens (--h-note, --h-hint on narrow boards). Reduced motion shows all five notes, still.
+// Notes use the site's Kalam tokens (--h-note, --h-hint on narrow boards). Lines and notes build up one by one and stay; they replay when you scroll back. Reduced motion shows all five notes, still.
 const notes = [
   { c: 'bd-n1', t: '3+ years of experience with b2b products' },
   { c: 'bd-n2', t: 'loves talking to customers' },
@@ -29,6 +29,9 @@ const notes = [
   const board = document.getElementById('bd') as HTMLElement;
   const tack = pin.querySelector('.bd-tack') as HTMLElement;
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // The five lines and notes play once, one after another, then stay. Leaving the board resets them,
+  // so scrolling back to it plays them again.
+  new IntersectionObserver((e) => { board.classList.toggle('play', e[0].isIntersecting); }, { threshold: 0.3 }).observe(board);
   if (!RM) {
     const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
     // The print hangs from the tack: a spring pendulum that follows a slow idle sway and settles after a swing.

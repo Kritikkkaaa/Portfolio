@@ -103,7 +103,7 @@ import Nav from '../../components/Nav.astro';
   const ITEMS: Item[] = [
     { title: 'who nexus is for, and how i got there', href: '/work/who-nexus-is-for', cover: 'people', paper: '#A9B9C8' },
     { title: "What I learnt building Plane's Twitter from scratch!", href: '/work/grow-planes-twitter', cover: 'twitter', paper: '#D6B79C' },
-    { title: "How I planned the launch of Plane's paid plan", href: '/work/plane-one-campaign', cover: 'campaign', paper: '#BFC995' }
+    { title: "How I launched a pricing plan on Twitter", href: '/work/plane-one-campaign', cover: 'campaign', paper: '#BFC995' }
   ];
 
   /* covers, drawn in the site's own shelf colours */
@@ -193,7 +193,7 @@ import Nav from '../../components/Nav.astro';
 
   const N = ITEMS.length;
   const STEP = 22.5;            // degrees between prints
-  const SLOTS = 360 / STEP;     // 16 prints fill the ring, items repeat
+  const SLOTS = N;              // one print per case study; the wheel stops at the first and the last, no loop
   const $ = (id: string) => document.getElementById(id) as HTMLElement;
   const rowsEl = $('ww-rows'), wheelEl = $('ww-wheel'), countEl = $('ww-count'), live = $('ww-live'), h1 = $('ww-h1');
 
@@ -204,14 +204,12 @@ import Nav from '../../components/Nav.astro';
     if (fromSite && history.length > 1) { e.preventDefault(); history.back(); }
   });
   const pad2 = (n: number) => String(n).padStart(2, '0');
-  function wrap(d: number, n: number) { d = ((d % n) + n) % n; return d > n / 2 ? d - n : d; }
+  const clamp = (v: number) => Math.max(0, Math.min(N - 1, v));
 
   let pos = 0, target = 0, active = -1, idle = 0;
 
-  // Titles repeat like the prints do (at least four in the loop), so the next one always peeks out behind the card.
-  const RN = N * Math.ceil(4 / N);
-  const rows = Array.from({ length: RN }, (_, j) => {
-    const i = j % N, it = ITEMS[i];
+  // One title per case study; the next one peeks out behind the card.
+  const rows = ITEMS.map((it, i) => {
     const el = document.createElement('div');
     el.className = 'ww-row';
     el.innerHTML = `<span class="ww-num">${pad2(i + 1)}</span><h2 class="ww-title">${it.title}</h2>`;
@@ -244,7 +242,7 @@ import Nav from '../../components/Nav.astro';
     }
     // A side print turns the wheel to itself first; only the centre one opens.
     el.addEventListener('click', (e) => {
-      const off = wrap(k - pos, SLOTS);
+      const off = k - pos;
       if (Math.abs(off) > 0.3) { e.preventDefault(); target = Math.round(pos + off); }
       else if (!it.href) e.preventDefault();
     });
@@ -270,7 +268,7 @@ import Nav from '../../components/Nav.astro';
     const cy = (free0 + free1) / 2 + R;
 
     rows.forEach((el, i) => {
-      const d = wrap(i - pos, RN);
+      const d = i - pos;
       const near = Math.min(1, Math.abs(d));
       el.style.transform = `translate3d(0, ${rowTop + d * rowH}px, 0)`;
       el.style.opacity = (1 - near * 0.8).toFixed(3);
@@ -278,7 +276,7 @@ import Nav from '../../components/Nav.astro';
     });
 
     prints.forEach((el, k) => {
-      const a = wrap(k - pos, SLOTS) * STEP;
+      const a = (k - pos) * STEP;
       if (Math.abs(a) > 62) { el.style.visibility = 'hidden'; return; }
       el.style.visibility = 'visible';
       const rad = a * Math.PI / 180;
@@ -293,7 +291,7 @@ import Nav from '../../components/Nav.astro';
       el.tabIndex = Math.abs(a) < STEP * 1.5 ? 0 : -1;
     });
 
-    const now = ((Math.round(pos) % N) + N) % N;
+    const now = clamp(Math.round(pos));
     if (now !== active) {
       active = now;
       live.textContent = `${pad2(now + 1)} of ${pad2(N)}. ${ITEMS[now].title}`;
@@ -309,7 +307,7 @@ import Nav from '../../components/Nav.astro';
   }
 
   function nudge(delta: number) {
-    target += delta;
+    target = clamp(target + delta);
     clearTimeout(idle);
     idle = window.setTimeout(() => { target = Math.round(target); }, 160);
   }
@@ -321,20 +319,22 @@ import Nav from '../../components/Nav.astro';
     nudge(Math.max(-1, Math.min(1, d / 300)));
   }, { passive: false });
 
-  let touchY: number | null = null;
-  addEventListener('touchstart', (e) => { touchY = e.touches[0].clientY; }, { passive: true });
+  // Swipe up or down, or sideways: swiping left (or up) brings the next study, right (or down) the previous one.
+  let touchX: number | null = null, touchY: number | null = null;
+  addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; touchY = e.touches[0].clientY; }, { passive: true });
   addEventListener('touchmove', (e) => {
-    if (touchY == null) return;
-    const y = e.touches[0].clientY;
-    nudge((touchY - y) / 200);
-    touchY = y;
+    if (touchX == null || touchY == null) return;
+    const x = e.touches[0].clientX, y = e.touches[0].clientY;
+    const dx = touchX - x, dy = touchY - y;
+    nudge((Math.abs(dx) > Math.abs(dy) ? dx : dy) / 200);
+    touchX = x; touchY = y;
   }, { passive: true });
-  addEventListener('touchend', () => { touchY = null; });
+  addEventListener('touchend', () => { touchX = null; touchY = null; });
 
   addEventListener('keydown', (e) => {
     if (e.defaultPrevented || e.altKey || e.metaKey || e.ctrlKey) return;
-    if (['ArrowDown', 'ArrowRight', 'PageDown'].includes(e.key)) { e.preventDefault(); target = Math.round(target) + 1; }
-    if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); target = Math.round(target) - 1; }
+    if (['ArrowDown', 'ArrowRight', 'PageDown'].includes(e.key)) { e.preventDefault(); target = clamp(Math.round(target) + 1); }
+    if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); target = clamp(Math.round(target) - 1); }
   });
 
   requestAnimationFrame(frame);

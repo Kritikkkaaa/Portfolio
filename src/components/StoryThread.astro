@@ -93,6 +93,7 @@ const nodeX = (s: Stop) => (s.kind === 'road' ? NODE : Math.round(s.width * 0.1)
 </div>
 </div>
 </div>
+<p class="tl-hint" id="tl-hint" aria-hidden="true"><span class="tl-hint-t">scroll</span> <span class="tl-hint-a">→</span></p>
 <div class="rv" id="rv" hidden>
 <svg class="rv-line" aria-hidden="true"></svg>
 {numbered.map((s, i) => s.cards.map((c, k) => <div class="rv-card" data-stop={i} data-k={k} data-kind={s.kind}><Milestone c={c} /></div>))}
@@ -130,6 +131,54 @@ const nodeX = (s: Stop) => (s.kind === 'road' ? NODE : Math.round(s.width * 0.1)
     });
     active = best;
   }, { passive: true });
+  // A mouse wheel moves the timeline sideways, smoothly.
+  // First the page settles so the whole section is on screen (its top at the top of the window); only then does
+  // the wheel move the route. At either end the wheel goes back to scrolling the page, so nobody gets stuck.
+  // Trackpads that already swipe sideways are left alone.
+  let tx = 0, gliding = 0, settling = false;
+  const maxLeft = () => scroller.scrollWidth - scroller.clientWidth;
+  const glide = () => {
+    const d = tx - scroller.scrollLeft;
+    if (calm || Math.abs(d) < 0.5) { scroller.scrollLeft = tx; gliding = 0; scroller.style.scrollSnapType = ''; return; }
+    scroller.scrollLeft += d * 0.12;
+    gliding = requestAnimationFrame(glide);
+  };
+  scroller.addEventListener('wheel', (e) => {
+    if (zoomed || e.ctrlKey || Math.abs(e.deltaX) >= Math.abs(e.deltaY)) return;
+    if (!gliding) tx = scroller.scrollLeft;
+    const max = maxLeft();
+    if ((e.deltaY < 0 && tx <= 0) || (e.deltaY > 0 && tx >= max - 1)) return;
+    e.preventDefault();
+    const top = wrap.getBoundingClientRect().top;
+    if (Math.abs(top) > 4) {
+      if (!settling) {
+        settling = true;
+        window.scrollTo({ top: scrollY + top, behavior: calm ? 'auto' : 'smooth' });
+        window.setTimeout(() => { settling = false; }, calm ? 0 : 650);
+      }
+      return;
+    }
+    if (settling) return;
+    tx = Math.max(0, Math.min(max, tx + e.deltaY * (e.deltaMode === 1 ? 32 : 1)));
+    scroller.style.scrollSnapType = 'none';
+    if (!gliding) gliding = requestAnimationFrame(glide);
+  }, { passive: false });
+
+  // The "scroll →" hint (or "swipe →" on touch screens) shows until the timeline has been moved, and again back at the start.
+  const hint = document.getElementById('tl-hint') as HTMLElement;
+  if (matchMedia('(pointer: coarse)').matches) (hint.querySelector('.tl-hint-t') as HTMLElement).textContent = 'swipe';
+  const syncHint = () => hint.classList.toggle('off', zoomed || scroller.scrollLeft > 40);
+  scroller.addEventListener('scroll', syncHint, { passive: true });
+  // It sits just above the red line, at the right edge.
+  const placeHint = () => {
+    const node = wrap.querySelector('.tl-node') as HTMLElement | null;
+    if (!node) return;
+    const r = node.getBoundingClientRect(), w = wrap.getBoundingClientRect();
+    hint.style.top = Math.round(r.top + r.height / 2 - w.top - 46) + 'px';
+  };
+  placeHint();
+  window.addEventListener('resize', placeHint);
+
   scroller.addEventListener('keydown', (e) => {
     if (zoomed || (e.target as Element).closest('.ms-toy')) return;
     const keys: Record<string, number> = { ArrowRight: active + 1, ArrowLeft: active - 1, Home: 0, End: count - 1 };
@@ -228,6 +277,7 @@ const nodeX = (s: Stop) => (s.kind === 'road' ? NODE : Math.round(s.width * 0.1)
   const setZoom = (on: boolean) => {
     zoomed = on;
     zoom?.classList.toggle('in', on);
+    hint.classList.toggle('off', on || scroller.scrollLeft > 40);
     zoom?.setAttribute('aria-pressed', String(on));
     zoom?.setAttribute('aria-label', on ? 'Back to the timeline' : 'Zoom out to see the whole route');
     const show = on ? river : scroller, hide = on ? scroller : river;

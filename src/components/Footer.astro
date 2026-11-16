@@ -64,7 +64,7 @@ const SUBSTACK = 'https://substack.com/@verykritikal/posts?utm_source=Portfolio&
   const f = (n: number) => Math.round(n * 100) / 100;
   const svg = document.getElementById('fx-svg') as unknown as SVGSVGElement;
   const STEP = 1.5, D = 4.8; // bubbles start 1.5s apart (1s to draw + half a second to read before the next); everything after them waits D seconds
-  const T_END = 12.2 + D, LOOP = 17 + D;
+  const T_END = 12.2 + D;
   const WORDS = [['brainstorm', 'new ideas'], ['argue over', 'specifics'], ['end-to-end', 'execution'], ['customer', 'empathy'], ['silly jokes'], ['a whole lot', 'of coffee']];
   // Two layouts: a wide scatter for desktop, a 2 x 3 scatter for phones (same 1:1 text size on a ~360px screen).
   const L = {
@@ -173,14 +173,16 @@ const SUBSTACK = 'https://substack.com/@verykritikal/posts?utm_source=Portfolio&
   if (!RM) {
     let last = 0, raf = 0, vis = false;
     const frame = (ts: number) => {
-      now = (now + Math.min((ts - last) / 1000, 0.05)) % LOOP; last = ts;
+      // Plays once and holds on the last line; it does not loop.
+      now = Math.min(T_END, now + Math.min((ts - last) / 1000, 0.05)); last = ts;
       draw(now);
-      raf = vis ? requestAnimationFrame(frame) : 0;
+      raf = vis && now < T_END ? requestAnimationFrame(frame) : 0;
     };
     new IntersectionObserver((es) => {
       const v = es[0].isIntersecting;
       if (v && !vis) { vis = true; last = performance.now(); if (!raf) raf = requestAnimationFrame(frame); }
-      else if (!v) vis = false;
+      // Scrolled away: rewind, so it plays again from the start next time it comes into view.
+      else if (!v) { vis = false; now = 0; draw(0); }
     }, { threshold: 0.35 }).observe(svg);
   }
 </script>
