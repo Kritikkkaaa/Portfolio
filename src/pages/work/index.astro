@@ -319,15 +319,17 @@ import Nav from '../../components/Nav.astro';
     nudge(Math.max(-1, Math.min(1, d / 300)));
   }, { passive: false });
 
-  let touchY: number | null = null;
-  addEventListener('touchstart', (e) => { touchY = e.touches[0].clientY; }, { passive: true });
+  // Swipe up or down, or sideways: swiping left (or up) brings the next study, right (or down) the previous one.
+  let touchX: number | null = null, touchY: number | null = null;
+  addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; touchY = e.touches[0].clientY; }, { passive: true });
   addEventListener('touchmove', (e) => {
-    if (touchY == null) return;
-    const y = e.touches[0].clientY;
-    nudge((touchY - y) / 200);
-    touchY = y;
+    if (touchX == null || touchY == null) return;
+    const x = e.touches[0].clientX, y = e.touches[0].clientY;
+    const dx = touchX - x, dy = touchY - y;
+    nudge((Math.abs(dx) > Math.abs(dy) ? dx : dy) / 200);
+    touchX = x; touchY = y;
   }, { passive: true });
-  addEventListener('touchend', () => { touchY = null; });
+  addEventListener('touchend', () => { touchX = null; touchY = null; });
 
   addEventListener('keydown', (e) => {
     if (e.defaultPrevented || e.altKey || e.metaKey || e.ctrlKey) return;

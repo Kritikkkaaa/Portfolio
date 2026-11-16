@@ -242,6 +242,18 @@
   .lessons.long p strong { font-weight: 600; }
   .card a { text-underline-offset: 3px; }
   .card.story-card a:hover { color: var(--red); }
+
+  /* Phones: one column, and one card, post or picture on screen at a time, each sized to fit the screen so it can be read
+     without zooming. These come last so they win over the desktop layouts above. Desktop is unchanged. */
+  @media (max-width: 820px) {
+    .pair, .trio, .versus, .tweets, .tweets.four, .village { grid-template-columns: 1fr !important; justify-content: stretch; justify-items: center; }
+    .trio .card.story-card, .pair .card.story-card, .village .card.story-card { justify-self: stretch; }
+    .ch-body > *, .trio > *, .pair > *, .tweets > *, .versus > * { min-width: 0; }
+    .tweet, .tweets.four .tweet { width: auto; max-width: 100%; }
+    .tweet img, .tweet video { width: auto; max-width: 100%; max-height: 72svh; margin: 0 auto; }
+    .item { justify-items: center; }
+    .card.story-card { font-size: 17px; }
+  }
 </style>
 </head>
 <body>

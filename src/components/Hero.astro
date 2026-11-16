@@ -3,12 +3,12 @@ import Board from './Board.astro';
 // First fold: a typed greeting, a short intro and the pinned photo board (Board.astro).
 const greeting = 'Hello, I am Kritika';
 ---
-<section id="top" aria-labelledby="hello" style="display: flex; flex-wrap: wrap; gap: 48px 56px; align-items: center; align-content: center; box-sizing: border-box; min-height: calc(100svh - 24px); padding-bottom: 24px">
-<div style="flex: 6 1 0; min-width: min(100%, 420px); display: flex; flex-direction: column; gap: 36px">
+<section id="top" class="hero" aria-labelledby="hello" style="display: flex; flex-wrap: wrap; gap: 48px 56px; align-items: center; align-content: center; box-sizing: border-box; min-height: calc(100svh - 24px); padding-bottom: 24px">
+<div class="hero-txt" style="flex: 6 1 0; min-width: min(100%, 420px); display: flex; flex-direction: column; gap: 36px">
 <h1 id="hello" class="rise" aria-label={greeting} style="animation-delay: 0.3s; margin: 0; font-family: 'Commissioner', system-ui, sans-serif; font-weight: 500; font-size: var(--t-display); line-height: 1; letter-spacing: -0.02em"><span class="tp" aria-hidden="true"><span class="tp-ghost">{greeting}</span><span class="tp-live"><span id="tp-text">{greeting}</span><span class="tp-caret" id="tp-caret"></span></span></span></h1>
 <div class="rise" style="animation-delay: 0.42s; display: flex; flex-direction: column; gap: 18px">
-<p style="margin: 0; max-width: 560px; font-size: var(--t-lead); font-weight: 300; line-height: 1.75; color: #C9CDD5; text-wrap: pretty">After 3 years in Product startups, I have found my sweet spot. Where <span style="font-family: 'Kalam', cursive; font-size: 1.1em; color: #D8C9A3">creativity, storytelling and empathy</span> intersect. I believe the best marketing makes it easy to decide.</p>
-<p style="margin: 0; max-width: 560px; font-size: var(--t-lead); font-weight: 300; line-height: 1.75; color: #C9CDD5; text-wrap: pretty">Off the clock, I read books and tarot under the sun, watch shows that shape our culture and write personal essays on Substack.</p>
+<p class="hero-p" style="margin: 0; max-width: 560px; font-size: var(--t-lead); font-weight: 300; line-height: 1.75; color: #C9CDD5; text-wrap: pretty">After 3 years in Product startups, I have found my sweet spot. Where <span style="font-family: 'Kalam', cursive; font-size: 1.1em; color: #D8C9A3">creativity, storytelling and empathy</span> intersect. I believe the best marketing makes it easy to decide.</p>
+<p class="hero-p" style="margin: 0; max-width: 560px; font-size: var(--t-lead); font-weight: 300; line-height: 1.75; color: #C9CDD5; text-wrap: pretty">Off the clock, I read books and tarot under the sun, watch shows that shape our culture and write personal essays on Substack.</p>
 </div>
 <div class="hd-cta-row">
 <a class="ft-primary rise" href="/work" style="animation-delay: 0.66s; align-self: flex-start">See my work<span aria-hidden="true">→</span></a>
@@ -16,8 +16,8 @@ const greeting = 'Hello, I am Kritika';
 </div>
 </div>
 
-<div class="fade" style="animation-delay: 0.4s; flex: 4 1 0; min-width: 300px; display: flex; justify-content: center">
-<div style="width: 100%; max-width: 500px">
+<div class="fade hero-bd" style="animation-delay: 0.4s; flex: 4 1 0; min-width: 300px; display: flex; justify-content: center">
+<div class="hero-bd-in" style="width: 100%; max-width: 500px">
 <Board />
 </div>
 </div>

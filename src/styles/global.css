@@ -860,3 +860,16 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
 .tl-next .ms-text{flex:none;width:auto}
 .tl-next h3{white-space:nowrap;text-align:center}
 @media (max-width:700px){.tl-close{font-size:30px}.tl-next h3{white-space:normal;max-width:84vw}}
+
+/* Home first fold on phones: everything starts below the menu icon, the photo board comes first and the text follows,
+   sized so the whole fold reads on one phone screen. Desktop is unchanged. */
+@media (max-width: 700px) {
+  .hero { padding-top: 64px; gap: 18px !important; align-content: flex-start !important; min-height: 0 !important; }
+  .hero .hero-bd { order: -1; min-width: 0 !important; flex-basis: 100% !important; }
+  .hero .hero-bd-in { max-width: min(300px, calc((100svh - 400px) * 500 / 680)) !important; }
+  .hero .hero-txt { gap: 16px !important; }
+  .hero h1 { font-size: 36px !important; }
+  .hero .hero-txt > div:not(.hd-cta-row) { gap: 10px !important; }
+  .hero .hero-p { font-size: 16px !important; line-height: 1.55 !important; }
+}
+@container (max-width: 320px) { .bd-nt { font-size: 13px; } }
