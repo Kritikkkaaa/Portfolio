@@ -39,14 +39,14 @@ const posts = [
 // The board. Five sections stacked down it, each read top to bottom, column by column.
 // Every item has a desktop position (section-local x, y); on phones the same items stack in reading order.
 // Kinds: note (blue sticky), check (list card), page (white sheet with a chart or the positioning),
-// place (empty placeholder sheet), learnt (green sticky), shot and qa (documents pinned to a card, tied to it
+// place (empty placeholder sheet), vp (a value proposition row: the old way, with nexus, messaging), learnt (green sticky), shot and qa (documents pinned to a card, tied to it
 // by a dotted thread), label (a column heading written on the board).
-type Kind = 'note' | 'check' | 'page' | 'place' | 'learnt' | 'shot' | 'qa' | 'label';
+type Kind = 'note' | 'check' | 'page' | 'place' | 'vp' | 'learnt' | 'shot' | 'qa' | 'label';
 type Item = {
   id: string; kind: Kind; x: number; y: number; w: number; h?: number; r?: number; skills?: string[];
   text?: string; label?: string; items?: string[]; chart?: 'donut' | 'pie' | 'pos';
   src?: string; iw?: number; ih?: number; alt?: string; caption?: string; qa?: [string, string][];
-  with?: string; color?: string;
+  with?: string; color?: string; old?: string[]; nexus?: string[]; msgH?: string; msg?: string;
 };
 type Sec = { title: string; chip: number; slug: string; items: Item[] };
 const sectionsRaw: Sec[] = [
@@ -77,8 +77,21 @@ const sectionsRaw: Sec[] = [
   { title: 'what value do they get?', chip: 1, slug: 'what-they-get', items: [
     { id: 's3-ctx', kind: 'note', x: 40, y: 130, w: 520, h: 170, r: -1.2, skills: ['positioning'],
       text: 'once i knew who they were, i asked what they actually get from nexus.' },
-    { id: 's3-vp', kind: 'place', x: 600, y: 130, w: 520, h: 260, r: 0.8, skills: ['positioning'],
-      text: 'value proposition goes here. i will send it. no invented copy.' }
+    // The value proposition, word for word from Kritika's doc, with its own capitals.
+    { id: 's3-sum', kind: 'note', x: 600, y: 130, w: 520, h: 190, r: 0.8, skills: ['positioning'],
+      text: 'For Shopify brands, Nexus makes running a multi-vendor marketplace simple: to decide on, to set up, and to grow.' },
+    { id: 's3-use', kind: 'vp', x: 40, y: 390, w: 460, h: 860, r: -0.6, skills: ['positioning'], label: 'Simple to use',
+      old: ['Onboard vendors and chase them for information', 'Teach vendors how to use a new platform', 'Hand-hold them through the first few weeks'],
+      nexus: ['Sellers sign up through your branded link. All information collected before onboarding not after.', 'Each seller lands on their own dashboard for products, orders and payouts', 'Guided steps take them from sign-up to their first product'],
+      msgH: 'Onboard sellers without becoming their help desk.', msg: 'Collect everything at sign-up, not after. Guided steps take each seller from joining to their first product.' },
+    { id: 's3-grow', kind: 'vp', x: 570, y: 390, w: 460, h: 860, r: 0.7, skills: ['positioning'], label: 'Simple to grow with',
+      old: ['A new seller sends an Excel sheet for you to review', 'Your team uploads every product to Shopify by hand', 'After delivery, your team calculates commissions by hand'],
+      nexus: ['Sellers upload and manage their own products on their dashboard', 'You review, add remarks or approve them from your dashboard', 'Nexus calculates each commission. You review it and pay.'],
+      msgH: 'Add sellers, not spreadsheets.', msg: 'No more Excel sheets to review or products to upload by hand. Sellers manage their own listings, and Nexus works out every commission.' },
+    { id: 's3-mig', kind: 'vp', x: 1100, y: 390, w: 460, h: 860, r: -0.8, skills: ['positioning'], label: 'Simple to migrate',
+      old: ['Demo to understand the product.', 'Quotes and pricing for a custom build', 'Migration plan after all is decided'],
+      nexus: ['Install Nexus from Shopify app store', 'Try everything for 14 days, no demos needed', 'Start on your existing Shopify store'],
+      msgH: 'No migration plan required.', msg: 'Install from the Shopify App Store and run it on your live store for 14 days.' }
   ] },
   { title: 'why build nexus at all?', chip: 2, slug: 'why-nexus', items: [
     { id: 's4-ctx', kind: 'note', x: 40, y: 130, w: 520, h: 320, r: -1.2, skills: ['research', 'positioning'],
@@ -181,7 +194,7 @@ const mSecRects = sections.map((s) => ({ x: 0, y: s.my, w: MW, h: s.mh }));
 const skillCount = (id: string) => [...pieces, ...docs, ...posts].filter((p) => p.skills.includes(id)).length;
 // Read time from the word count of everything written on the page, at 230 words a minute.
 const words = [title, description, ...questions, coverCaption, ...sections.map((s) => s.title), closing,
-  ...all.flatMap((p) => [p.text ?? '', p.label ?? '', ...(p.items ?? []), ...(p.qa ?? []).flat()]),
+  ...all.flatMap((p) => [p.text ?? '', p.label ?? '', ...(p.items ?? []), ...(p.qa ?? []).flat(), ...(p.old ?? []), ...(p.nexus ?? []), p.msgH ?? '', p.msg ?? '']),
   'current segmentation of users', 'current installs with primary ICP', 'previous positioning free to start current positioning simple to start, manage and grow a marketplace'
 ].join(' ').split(/\s+/).filter(Boolean).length;
 const readMins = Math.max(1, Math.round(words / 230));
@@ -205,7 +218,7 @@ let donutAt = 0;
 const donut = donutRaw.map((d) => { const len = (d.stores / 240) * DONUT_C; const seg = { ...d, len: Math.max(len - 3, 1), off: donutAt }; donutAt += len; return seg; });
 
 const pos = (p: { ax: number; ay: number; amx: number; amy: number }) => `--x:${p.ax}px;--y:${p.ay}px;--mx:${p.amx}px;--my:${p.amy}px;`;
-const cls: Record<string, string> = { note: 'note slot-ctx', learnt: 'note slot-learnt', check: 'check', page: 'page', place: 'page pc-place' };
+const cls: Record<string, string> = { note: 'note slot-ctx', learnt: 'note slot-learnt', check: 'check', page: 'page', place: 'page pc-place', vp: 'page pc-vp' };
 ---
 <Base title="who nexus is for, and how i got there · Kritika Upadhyay" description={description}>
 <Nav />
@@ -272,6 +285,16 @@ const cls: Record<string, string> = { note: 'note slot-ctx', learnt: 'note slot-
   : p.text!.split('\n\n').map((t) => <p class="note-t">{t}</p>)}</div>}
 {p.kind === 'learnt' && <div class="note-b"><p class="pos-k">{p.label}</p><p class="note-t">{p.text}</p></div>}
 {p.kind === 'place' && <p class="vp-hole">{p.text}</p>}
+{p.kind === 'vp' && <>
+<p class="vp-k">{p.label}</p>
+<p class="vp-h">The old way</p>
+<ol class="vp-ol">{p.old!.map((t) => <li>{t}</li>)}</ol>
+<p class="vp-h">With Nexus</p>
+<ol class="vp-ol">{p.nexus!.map((t) => <li>{t}</li>)}</ol>
+<p class="vp-h">Messaging</p>
+<p class="vp-mh">{p.msgH}</p>
+<p class="vp-m">{p.msg}</p>
+</>}
 {p.kind === 'check' && <ul class="ck-list">
 {p.items!.map((it) => <li><span class="ck-q" aria-hidden="true">?</span><span>{it}</span></li>)}
 </ul>}
@@ -471,6 +494,13 @@ const cls: Record<string, string> = { note: 'note slot-ctx', learnt: 'note slot-
 /* The value proposition is still to come: an empty sheet with a dashed outline says so. */
 .pc-place{display:flex;align-items:center;justify-content:center;padding:34px 40px;background:rgba(255,255,255,.06);border:3px dashed #8A8D96;box-shadow:none;color:#C9CDD5}
 .pc-place::before,.pc-place::after{display:none}
+.pc-vp{display:flex;flex-direction:column}
+.vp-k{margin:0 0 6px;font-size:32px;font-weight:600;letter-spacing:-.01em}
+.vp-h{margin:22px 0 10px;padding-top:14px;border-top:1px solid #DADAD4;font-size:15px;font-weight:600;letter-spacing:.14em;color:#5A5A62}
+.vp-ol{display:flex;flex-direction:column;gap:8px;margin:0;padding:0 0 0 24px;font-size:19px;line-height:1.4}
+.vp-ol li::marker{color:#E08A4C;font-weight:600}
+.vp-mh{margin:0 0 8px;font-size:22px;font-weight:600;line-height:1.3}
+.vp-m{margin:0;font-size:19px;line-height:1.45;color:#3A3A42}
 .vp-hole{margin:0;font-family:'Kalam',cursive;font-weight:300;font-size:30px;line-height:1.2;text-align:center}
 
 .ic-world.filtering .pc{filter:saturate(.3) brightness(.55)}
@@ -508,11 +538,12 @@ const cls: Record<string, string> = { note: 'note slot-ctx', learnt: 'note slot-
 .end-btn.quiet:hover,.end-btn.quiet:focus-visible{color:#EFEFEE;border-color:#A9AFB9;outline:none}
 .end-btn:focus-visible{box-shadow:0 0 0 4px #141416,0 0 0 7px #EFEFEE}
 
-/* Phones and touch screens: the board is one screen tall, laid out as one column, opens zoomed out,
-   and the reader explores it directly. */
+/* Phones and touch screens: the board is laid out as one column, scaled to the screen's width and scrolled
+   straight down with the page. No zoomed-out view, no zoom control, no panning. */
 .ic.touch .ic-board{height:auto}
-.ic.touch .ic-view{position:relative;height:100svh}
-.ic.touch .ic-view.zoomed{touch-action:none}
+.ic.touch .ic-view{position:relative;height:auto;touch-action:auto}
+.ic.touch .ic-world{cursor:auto}
+.ic.touch #zoom{display:none}
 .ic.touch .ic-world{width:var(--mww);height:var(--mwh)}
 .ic.touch .pc,.ic.touch .ic-sec-h,.ic.touch .ic-col-k{left:var(--mx);top:var(--my)}
 .ic.touch .ic-sec-h{width:500px;white-space:normal}
@@ -575,12 +606,6 @@ const cls: Record<string, string> = { note: 'note slot-ctx', learnt: 'note slot-
     const vw = view.clientWidth, vh = view.clientHeight - BAR;
     const s = Math.min(vw / (r.w * 1.08), vh / (r.h * 1.08));
     return { tx: vw / 2 - (r.x + r.w / 2) * s, ty: vh / 2 - (r.y + r.h / 2) * s, s };
-  };
-  // On phones a section is a tall column: zoom to its width and start at its top.
-  const fitTop = (r: Area): Cam => {
-    const vw = view.clientWidth;
-    const s = Math.min(1.2, vw / (r.w * 1.04));
-    return { tx: vw / 2 - (r.x + r.w / 2) * s, ty: 16 - r.y * s, s };
   };
   const put = (c: Cam, animate = false) => {
     world.classList.toggle('anim', animate && !calm);
@@ -666,15 +691,38 @@ const cls: Record<string, string> = { note: 'note slot-ctx', learnt: 'note slot-
     if (on) { show(0); progress(current, frames.length); fillThread(null); } else draw();
   };
 
-  // Moving between sections: on desktop, by scrolling the story there; on touch, by zooming the camera.
-  const touchGo = (sec: number) => {
+  // Phones: no zoomed-out board, no zoom and no panning. The one-column board is scaled to the screen's width
+  // and sits in the page, so the reader scrolls straight down and each card pins up as it scrolls into view.
+  const viewTop = () => view.getBoundingClientRect().top + window.scrollY;
+  const layoutPhone = () => {
+    cam = { tx: 0, ty: 0, s: view.clientWidth / W.w };
+    // Extra room under the ending so the control bar never covers its buttons.
+    view.style.height = `${Math.ceil(W.h * cam.s) + 110}px`;
+    put(cam);
+  };
+  const phoneScroll = () => {
+    const s = cam.s, top = view.getBoundingClientRect().top, vh = window.innerHeight;
+    pieces.forEach((p) => { if (!p.classList.contains('on') && top + p.offsetTop * s < vh * 0.85) p.classList.add('on'); });
+    ties.forEach((t) => t.classList.toggle('on', !!document.getElementById(t.dataset.for!)?.classList.contains('on')));
+    threads.forEach((p) => {
+      const b = p.getBBox();
+      const v = Math.max(0, Math.min(1, (vh * 0.7 - (top + b.y * s)) / Math.max(1, b.height * s)));
+      p.style.strokeDashoffset = `${1 - v}`;
+    });
+    let sec = -1;
+    secs.forEach((r, i) => { if (top + r.y * s < vh * 0.4) sec = i; });
     current = sec;
-    view.classList.toggle('zoomed', sec >= 0);
-    cam = sec >= 0 ? fitTop(secs[sec]) : fit(all);
-    put(cam, true);
-    progress(sec, frames.length);
-    out = sec < 0;
-    setOut(out);
+    steps.forEach((b, c) => b.classList.toggle('on', sec >= 0 && c === chipOf[sec]));
+    fills.forEach((f, c) => {
+      const a = secs[firstSecOf(c)], z = secs[lastSecOf(c)];
+      const y0 = top + a.y * s, y1 = top + (z.y + z.h) * s;
+      f.style.width = `${Math.max(0, Math.min(1, (vh * 0.4 - y0) / (y1 - y0))) * 100}%`;
+    });
+  };
+  // Moving between sections: on desktop, by scrolling the story there; on phones, by scrolling the column there.
+  const touchGo = (sec: number, behavior: ScrollBehavior = calm ? 'auto' : 'smooth') => {
+    if (sec < 0) return;
+    window.scrollTo({ top: viewTop() + secs[sec].y * cam.s - 12, behavior });
   };
   const goSection = (sec: number) => {
     if (touch) return touchGo(sec);
@@ -725,6 +773,7 @@ const cls: Record<string, string> = { note: 'note slot-ctx', learnt: 'note slot-
   const ptrs = new Map<number, { x: number; y: number }>();
   let moved = 0, pinch = 0;
   view.addEventListener('pointerdown', (e) => {
+    if (touch) return;
     ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
     moved = 0;
     if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch = Math.hypot(a.x - b.x, a.y - b.y); }
@@ -761,6 +810,7 @@ const cls: Record<string, string> = { note: 'note slot-ctx', learnt: 'note slot-
   });
   view.addEventListener('pointercancel', (e) => { ptrs.delete(e.pointerId); pinch = 0; });
   view.addEventListener('wheel', (e) => {
+    if (touch) return;
     if (e.ctrlKey) {
       e.preventDefault();
       if (!exploring) explore(true);
@@ -792,8 +842,8 @@ const cls: Record<string, string> = { note: 'note slot-ctx', learnt: 'note slot-
     if (first < 0) {
       window.scrollTo({ top: 0, behavior: calm ? 'auto' : 'smooth' });
     } else if (touch) {
-      view.scrollIntoView({ behavior: calm ? 'auto' : 'smooth' });
-      touchGo(frames[first].sec);
+      const el = document.getElementById(frames[first].show[0])!;
+      window.scrollTo({ top: viewTop() + el.offsetTop * cam.s - 90, behavior: calm ? 'auto' : 'smooth' });
     } else {
       explore(false);
       window.scrollTo({ top: boardTop() + frameAt(first) + 2, behavior: calm ? 'auto' : 'smooth' });
@@ -806,17 +856,17 @@ const cls: Record<string, string> = { note: 'note slot-ctx', learnt: 'note slot-
   window.addEventListener('scroll', () => {
     if (queued) return;
     queued = true;
-    requestAnimationFrame(() => { queued = false; draw(); bar(); });
+    requestAnimationFrame(() => { queued = false; if (touch) phoneScroll(); else draw(); bar(); });
   }, { passive: true });
-  window.addEventListener('resize', () => { size(); if (touch) touchGo(current); else draw(); bar(); });
+  window.addEventListener('resize', () => { size(); if (touch) { layoutPhone(); phoneScroll(); } else draw(); bar(); });
 
   size();
-  if (touch) { show(0); touchGo(-1); fillThread(null); } else draw();
+  if (touch) { layoutPhone(); phoneScroll(); } else draw();
   // Deep links: #what-i-knew, #who-gets-the-most-value, #what-they-get, #why-nexus or #what-changed opens that section.
   const slugs: string[] = JSON.parse(board.dataset.slugs!);
   const deep = slugs.indexOf(location.hash.slice(1));
   if (deep >= 0) {
-    if (touch) { view.scrollIntoView(); touchGo(deep); }
+    if (touch) { touchGo(deep, 'auto'); phoneScroll(); }
     else window.scrollTo({ top: boardTop() + frameAt(firstFrameOf(deep)) + 2, behavior: 'auto' });
   }
   bar();
