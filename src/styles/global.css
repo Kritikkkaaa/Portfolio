@@ -873,3 +873,19 @@ a{color:#E8EBF0}a:hover{color:#FFFFFF}
   .hero .hero-p { font-size: 16px !important; line-height: 1.55 !important; }
 }
 @container (max-width: 320px) { .bd-nt { font-size: 13px; } }
+
+/* Phones: journey header stacks as heading, handwritten line, then the two buttons */
+@media (max-width: 700px) {
+  .tl-head .hd-note { order: 1; }
+  .tl-head .tl-cta { order: 2; flex-basis: 100%; justify-content: flex-start; margin: 14px 0 0 !important; }
+}
+
+/* Phones: each journey animation sits below the red line, under its card's text */
+@media (max-width: 700px) {
+  .tl-card .ms { flex-direction: column; align-items: flex-start; gap: 18px; }
+  .tl-scroller { --tl-h: 720px; }
+  .tl-card .ms-text, .tl-card .ms-toy { flex: none !important; }
+  .tl-card .ms-text { width: min(300px, 78vw); }
+  .tl-card.up .ms-toy { position: absolute; left: 23px; top: calc(100% + 44px); }
+  .tl-item.detour .tl-card.up .ms-toy { top: calc(100% + 124px); }
+}
