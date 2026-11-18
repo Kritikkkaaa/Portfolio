@@ -21,17 +21,16 @@ const COFFEE = '#coffee', TEDX = '#tedx', TAROT = '#tarot', COVER = '#substack';
 const planeLogo = `<svg class="logo" width="130" height="81" viewBox="0 0 579 361" role="img" aria-label="Plane logo"><path d="M0 20.6413C0 5.3174 16.1 -4.64793 29.7966 2.20067L147.972 61.3502V200.168C147.972 219.674 158.992 237.527 176.417 246.248L283.068 299.63V340.352C283.068 355.675 266.968 365.641 253.271 358.779L28.4447 246.248C11.0201 237.527 0 219.688 0 200.168V20.6413ZM147.972 20.6413C147.972 5.3174 164.072 -4.64793 177.769 2.21435L295.945 61.3638V200.182C295.945 219.688 306.965 237.541 324.39 246.262L431.041 299.643V340.366C431.041 355.689 414.94 365.654 401.244 358.792L283.068 299.643V160.826C283.068 141.306 272.048 123.466 254.623 114.744L147.972 61.3638V20.6413ZM295.931 20.6413C295.931 5.3174 312.032 -4.64793 325.728 2.21435L550.555 114.744C567.993 123.466 579 141.306 579 160.826V340.366C579 355.689 562.899 365.654 549.203 358.792L431.027 299.643V160.826C431.027 141.306 420.007 123.466 402.582 114.744L295.931 61.3638V20.6413Z" fill="#1C1B1F"></path></svg>`;
 // "she substacks": a cutout of a writer at her laptop
 const carrie = '<img src="/desk/carrie.png" alt="a woman writing at her laptop, thinking" style="max-width: 150px; max-height: 182px">';
-// "Tech jobs and their stories.": the Plane logo and the Nexus symbol, each on its own white tile, stacked;
-// on hover the tiles fan apart
-const nexusSymbol = `<svg class="nx" width="84" height="49" viewBox="0 0 400 232" role="img" aria-label="Nexus symbol"><path fill-rule="evenodd" fill="#1C1B1F" d="M2 116 L46 0 L213 0 L169 232 L46 232 Z M74 116 L99 46 L166 46 L166 186 L99 186 Z M247 0 L354 0 L398 116 L354 232 L203 232 Z M256 46 L320 46 L346 116 L320 186 L258 186 Z"></path></svg>`;
-const techPair = `<span class="pair"><span class="tile t-nx">${nexusSymbol}</span><span class="tile t-pl">${planeLogo}</span></span>`;
+// "Tech jobs and their stories.": a little desk of her work, cut from her own photos: the laptop (showing
+// Plane's GitHub star history), the pen cup and the notebook stack. On hover they shift apart a little.
+const workGroup = `<span class="wgrp"><img class="wp" src="/desk/work-pens.png" alt="a mesh cup full of pens"><img class="wl" src="/desk/work-laptop.png" alt="kritika's laptop showing plane's github star history climbing"><img class="wn" src="/desk/work-notebooks.png" alt="a notebook stack with yellow sticky notes on top"></span>`;
 
 // Phone column, in number order.
 const items = [
   { n: 1, name: 'say hello', href: JOURNEY, say: true, art: '<img src="/desk/kritika-mirror.png" alt="kritika taking a mirror selfie in a white top and green checked trousers" style="max-width: 240px; max-height: 260px">' },
   { n: 2, name: 'my coffee reccs!', href: COFFEE, art: '<img src="/desk/iced-latte.png" alt="an iced latte in a tall glass">' },
   { n: 3, name: 'she substacks', href: COVER, art: carrie },
-  { n: 4, name: 'Tech jobs and their stories.', href: WORK, art: techPair },
+  { n: 4, name: 'Tech jobs and their stories.', href: WORK, art: workGroup },
   { n: 5, name: 'tedx bitd', href: TEDX, art: '<img src="/desk/tedx-x.png" alt="a big red handmade x from tedx bitd">' },
   { n: 6, name: 'the world', href: TAROT, art: '<img src="/desk/the-world-tarot.png" alt="the world tarot card">' }
 ];
@@ -73,17 +72,17 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 .fig{position:absolute;font-family:Geist,sans-serif;font-weight:500;font-size:15px;color:#B4502F}
 /* each cutout's number sits right by its image */
 .no{position:absolute;font-family:Geist,sans-serif;font-weight:500;font-size:17px;color:#B4502F;pointer-events:none}
-/* Tech jobs: two white tiles stacked, Nexus behind, Plane in front; hovering fans them apart */
-.pair{position:relative;display:block;width:240px;height:160px}
-.tile{position:absolute;left:50%;top:50%;width:150px;height:100px;margin:-50px 0 0 -75px;display:flex;align-items:center;justify-content:center;background:#fff;box-shadow:0 10px 20px rgba(70,50,35,.16),0 1px 3px rgba(70,50,35,.10);transition:transform .6s cubic-bezier(.3,1.3,.5,1)}
-.tile svg{display:block;filter:none !important}
-.tile.t-nx{justify-content:flex-end;align-items:flex-start;box-sizing:border-box;padding:10px 12px;transform:translate(52px,-50px) rotate(6deg)}
-.tile.t-pl{transform:translate(-12px,12px) rotate(-3deg)}
-.tile.t-pl svg{width:100px;height:62px}.tile.t-nx svg{width:62px;height:36px}
-.cut:hover .tile.t-nx,.cut.hl .tile.t-nx,.cut:focus-visible .tile.t-nx,.m-item .tile.t-nx{transform:translate(84px,-6px) rotate(4deg);justify-content:center;align-items:center}
-.cut:hover .tile.t-pl,.cut.hl .tile.t-pl,.cut:focus-visible .tile.t-pl,.m-item .tile.t-pl{transform:translate(-70px,6px) rotate(-4deg)}
-.m-item .pair{width:300px;transform:scale(.9)}
-@media (prefers-reduced-motion: reduce){.tile{transition:none}}
+/* Tech jobs: pen cup at the back, laptop beside it, notebooks in front (hiding the cup's trimmed base) */
+.wgrp{position:relative;display:block;width:300px;height:230px}
+.wgrp img{position:absolute;display:block;max-width:none !important;max-height:none !important;filter:drop-shadow(0 7px 9px rgba(70,50,35,.20));transition:transform .6s cubic-bezier(.3,1.3,.5,1)}
+.wgrp .wp{left:26px;top:52px;width:80px;transform:rotate(-4deg)}
+.wgrp .wl{left:104px;top:8px;width:172px}
+.wgrp .wn{left:0;top:150px;width:150px;transform:rotate(2deg)}
+.cut:hover .wgrp .wp,.cut.hl .wgrp .wp,.cut:focus-visible .wgrp .wp{transform:translate(-14px,-6px) rotate(-9deg)}
+.cut:hover .wgrp .wl,.cut.hl .wgrp .wl,.cut:focus-visible .wgrp .wl{transform:translate(10px,-10px) rotate(1.5deg)}
+.cut:hover .wgrp .wn,.cut.hl .wgrp .wn,.cut:focus-visible .wgrp .wn{transform:translate(-8px,8px) rotate(-1deg)}
+.m-item .wgrp{transform:scale(.9)}
+@media (prefers-reduced-motion: reduce){.wgrp img{transition:none}}
 /* contents: one paragraph, numbers in terracotta */
 .toc{position:absolute;left:960px;top:722px;width:470px;margin:0;font-family:'Hanken Grotesk',sans-serif;font-size:18px;line-height:1.4;color:#6f6862}
 .toc a{white-space:nowrap;margin-right:.55em}
@@ -266,8 +265,8 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 <span class="no" aria-hidden="true" style="left: -16px; top: 12px">3</span>
 </a>
 
-<a href={WORK} class="cut c-tech" data-id="tech" aria-label="Tech jobs and their stories." style="left: 92px; top: 400px; width: 240px; height: 160px">
-<div class="box" set:html={techPair}></div>
+<a href={WORK} class="cut c-tech" data-id="tech" aria-label="Tech jobs and their stories." style="left: 80px; top: 372px; width: 300px; height: 230px">
+<div class="box" set:html={workGroup}></div>
 <span class="no" aria-hidden="true" style="left: -6px; top: 6px">4</span>
 </a>
 
