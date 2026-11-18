@@ -1,19 +1,189 @@
 ---
-import Base from '../layouts/Base.astro';
-import Doodles from '../components/Doodles.astro';
-import Nav from '../components/Nav.astro';
-import Hero from '../components/Hero.astro';
-import StoryThread from '../components/StoryThread.astro';
-import Footer from '../components/Footer.astro';
+// Home ("/"): the desk spread. Desktop is a fixed 1512x982 design scaled to fit the window;
+// below 768px it becomes one scrolling column. Images live in public/desk/.
+// The previous home page now lives at /home (src/pages/home.astro).
+import Analytics from '../components/Analytics.astro';
+
+const WORK = '/work';
+const TWITTER = 'https://x.com/verykritikal?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
+const SUBSTACK = 'https://substack.com/@verykritikal/posts?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
+const INSTAGRAM = 'https://www.instagram.com/verykritikal/?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
+const LINKEDIN = 'https://www.linkedin.com/in/kritika-upadhyay-2001/?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
+const EMAIL = 'mailto:kritikaupadhyay2001@gmail.com';
+const WHATSAPP = '#whatsapp'; // set to 'https://wa.me/<number with country code, no +>'
+const ext = (href: string) => href.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {};
+
+// Placeholders until their pages exist: say hello, coffee, tedx bitd, the world, she substacks.
+const HELLO = '#hello', COFFEE = '#coffee', TEDX = '#tedx', TAROT = '#tarot', COVER = '#substack';
+
+const planeLogo = `<svg class="logo" width="130" height="81" viewBox="0 0 579 361" role="img" aria-label="Plane logo"><path d="M0 20.6413C0 5.3174 16.1 -4.64793 29.7966 2.20067L147.972 61.3502V200.168C147.972 219.674 158.992 237.527 176.417 246.248L283.068 299.63V340.352C283.068 355.675 266.968 365.641 253.271 358.779L28.4447 246.248C11.0201 237.527 0 219.688 0 200.168V20.6413ZM147.972 20.6413C147.972 5.3174 164.072 -4.64793 177.769 2.21435L295.945 61.3638V200.182C295.945 219.688 306.965 237.541 324.39 246.262L431.041 299.643V340.366C431.041 355.689 414.94 365.654 401.244 358.792L283.068 299.643V160.826C283.068 141.306 272.048 123.466 254.623 114.744L147.972 61.3638V20.6413ZM295.931 20.6413C295.931 5.3174 312.032 -4.64793 325.728 2.21435L550.555 114.744C567.993 123.466 579 141.306 579 160.826V340.366C579 355.689 562.899 365.654 549.203 358.792L431.027 299.643V160.826C431.027 141.306 420.007 123.466 402.582 114.744L295.931 61.3638V20.6413Z" fill="#1C1B1F"></path></svg>`;
+const coverCard = `<div style="position: relative; width: 116px; height: 155px; overflow: hidden; box-shadow: 0 8px 14px rgba(70,50,35,.22)"><img src="/desk/substack-cover.jpg" alt="kritika's outfit, red heels and a printed tote" style="width: 116px; height: 155px; max-width: none; max-height: none; object-fit: cover; filter: none"><p style="position: absolute; left: 8px; top: 8px; right: 6px; margin: 0; font-family: 'Archivo Black', sans-serif; font-size: 17px; line-height: .95; color: #FFEAD3">She Substacks!</p></div>`;
+
+// Phone column, in number order.
+const items = [
+  { n: 1, name: 'say hello', href: HELLO, art: '<img src="/desk/kritika.png" alt="kritika smiling, long hair" style="max-width: 240px; max-height: 230px">' },
+  { n: 2, name: 'plane', href: WORK, art: planeLogo },
+  { n: 3, name: 'coffee', href: COFFEE, art: '<img src="/desk/coffee.png" alt="kritika\'s hand holding a takeaway coffee">' },
+  { n: 4, name: 'nexus', href: WORK, art: '<img src="/desk/nexus.png" alt="Nexus logo" style="width: 150px">' },
+  { n: 5, name: 'tedx bitd', href: TEDX, art: '<img src="/desk/tedx-x.png" alt="a big red handmade x from tedx bitd">' },
+  { n: 6, name: 'the world', href: TAROT, art: '<img src="/desk/the-world-tarot.png" alt="the world tarot card">' },
+  { n: 7, name: 'she substacks', href: COVER, art: coverCard }
+];
+
+const socials = [
+  { label: 'Twitter', href: TWITTER, svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A9452A" stroke-width="1.8" stroke-linecap="round"><path d="M4 4l16 16M20 4L4 20"></path></svg>' },
+  { label: 'Substack', href: SUBSTACK, svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A9452A" stroke-width="1.8" stroke-linejoin="round"><path d="M5 4h14M5 8h14M5 12h14v9l-7-4-7 4z"></path></svg>' },
+  { label: 'Instagram', href: INSTAGRAM, svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A9452A" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.2" cy="6.8" r=".8" fill="#A9452A"></circle></svg>' },
+  { label: 'LinkedIn', href: LINKEDIN, svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A9452A" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="3.5" width="17" height="17" rx="3"></rect><path d="M8 10.5v6M8 7.5v.1M12 16.5v-6M12 13c0-1.6 1-2.6 2.3-2.6S16.5 11.3 16.5 13v3.5"></path></svg>' },
+  { label: 'Email', href: EMAIL, svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A9452A" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="2"></rect><path d="M3.5 6.5l8.5 6.5 8.5-6.5"></path></svg>' },
+  { label: 'WhatsApp', href: WHATSAPP, svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A9452A" stroke-width="1.8" stroke-linejoin="round"><path d="M4 20l1.4-4.2A8 8 0 1 1 8.4 19z"></path><path d="M9.2 9.2c.3 2.4 2.2 4.4 4.6 4.9l1-1.1 1.6.8" stroke-linecap="round"></path></svg>' }
+];
 ---
-<Base>
-<Doodles />
-<Nav />
-<div class="main" style="position: relative; z-index: 1">
-<div style="max-width: 1180px; margin: 0 auto; padding: 24px 24px 0">
-<Hero />
-<StoryThread />
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>kritika · darling, have you met Kritika?</title>
+<link rel="icon" href="/mark.svg" type="image/svg+xml">
+<link rel="icon" href="/mark-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/mark-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Hanken+Grotesk:ital,wght@0,400;0,500;1,400&amp;family=Archivo+Black&amp;display=swap" rel="stylesheet">
+<style is:inline>
+html,body{margin:0;height:100%;background:#f4f3f0;overflow:hidden}
+#stage{position:absolute;left:0;top:0;transform-origin:0 0}
+a{color:#B4502F;text-decoration:none}a:hover{color:#8F3C21}
+a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
+.desk{background-color:#FFEAD3;background-image:url(/desk/paper.jpg);background-size:1000px auto;background-blend-mode:multiply}
+.pageL{background:linear-gradient(100deg,#ffffff 0%,#fbfbf9 38%,#ffffff 52%,#f6f6f3 78%,#e9e8e4 96%,#d9d7d2 100%)}
+.pageR{background:linear-gradient(80deg,#d6d4cf 0%,#e8e7e3 4%,#f7f7f4 20%,#ffffff 46%,#fafaf8 70%,#ffffff 100%)}
+.sheen{background:linear-gradient(115deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.75) 42%,rgba(255,255,255,0) 54%)}
+.cut{position:absolute;display:block;width:170px;height:170px}
+.cut .box{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transition:transform .5s cubic-bezier(.3,1.4,.5,1)}
+.cut img,.cut svg.logo{max-width:150px;max-height:150px;filter:drop-shadow(0 7px 9px rgba(70,50,35,.20))}
+.cut:hover .box,.cut.hl .box{transform:translateY(-8px) rotate(0deg) !important}
+.fig{position:absolute;font-family:Geist,sans-serif;font-weight:500;font-size:15px;color:#B4502F}
+.bubble{opacity:0;transform:scale(.7) translateY(8px);transform-origin:bottom right;transition:opacity .25s,transform .45s cubic-bezier(.3,1.6,.5,1)}
+.c-me:hover .bubble,.c-me.hl .bubble{opacity:1;transform:none}
+.navface .open{opacity:0}.navface:hover .open{opacity:1}.navface:hover .shut{opacity:0}
+.keyitem{color:#6f6862}.keyitem:hover{color:#1C1B1F}
+@media (prefers-reduced-motion: reduce){.cut .box,.bubble{transition:none}}
+
+/* Phones (under 768px): one scrolling column */
+.m{display:none}
+@media (max-width: 767px){
+  html,body{height:auto;overflow:auto}
+  body{background:transparent}
+  #stage{display:none}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;background-color:#FFEAD3;background-image:url(/desk/paper.jpg);background-size:cover;background-position:center;background-blend-mode:multiply}
+  .m{display:block;background:none;min-height:100vh;box-sizing:border-box;padding:48px 16px 40px;font-family:'Hanken Grotesk',sans-serif;color:#1C1B1F}
+  .m h1{margin:0 0 28px;font-family:Geist,sans-serif;font-weight:600;font-size:44px;line-height:1.02;letter-spacing:-.02em;color:#A9452A}
+  .m ul{list-style:none;margin:0;padding:0;display:grid;gap:16px}
+  .m-item{display:flex;flex-direction:column;align-items:center;gap:12px;padding:20px 16px;border-radius:16px;background:rgba(255,255,255,.6);-webkit-tap-highlight-color:transparent}
+  .m-art{display:flex;align-items:center;justify-content:center;min-height:150px}
+  .m-art img,.m-art svg.logo{max-width:150px;max-height:150px;filter:drop-shadow(0 7px 9px rgba(70,50,35,.20))}
+  .m-name{font-size:17px;color:#1C1B1F}
+  .m-name b{font-family:Geist,sans-serif;font-weight:500;color:#B4502F;margin-right:6px}
+  .m-foot{margin:32px 0 0;font-size:13px;color:#4A4542}
+  .m-socials{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+  .m-socials a{display:flex;align-items:center;justify-content:center;width:44px;height:44px}
+}
+.cb-yes,.cb-no{min-height:40px;padding:0 20px;border-radius:10px;font-family:inherit;font-size:14px;cursor:pointer}
+.cb-yes{border:0;background:#E8EBF0;color:#0B0A0F;font-weight:600}
+.cb-no{background:none;border:1px solid #3A3842;color:#E8EBF0}
+</style>
+<Analytics />
+</head>
+<body>
+<div id="stage">
+<div class="desk" style="position: relative; width: 1512px; height: 982px; overflow: hidden; font-family: 'Hanken Grotesk', sans-serif; color: #1C1B1F">
+
+<div class="pageL" aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 756px; height: 982px"></div>
+<div class="pageR" aria-hidden="true" style="position: absolute; left: 756px; top: 0; width: 756px; height: 982px"></div>
+<div class="sheen" aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 1512px; height: 982px; opacity: .6"></div>
+
+<h1 style="position: absolute; left: 72px; top: 118px; width: 600px; margin: 0; font-family: Geist, sans-serif; font-weight: 600; font-size: 64px; line-height: 1.02; letter-spacing: -.02em; color: #A9452A">darling, have you met Kritika?</h1>
+
+<a href={WORK} class="cut c-plane" data-id="plane" aria-label="plane" style="left: 80px; top: 380px">
+<div class="box" style="transform: rotate(-4deg)" set:html={planeLogo}></div>
+<span class="fig" style="left: 0; top: 0">2.</span>
+</a>
+
+<a href={COFFEE} class="cut c-coffee" data-id="coffee" aria-label="coffee" style="left: 330px; top: 470px">
+<div class="box" style="transform: rotate(5deg)"><img src="/desk/coffee.png" alt="kritika's hand holding a takeaway coffee"></div>
+<span class="fig" style="left: 0; top: 0">3.</span>
+</a>
+
+<a href={WORK} class="cut c-nexus" data-id="nexus" aria-label="nexus" style="left: 80px; top: 640px">
+<div class="box" style="transform: rotate(-2deg)"><img src="/desk/nexus.png" alt="Nexus logo" style="width: 150px"></div>
+<span class="fig" style="left: 0; top: 0">4.</span>
+</a>
+
+<a href={HELLO} class="cut c-me" data-id="me" aria-label="say hello" style="left: 596px; top: 330px; width: 320px; height: 310px">
+<div class="box"><img src="/desk/kritika.png" alt="kritika smiling, long hair" style="max-width: 320px; max-height: 300px"></div>
+<div class="bubble" style="position: absolute; left: -190px; top: -20px; width: 200px; padding: 14px 18px; border-radius: 18px 18px 4px 18px; background: #BFE7EA; font-family: 'Hanken Grotesk', sans-serif; font-size: 17px; line-height: 1.35; color: #1C1B1F">hey there! want to build something with me?</div>
+<span class="fig" style="left: 10px; top: 0">1.</span>
+</a>
+
+<a href={TEDX} class="cut c-x" data-id="x" aria-label="tedx bitd" style="left: 1010px; top: 190px">
+<div class="box" style="transform: rotate(-6deg)"><img src="/desk/tedx-x.png" alt="a big red handmade x from tedx bitd"></div>
+<span class="fig" style="left: 0; top: 0">5.</span>
+</a>
+
+<a href={TAROT} class="cut c-tarot" data-id="tarot" aria-label="the world" style="left: 1270px; top: 250px">
+<div class="box" style="transform: rotate(7deg)"><img src="/desk/the-world-tarot.png" alt="the world tarot card"></div>
+<span class="fig" style="left: 0; top: 0">6.</span>
+</a>
+
+<a href={COVER} class="cut c-cover" data-id="cover" aria-label="she substacks" style="left: 1210px; top: 470px">
+<div class="box" style="transform: rotate(-3deg)" set:html={coverCard}></div>
+<span class="fig" style="left: 0; top: 0">7.</span>
+</a>
+
+<nav aria-label="Contents" style="position: absolute; left: 1010px; top: 690px; width: 400px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; row-gap: 10px; font-family: 'Hanken Grotesk', sans-serif; font-size: 14px">
+<a href={HELLO} class="keyitem" data-for="me" style="display: grid; grid-template-columns: 22px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">1.</span><span>say hello</span></a>
+<a href={WORK} class="keyitem" data-for="plane" style="display: grid; grid-template-columns: 22px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">2.</span><span>plane</span></a>
+<a href={COFFEE} class="keyitem" data-for="coffee" style="display: grid; grid-template-columns: 22px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">3.</span><span>coffee</span></a>
+<a href={WORK} class="keyitem" data-for="nexus" style="display: grid; grid-template-columns: 22px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">4.</span><span>nexus</span></a>
+<a href={TEDX} class="keyitem" data-for="x" style="display: grid; grid-template-columns: 22px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">5.</span><span>tedx bitd</span></a>
+<a href={TAROT} class="keyitem" data-for="tarot" style="display: grid; grid-template-columns: 22px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">6.</span><span>the world</span></a>
+<a href={COVER} class="keyitem" data-for="cover" style="display: grid; grid-template-columns: 22px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">7.</span><span>she substacks</span></a>
+</nav>
+
+<p style="position: absolute; left: 72px; top: 872px; margin: 0; font-size: 13px; color: #4A4542">last spotted at Beanlore, Kormangala, reading in the sun.</p>
+<nav aria-label="Socials" style="position: absolute; right: 64px; top: 864px; display: flex; gap: 18px; align-items: center">
+{socials.map((s) => <a href={s.href} aria-label={s.label} style="display: flex" {...ext(s.href)} set:html={s.svg}></a>)}
+</nav>
+
 </div>
-<Footer />
 </div>
-</Base>
+
+<main class="m desk">
+<h1>darling, have you met Kritika?</h1>
+<ul>
+{items.map((it) => <li><a class="m-item" href={it.href}><span class="m-art" set:html={it.art}></span><span class="m-name"><b>{it.n}.</b>{it.name}</span></a></li>)}
+</ul>
+<p class="m-foot">last spotted at Beanlore, Kormangala, reading in the sun.</p>
+<nav class="m-socials" aria-label="Socials">
+{socials.map((s) => <a href={s.href} aria-label={s.label} {...ext(s.href)} set:html={s.svg}></a>)}
+</nav>
+</main>
+
+<div id="consent" role="dialog" aria-label="Cookie choice" hidden style="position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 55; max-width: 360px; box-sizing: border-box; padding: 18px 20px; border-radius: 16px; background: #141319; border: 1px solid #3A3842; box-shadow: 0 20px 50px rgba(0,0,0,0.6); font-family: 'Hanken Grotesk', system-ui, sans-serif; font-size: 14px; line-height: 1.5; color: #C9CDD5">
+<p style="margin: 0 0 14px">Allow cookies on your visit so I know what you resonate with. No ads, I promise.</p>
+<div style="display: flex; gap: 10px">
+<button class="cb-yes" type="button" data-consent="yes">Yes!</button>
+<button class="cb-no" type="button" data-consent="no">No thanks</button>
+</div>
+</div>
+
+<script is:inline>
+// scale the 1512x982 spread to fill any desktop window
+function fit(){var s=Math.min(innerWidth/1512,innerHeight/982),st=document.getElementById('stage');st.style.transform='scale('+s+')';st.style.left=((innerWidth-1512*s)/2)+'px';st.style.top=((innerHeight-982*s)/2)+'px';}
+addEventListener('resize',fit);fit();
+// hovering a key item highlights its cutout
+document.querySelectorAll('[data-for]').forEach(function(a){var c=document.querySelector('.cut[data-id="'+a.dataset.for+'"]');a.addEventListener('mouseenter',function(){c&&c.classList.add('hl')});a.addEventListener('mouseleave',function(){c&&c.classList.remove('hl')});});
+</script>
+</body>
+</html>
