@@ -34,7 +34,7 @@ const cells = [
 //  pictures: 'what it was like to pull off a TEDx event' (/desk/tedx-x.png, jul 2021)
 // Positioning and battlecards use Unsplash photos as stand-ins (planning at a desk; two chess knights).
 // grid: 3 columns x 2 rows; images are IW x IH with the caption below
-const GX = [470, 820, 1170], GY = [300, 596], CW = 290, IH = 214;
+const GX = [470, 840, 1210], GY = [304, 612], CW = 250, IH = 172;
 ---
 <!doctype html>
 <html lang="en">
@@ -72,22 +72,22 @@ h1{position:absolute;left:470px;top:92px;width:420px;margin:0;font-family:Geist,
 .cell{position:absolute;display:block}
 .cell .pic{position:relative;display:block;overflow:hidden;background:#efece6}
 .cell .pic img{width:100%;height:100%;object-fit:cover;display:block}
-.cell .cap{display:flex;gap:8px;align-items:baseline;margin-top:10px;font-size:13px;line-height:1.35;color:#4A4542}
+.cell .cap{display:flex;gap:8px;align-items:baseline;margin-top:10px;font-size:12px;line-height:1.35;color:#4A4542}
 .cell .cap b{font-family:Geist,sans-serif;font-weight:500;color:#A9452A}
 /* hover: the whole image darkens, then the date, what it's about, and Read more come up */
-.cell .ov{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:22px;box-sizing:border-box;background:rgba(28,27,31,.78);color:#fff;opacity:0;transition:opacity .35s ease}
+.cell .ov{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:18px;box-sizing:border-box;background:rgba(28,27,31,.78);color:#fff;opacity:0;transition:opacity .35s ease}
 .cell .ov .d{font-size:11px;letter-spacing:.2em;color:#F3E4DC;transform:translateY(8px);transition:transform .45s cubic-bezier(.2,.7,.2,1)}
-.cell .ov .a{margin-top:8px;font-size:14px;line-height:1.5;color:#f1eeea;transform:translateY(10px);transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.cell .ov .a{margin-top:8px;font-size:13px;line-height:1.5;color:#f1eeea;transform:translateY(10px);transition:transform .5s cubic-bezier(.2,.7,.2,1)}
 .cell .rm{display:inline-block;margin-top:14px;padding:8px 14px;border:1px solid #F3E4DC;font-size:13px;letter-spacing:.04em;color:#fff;opacity:0;transform:translateY(12px) scale(.94);transition:opacity .35s ease .08s,transform .5s cubic-bezier(.3,1.4,.5,1) .08s}
 .cell:hover .ov,.cell:focus-visible .ov{opacity:1}
 .cell:hover .ov .d,.cell:hover .ov .a,.cell:focus-visible .ov .d,.cell:focus-visible .ov .a{transform:none}
 .cell:hover .rm,.cell:focus-visible .rm{opacity:1;transform:none}
 /* words */
 .cell.w{padding-top:2px}
-.cell .num{display:block;font-family:Geist,sans-serif;font-weight:300;font-size:72px;line-height:1;letter-spacing:-.03em;color:#1C1B1F;transition:color .25s}
+.cell .num{display:block;font-family:Geist,sans-serif;font-weight:300;font-size:60px;line-height:1;letter-spacing:-.03em;color:#1C1B1F;transition:color .25s}
 .cell .at{display:block;margin:12px 0 4px;font-size:11px;letter-spacing:.22em;color:#8a837d}
-.cell .t{display:block;font-family:Geist,sans-serif;font-weight:500;font-size:18px;line-height:1.25;color:#1C1B1F}
-.cell .l{display:block;margin-top:8px;font-size:14px;line-height:1.5;color:#6f6862}
+.cell .t{display:block;font-family:Geist,sans-serif;font-weight:500;font-size:16px;line-height:1.25;color:#1C1B1F}
+.cell .l{display:block;margin-top:8px;font-size:13px;line-height:1.5;color:#6f6862}
 .cell.w .rmw{display:inline-block;margin-top:12px;font-size:13px;color:#A9452A;text-decoration:underline;text-underline-offset:3px;opacity:0;transform:translateY(6px);transition:opacity .3s,transform .4s cubic-bezier(.3,1.4,.5,1)}
 .cell.w:hover .num,.cell.w:focus-visible .num{color:#A9452A}
 .cell.w:hover .rmw,.cell.w:focus-visible .rmw{opacity:1;transform:none}
