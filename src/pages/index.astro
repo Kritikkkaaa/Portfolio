@@ -76,17 +76,29 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
    are already /journey (same title, Back and socials in the same places), so the new page lands without a jump. */
 .mag{position:fixed;inset:0;z-index:60;perspective:2600px;cursor:default}
 .mag-under,.mag-leaf,.mag-lshade{position:absolute;top:0;height:100%}
-.mag-under{left:50%;width:50%;overflow:hidden;background:#fbfaf7}
-.mag-lshade{left:0;width:50%;background:#000;opacity:0;pointer-events:none;animation:magL 1.15s cubic-bezier(.62,.04,.22,1) forwards}
+.mag-under{left:50%;width:50%;overflow:hidden;background:#fff}
+.mag-lshade{left:0;width:50%;background:#000;opacity:0;pointer-events:none;animation:magL 1.3s cubic-bezier(.62,.04,.22,1) forwards}
 .mag-leaf{left:50%;width:50%;transform-origin:left center;transform-style:preserve-3d;animation:magTurn 1.15s cubic-bezier(.62,.04,.22,1) forwards}
 .mag-face{position:absolute;inset:0;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden}
 .mag-back{transform:rotateY(180deg);background:#fbfaf7}
 .mag-in{position:absolute;top:0;left:0;width:100vw;height:100%}
-.mag-under .mag-in{left:-50vw}
+.mag.phone .mag-under{background:#fbfaf7}
+/* a bending page: thin strips, each turning a little more than the one before (built by Bend() in the script) */
+.bend{position:absolute;top:0;transform-style:preserve-3d;pointer-events:none}
+.bs{position:absolute;top:0;height:100%;transform-origin:0 50%;transform-style:preserve-3d}
+.bf{position:absolute;top:0;left:0;width:calc(100% + 1px);height:100%;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.bf.bb{transform:rotateY(180deg)}
+.bc{position:absolute;top:0;height:100%}
+.bl{position:absolute;inset:0}
+.mag-sp{position:absolute;width:1512px;height:982px;transform-origin:0 0;font-family:'Hanken Grotesk',sans-serif;color:#1C1B1F;text-align:left}
+.mag-sp .mb{display:inline-block;padding:6px 0;font-size:15px;color:#A9452A;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.mag-sp .mh{font-family:Geist,sans-serif;font-weight:600;font-size:64px;line-height:1.02;letter-spacing:-.02em}
+.mag-sp .ms{position:absolute;display:flex;gap:18px;align-items:center}
+.mag-sp .ms a{display:flex}
 .mag-shade{position:absolute;inset:0;pointer-events:none}
 .mag-front .mag-shade{background:linear-gradient(90deg,rgba(0,0,0,0) 35%,rgba(0,0,0,.55) 100%);opacity:0;animation:magF 1.15s cubic-bezier(.62,.04,.22,1) forwards}
 .mag-back .mag-shade{background:linear-gradient(270deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.35) 100%);opacity:1;animation:magB 1.15s cubic-bezier(.62,.04,.22,1) forwards}
-.mag-under .mag-shade{background:linear-gradient(90deg,rgba(0,0,0,.45) 0%,rgba(0,0,0,0) 60%);animation:magB 1.15s cubic-bezier(.62,.04,.22,1) forwards}
+.mag-under .mag-shade{background:linear-gradient(90deg,rgba(0,0,0,.35) 0%,rgba(0,0,0,0) 60%);animation:magB 1.3s cubic-bezier(.62,.04,.22,1) forwards}
 @keyframes magTurn{from{transform:rotateY(0)}to{transform:rotateY(-180deg)}}
 @keyframes magF{50%{opacity:.9}100%{opacity:.9}}
 @keyframes magB{0%{opacity:1}50%{opacity:1}100%{opacity:0}}
@@ -309,6 +321,55 @@ addEventListener('resize',fit);fit();
 // hovering a key item highlights its cutout
 document.querySelectorAll('[data-for]').forEach(function(a){var c=document.querySelector('.cut[data-id="'+a.dataset.for+'"]');a.addEventListener('mouseenter',function(){c&&c.classList.add('hl')});a.addEventListener('mouseleave',function(){c&&c.classList.remove('hl')});});
 
+// Bend: a page that bends as it turns, like a glossy magazine page rather than a stiff board.
+// It is cut into N thin strips, each hinged to the one before; mid-turn the outer strips turn further than the ones
+// by the spine, so the page curves. Light is drawn per strip from its angle: darker as it tilts away, with a soft
+// sheen sliding across the curve. host: an empty element at the spine (preserve-3d, under a perspective);
+// W x H: the page size; front() / back(): make a fresh copy of what each side shows (full page, positioned at 0,0).
+// Returns set(p), p from 0 (flat on the right) to 1 (turned over, flat on the left).
+function Bend(host, W, H, N, front, back){
+  var w = W / N, parts = [], par = host, G = [], gs = 0, i;
+  for (i = 0; i < N; i++) { G[i] = Math.pow((i + 1) / N, 1.7); gs += G[i]; }
+  for (i = 0; i < N; i++) G[i] /= gs;
+  function face(cls, node, off){
+    var f = document.createElement('div'), c = document.createElement('div'), l = document.createElement('div');
+    f.className = cls; c.className = 'bc'; c.style.left = off + 'px'; c.style.width = W + 'px'; l.className = 'bl';
+    c.appendChild(node); f.appendChild(c); f.appendChild(l); return { f: f, l: l };
+  }
+  host.style.width = W + 'px'; host.style.height = H + 'px'; host.setAttribute('aria-hidden', 'true'); host.inert = true;
+  for (i = 0; i < N; i++) {
+    var st = document.createElement('div'); st.className = 'bs'; st.style.left = (i ? w : 0) + 'px'; st.style.width = w + 'px';
+    var F = face('bf', front(), -i * w), B = face('bf bb', back(), -(W - (i + 1) * w));
+    st.appendChild(F.f); st.appendChild(B.f); par.appendChild(st); par = st;
+    parts.push({ s: st, f: F.l, b: B.l });
+  }
+  var R = Math.PI / 180, BEND = 80;
+  function lightF(a){ return [0.5 * (1 - Math.cos(a * R)), 0.16 * Math.max(0, 1 - Math.abs(a - 40) / 22)]; }
+  function lightB(a){ return [0.42 * (1 + Math.cos(a * R)), 0.14 * Math.max(0, 1 - Math.abs(a - 142) / 22)]; }
+  function grad(L0, L1){
+    return 'linear-gradient(90deg,rgba(255,255,255,' + L0[1].toFixed(3) + '),rgba(255,255,255,' + L1[1].toFixed(3) + ')),' +
+           'linear-gradient(90deg,rgba(0,0,0,' + L0[0].toFixed(3) + '),rgba(0,0,0,' + L1[0].toFixed(3) + '))';
+  }
+  return function(p){
+    var sn = Math.sin(p * Math.PI), a = 180 * p - BEND * sn / 2, A = [];
+    for (var k = 0; k < N; k++) { var d = BEND * sn * G[k]; a += d; A.push(a);
+      parts[k].s.style.transform = 'rotateY(' + (-(k ? d : a)).toFixed(3) + 'deg)'; }
+    for (k = 0; k < N; k++) {
+      var e0 = (A[Math.max(k - 1, 0)] + A[k]) / 2, e1 = (A[k] + A[Math.min(k + 1, N - 1)]) / 2;
+      parts[k].f.style.backgroundImage = grad(lightF(e0), lightF(e1));
+      parts[k].b.style.backgroundImage = grad(lightB(e1), lightB(e0)); // the back face is mirrored
+    }
+  };
+}
+// cubic-bezier(.62,.04,.22,1): slow lift, quick turn, soft landing
+function turnEase(x){
+  var t = x;
+  for (var j = 0; j < 6; j++) { var cx = 3 * .62 * t * (1 - t) * (1 - t) + 3 * .22 * t * t * (1 - t) + t * t * t - x,
+    dx = 3 * .62 * (1 - t) * (1 - 3 * t) + 3 * .22 * t * (2 - 3 * t) + 3 * t * t; if (Math.abs(dx) < 1e-6) break; t -= cx / dx; }
+  t = Math.max(0, Math.min(1, t));
+  return 3 * .04 * t * (1 - t) * (1 - t) + 3 * t * t * (1 - t) + t * t * t;
+}
+
 // Intro: scroll (or swipe) to turn the page onto the desk; holding a scroll ~0.7s or the button turns it fully.
 // Scrolling back up at the top brings it back.
 (function(){
@@ -322,20 +383,45 @@ document.querySelectorAll('[data-for]').forEach(function(a){var c=document.query
   var back = D.querySelector('.i-back'); back.insertBefore(copy, back.firstChild);
 
   var p = 0, done = !root.classList.contains('intro-on'), start = 0, last = 0, snap, fin, ty = null;
-  function el(){ return phone.matches ? M : D; }
+  // Desktop: the turning page is a Bend (made the first time it is needed); the real page (with its button)
+  // shows only while it lies flat. shown eases toward p: a timed turn when anim, else a quick follow of the scroll.
+  var leaf = D.querySelector('.i-leaf'), host = null, bend = null, shown = 0, tw = null, raf = 0;
+  function ensure(){
+    if (bend) return;
+    host = document.createElement('div'); host.className = 'bend'; host.style.left = '756px';
+    D.appendChild(host);
+    var face = D.querySelector('.i-front');
+    bend = Bend(host, 756, 982, 16, function(){
+      var c = face.cloneNode(true);
+      c.querySelectorAll('.i-faceShade').forEach(function(n){ n.remove(); });
+      c.querySelectorAll('[data-turn]').forEach(function(n){ n.removeAttribute('data-turn'); });
+      c.className = 'black'; c.style.cssText = 'position:absolute;left:0;top:0;width:756px;height:982px'; return c;
+    }, function(){ return copy.cloneNode(true); });
+  }
+  function draw(q){
+    shown = q;
+    D.style.setProperty('--p', q); D.style.setProperty('--lift', Math.sin(q * Math.PI).toFixed(3));
+    if (q > 0 && !phone.matches) { ensure(); bend(q); host.style.visibility = 'visible'; leaf.style.visibility = 'hidden'; }
+    else { if (host) host.style.visibility = 'hidden'; leaf.style.visibility = ''; }
+  }
+  function loop(t){
+    if (tw) { var k = Math.min(1, (t - tw.t0) / tw.dur); draw(tw.from + (tw.to - tw.from) * turnEase(k)); if (k >= 1) tw = null; }
+    else { var q = shown + (p - shown) * 0.3; draw(Math.abs(p - q) < 0.002 ? p : q); }
+    raf = (tw || shown !== p) ? requestAnimationFrame(loop) : 0;
+  }
   function render(anim){
-    [D, M].forEach(function(e){
-      e.classList.toggle('anim', !!anim && !reduce);
-      e.style.setProperty('--p', p);
-      e.style.setProperty('--lift', Math.sin(p * Math.PI).toFixed(3));
-    });
+    M.classList.toggle('anim', !!anim && anim !== 2 && !reduce);
+    M.style.setProperty('--p', p); M.style.setProperty('--lift', Math.sin(p * Math.PI).toFixed(3));
+    if (reduce || anim === 2 || document.hidden) { tw = null; draw(p); return; }
+    if (anim) tw = { from: shown, to: p, t0: performance.now(), dur: Math.max(450, 1150 * Math.abs(p - shown)) };
+    if (!raf) raf = requestAnimationFrame(loop);
   }
   function finish(){ done = true; root.classList.remove('intro-on'); }
   function turn(){ p = 1; render(true); clearTimeout(fin); fin = setTimeout(finish, reduce ? 0 : 1150); }
   function push(d){
     if (done) {
       if (d >= 0 || (phone.matches && scrollY > 0)) return;
-      done = false; root.classList.add('intro-on'); render(false);
+      done = false; root.classList.add('intro-on'); render(2);
     }
     if (p >= 1 && d >= 0) return;
     clearTimeout(fin);
@@ -361,7 +447,7 @@ document.querySelectorAll('[data-for]').forEach(function(a){var c=document.query
   function turnBack(){
     clearTimeout(fin); clearTimeout(snap); start = 0;
     if (phone.matches) scrollTo(0, 0);
-    done = false; p = 1; root.classList.add('intro-on'); render(false);
+    done = false; p = 1; root.classList.add('intro-on'); render(2);
     void D.offsetWidth; void M.offsetWidth;
     setTimeout(function(){ p = 0; render(true); }, 30);
     var b = (phone.matches ? M : D).querySelector('[data-turn]'); if (b) b.focus({ preventScroll: true });
@@ -378,31 +464,53 @@ document.querySelectorAll('[data-for]').forEach(function(a){var c=document.query
   function hush(){ document.querySelectorAll('.say').forEach(function(n){ n.classList.remove('say'); }); }
   function strip(n){ n.querySelectorAll('[id],[data-id],[data-for],[data-say],[data-back],[data-turn]').forEach(function(e){ ['id','data-id','data-for','data-say','data-back','data-turn'].forEach(function(k){ e.removeAttribute(k); }); }); n.removeAttribute('id'); return n; }
   // the top of /journey, drawn here so the turning page can carry it
-  function journey(){
-    var soc = document.querySelector('#stage nav[aria-label="Socials"]');
-    return '<div class="mag-j"><span class="mb">Back</span><p class="mh">i could never do things straight!</p><div class="ms">' + (soc ? soc.innerHTML : '') + '</div></div>';
+  // On a laptop it is the journey spread (same pages as the desk), placed and scaled like #stage; dx shifts it for a
+  // layer that starts at the middle of the window. On a phone it is the top of the one-column page.
+  function journey(dx){
+    var soc = document.querySelector('#stage nav[aria-label="Socials"]'), icons = soc ? soc.innerHTML : '';
+    if (phone.matches) return '<div class="mag-j"><span class="mb">Back</span><p class="mh">i could never do things straight!</p><div class="ms">' + icons + '</div></div>';
+    var st = document.getElementById('stage');
+    return '<div class="mag-sp" style="left:' + (parseFloat(st.style.left) - dx) + 'px;top:' + st.style.top + ';transform:' + st.style.transform + '">' +
+      '<div class="pageL" style="position:absolute;left:0;top:0;width:756px;height:982px"></div>' +
+      '<div class="pageR" style="position:absolute;left:756px;top:0;width:756px;height:982px"></div>' +
+      '<div class="sheen" style="position:absolute;left:0;top:0;width:1512px;height:982px;opacity:.6"></div>' +
+      '<span class="mb" style="position:absolute;left:72px;top:76px">Back</span>' +
+      '<p class="mh" style="position:absolute;left:72px;top:118px;width:600px;margin:0">i could never do things straight!</p>' +
+      '<div class="ms" style="left:72px;top:864px">' + icons + '</div></div>';
   }
   function fold(href){
     if (going) return; going = true;
     if (reduce) { location.href = href; return; }
     var m = document.createElement('div'), P = phone.matches;
-    m.className = 'mag' + (P ? ' phone' : ''); m.setAttribute('aria-hidden', 'true');
-    m.innerHTML = '<div class="mag-under"><div class="mag-in">' + journey() + '</div><div class="mag-shade"></div></div>' +
-      '<div class="mag-lshade"></div>' +
-      '<div class="mag-leaf"><div class="mag-face mag-front"></div>' +
-      (P ? '' : '<div class="mag-face mag-back"><div class="mag-in">' + journey() + '</div><div class="mag-shade"></div></div>') + '</div>';
-    var front = m.querySelector('.mag-front');
-    if (P) { // a copy of the phone page, at the current scroll position
+    m.className = 'mag' + (P ? ' phone' : ''); m.setAttribute('aria-hidden', 'true'); m.inert = true;
+    if (P) { // phones: the whole screen turns away to the left
+      m.innerHTML = '<div class="mag-under"><div class="mag-in">' + journey(0) + '</div><div class="mag-shade"></div></div>' +
+        '<div class="mag-leaf"><div class="mag-face mag-front"></div></div>';
       var c = strip(document.querySelector('main.m').cloneNode(true));
       c.style.cssText = 'position:absolute;left:0;right:0;top:' + (-scrollY) + 'px;background:none';
-      front.appendChild(c);
-    } else { // a copy of the desk, shifted so this face shows its right page
-      var st = document.getElementById('stage'), d = strip(st.cloneNode(true)), i = d.querySelector('.intro'); if (i) i.remove();
-      d.style.position = 'absolute'; d.style.transformOrigin = '0 0'; d.style.top = st.style.top; d.style.left = (parseFloat(st.style.left) - innerWidth / 2) + 'px';
-      front.appendChild(d); front.appendChild(Object.assign(document.createElement('div'), { className: 'mag-shade' }));
+      m.querySelector('.mag-front').appendChild(c);
+      document.body.appendChild(m);
+      setTimeout(function(){ location.href = href; }, 1000);
+      return;
     }
-    document.body.appendChild(m);
-    setTimeout(function(){ location.href = href; }, P ? 1000 : 1100);
+    // laptops: the desk's right page bends over the spine; its back, and the page under it, are /journey
+    var W = innerWidth / 2, H = innerHeight, st = document.getElementById('stage');
+    m.innerHTML = '<div class="mag-under"><div class="mag-in">' + journey(W) + '</div><div class="mag-shade"></div></div><div class="mag-lshade"></div>';
+    var host = document.createElement('div'); host.className = 'bend'; host.style.left = W + 'px'; m.appendChild(host);
+    var set = Bend(host, W, H, 16, function(){
+      var d = strip(st.cloneNode(true)), i = d.querySelector('.intro'); if (i) i.remove();
+      d.style.position = 'absolute'; d.style.transformOrigin = '0 0'; d.style.top = st.style.top; d.style.left = (parseFloat(st.style.left) - W) + 'px';
+      return d;
+    }, function(){
+      var b = document.createElement('div'); b.className = 'mag-in'; b.style.background = '#fff'; b.innerHTML = journey(0); return b;
+    });
+    set(0); document.body.appendChild(m);
+    var t0 = performance.now(), DUR = 1300;
+    (function step(t){
+      var k = Math.min(1, (t - t0) / DUR); set(turnEase(k));
+      if (k < 1) requestAnimationFrame(step); else location.href = href;
+    })(t0);
+    setTimeout(function(){ location.href = href; }, DUR + 400); // in case the tab is in the background
   }
   addEventListener('pageshow', function(){ going = false; document.querySelectorAll('.mag').forEach(function(n){ n.remove(); }); });
   document.querySelectorAll('[data-say]').forEach(function(a){
