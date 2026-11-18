@@ -5,8 +5,9 @@
 //  - A straight black line across the middle of the spread, with four cuts on it: the plans.
 //  - The terracotta line ("My journey so far!", the heading on the live site) peels off it and roams up and down
 //    the page through the stops; the loops are the detours. Hovering a stop unfurls what it taught her below it.
-// Top right: "you and i can work together." as a pinned tear-off flyer with contact tabs.
-// The page turn from the desk (in index.astro, "fold") draws this page's Back, title and socials in the same places.
+// Top right: "now you and i can work together!" as a pinned tear-off flyer whose chits are her socials
+// (so the page has no separate socials row).
+// The page turn from the desk (in index.astro, "fold") draws this page's Back and title in the same places.
 import Analytics from '../components/Analytics.astro';
 
 const TWITTER = 'https://x.com/verykritikal?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
@@ -71,20 +72,19 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 .grain{position:absolute;inset:0;background:url(/desk/paper.jpg);background-size:900px auto;mix-blend-mode:multiply;opacity:.16;pointer-events:none}
 .back{position:absolute;left:72px;top:76px;padding:6px 0;font-size:15px;color:#A9452A;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
 h1{position:absolute;left:72px;top:118px;width:600px;margin:0;font-family:Geist,sans-serif;font-weight:600;font-size:64px;line-height:1.02;letter-spacing:-.02em;color:#1C1B1F}
-/* "you and i can work together.": a pinned tear-off flyer, like the ones on a cafe noticeboard; one tab already taken */
-.flyer{position:absolute;left:964px;top:58px;width:256px;margin:0;background:#fff;box-shadow:0 12px 26px rgba(70,50,35,.14),0 1px 3px rgba(70,50,35,.10);transform:rotate(1.6deg);transform-origin:50% 0}
+/* "now you and i can work together!": a pinned tear-off flyer, like the ones on a cafe noticeboard. One line, then
+   tear-off chits with her socials (one chit already taken). Hovering a chit peels it. */
+.flyer{position:absolute;left:964px;top:58px;margin:0;background:#fff;box-shadow:0 12px 26px rgba(70,50,35,.14),0 1px 3px rgba(70,50,35,.10);transform:rotate(1.6deg);transform-origin:50% 0}
 .flyer .pin{position:absolute;left:50%;top:-7px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#A9452A;box-shadow:0 2px 3px rgba(0,0,0,.25),inset -2px -2px 0 rgba(0,0,0,.15)}
-.flyer .fh{margin:0;padding:26px 22px 4px;font-family:'EB Garamond',serif;font-style:italic;font-size:27px;line-height:1.15;color:#1C1B1F}
-.flyer .fs{margin:0;padding:0 22px 16px;font-size:12px;letter-spacing:.24em;color:#8a837d}
+.flyer .fh{margin:0;padding:24px 22px 18px;font-family:Geist,sans-serif;font-weight:500;font-size:19px;letter-spacing:-.01em;white-space:nowrap;color:#1C1B1F}
 .flyer .tabs{display:flex;border-top:1.5px dashed #c9c4bd}
-.flyer .tab{flex:1;height:104px;display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;transform-origin:50% 0;font-size:13px;letter-spacing:.14em;color:#A9452A;border-left:1px dashed #d8d3cc;background:#fff;transition:transform .45s cubic-bezier(.3,1.5,.5,1),box-shadow .3s}
+.flyer .tab{width:46px;height:74px;display:flex;align-items:center;justify-content:center;transform-origin:50% 0;border-left:1px dashed #d8d3cc;background:#fff;transition:transform .45s cubic-bezier(.3,1.5,.5,1),box-shadow .3s}
 .flyer .tab:first-child{border-left:0}
-.flyer .tab:hover,.flyer .tab:focus-visible{transform:rotate(-7deg) translateY(3px);box-shadow:0 6px 10px rgba(70,50,35,.14);color:#8F3C21}
-.flyer .tab.gone{background:transparent;border-left:1px dashed transparent;pointer-events:none}
+.flyer .tab svg{display:block}
+.flyer .tab:hover,.flyer .tab:focus-visible{transform:rotate(-8deg) translateY(3px);box-shadow:0 6px 10px rgba(70,50,35,.16)}
+.flyer .tab.gone{flex:1;width:auto;background:transparent;border-left:1px dashed transparent;pointer-events:none}
 .flyer .tab.gone::after{content:"";display:block;width:100%;height:8px;align-self:flex-start;background:#fff;clip-path:polygon(0 0,100% 0,100% 40%,85% 100%,70% 45%,55% 100%,40% 50%,25% 100%,10% 45%,0 90%)}
 @media (prefers-reduced-motion: reduce){.flyer .tab{transition:none}}
-.socials{position:absolute;left:72px;top:864px;display:flex;gap:18px;align-items:center}
-.socials a{display:flex}
 .lines{position:absolute;left:0;top:0;width:1512px;height:982px;overflow:visible;pointer-events:none}
 .lines path{fill:none;stroke-linecap:round;stroke-linejoin:round}
 /* the straight plan draws across first, evenly; then the terracotta line peels off it and roams */
@@ -111,7 +111,7 @@ h1{position:absolute;left:72px;top:118px;width:600px;margin:0;font-family:Geist,
 .stop .date{display:block;margin-bottom:4px;font-family:'Hanken Grotesk',sans-serif;font-style:normal;font-size:12px;letter-spacing:.14em;color:#8a837d}
 .stop .name{font-size:18px;color:#1C1B1F;transition:color .3s}
 .stop .more{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .7s cubic-bezier(.2,.7,.2,1),opacity .5s ease .1s}
-.stop .more>p{overflow:hidden;margin:0;font-family:'EB Garamond',serif;font-style:italic;font-size:17px;line-height:1.3;color:#2a2724}
+.stop .more>p{overflow:hidden;margin:0;font-family:'Hanken Grotesk',sans-serif;font-size:15px;line-height:1.5;color:#2a2724}
 .stop .more>p span{display:block;padding-top:6px}
 .stop:hover .more,.stop:focus-within .more,.stop:focus .more{grid-template-rows:1fr;opacity:1}
 /* labels above the line keep their place: the description drops below the name, over the line, on a paper backing */
@@ -133,9 +133,9 @@ h1{position:absolute;left:72px;top:118px;width:600px;margin:0;font-family:Geist,
   .m{display:flex;flex-direction:column;min-height:100vh;min-height:100svh;box-sizing:border-box;padding:48px 16px 32px}
   .m .back{position:static;align-self:flex-start;min-height:32px;box-sizing:border-box}
   .m h1{position:static;width:auto;margin:6px 0 0;font-size:44px}
-  .m .mflyer{position:static;width:auto;margin:24px 0 0;transform:none}
-  .m .mflyer .fh{padding:20px 18px 14px;font-size:24px}
-  .m .mflyer .tab{height:auto;min-height:48px;writing-mode:horizontal-tb}
+  .m .mflyer{position:static;margin:24px 0 0;transform:none}
+  .m .mflyer .fh{padding:20px 16px 16px;font-size:17px;white-space:normal}
+  .m .mflyer .tab{flex:1;width:auto;height:64px}
   .m .mhead{margin:32px 0 10px;font-size:12px;letter-spacing:.24em}
   .m .mplans{list-style:none;margin:0;padding:0 0 0 16px;border-left:2px solid #1C1B1F;display:grid;gap:10px}
   .m .mplans li{font-family:'EB Garamond',serif;font-style:italic;font-size:20px;line-height:1.25}
@@ -148,9 +148,7 @@ h1{position:absolute;left:72px;top:118px;width:600px;margin:0;font-family:Geist,
   .m .mstops li::before{content:"";position:absolute;left:-26px;top:3px;width:12px;height:12px;box-sizing:border-box;border-radius:50%;background:#A9452A;border:3px solid #fbfaf7;box-shadow:0 0 0 1px #A9452A}
   .m .mstops .date{font-size:12px;letter-spacing:.14em;color:#8a837d}
   .m .mstops .name{font-size:17px}
-  .m .mstops .q{margin:4px 0 0;font-family:'EB Garamond',serif;font-style:italic;font-size:17px;line-height:1.3;color:#4A4542}
-  .m .socials{position:static;margin-top:auto;gap:6px;margin-left:-12px}
-  .m .socials a{width:44px;height:44px;align-items:center;justify-content:center}
+  .m .mstops .q{margin:4px 0 0;font-size:15px;line-height:1.5;color:#4A4542}
 }
 .cb-yes,.cb-no{min-height:40px;padding:0 20px;border-radius:10px;font-family:inherit;font-size:14px;cursor:pointer}
 .cb-yes{border:0;background:#E8EBF0;color:#0B0A0F;font-weight:600}
@@ -168,15 +166,12 @@ h1{position:absolute;left:72px;top:118px;width:600px;margin:0;font-family:Geist,
 
 <a class="back" href="/#desk">Back</a>
 <h1>i prefer the scenic route.</h1>
-<aside class="flyer ed" style="animation-delay: .9s" aria-label="you and i can work together">
+<aside class="flyer ed" style="animation-delay: .9s" aria-label="now you and i can work together!">
 <span class="pin" aria-hidden="true"></span>
-<p class="fh">you and i can work together.</p>
-<p class="fs">take one.</p>
+<p class="fh">now you and i can work together!</p>
 <div class="tabs">
-<a class="tab" href={EMAIL}>email me</a>
-<a class="tab" href={WHATSAPP} target="_blank" rel="noopener">whatsapp</a>
+{socials.map((c) => <a class="tab" href={c.href} aria-label={c.label} {...ext(c.href)} set:html={c.svg}></a>)}
 <span class="tab gone" aria-hidden="true"></span>
-<a class="tab" href={LINKEDIN} target="_blank" rel="noopener">linkedin</a>
 </div>
 </aside>
 
@@ -203,19 +198,15 @@ h1{position:absolute;left:72px;top:118px;width:600px;margin:0;font-family:Geist,
 </li>
 ))}
 </ol>
-
-<nav class="socials" aria-label="Socials">
-{socials.map((s) => <a href={s.href} aria-label={s.label} {...ext(s.href)} set:html={s.svg}></a>)}
-</nav>
 </div>
 </section>
 
 <main class="m">
 <a class="back" href="/#desk">Back</a>
 <h1>i prefer the scenic route.</h1>
-<aside class="flyer mflyer" aria-label="you and i can work together">
-<p class="fh">you and i can work together.</p>
-<div class="tabs"><a class="tab" href={EMAIL}>email me</a><a class="tab" href={WHATSAPP} target="_blank" rel="noopener">whatsapp</a><a class="tab" href={LINKEDIN} target="_blank" rel="noopener">linkedin</a></div>
+<aside class="flyer mflyer" aria-label="now you and i can work together!">
+<p class="fh">now you and i can work together!</p>
+<div class="tabs">{socials.map((c) => <a class="tab" href={c.href} aria-label={c.label} {...ext(c.href)} set:html={c.svg}></a>)}</div>
 </aside>
 <p class="mhead" style="color: #4A4542">what i wanted to do</p>
 <ol class="mplans">
@@ -231,9 +222,6 @@ h1{position:absolute;left:72px;top:118px;width:600px;margin:0;font-family:Geist,
 <ol class="mstops">
 {stops.map((s) => <li><span class="name">{s.name}</span><span class="date">{s.date}</span><p class="q">{s.learnt}</p></li>)}
 </ol>
-<nav class="socials" aria-label="Socials">
-{socials.map((s) => <a href={s.href} aria-label={s.label} {...ext(s.href)} set:html={s.svg}></a>)}
-</nav>
 </main>
 
 <div id="consent" role="dialog" aria-label="Cookie choice" hidden style="position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 55; max-width: 360px; box-sizing: border-box; padding: 18px 20px; border-radius: 16px; background: #141319; border: 1px solid #3A3842; box-shadow: 0 20px 50px rgba(0,0,0,0.6); font-family: 'Hanken Grotesk', system-ui, sans-serif; font-size: 14px; line-height: 1.5; color: #C9CDD5">
