@@ -315,8 +315,10 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 </div>
 
 <script is:inline>
-// scale the 1512x982 spread to fill any desktop window
-function fit(){var s=Math.min(innerWidth/1512,innerHeight/982),st=document.getElementById('stage');document.documentElement.style.setProperty('--s',s);st.style.transform='scale('+s+')';st.style.left=((innerWidth-1512*s)/2)+'px';st.style.top=((innerHeight-982*s)/2)+'px';}
+// scale the 1512x982 spread to fill the window
+// The spread is zoomed in to cover the whole window, centred, so nothing shows beside it; the overflow is trimmed
+// off the sides evenly and a little more from the bottom than the top. On very unusual window shapes it stops zooming at 18% trimmed, so Back and the socials stay in view.
+function fit(){var a=innerWidth/1512,b=innerHeight/982,lo=Math.min(a,b),s=Math.min(Math.max(a,b),lo/0.82),st=document.getElementById('stage');document.documentElement.style.setProperty('--s',s);st.style.transform='scale('+s+')';st.style.left=((innerWidth-1512*s)/2)+'px';st.style.top=((innerHeight-982*s)*0.4)+'px';}
 addEventListener('resize',fit);fit();
 // hovering a key item highlights its cutout
 document.querySelectorAll('[data-for]').forEach(function(a){var c=document.querySelector('.cut[data-id="'+a.dataset.for+'"]');a.addEventListener('mouseenter',function(){c&&c.classList.add('hl')});a.addEventListener('mouseleave',function(){c&&c.classList.remove('hl')});});
