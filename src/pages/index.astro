@@ -23,12 +23,15 @@ const planeLogo = `<svg class="logo" width="130" height="81" viewBox="0 0 579 36
 const carrie = '<img src="/desk/carrie.png" alt="a woman writing at her laptop, thinking" style="max-width: 150px; max-height: 182px">';
 // "Tech jobs and their stories.": a little desk of her work, cut from her own photos: the laptop (showing
 // Plane's GitHub star history), the pen cup and the notebook stack. On hover they shift apart a little.
-const workGroup = `<span class="wgrp"><img class="wp" src="/desk/work-pens.png" alt="a mesh cup full of pens"><img class="wl" src="/desk/work-laptop.png" alt="kritika's laptop showing plane's github star history climbing"><img class="wn" src="/desk/work-notebooks.png" alt="a notebook stack with yellow sticky notes on top"></span>`;
+const workGroup = `<span class="wgrp"><img class="wp" src="/desk/work-pens.png" alt="a mesh cup full of pens"><img class="wn" src="/desk/work-notebooks.png" alt="a notebook stack with yellow sticky notes on top"><img class="wl" src="/desk/work-laptop.png" alt="kritika's laptop showing plane's github star history climbing"><img class="wc" src="/desk/iced-latte.png" alt="an iced latte in a tall glass"></span>`;
+// "my coffee reccs!": a brunch, cut piece by piece from her photo: the croissant sandwich, the english breakfast,
+// the iced coffee and her shades. On hover they spread a little.
+const brunch = `<span class="brn"><img class="bc" src="/desk/brunch-croissant.png" alt="a croissant sandwich on an oval plate"><img class="bb" src="/desk/brunch-breakfast.png" alt="an english breakfast plate with pancakes, beans and hash browns"><img class="bk" src="/desk/brunch-coffee.png" alt="an iced coffee with a straw"><img class="bs" src="/desk/brunch-shades.png" alt="black sunglasses"></span>`;
 
 // Phone column, in number order.
 const items = [
   { n: 1, name: 'say hello', href: JOURNEY, say: true, art: '<img src="/desk/kritika-mirror.png" alt="kritika taking a mirror selfie in a white top and green checked trousers" style="max-width: 240px; max-height: 260px">' },
-  { n: 2, name: 'my coffee reccs!', href: COFFEE, art: '<img src="/desk/iced-latte.png" alt="an iced latte in a tall glass">' },
+  { n: 2, name: 'my coffee reccs!', href: COFFEE, art: brunch },
   { n: 3, name: 'she substacks', href: COVER, art: carrie },
   { n: 4, name: 'Tech jobs and their stories.', href: WORK, art: workGroup },
   { n: 5, name: 'tedx bitd', href: TEDX, art: '<img src="/desk/tedx-x.png" alt="a big red handmade x from tedx bitd">' },
@@ -73,16 +76,35 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 /* each cutout's number sits right by its image */
 .no{position:absolute;font-family:Geist,sans-serif;font-weight:500;font-size:17px;color:#B4502F;pointer-events:none}
 /* Tech jobs: pen cup at the back, laptop beside it, notebooks in front (hiding the cup's trimmed base) */
-.wgrp{position:relative;display:block;width:300px;height:230px}
-.wgrp img{position:absolute;display:block;max-width:none !important;max-height:none !important;filter:drop-shadow(0 7px 9px rgba(70,50,35,.20));transition:transform .6s cubic-bezier(.3,1.3,.5,1)}
-.wgrp .wp{left:26px;top:52px;width:80px;transform:rotate(-4deg)}
-.wgrp .wl{left:104px;top:8px;width:172px}
-.wgrp .wn{left:0;top:150px;width:150px;transform:rotate(2deg)}
-.cut:hover .wgrp .wp,.cut.hl .wgrp .wp,.cut:focus-visible .wgrp .wp{transform:translate(-14px,-6px) rotate(-9deg)}
-.cut:hover .wgrp .wl,.cut.hl .wgrp .wl,.cut:focus-visible .wgrp .wl{transform:translate(10px,-10px) rotate(1.5deg)}
-.cut:hover .wgrp .wn,.cut.hl .wgrp .wn,.cut:focus-visible .wgrp .wn{transform:translate(-8px,8px) rotate(-1deg)}
-.m-item .wgrp{transform:scale(.9)}
-@media (prefers-reduced-motion: reduce){.wgrp img{transition:none}}
+.wgrp,.brn{position:relative;display:block}
+.wgrp{width:356px;height:232px}.brn{width:330px;height:250px}
+.wgrp img,.brn img{position:absolute;display:block;height:auto !important;max-width:none !important;max-height:none !important;filter:drop-shadow(0 7px 9px rgba(70,50,35,.20));transition:transform .6s cubic-bezier(.3,1.3,.5,1)}
+/* work: books and laptop share one baseline (y 228), pens peek from behind the books, the coffee stands beside */
+.wgrp .wp{left:24px;top:78px;width:74px;transform:rotate(-3deg)}
+.wgrp .wn{left:0;top:160px;width:150px}
+.wgrp .wl{left:152px;top:50px;width:156px}
+.wgrp .wc{left:300px;top:149px;width:56px}
+.cut:hover .wgrp .wp,.cut.hl .wgrp .wp,.cut:focus-visible .wgrp .wp{transform:translate(-10px,-6px) rotate(-8deg)}
+.cut:hover .wgrp .wn,.cut.hl .wgrp .wn,.cut:focus-visible .wgrp .wn{transform:translate(-8px,4px)}
+.cut:hover .wgrp .wl,.cut.hl .wgrp .wl,.cut:focus-visible .wgrp .wl{transform:translateY(-8px)}
+.cut:hover .wgrp .wc,.cut.hl .wgrp .wc,.cut:focus-visible .wgrp .wc{transform:translate(8px,-4px) rotate(4deg)}
+/* brunch: a flat lay */
+.brn .bc{left:0;top:6px;width:150px;transform:rotate(-8deg)}
+.brn .bb{left:128px;top:56px;width:176px}
+.brn .bk{left:262px;top:0;width:64px;transform:rotate(6deg)}
+.brn .bs{left:84px;top:160px;width:34px;transform:rotate(22deg)}
+.cut:hover .brn .bc,.cut.hl .brn .bc,.cut:focus-visible .brn .bc{transform:translate(-8px,-6px) rotate(-11deg)}
+.cut:hover .brn .bb,.cut.hl .brn .bb,.cut:focus-visible .brn .bb{transform:translate(6px,6px)}
+.cut:hover .brn .bk,.cut.hl .brn .bk,.cut:focus-visible .brn .bk{transform:translate(8px,-6px) rotate(10deg)}
+.cut:hover .brn .bs,.cut.hl .brn .bs,.cut:focus-visible .brn .bs{transform:translate(-8px,8px) rotate(30deg)}
+.m-item .wgrp,.m-item .brn{transform:scale(.9)}
+@media (prefers-reduced-motion: reduce){.wgrp img,.brn img{transition:none}}
+/* scrolling on the desk: everything nudges up together and settles back, with a note that this is the whole page */
+.desk .cut,.desk .toc{translate:0 var(--nudge,0px);transition:translate .55s cubic-bezier(.3,1.5,.5,1)}
+.desk.nudging .cut,.desk.nudging .toc{transition:translate .18s ease-out}
+.endnote{position:absolute;left:456px;top:872px;width:600px;margin:0;text-align:center;font-family:'Hanken Grotesk',sans-serif;font-size:15px;color:#8a837d;opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s;pointer-events:none}
+.endnote.on{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){.desk .cut,.desk .toc{transition:none}}
 /* contents: one paragraph, numbers in terracotta */
 .toc{position:absolute;left:960px;top:722px;width:470px;margin:0;font-family:'Hanken Grotesk',sans-serif;font-size:18px;line-height:1.4;color:#6f6862}
 .toc a{white-space:nowrap;margin-right:.55em}
@@ -255,31 +277,32 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 <span class="no" aria-hidden="true" style="left: 12px; top: 80px">1</span>
 </a>
 
-<a href={COFFEE} class="cut c-coffee" data-id="coffee" aria-label="my coffee reccs!" style="left: 860px; top: 96px; width: 150px; height: 200px">
-<div class="box" style="transform: rotate(4deg)"><img src="/desk/iced-latte.png" alt="an iced latte in a tall glass"></div>
-<span class="no" aria-hidden="true" style="left: -14px; top: 10px">2</span>
+<a href={COFFEE} class="cut c-coffee" data-id="coffee" aria-label="my coffee reccs!" style="left: 880px; top: 84px; width: 330px; height: 250px">
+<div class="box" set:html={brunch}></div>
+<span class="no" aria-hidden="true" style="left: -14px; top: 6px">2</span>
 </a>
 
-<a href={COVER} class="cut c-cover" data-id="cover" aria-label="she substacks" style="left: 1010px; top: 470px; width: 170px; height: 190px">
+<a href={COVER} class="cut c-cover" data-id="cover" aria-label="she substacks" style="left: 960px; top: 404px; width: 170px; height: 190px">
 <div class="box" set:html={carrie}></div>
 <span class="no" aria-hidden="true" style="left: -16px; top: 12px">3</span>
 </a>
 
-<a href={WORK} class="cut c-tech" data-id="tech" aria-label="Tech jobs and their stories." style="left: 80px; top: 372px; width: 300px; height: 230px">
+<a href={WORK} class="cut c-tech" data-id="tech" aria-label="Tech jobs and their stories." style="left: 214px; top: 396px; width: 356px; height: 232px">
 <div class="box" set:html={workGroup}></div>
 <span class="no" aria-hidden="true" style="left: -6px; top: 6px">4</span>
 </a>
 
-<a href={TEDX} class="cut c-x" data-id="x" aria-label="tedx bitd" style="left: 390px; top: 635px">
+<a href={TEDX} class="cut c-x" data-id="x" aria-label="tedx bitd" style="left: 430px; top: 648px">
 <div class="box" style="transform: rotate(-6deg)"><img src="/desk/tedx-x.png" alt="a big red handmade x from tedx bitd" style="max-width: 112px; max-height: 112px"></div>
 <span class="no" aria-hidden="true" style="left: -10px; top: 8px">5</span>
 </a>
 
-<a href={TAROT} class="cut c-tarot" data-id="tarot" aria-label="the world" style="left: 1270px; top: 450px">
+<a href={TAROT} class="cut c-tarot" data-id="tarot" aria-label="the world" style="left: 1170px; top: 436px">
 <div class="box" style="transform: rotate(5deg)"><img src="/desk/the-world-tarot.png" alt="the world tarot card"></div>
 <span class="no" aria-hidden="true" style="left: 2px; top: 4px">6</span>
 </a>
 
+<p class="endnote" aria-hidden="true">that's the whole page, darling. click on anything.</p>
 <nav aria-label="Contents"><p class="toc"><a href={JOURNEY} class="keyitem" data-for="me"><b>1.</b>say hello</a> <a href={COFFEE} class="keyitem" data-for="coffee"><b>2.</b>my coffee reccs!</a> <a href={COVER} class="keyitem" data-for="cover"><b>3.</b>she substacks</a> <a href={WORK} class="keyitem" data-for="tech"><b>4.</b>Tech jobs and their stories.</a> <a href={TEDX} class="keyitem" data-for="x"><b>5.</b>tedx bitd</a> <a href={TAROT} class="keyitem" data-for="tarot"><b>6.</b>the world</a></p></nav>
 
 <p class="spotted" style="position: absolute; left: 72px; top: 268px; margin: 0; font-size: 13px; color: #4A4542">last spotted at <a href={BEANLORE} target="_blank" rel="noopener">Beanlore, Kormangala</a>, reading in the sun.<img class="spot-pic" src="/desk/reading-in-the-sun.jpg" alt="kritika reading a book in the sun at Beanlore"></p>
@@ -427,8 +450,18 @@ function turnEase(x){
   }
   function finish(){ done = true; root.classList.remove('intro-on'); }
   function turn(){ p = 1; render(true); clearTimeout(fin); fin = setTimeout(finish, reduce ? 0 : 1150); }
+  // On the desk (laptops), scrolling down can't go anywhere: everything nudges up together and settles back,
+  // and a note says this is the whole page. Each scroll gives the same little bounce.
+  var deskEl = D.parentNode, note = deskEl.querySelector('.endnote'), nudgeT, noteT;
+  function nudge(){
+    if (reduce) { note.classList.add('on'); clearTimeout(noteT); noteT = setTimeout(function(){ note.classList.remove('on'); }, 2200); return; }
+    deskEl.classList.add('nudging'); deskEl.style.setProperty('--nudge', '-22px');
+    clearTimeout(nudgeT); nudgeT = setTimeout(function(){ deskEl.classList.remove('nudging'); deskEl.style.setProperty('--nudge', '0px'); }, 140);
+    note.classList.add('on'); clearTimeout(noteT); noteT = setTimeout(function(){ note.classList.remove('on'); }, 2200);
+  }
   function push(d){
     if (done) {
+      if (d > 0 && !phone.matches) { nudge(); return; }
       if (d >= 0 || (phone.matches && scrollY > 0)) return;
       done = false; root.classList.add('intro-on'); render(2);
     }
@@ -537,46 +570,30 @@ function turnEase(x){
   addEventListener('pageshow', hush); // coming back with the browser's back button
 })();
 
-// "last spotted" photo: pops up when the line is hovered, then follows the cursor (with a slight drag), locked
-// inside the top-left quarter of the spread. Once the cursor crosses the middle of the spread, across (the fold)
-// or down, it fades out. Hovering the line again brings it back.
+// "last spotted" photo: shows only while the cursor is on the line, sitting 5px right of and below the cursor
+// (with a slight drag). Leaving the line hides it.
 (function(){
   var lines = document.querySelectorAll('#stage p.spotted'), line = lines[lines.length - 1]; // last one is the real desk (the first is the page-turn copy)
   if (!line) return;
   var pic = line.querySelector('.spot-pic');
-  var MIDX = 756, MIDY = 491; // the middle of the 1512 x 982 spread
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var on = false, tx = 10, ty = 0, x = 10, y = 0, raf = 0;
-  function scale(){ return line.getBoundingClientRect().width / line.offsetWidth || 1; } // the desk is scaled to the window
-  // cursor position on the spread
-  function spot(cx, cy){
-    var r = line.getBoundingClientRect(), s = scale();
-    return { x: line.offsetLeft + (cx - r.left) / s, y: line.offsetTop + (cy - r.top) / s, lx: (cx - r.left) / s, ly: (cy - r.top) / s };
-  }
+  var on = false, tx = 5, ty = 0, x = 5, y = 0, raf = 0;
   function aim(cx, cy){
-    var c = spot(cx, cy);
-    // keep the whole photo on the near side of both middles
-    tx = Math.min(c.lx + 10, MIDX - line.offsetLeft - pic.offsetWidth);
-    ty = Math.min(c.ly + 10, MIDY - line.offsetTop - pic.offsetHeight);
+    var r = line.getBoundingClientRect(), s = r.width / line.offsetWidth || 1; // the desk is scaled to the window
+    tx = (cx - r.left) / s + 5; ty = (cy - r.top) / s + 5;
   }
   function tick(){
-    var k = reduce ? 1 : 0.3;
+    var k = reduce ? 1 : 0.35;
     x += (tx - x) * k; y += (ty - y) * k;
     pic.style.left = x.toFixed(1) + 'px'; pic.style.top = y.toFixed(1) + 'px';
     raf = (on && (Math.abs(tx - x) > 0.3 || Math.abs(ty - y) > 0.3)) ? requestAnimationFrame(tick) : 0;
   }
-  function follow(){ if (!raf) raf = requestAnimationFrame(tick); }
   line.addEventListener('mouseenter', function(e){
-    aim(e.clientX, e.clientY);
-    if (!on) { x = tx; y = ty; pic.style.left = x + 'px'; pic.style.top = y + 'px'; }
+    aim(e.clientX, e.clientY); x = tx; y = ty; pic.style.left = x + 'px'; pic.style.top = y + 'px';
     on = true; line.classList.add('on');
   });
-  addEventListener('mousemove', function(e){
-    if (!on) return;
-    var c = spot(e.clientX, e.clientY);
-    if (c.x > MIDX || c.y > MIDY) { on = false; line.classList.remove('on'); return; }
-    aim(e.clientX, e.clientY); follow();
-  });
+  line.addEventListener('mousemove', function(e){ aim(e.clientX, e.clientY); if (!raf) raf = requestAnimationFrame(tick); });
+  line.addEventListener('mouseleave', function(){ on = false; line.classList.remove('on'); });
 })();
 </script>
 </body>
