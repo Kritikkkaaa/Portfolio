@@ -272,7 +272,7 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 <button class="back" type="button" data-back>Back</button>
 <h1 style="position: absolute; left: 72px; top: 118px; width: 600px; margin: 0; font-family: Geist, sans-serif; font-weight: 600; font-size: 64px; line-height: 1.02; letter-spacing: -.02em; color: #A9452A">darling, have you met Kritika?</h1>
 
-<a href={JOURNEY} class="cut c-me" data-id="me" data-say aria-label="what's her story?" style="left: 590px; top: 292px; width: 340px; height: 368px">
+<a href={JOURNEY} class="cut c-me" data-id="me" data-say data-cur="nav" aria-label="what's her story?" style="left: 590px; top: 292px; width: 340px; height: 368px">
 <div class="box"><img src="/desk/kritika-mirror.png" alt="kritika taking a mirror selfie in a white top and green checked trousers" style="max-width: 340px; max-height: 360px"></div>
 <div class="bubble imsg" style="left: -150px; top: -26px; width: 236px">i am Kritika! I am a creative. marketer. and a writer.<svg class="tail" viewBox="0 0 17 21" aria-hidden="true"><path d="M0 0 C1 9 5 16 17 21 C9 21.5 3.5 20 0 17.5 Z" fill="#0A84FF"></path></svg></div>
 <span class="no" aria-hidden="true" style="left: 12px; top: 80px">1</span>
@@ -283,7 +283,7 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 <span class="no" aria-hidden="true" style="left: -14px; top: 6px">2</span>
 </a>
 
-<a href={COVER} class="cut c-cover" data-id="cover" aria-label="i write on Substack" style="left: 996px; top: 452px; width: 170px; height: 190px">
+<a href={COVER} class="cut c-cover" data-cur="nav" data-id="cover" aria-label="i write on Substack" style="left: 996px; top: 452px; width: 170px; height: 190px">
 <div class="box" set:html={carrie}></div>
 <span class="no" aria-hidden="true" style="left: -16px; top: 12px">3</span>
 </a>
@@ -293,12 +293,12 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 <span class="no" aria-hidden="true" style="left: -6px; top: 6px">4</span>
 </a>
 
-<a href={TEDX} class="cut c-x" data-id="x" aria-label="ideas that never took off" style="left: 40px; top: 392px">
+<a href={TEDX} class="cut c-x" data-cur="nav" data-id="x" aria-label="ideas that never took off" style="left: 40px; top: 392px">
 <div class="box" style="transform: rotate(-6deg)"><img src="/desk/tedx-x.png" alt="a big red handmade x from tedx bitd" style="max-width: 112px; max-height: 112px"></div>
 <span class="no" aria-hidden="true" style="left: -10px; top: 8px">5</span>
 </a>
 
-<a href={TAROT} class="cut c-tarot" data-id="tarot" aria-label="things i do for fun" style="left: 1204px; top: 340px">
+<a href={TAROT} class="cut c-tarot" data-cur="nav" data-id="tarot" aria-label="things i do for fun" style="left: 1204px; top: 340px">
 <div class="box" style="transform: rotate(5deg)"><img src="/desk/the-world-tarot.png" alt="the world tarot card"></div>
 <span class="no" aria-hidden="true" style="left: 2px; top: 4px">6</span>
 </a>
@@ -597,5 +597,6 @@ function turnEase(x){
   line.addEventListener('mouseleave', function(){ on = false; line.classList.remove('on'); });
 })();
 </script>
+<script is:inline src="/kritikal-cursor.js" defer></script>
 </body>
 </html>

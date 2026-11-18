@@ -164,7 +164,7 @@ function render(){
   pinsEl.innerHTML='';
   L.forEach(function(p){
     var on=open===p.id, op=on?1:(open?0.25:0.55), sz=on?16:11;
-    var a=document.createElement('a'); a.href=p.href; a.target='_blank'; a.setAttribute('aria-label',p.name+', '+p.area);
+    var a=document.createElement('a'); a.href=p.href; a.target='_blank'; a.setAttribute('data-cur','pin'); a.setAttribute('aria-label',p.name+', '+p.area);
     a.style.cssText='position:absolute;left:'+(p.x-8)+'px;top:'+(p.y-8)+'px;width:16px;height:16px;display:block;z-index:'+(on?5:1);
     var d=document.createElement('span'); d.style.cssText='position:absolute;left:'+(8-sz/2)+'px;top:'+(8-sz/2)+'px;width:'+sz+'px;height:'+sz+'px;border-radius:50%;background:rgba(169,69,42,'+op+');box-shadow:0 0 0 '+(on?5:0)+'px rgba(169,69,42,.16);transition:all .25s ease';
     a.appendChild(d);
@@ -195,5 +195,6 @@ addEventListener('resize',fit);fit();
 // phones: make sure the card videos play muted inline
 document.querySelectorAll('.m video').forEach(function(v){v.muted=true;v.play&&v.play().catch(function(){});});
 </script>
+<script is:inline src="/kritikal-cursor.js" defer></script>
 </body>
 </html>
