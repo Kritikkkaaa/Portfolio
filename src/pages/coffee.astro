@@ -1,0 +1,199 @@
+---
+// /coffee, "Genuine reccos." — from Kritika's coffee/index.html design (the exact reference; layout, copy and
+// casing unchanged). Desktop: a fixed 1512x982 spread scaled to fill the window, with a hand-drawn map; hovering a
+// dot opens a card. Below 768px: heading, the article in one column, then the places as tappable cards (no map).
+// Photos and the video live in public/coffee/.
+import Analytics from '../components/Analytics.astro';
+
+const L = [
+      { id: 'maize', name: 'Maize & Malt', area: 'Mahadevapura, Bengaluru', x: 575, y: 732, mx: 150, my: 430, href: 'https://maps.app.goo.gl/28oTarv8uJ7Lba8j6' , line: 'amazing vegetarian food and starters. probably the only club where the food will exceed your expectation, over drinks.', kind: 'video', media: '/coffee/maize-and-malt.mp4', alt: 'friends dancing at maize & malt' },
+      { id: 'kopi', name: 'Kopitiam Lah', area: 'Indiranagar, Bengaluru', x: 551, y: 741, mx: 150, my: 430, href: 'https://maps.app.goo.gl/GDwtF5ZaTJTMu5LR6' , line: 'experimental malaysian food. you will not order enough but then will regret it. yep, you are definitely gonna over eat.', kind: 'img', media: '/coffee/kopitiam-lah.jpg', alt: 'the lit-up entrance of kopitiam lah' },
+      { id: 'gato', name: 'Gato House', area: 'HSR Layout, Bengaluru', x: 537, y: 762, mx: 150, my: 430, href: 'https://maps.app.goo.gl/XW6wz3fjqmS3a2vT6' , line: "new find. good music. wide menu. haven't tried coffee. slapping hot chocolate.", kind: 'img', media: '/coffee/gato-house.jpg', alt: 'hot chocolate and toast at gato house' },
+      { id: 'amin', name: 'Amintiri', area: 'HSR Layout, Bengaluru', x: 551, y: 774, mx: 150, my: 430, href: 'https://maps.app.goo.gl/X19gvWodnExo6XVi9' , line: "people think it's a dessert place. but then you visit one time at 10.30. and then it becomes home.", kind: 'img', media: '/coffee/amintiri.jpg', alt: 'a plate of noodle salad on marble at amintiri' },
+      { id: 'aurum', name: 'Aurum', area: 'HSR Layout, Bengaluru', x: 565, y: 764, mx: 150, my: 430, href: 'https://maps.app.goo.gl/hStk3j6JExN2ZuT58' , line: 'the official hideout for mercury retrograde. amazing maggie and momos!', kind: 'img', media: '/coffee/aurum.jpg', alt: 'a round wooden table with a potted flower at aurum' },
+      { id: 'kohe', name: 'Kohe', area: 'Hyderabad', x: 634, y: 288, mx: 200, my: 250, href: 'https://maps.app.goo.gl/SxnuhXHzEZUEzjCx6' , line: 'a hole in the wall with daily menu and experimental coffee. the barista there is hot!', kind: 'img', media: '/coffee/kohe.jpg', alt: 'kohe at night, string lights and hanging plants' },
+      { id: 'artjuna', name: 'Artjuna', area: 'Anjuna, Goa', x: 166, y: 488, mx: 230, my: 250, href: 'https://maps.app.goo.gl/MCdXCbK6bYBWVdiM7', line: 'you can get lost in the paintings there man! also food is over priced but yum.', kind: 'img', media: '/coffee/artjuna.jpg', alt: 'friends at a table at artjuna, paintings on the walls' }
+];
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>kritika · Genuine reccos</title>
+<link rel="icon" href="/mark.svg" type="image/svg+xml">
+<link rel="icon" href="/mark-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/mark-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@500;600&amp;family=EB+Garamond:ital,wght@0,400;1,400&amp;family=Hanken+Grotesk:wght@400;500&amp;display=swap" rel="stylesheet">
+<style is:inline>
+html,body{margin:0;height:100%;background:#fff;overflow:hidden}
+#stage{position:absolute;left:0;top:0;transform-origin:0 0}
+a{color:#A9452A;text-decoration:none}a:hover{color:#7E321D}
+a:focus-visible{outline:2px solid #A9452A;outline-offset:4px}
+.pageL{background:linear-gradient(100deg,#ffffff 0%,#fbfbf9 38%,#ffffff 52%,#f6f6f3 78%,#e9e8e4 96%,#d9d7d2 100%)}
+.pageR{background:linear-gradient(80deg,#d6d4cf 0%,#e8e7e3 4%,#f7f7f4 20%,#ffffff 46%,#fafaf8 70%,#ffffff 100%)}
+.sheen{background:linear-gradient(115deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.75) 42%,rgba(255,255,255,0) 54%)}
+.entry{display:grid;grid-template-columns:28px 1fr;column-gap:10px;padding:2px 0;color:#1C1B1F}
+.entry:hover .nm{color:#A9452A}
+.city{transition:opacity .3s}
+@keyframes late{to{opacity:1}}
+@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.96)}to{opacity:1;transform:none}}
+
+/* Phones (under 768px): one column, no map */
+.m{display:none}
+@media (max-width: 767px){
+  html,body{height:auto;overflow:auto}
+  #stage{display:none}
+  .m{display:block;box-sizing:border-box;padding:40px 16px 40px;font-family:'Hanken Grotesk',sans-serif;color:#1C1B1F}
+  .m-home{display:inline-flex;align-items:center;min-height:44px;font-size:14px;color:#4A4542;text-decoration:underline;text-underline-offset:3px}
+  .m h1{margin:4px 0 24px;font-family:Geist,sans-serif;font-weight:600;font-size:44px;line-height:1.02;letter-spacing:-.02em;color:#A9452A}
+  .m article{font-family:'EB Garamond',serif;font-size:17px;line-height:1.5;color:#2a2724}
+  .m article img{display:block;width:100%;height:auto;aspect-ratio:628/380;object-fit:cover}
+  .m article h2{margin:20px 0 14px;font-family:'EB Garamond',serif;font-style:italic;font-weight:400;font-size:28px;line-height:1.1;color:#1C1B1F}
+  .m article p{margin:0 0 12px}
+  .m article .pull{margin:4px 0 14px;font-style:italic;color:#A9452A;font-size:21px;line-height:1.3}
+  .m article .glasses{margin-top:8px;aspect-ratio:628/240;object-position:center 45%}
+  .m ul{list-style:none;margin:36px 0 0;padding:0;display:grid;gap:16px}
+  .m-card{display:block;background:#fff;box-shadow:0 10px 28px rgba(70,50,35,.16),0 1px 4px rgba(70,50,35,.08);overflow:hidden;color:#1C1B1F;-webkit-tap-highlight-color:transparent}
+  .m-card img,.m-card video{display:block;width:100%;height:190px;object-fit:cover;background:#efece6}
+  .m-card .in{padding:16px 18px 18px}
+  .m-card .nm{margin:0;font-family:Geist,sans-serif;font-weight:600;font-size:20px;color:#A9452A}
+  .m-card .ar{margin:2px 0 0;font-size:13px;color:#6f6862}
+  .m-card .ln{margin:10px 0 0;font-family:'EB Garamond',serif;font-style:italic;font-size:18px;line-height:1.35;color:#2a2724}
+  .m-card .mp{display:inline-block;margin-top:12px;font-size:14px;color:#A9452A;text-decoration:underline;text-underline-offset:3px}
+  .m-talk{margin:32px 0 0;font-size:14px;line-height:1.5;color:#6f6862}
+  .m-talk a{text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+}
+.cb-yes,.cb-no{min-height:40px;padding:0 20px;border-radius:10px;font-family:inherit;font-size:14px;cursor:pointer}
+.cb-yes{border:0;background:#E8EBF0;color:#0B0A0F;font-weight:600}
+.cb-no{background:none;border:1px solid #3A3842;color:#E8EBF0}
+</style>
+<Analytics />
+</head>
+<body>
+<div id="stage">
+<div style="position: relative; width: 1512px; height: 982px; overflow: hidden; font-family: 'Hanken Grotesk', sans-serif; color: #1C1B1F">
+<div class="pageL" aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 756px; height: 982px"></div>
+<div class="pageR" aria-hidden="true" style="position: absolute; left: 756px; top: 0; width: 756px; height: 982px"></div>
+<div class="sheen" aria-hidden="true" style="position: absolute; inset: 0; opacity: .6"></div>
+
+<a href="/" style="position: absolute; left: 67px; top: 64px; font-size: 14px; color: #4A4542; text-decoration: underline; text-underline-offset: 3px">Home</a>
+
+<h1 style="position: absolute; left: 64px; top: 96px; width: 628px; margin: 0; font-family: Geist, sans-serif; font-weight: 600; font-size: 64px; line-height: 1.02; letter-spacing: -.02em; color: #A9452A">Genuine reccos.</h1>
+
+<div aria-hidden="true" style="position: absolute; left: 64px; top: 236px; width: 628px; height: 610px; box-sizing: border-box; border: 1.4px solid rgba(59,54,51,.85)"></div>
+<svg width="628" height="610" viewBox="98 0 468.4 455" fill="none" role="img" aria-label="hand-drawn map of south india showing hyderabad, goa and bengaluru" style="position: absolute; left: 64px; top: 236px">
+<g stroke="#3b3633" stroke-linecap="round" stroke-linejoin="round">
+<path d="M126.3 0.6 L127.2 2.8 L127.4 5.5 L126.8 9.0 L128.9 12.3 L129.2 15.3 L129.1 19.2 L130.4 20.9 L130.9 23.3 L131.4 26.7 L131.9 29.7 L132.9 32.8 L132.7 35.6 L133.9 38.7 L134.5 40.4 L136.0 45.0 L136.5 46.9 L137.2 49.4 L137.9 53.5 L139.3 56.8 L140.6 59.1 L141.6 61.6 L144.0 63.6 L145.1 69.0 L143.8 70.3 L145.8 71.6 L148.3 74.5 L149.6 77.8 L151.4 79.4 L152.7 83.3 L155.3 85.6 L154.3 89.5 L156.0 92.1 L158.8 92.3 L158.8 97.1 L159.8 98.8 L159.9 103.6 L159.9 105.9 L161.9 109.1 L162.6 110.9 L162.3 115.9 L163.2 119.0 L164.1 119.9 L164.0 123.9 L165.0 126.2 L165.5 129.7 L165.8 131.8 L165.7 137.1 L166.8 138.1 L167.2 141.6 L167.1 145.2 L166.5 147.5 L167.9 150.8 L167.3 153.6 L168.6 156.9 L167.5 159.2 L169.3 162.7 L169.0 165.9 L168.6 168.8 L169.7 172.0 L170.5 174.7 L171.3 178.4 L171.1 180.6 L171.8 183.6 L173.5 186.1 L174.0 189.0 L175.5 191.4 L176.9 195.4 L176.3 197.1 L178.8 200.1 L180.6 203.7 L180.7 206.6 L181.5 208.8 L183.7 210.5 L184.5 215.1 L186.0 217.8 L186.3 219.5 L186.6 223.8 L188.7 225.6 L189.6 228.1 L191.7 231.7 L192.5 234.3 L192.6 237.2 L194.4 238.6 L197.3 243.6 L198.8 244.4 L199.6 246.3 L201.8 250.3 L203.8 252.1 L205.6 255.0 L207.7 257.0 L209.1 259.6 L210.6 262.3 L212.2 264.1 L214.7 267.6 L214.0 269.4 L216.9 271.7 L218.4 275.1 L218.7 278.0 L221.2 280.3 L221.7 282.7 L223.9 286.5 L224.3 287.7 L225.9 291.1 L227.3 294.7 L227.7 296.6 L227.8 300.5 L228.3 303.3 L231.6 306.8 L231.3 308.5 L231.8 311.6 L233.2 315.1 L233.8 316.1 L235.4 322.9 L235.5 323.2 L236.1 326.1 L236.2 330.2 L237.5 332.5 L236.8 334.3 L238.4 339.0 L239.2 342.2 L237.4 344.3 L237.0 347.4 L239.4 351.0 L241.1 353.0 L239.0 357.0 L239.2 359.8 L241.1 362.1 L240.7 364.6 L241.6 368.3 L242.4 370.8 L243.9 375.0 L244.1 377.3 L245.5 380.6 L246.2 383.1 L246.8 386.0 L248.2 388.1 L248.8 392.0 L250.6 395.6 L251.0 397.0 L252.2 399.6 L255.1 402.7 L255.2 405.3 L256.4 407.9 L257.9 411.3 L258.4 413.8 L259.6 417.9 L261.2 419.7 L262.1 422.7 L262.1 425.9 L264.5 427.9 L264.4 431.9 L264.9 433.4 L265.9 436.1 L267.0 439.3 L269.1 442.5 L267.7 444.6 L269.2 448.6 L268.1 450.5 L270.0 455.8" stroke-width="1.6" opacity=".85"></path>
+<path d="M126.1 -1.0 L126.2 2.4 L126.9 5.8 L126.0 7.4 L129.5 12.4 L129.7 14.6 L129.2 17.6 L130.6 21.4 L130.8 24.2 L130.8 26.9 L132.6 29.0 L132.3 32.9 L133.0 35.9 L133.4 38.0 L135.1 42.3 L135.5 44.8 L136.9 46.0 L137.0 50.3 L138.5 52.2 L138.9 56.7 L141.2 59.3 L141.9 60.7 L143.3 63.6 L144.6 67.0 L145.0 69.5 L147.6 73.4 L149.9 75.6 L148.7 77.6 L150.0 80.9 L151.5 81.7 L154.4 86.1 L155.2 89.3 L157.0 91.3 L157.9 93.7 L158.5 97.5 L159.5 101.3 L160.1 103.0 L161.7 105.0 L161.0 109.7 L162.2 110.3 L163.3 115.0 L164.9 117.2 L163.7 121.3 L163.9 123.0 L164.7 127.6 L166.1 129.9 L165.6 131.5 L167.0 134.4 L165.0 138.6 L167.4 142.7 L167.6 145.0 L166.1 148.0 L167.5 150.8 L168.5 154.5 L168.0 157.3 L169.0 160.2 L170.3 162.4 L169.2 166.9 L169.2 170.0 L169.4 171.1 L170.9 176.6 L170.9 178.4 L171.6 180.5 L172.5 182.4 L173.8 187.0 L173.6 189.8 L174.2 191.8 L174.7 193.8 L178.3 198.6 L178.7 200.3 L180.8 203.1 L180.9 208.3 L181.6 210.6 L183.5 212.6 L184.3 214.4 L184.5 218.1 L185.9 218.9 L188.8 223.4 L189.0 225.6 L190.2 228.0 L190.9 230.6 L191.9 234.8 L194.4 237.2 L195.1 239.8 L196.2 242.9 L198.2 244.3 L199.4 246.5 L201.9 248.6 L204.3 252.1 L204.7 255.3 L208.1 257.1 L208.4 260.1 L210.7 261.3 L211.8 264.3 L213.8 266.6 L215.6 268.8 L216.7 273.6 L217.9 275.6 L219.3 277.2 L220.4 280.0 L221.0 283.2 L223.1 285.1 L224.6 289.2 L226.0 290.9 L226.9 294.4 L229.1 296.8 L228.6 300.1 L229.1 302.4 L231.7 305.1 L230.6 308.4 L232.9 311.5 L232.5 314.7 L234.2 317.9 L233.4 321.8 L236.1 324.2 L236.0 326.4 L236.0 330.1 L238.3 332.1 L238.1 336.6 L237.9 338.9 L237.7 340.6 L238.4 345.1 L238.6 348.2 L239.5 348.8 L239.9 353.1 L239.2 356.3 L239.7 358.3 L240.3 361.9 L240.3 364.9 L241.5 368.9 L242.6 371.6 L244.0 376.2 L245.3 376.9 L244.8 380.9 L246.7 383.0 L247.0 386.0 L249.9 387.9 L249.5 390.2 L251.0 393.8 L251.1 397.7 L252.4 401.1 L254.2 403.2 L255.0 406.0 L256.7 407.8 L256.5 412.3 L259.2 415.0 L259.2 416.5 L262.1 419.6 L261.7 421.8 L263.7 426.3 L262.9 428.4 L265.1 430.9 L265.1 434.1 L266.2 437.0 L267.3 439.3 L267.7 441.7 L268.7 444.6 L269.6 447.4 L270.1 452.0 L269.9 456.3" stroke-width="1" opacity=".35"></path>
+<path d="M723.8 150.6 L718.8 150.8 L719.0 151.9 L716.4 153.5 L714.5 154.3 L712.7 155.9 L709.4 154.0 L708.5 156.8 L706.0 156.6 L706.7 157.8 L702.4 158.9 L699.8 159.8 L697.6 160.4 L695.1 160.4 L692.6 162.1 L690.8 161.4 L689.2 162.2 L686.5 163.5 L685.1 163.3 L682.0 165.9 L680.0 165.9 L678.9 167.5 L676.0 166.8 L673.2 167.4 L671.3 168.7 L669.8 170.1 L668.8 170.2 L665.3 171.9 L663.4 172.8 L662.4 175.2 L659.3 174.9 L658.0 177.5 L657.2 177.8 L655.4 179.2 L653.6 181.0 L652.6 182.3 L648.8 185.0 L650.3 187.5 L647.8 188.7 L646.2 191.0 L646.7 193.7 L646.2 194.8 L644.6 196.8 L643.6 198.6 L643.9 199.8 L643.4 203.6 L644.0 204.1 L643.3 208.0 L642.7 209.8 L643.1 212.8 L642.0 214.3 L641.4 216.0 L642.3 219.1 L642.2 220.8 L641.5 223.3 L641.0 225.8 L641.5 227.9 L639.4 230.1 L641.4 231.9 L641.1 234.6 L639.3 235.5 L640.3 239.1 L639.3 240.6 L640.2 244.4 L638.0 246.7 L638.6 246.7 L639.4 250.4 L639.5 252.4 L637.0 254.0 L637.9 257.3 L638.3 258.8 L637.5 260.1 L638.9 263.4 L636.8 265.7 L637.8 268.1 L636.7 269.4 L638.4 273.0 L637.4 275.3 L637.2 276.2 L636.3 278.8 L638.8 281.4 L638.2 283.3 L638.4 287.1 L638.9 288.2 L638.6 289.6 L638.2 291.9 L638.4 294.6 L638.8 298.5 L640.7 298.9 L639.1 301.3 L640.2 303.8 L640.8 305.6 L641.7 309.4 L642.5 309.6 L641.7 312.7 L642.0 314.4 L643.7 316.9 L645.2 317.9 L645.4 322.1 L645.6 322.9 L645.9 325.2 L646.9 326.7 L647.1 329.0 L648.5 332.1 L648.0 334.6 L649.2 336.6 L649.6 339.0 L650.7 340.9 L651.0 342.6 L653.2 345.3 L653.0 347.3 L653.5 349.0 L651.6 351.7 L653.3 354.3 L653.5 355.8 L654.8 357.5 L653.2 360.5 L656.0 363.5 L656.3 364.2 L654.9 366.5 L655.5 368.7 L655.8 371.8 L656.6 371.9 L657.2 375.6 L658.3 378.4 L656.8 379.2 L657.5 383.1 L657.1 384.6 L658.2 386.1 L657.4 388.9 L657.7 389.9 L655.9 392.8 L656.3 396.7 L655.7 397.0 L657.1 401.2 L656.2 402.1 L655.3 405.1 L654.8 406.6 L655.2 407.3 L654.0 410.7 L653.4 413.4 L654.0 414.7 L655.0 416.8 L652.7 420.2 L652.1 421.8 L651.2 423.2 L650.6 426.2 L651.4 429.4 L651.2 430.7 L650.1 433.9 L649.8 436.5 L649.2 437.6 L648.7 439.0 L647.1 441.0 L647.3 444.1 L647.2 446.9 L646.1 448.6 L645.9 450.9 L645.1 452.4 L645.0 455.0" stroke-width="1.6" opacity=".85"></path>
+<path d="M721.9 149.6 L720.5 150.9 L719.9 152.7 L717.3 152.9 L713.7 155.2 L712.8 154.8 L710.4 153.4 L708.8 155.9 L705.4 158.1 L704.6 157.7 L702.4 158.0 L701.1 158.4 L698.0 160.6 L695.9 161.0 L692.3 161.4 L692.7 161.9 L687.5 163.3 L687.4 163.6 L684.2 162.8 L681.6 164.9 L679.5 165.3 L677.3 165.9 L675.9 167.3 L673.5 167.7 L672.5 166.5 L668.1 170.6 L667.4 171.3 L664.9 171.6 L664.1 172.6 L660.3 174.2 L659.7 174.5 L658.4 177.0 L655.6 178.1 L655.7 179.6 L653.7 180.8 L652.8 182.7 L651.5 185.7 L648.9 187.7 L647.9 189.0 L647.3 190.5 L647.0 191.9 L646.3 195.1 L644.5 197.8 L643.9 197.6 L643.3 201.7 L643.0 201.6 L642.9 205.1 L642.7 207.8 L644.0 208.8 L642.0 211.0 L642.0 214.4 L642.4 217.2 L641.3 218.6 L641.6 222.1 L641.7 222.9 L642.1 226.9 L640.4 228.1 L642.1 230.4 L640.7 232.9 L640.8 234.9 L641.1 238.2 L640.7 240.7 L640.7 241.8 L639.8 243.5 L639.4 245.0 L639.4 247.5 L638.2 250.3 L639.6 252.4 L637.9 254.7 L637.4 256.9 L639.5 259.5 L637.8 260.4 L636.9 262.9 L638.9 266.6 L637.3 268.7 L638.2 269.9 L636.8 273.4 L637.2 274.3 L636.2 276.8 L636.1 277.9 L636.9 282.0 L637.7 283.6 L638.4 286.6 L639.8 288.6 L637.6 290.4 L639.4 292.6 L638.6 295.5 L639.2 296.8 L638.7 299.0 L639.1 301.3 L640.1 304.0 L640.2 306.3 L641.6 309.2 L641.6 309.9 L643.5 313.1 L643.3 313.9 L643.8 317.0 L645.1 318.8 L645.3 322.1 L645.5 323.5 L646.0 324.9 L646.6 327.8 L648.1 329.8 L648.5 331.5 L648.8 333.7 L649.7 335.4 L649.3 340.2 L650.6 340.5 L649.9 343.3 L652.4 343.9 L652.0 346.2 L652.6 349.0 L653.4 351.2 L653.5 354.0 L653.8 354.9 L655.2 358.2 L654.9 361.1 L654.5 361.6 L655.8 365.0 L654.7 365.9 L657.3 369.0 L656.3 371.2 L656.6 374.4 L658.3 374.9 L658.4 377.7 L657.0 380.6 L657.4 381.2 L657.7 384.3 L658.1 385.9 L656.8 388.3 L656.9 391.5 L657.5 393.7 L656.6 397.3 L656.8 398.7 L656.4 400.8 L655.0 402.1 L654.9 404.2 L653.3 406.7 L654.6 407.3 L655.4 412.3 L653.3 412.9 L654.6 414.8 L654.0 417.5 L652.8 420.6 L652.4 423.1 L652.0 424.2 L650.9 427.0 L650.9 428.8 L650.6 430.4 L650.5 433.4 L650.2 435.5 L648.6 436.6 L649.2 440.6 L647.6 440.9 L647.5 444.3 L647.4 445.5 L646.7 447.9 L646.1 450.1 L645.9 453.2 L644.9 453.9" stroke-width="1" opacity=".35"></path>
+</g>
+<text x="513" y="45" text-anchor="end" font-family="EB Garamond, serif" font-style="italic" font-size="18" fill="#1C1B1F">Hyderabad</text>
+<text x="186" y="193" font-family="EB Garamond, serif" font-style="italic" font-size="18" fill="#1C1B1F">Goa</text>
+<text x="465" y="425" text-anchor="middle" font-family="EB Garamond, serif" font-style="italic" font-size="18" fill="#1C1B1F">Bengaluru</text>
+</svg>
+
+<div id="pins"></div>
+<div id="card-slot"></div>
+
+<p style="position: absolute; left: 67px; top: 166px; margin: 0; font-size: 15px; color: #4A4542">tap a place. i’ll tell you why.</p>
+
+<p style="position: absolute; left: 67px; top: 858px; width: 625px; margin: 0; font-family: 'Hanken Grotesk', sans-serif; font-size: 13px; line-height: 1.5; color: #6f6862">if you liked how i described these places, imagine what i’d write about yours. <a href="mailto:kritikaupadhyay2001@gmail.com" style="font-size: 13px; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap">let’s talk</a></p>
+
+<article style="position: absolute; left: 820px; top: 64px; width: 628px; height: 854px; display: flex; flex-direction: column; font-family: 'EB Garamond', serif; font-size: 15.5px; line-height: 1.5; color: #2a2724; text-align: justify; hyphens: auto">
+<img src="/coffee/cafe.jpg" alt="the coffee counter at a cafe, chalkboard menus and warm pendant lights" style="display: block; flex: none; width: 628px; height: 380px; object-fit: cover">
+<h2 style="margin: 22px 0 16px; font-family: 'EB Garamond', serif; font-style: italic; font-weight: 400; font-size: 32px; line-height: 1.1; text-align: left; color: #1C1B1F">i like to hangout alone at a crowded cafe. <span style="color: #A9452A">but why?</span></h2>
+<div style="flex: none; column-count: 2; column-gap: 56px">
+
+<p style="margin: 0 0 12px">if you live in bangalore, you’ve noticed how much people love to work out of cafés. someone once told me it all started here. i believed it instantly. even founders must get bored of their own company, <em>i thought to myself.</em></p>
+<p style="margin: 0 0 12px">so i became one of those people too. it was hard at first. i would get distracted easily. <em>i like to read a room. any room.</em> now i can read a book in peace, whatever’s happening around me.</p>
+<p style="margin: -6px 0 12px; font-family: 'EB Garamond', serif; font-style: italic; color: #A9452A; text-align: left; font-size: 20px">that’s when i started wondering why we do this at all.</p>
+
+<p style="margin: 0 0 12px">it isn’t always quiet. at kohe in hyderabad, people bustle in and out. friends arguing, young parents trying to have a life, families home after years abroad. i spot more stories there than i could ever write.</p>
+<p style="margin: 0 0 12px">but i have come to realise that Bangalore is a city of choices. and people here live like an adult. could that be why, hanging out at cafes alone caught on. it's a choice to be alone and not owe an answer to anyone. <span style="color: #A9452A">what do you think?</span></p>
+
+</div>
+<div style="flex: 0 1 200px; min-height: 0; margin-top: auto; padding-top: 16px; overflow: hidden"><img src="/coffee/glasses.jpg" alt="two iced coffees on a round black table" style="display: block; width: 628px; height: 100%; object-fit: cover; object-position: center 45%"></div>
+</article>
+
+
+</div>
+</div>
+
+<main class="m">
+<a class="m-home" href="/">Home</a>
+<h1>Genuine reccos.</h1>
+<article>
+<img src="/coffee/cafe.jpg" alt="the coffee counter at a cafe, chalkboard menus and warm pendant lights">
+<h2>i like to hangout alone at a crowded cafe. <span style="color: #A9452A">but why?</span></h2>
+<p>if you live in bangalore, you’ve noticed how much people love to work out of cafés. someone once told me it all started here. i believed it instantly. even founders must get bored of their own company, <em>i thought to myself.</em></p>
+<p>so i became one of those people too. it was hard at first. i would get distracted easily. <em>i like to read a room. any room.</em> now i can read a book in peace, whatever’s happening around me.</p>
+<p class="pull">that’s when i started wondering why we do this at all.</p>
+<p>it isn’t always quiet. at kohe in hyderabad, people bustle in and out. friends arguing, young parents trying to have a life, families home after years abroad. i spot more stories there than i could ever write.</p>
+<p>but i have come to realise that Bangalore is a city of choices. and people here live like an adult. could that be why, hanging out at cafes alone caught on. it's a choice to be alone and not owe an answer to anyone. <span style="color: #A9452A">what do you think?</span></p>
+<img class="glasses" src="/coffee/glasses.jpg" alt="two iced coffees on a round black table">
+</article>
+<ul aria-label="places">
+{L.map((p) => (
+<li><a class="m-card" href={p.href} target="_blank" rel="noopener">
+{p.kind === 'video'
+  ? <video src={p.media} autoplay muted loop playsinline aria-label={p.alt}></video>
+  : <img src={p.media} alt={p.alt} loading="lazy">}
+<div class="in"><p class="nm">{p.name}</p><p class="ar">{p.area}</p><p class="ln">{p.line}</p><span class="mp">see on maps</span></div>
+</a></li>
+))}
+</ul>
+<p class="m-talk">if you liked how i described these places, imagine what i’d write about yours. <a href="mailto:kritikaupadhyay2001@gmail.com">let’s talk</a></p>
+</main>
+
+<div id="consent" role="dialog" aria-label="Cookie choice" hidden style="position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 55; max-width: 360px; box-sizing: border-box; padding: 18px 20px; border-radius: 16px; background: #141319; border: 1px solid #3A3842; box-shadow: 0 20px 50px rgba(0,0,0,0.6); font-family: 'Hanken Grotesk', system-ui, sans-serif; font-size: 14px; line-height: 1.5; color: #C9CDD5">
+<p style="margin: 0 0 14px">Allow cookies on your visit so I know what you resonate with. No ads, I promise.</p>
+<div style="display: flex; gap: 10px">
+<button class="cb-yes" type="button" data-consent="yes">Yes!</button>
+<button class="cb-no" type="button" data-consent="no">No thanks</button>
+</div>
+</div>
+
+<script is:inline define:vars={{ L }}>
+// the map dots and their hover cards, as in the design
+var open=null,t=null,shown=null,pinsEl=document.getElementById('pins'),slot=document.getElementById('card-slot');
+function close(){clearTimeout(t);t=setTimeout(function(){open=null;render();},260);}
+function render(){
+  pinsEl.innerHTML='';
+  L.forEach(function(p){
+    var on=open===p.id, op=on?1:(open?0.25:0.55), sz=on?16:11;
+    var a=document.createElement('a'); a.href=p.href; a.target='_blank'; a.setAttribute('aria-label',p.name+', '+p.area);
+    a.style.cssText='position:absolute;left:'+(p.x-8)+'px;top:'+(p.y-8)+'px;width:16px;height:16px;display:block;z-index:'+(on?5:1);
+    var d=document.createElement('span'); d.style.cssText='position:absolute;left:'+(8-sz/2)+'px;top:'+(8-sz/2)+'px;width:'+sz+'px;height:'+sz+'px;border-radius:50%;background:rgba(169,69,42,'+op+');box-shadow:0 0 0 '+(on?5:0)+'px rgba(169,69,42,.16);transition:all .25s ease';
+    a.appendChild(d);
+    a.addEventListener('mouseenter',function(){clearTimeout(t);if(open!==p.id){open=p.id;render();}});
+    a.addEventListener('focus',function(){clearTimeout(t);if(open!==p.id){open=p.id;render();}});
+    a.addEventListener('mouseleave',close);
+    pinsEl.appendChild(a);
+  });
+  var o=null; for(var i=0;i<L.length;i++){if(L[i].id===open)o=L[i];}
+  if(!o){slot.innerHTML='';shown=null;return;}
+  if(shown===o.id)return; shown=o.id;
+  var media=o.kind==='video'?'<video src="'+o.media+'" autoplay muted loop playsinline aria-label="'+o.alt+'" style="display:block;width:300px;height:170px;object-fit:cover"></video>':
+    (o.kind==='img'?'<img src="'+o.media+'" alt="'+o.alt+'" style="display:block;width:300px;height:170px;object-fit:cover">':'');
+  slot.innerHTML='<div style="position:absolute;left:'+o.mx+'px;top:'+o.my+'px;width:300px;height:420px;background:#fff;box-shadow:0 18px 40px rgba(70,50,35,.22),0 2px 6px rgba(70,50,35,.1);overflow:hidden;animation:pop .3s cubic-bezier(.3,1.5,.5,1);z-index:10">'+
+   '<div style="height:170px;background:#efece6;overflow:hidden">'+media+'</div><div style="padding:16px 18px 18px">'+
+   '<p style="margin:0;font-family:Geist,sans-serif;font-weight:600;font-size:20px;color:#A9452A">'+o.name+'</p>'+
+   '<p style="margin:2px 0 0;font-size:13px;color:#6f6862">'+o.area+'</p>'+
+   '<p style="margin:10px 0 0;font-family:\'EB Garamond\',serif;font-style:italic;font-size:18px;line-height:1.35;color:#2a2724">'+o.line+'</p>'+
+   '<a href="'+o.href+'" target="_blank" style="display:inline-block;margin-top:12px;font-size:14px;text-decoration:underline;text-underline-offset:3px;opacity:0;animation:late .4s ease 1s forwards">see on maps</a></div></div>';
+  var v=slot.querySelector('video'); if(v){v.muted=true;v.play&&v.play().catch(function(){});} // iPhone: muted + playsinline
+  var c=slot.firstChild; c.addEventListener('mouseenter',function(){clearTimeout(t);}); c.addEventListener('mouseleave',close);
+}
+render();
+// The spread is zoomed in to cover the whole window (same as the desk), trimming a little off the edges;
+// on very unusual window shapes it stops at 18% trimmed.
+function fit(){var a=innerWidth/1512,b=innerHeight/982,lo=Math.min(a,b),k=Math.min(Math.max(a,b),lo/0.82),st=document.getElementById('stage');st.style.transform='scale('+k+')';st.style.left=((innerWidth-1512*k)/2)+'px';st.style.top=((innerHeight-982*k)*0.4)+'px';}
+addEventListener('resize',fit);fit();
+// phones: make sure the card videos play muted inline
+document.querySelectorAll('.m video').forEach(function(v){v.muted=true;v.play&&v.play().catch(function(){});});
+</script>
+</body>
+</html>
