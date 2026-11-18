@@ -2,15 +2,14 @@
 // /jobs, "work i have done." — opened from 4 on the desk (/home-redo).
 // Desktop: one magazine page (1512x982, scaled to fill the window), like the desk. A soft terracotta panel on the
 // left holds her skills (from her resume) in three groups. To its right: the heading on the left, a short note
-// (under 100 words) on the right, then six postage stamps in two rows with plenty of space between them:
-// words and pictures alternating (01 words, 02 picture, 03 words / 04 picture, 05 words, 06 picture).
-// Each stamp has perforated edges and a thin inner frame. Hovering a picture stamp shows its date and what it's about.
-// Below 768px: one column of stamps.
+// (under 100 words) on the right, then a neat grid of six in two rows: plain images (no border) and plain text.
+// Hovering an image darkens all of it and shows the date, what it's about, and "Read more".
+// Below 768px: one column.
 import Analytics from '../components/Analytics.astro';
 
 // the note, under 100 words: who she is, then how to read the page
 const NOTE = 'i am a visual thinker who loves solving a logical problem with creativity and empathy. see my work to understand how.';
-const HOWTO = 'read this like a contents page. the stamps with numbers are stories i lived; the stamps with pictures are the work itself. hover on a picture to see when it happened and what it was about, then click to read it whole. the skills i lean on most sit on the left. start anywhere.';
+const HOWTO = 'read this like a contents page. the numbers in words are stories i lived; the pictures are the work itself. hover on a picture to see when it happened and what it was about, then click to read it whole. the skills i lean on most sit on the left. start anywhere.';
 
 // skills, from her resume, grouped
 const skills = [
@@ -34,9 +33,8 @@ const cells = [
 //         'the metric that wouldn’t move' (/nexus), 'building Nexus, then selling it', 'What the Fork'
 //  pictures: 'what it was like to pull off a TEDx event' (/desk/tedx-x.png, jul 2021)
 // Positioning and battlecards use Unsplash photos as stand-ins (planning at a desk; two chess knights).
-// stamp grid: 3 columns x 2 rows, stamps sized in 18px steps so the perforations land evenly
-const SW = 252, SH = 270, GX = [470, 839, 1208], GY = [300, 612];
-const TILT = [-1.4, 1, -0.8, 1.2, -1, 0.8];
+// grid: 3 columns x 2 rows; images are IW x IH with the caption below
+const GX = [470, 820, 1170], GY = [300, 596], CW = 290, IH = 214;
 ---
 <!doctype html>
 <html lang="en">
@@ -70,29 +68,30 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 h1{position:absolute;left:470px;top:92px;width:420px;margin:0;font-family:Geist,sans-serif;font-weight:600;font-size:64px;line-height:1.02;letter-spacing:-.02em;color:#1C1B1F}
 .note{position:absolute;left:1000px;top:100px;width:440px;margin:0;font-size:15px;line-height:1.6;color:#4A4542}
 .note .lead{display:block;margin-bottom:10px;color:#1C1B1F;font-weight:500}
-/* stamps: perforated edge (a ring of holes on paper), a thin inner frame, a soft shadow */
-.stamp{position:absolute;display:block;filter:drop-shadow(0 8px 12px rgba(70,50,35,.14)) drop-shadow(0 1px 2px rgba(70,50,35,.10));transition:transform .5s cubic-bezier(.3,1.4,.5,1)}
-.stamp::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 9px 9px,transparent 5.5px,#fdfcfa 6px) -9px -9px/18px 18px}
-.stamp .face{position:absolute;inset:9px;background:#fdfcfa;box-sizing:border-box;padding:12px}
-.stamp .face::after{content:"";position:absolute;inset:6px;border:1px solid rgba(169,69,42,.45);pointer-events:none}
-a.stamp:hover,.stamp:focus-visible{transform:translateY(-6px) rotate(0deg) !important}
-/* words stamp */
-.stamp .num{display:block;margin:4px 0 0 4px;font-family:Geist,sans-serif;font-weight:300;font-size:64px;line-height:1;letter-spacing:-.03em;color:#1C1B1F}
-.stamp .at{display:block;margin:14px 0 4px 4px;font-size:11px;letter-spacing:.22em;color:#8a837d}
-.stamp .t{display:block;margin-left:4px;font-family:Geist,sans-serif;font-weight:500;font-size:16px;line-height:1.25;color:#1C1B1F}
-.stamp .l{display:block;margin:8px 4px 0;font-size:13px;line-height:1.45;color:#6f6862}
-a.stamp:hover .num,a.stamp:focus-visible .num{color:#A9452A}
-/* picture stamp */
-.stamp .pic{position:absolute;left:12px;right:12px;top:12px;bottom:46px;overflow:hidden;background:#efece6}
-.stamp .pic img{width:100%;height:100%;object-fit:cover;display:block}
-.stamp .cap{position:absolute;left:16px;right:14px;bottom:14px;display:flex;gap:8px;align-items:baseline;font-size:12px;line-height:1.3;color:#4A4542}
-.stamp .cap b{font-family:Geist,sans-serif;font-weight:500;color:#A9452A}
-.stamp .ov{position:absolute;left:12px;right:12px;top:12px;bottom:46px;display:flex;flex-direction:column;justify-content:flex-end;padding:16px;box-sizing:border-box;background:linear-gradient(0deg,rgba(28,27,31,.88) 0%,rgba(28,27,31,.6) 60%,rgba(28,27,31,.2) 100%);color:#fff;opacity:0;transition:opacity .4s ease}
-.stamp .ov .d{font-size:11px;letter-spacing:.2em;color:#F3E4DC}
-.stamp .ov .a{margin-top:6px;font-size:13px;line-height:1.45;color:#eeeae5}
-.stamp .ov .go{margin-top:8px;font-size:12px;color:#F3E4DC;text-decoration:underline;text-underline-offset:3px}
-.stamp:hover .ov,.stamp:focus-visible .ov{opacity:1}
-@media (prefers-reduced-motion: reduce){.stamp,.stamp .ov{transition:none}}
+/* the grid: plain images (no border) and plain text */
+.cell{position:absolute;display:block}
+.cell .pic{position:relative;display:block;overflow:hidden;background:#efece6}
+.cell .pic img{width:100%;height:100%;object-fit:cover;display:block}
+.cell .cap{display:flex;gap:8px;align-items:baseline;margin-top:10px;font-size:13px;line-height:1.35;color:#4A4542}
+.cell .cap b{font-family:Geist,sans-serif;font-weight:500;color:#A9452A}
+/* hover: the whole image darkens, then the date, what it's about, and Read more come up */
+.cell .ov{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:22px;box-sizing:border-box;background:rgba(28,27,31,.78);color:#fff;opacity:0;transition:opacity .35s ease}
+.cell .ov .d{font-size:11px;letter-spacing:.2em;color:#F3E4DC;transform:translateY(8px);transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+.cell .ov .a{margin-top:8px;font-size:14px;line-height:1.5;color:#f1eeea;transform:translateY(10px);transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.cell .rm{display:inline-block;margin-top:14px;padding:8px 14px;border:1px solid #F3E4DC;font-size:13px;letter-spacing:.04em;color:#fff;opacity:0;transform:translateY(12px) scale(.94);transition:opacity .35s ease .08s,transform .5s cubic-bezier(.3,1.4,.5,1) .08s}
+.cell:hover .ov,.cell:focus-visible .ov{opacity:1}
+.cell:hover .ov .d,.cell:hover .ov .a,.cell:focus-visible .ov .d,.cell:focus-visible .ov .a{transform:none}
+.cell:hover .rm,.cell:focus-visible .rm{opacity:1;transform:none}
+/* words */
+.cell.w{padding-top:2px}
+.cell .num{display:block;font-family:Geist,sans-serif;font-weight:300;font-size:72px;line-height:1;letter-spacing:-.03em;color:#1C1B1F;transition:color .25s}
+.cell .at{display:block;margin:12px 0 4px;font-size:11px;letter-spacing:.22em;color:#8a837d}
+.cell .t{display:block;font-family:Geist,sans-serif;font-weight:500;font-size:18px;line-height:1.25;color:#1C1B1F}
+.cell .l{display:block;margin-top:8px;font-size:14px;line-height:1.5;color:#6f6862}
+.cell.w .rmw{display:inline-block;margin-top:12px;font-size:13px;color:#A9452A;text-decoration:underline;text-underline-offset:3px;opacity:0;transform:translateY(6px);transition:opacity .3s,transform .4s cubic-bezier(.3,1.4,.5,1)}
+.cell.w:hover .num,.cell.w:focus-visible .num{color:#A9452A}
+.cell.w:hover .rmw,.cell.w:focus-visible .rmw{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){.cell .ov,.cell .ov *,.cell .rm,.cell .rmw{transition:none}}
 
 /* phones: one column of stamps */
 .m{display:none}
@@ -106,11 +105,13 @@ a.stamp:hover .num,a.stamp:focus-visible .num{color:#A9452A}
   .m .mskills{margin:28px -16px 0;padding:24px 16px 8px;background:#F3E4DC}
   .m .sk{position:static;width:auto;margin-bottom:18px}
   .m .mcells{display:grid;gap:28px;margin:36px 0 0}
-  .m .stamp{position:relative;width:auto;height:270px;transform:none !important}
-  .m .stamp.w{height:auto;min-height:216px}
-  .m .stamp.w .face{display:block;position:relative;margin:9px;inset:auto;min-height:198px}
-  .m .stamp .ov{opacity:1;background:linear-gradient(0deg,rgba(28,27,31,.82) 0%,rgba(28,27,31,0) 70%)}
-  .m .stamp .ov .go{display:none}
+  .m .cell{position:relative}
+  .m .cell .pic{aspect-ratio:4/3}
+  .m .cell .ov{position:static;opacity:1;background:none;color:#4A4542;padding:8px 0 0}
+  .m .cell .ov .d{color:#8a837d;transform:none}
+  .m .cell .ov .a{color:#4A4542;transform:none}
+  .m .cell .rm{opacity:1;transform:none;margin-top:8px;padding:0;border:0;color:#A9452A;text-decoration:underline;text-underline-offset:3px}
+  .m .cell.w .rmw{opacity:1;transform:none}
 }
 .cb-yes,.cb-no{min-height:40px;padding:0 20px;border-radius:10px;font-family:inherit;font-size:14px;cursor:pointer}
 .cb-yes{border:0;background:#E8EBF0;color:#0B0A0F;font-weight:600}
@@ -138,13 +139,13 @@ a.stamp:hover .num,a.stamp:focus-visible .num{color:#A9452A}
 <p class="note"><span class="lead">{NOTE}</span>{HOWTO}</p>
 {cells.map((c, i) => {
   const n = String(i + 1).padStart(2, '0');
-  const st = `left: ${GX[i % 3]}px; top: ${GY[Math.floor(i / 3)]}px; width: ${SW}px; height: ${SH}px; transform: rotate(${TILT[i]}deg)`;
+  const st = `left: ${GX[i % 3]}px; top: ${GY[Math.floor(i / 3)]}px; width: ${CW}px`;
+  const more = c.href ? 'Read more' : 'coming soon';
   const inner = c.kind === 'words'
-    ? <span class="face"><span class="num">{n}</span><span class="at">{c.at}</span><span class="t">{c.title}</span><span class="l">{c.line}</span></span>
-    : <span class="face"><span class="pic"><img src={c.img} alt="" loading="lazy"></span><span class="ov"><span class="d">{c.date}</span><span class="a">{c.about}</span>{c.href && <span class="go">read the case study</span>}</span><span class="cap"><b>{n}</b><span>{c.title}</span></span></span>;
-  return c.href
-    ? <a class={`stamp ${c.kind === 'words' ? 'w' : 'p'}`} href={c.href} style={st}>{inner}</a>
-    : <div class={`stamp ${c.kind === 'words' ? 'w' : 'p'}`} tabindex={c.kind === 'pic' ? '0' : undefined} style={st}>{inner}</div>;
+    ? <><span class="num">{n}</span><span class="at">{c.at}</span><span class="t">{c.title}</span><span class="l">{c.line}</span><span class="rmw">{more}</span></>
+    : <><span class="pic" style={`height: ${IH}px`}><img src={c.img} alt="" loading="lazy"><span class="ov"><span class="d">{c.date}</span><span class="a">{c.about}</span><span class="rm">{more}</span></span></span><span class="cap"><b>{n}</b><span>{c.title}</span></span></>;
+  const cls = `cell ${c.kind === 'words' ? 'w' : 'p'}`;
+  return c.href ? <a class={cls} href={c.href} style={st}>{inner}</a> : <div class={cls} tabindex="0" style={st}>{inner}</div>;
 })}
 </div>
 </section>
@@ -159,10 +160,12 @@ a.stamp:hover .num,a.stamp:focus-visible .num{color:#A9452A}
 <div class="mcells">
 {cells.map((c, i) => {
   const n = String(i + 1).padStart(2, '0');
+  const more = c.href ? 'Read more' : 'coming soon';
   const inner = c.kind === 'words'
-    ? <span class="face"><span class="num">{n}</span><span class="at">{c.at}</span><span class="t">{c.title}</span><span class="l">{c.line}</span></span>
-    : <span class="face"><span class="pic"><img src={c.img} alt="" loading="lazy"></span><span class="ov"><span class="d">{c.date}</span><span class="a">{c.about}</span></span><span class="cap"><b>{n}</b><span>{c.title}</span></span></span>;
-  return c.href ? <a class={`stamp ${c.kind === 'words' ? 'w' : 'p'}`} href={c.href}>{inner}</a> : <div class={`stamp ${c.kind === 'words' ? 'w' : 'p'}`}>{inner}</div>;
+    ? <><span class="num">{n}</span><span class="at">{c.at}</span><span class="t">{c.title}</span><span class="l">{c.line}</span><span class="rmw">{more}</span></>
+    : <><span class="pic"><img src={c.img} alt="" loading="lazy"></span><span class="cap"><b>{n}</b><span>{c.title}</span></span><span class="ov"><span class="d">{c.date}</span><span class="a">{c.about}</span><span class="rm">{more}</span></span></>;
+  const cls = `cell ${c.kind === 'words' ? 'w' : 'p'}`;
+  return c.href ? <a class={cls} href={c.href}>{inner}</a> : <div class={cls}>{inner}</div>;
 })}
 </div>
 </main>
