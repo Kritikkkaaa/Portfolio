@@ -1,0 +1,415 @@
+---
+// /substacks, "i write on Substack." — opened from 3 on the desk (/home-redo).
+// Desktop: two magazine spreads (1512x982 each, scaled to fill the window), like /jobs.
+//  Spread 1, the column's front page: a terracotta masthead panel (bio, numbers, subscribe), the heading and note,
+//  a contents list grouped by section, and one lead story with a pull quote.
+//  Spread 2, the posts, each section set its own way: postcards that flip, a three-column heart spread,
+//  the work story with a note to /jobs, the at-home banner, and the op-ed in a plain dark box.
+// Below 768px: one column.
+// Posts are pulled from Substack's public archive at build time, so titles, covers, dates and word counts stay current.
+// Each post's section and pull quote are set by hand in `posts` below. A new post that isn't listed there
+// shows up under "just in" in the contents (and on phones) until it gets a section.
+import Analytics from '../components/Analytics.astro';
+
+const PUB = 'https://verykritikal.substack.com';
+const UTM = 'utm_source=Portfolio&utm_medium=Substacks+page&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
+const SUBSCRIBE = `${PUB}/subscribe?${UTM}`;
+const BIO = 'swinging between intensity and moderation. want to be all Whimsy!';
+const NOTE = 'i write about the things i’m still figuring out. love, living alone, work, and the places that change me a little.';
+const PERSONAL = 'some of these get personal. that’s the point.';
+const LEAD = 'love-is-usually-just-around-the-corner';
+
+const sections = [
+  { id: 'postcards', name: 'postcards' },
+  { id: 'heart', name: 'matters of the heart' },
+  { id: 'home', name: 'at home, alone' },
+  { id: 'work', name: 'at work' },
+  { id: 'loud', name: 'said out loud' }
+];
+
+// her posts. `sec` and `quote` (her own words) are set by hand; the rest is the fallback if Substack can't be reached.
+const posts = [
+  { slug: 'to-monish-aastha-tanay-krishna-and', sec: 'postcards', place: 'pondicherry', quote: 'if you are meant to meet them, you will meet them', title: 'to Monish, Aastha, Tanay, Krishna and others', sub: 'a postcard from Pondicherry 💌', date: '2025-09-01T08:39:02.886Z', words: 1509, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/f22b8cdd-bec9-4e95-a8ec-6ff0ab7f0a4f_3912x2373.jpeg' },
+  { slug: 'a-house-by-the-beach-someday', sec: 'postcards', place: 'goa', quote: 'It’s hard to feel like the main character next to the sea.', title: 'A house by the beach, someday', sub: 'a post card from Goa', date: '2026-10-20T09:20:23.602Z', words: 821, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/22851840-4fb3-40a3-8e5c-47cdf4798ccb_736x736.jpeg' },
+  { slug: 'gunshot-diary', sec: 'heart', quote: 'someone who didn’t just see your outfit, they saw your blueprints.', title: 'Gunshot diary', sub: 'A story about an elongated sleepover with a stranger', date: '2026-03-27T11:40:06.497Z', words: 1474, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/ebc3dc39-5c4d-46f8-afe2-ad528a0a3e18_1170x892.png' },
+  { slug: 'was-he-a-fckboy', sec: 'heart', quote: 'Because you are so much in it!', title: 'Was he a F*ckboy?', sub: 'On charm, damage, and the art of finally seeing them clearly', date: '2026-05-28T12:41:35.055Z', words: 862, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/4775d1f2-7a05-47ce-b211-73d7730dc316_1602x1190.jpeg' },
+  { slug: 'love-is-usually-just-around-the-corner', sec: 'heart', quote: 'love is reachable, not graspable.', title: 'love is usually just around the corner', sub: 'but are you someone who won’t scare it away?', date: '2026-08-15T10:07:58.364Z', words: 731, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/5d2fa710-31d8-4d0c-91de-b5783773b674_736x538.jpeg' },
+  { slug: 'unthought-known', sec: 'home', quote: 'What if things were never lost. Just unseen.', title: 'Unthought known', sub: 'Some things are known before they are ever thought. This is one of those stories.', date: '2026-07-02T14:50:30.012Z', words: 1075, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/bb1646bf-5cdd-4839-8308-b33d54c4d672_1584x396.png' },
+  { slug: 'data-vs-instincts', sec: 'work', quote: 'I defended first and answered after.', title: 'Data vs Instincts', sub: 'And why what you can see is not enough!', date: '2026-06-15T10:31:17.888Z', words: 1329, cover: '' },
+  { slug: 'on-being-watched-being-warned-and', sec: 'loud', quote: 'keeping women safe by keeping them in.', title: 'On being watched, being warned, and never being asked', sub: 'Small rules, quiet costs, and one uncomfortable morning', date: '2026-10-10T10:59:03.893Z', words: 1274, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/43338fa9-9fb3-43a1-bb64-4c89ad6477cb_1080x1349.jpeg' }
+];
+
+// pull the live archive; if it fails, the fallback above is used
+let live: any[] = [];
+try {
+  const r = await fetch(`${PUB}/api/v1/archive?sort=new&limit=50`, { signal: AbortSignal.timeout(8000) });
+  if (r.ok) live = await r.json();
+} catch {}
+const bySlug = new Map(live.filter((p) => p && p.slug && p.type !== 'podcast').map((p) => [p.slug, p]));
+const merge = (p: any) => {
+  const l = bySlug.get(p.slug);
+  return l ? { ...p, title: l.title || p.title, sub: l.subtitle || p.sub, date: l.post_date || p.date, words: l.wordcount || p.words, cover: l.cover_image || p.cover } : p;
+};
+const known = new Set(posts.map((p) => p.slug));
+const all = posts.map(merge);
+const fresh = live
+  .filter((l) => l && l.slug && !known.has(l.slug) && l.type !== 'podcast')
+  .map((l) => ({ slug: l.slug, sec: 'new', quote: '', title: l.title, sub: l.subtitle || '', date: l.post_date, words: l.wordcount || 0, cover: l.cover_image || '' }));
+
+// covers come through Substack's image CDN at the size they're shown, not full size
+const img = (url: string, w = 800) => !url ? '' : url.includes('substackcdn.com/image/fetch') ? url : `https://substackcdn.com/image/fetch/w_${w},c_limit,f_auto,q_auto:good,fl_progressive:steep/${encodeURIComponent(url)}`;
+const href = (slug: string) => `${PUB}/p/${slug}?${UTM}`;
+const mins = (w: number) => Math.max(1, Math.round(w / 215));
+const day = (d: string) => new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' }).toLowerCase();
+const meta = (p: any) => `${day(p.date)} · ${mins(p.words)} min read`;
+const get = (slug: string) => all.find((p) => p.slug === slug)!;
+const inSec = (id: string) => all.filter((p) => p.sec === id);
+
+// masthead numbers
+const everything = [...all, ...fresh];
+const essays = everything.length;
+const words = everything.reduce((n, p) => n + (p.words || 0), 0);
+const since = new Date(Math.min(...everything.map((p) => +new Date(p.date)))).toLocaleDateString('en-GB', { month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' }).toLowerCase();
+
+// contents, numbered in the order they appear
+const contents = [
+  ...(fresh.length ? [{ name: 'just in', items: fresh }] : []),
+  ...sections.map((s) => ({ name: s.name, items: inSec(s.id) }))
+];
+let k = 0;
+const numbered = contents.map((c) => ({ ...c, items: c.items.map((p: any) => ({ ...p, n: String(++k).padStart(2, '0') })) }));
+
+const lead = get(LEAD);
+const [pondi, goa] = inSec('postcards');
+const hearts = inSec('heart');
+const home = inSec('home')[0];
+const work = inSec('work')[0];
+const loud = inSec('loud')[0];
+const postmark = (p: any) => `${p.place} · ${day(p.date)}`;
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>kritika · i write on Substack.</title>
+<meta name="description" content="Kritika's Substack, VeryKritikal: essays on love, living alone, work, and the places that change her a little.">
+<link rel="icon" href="/mark.svg" type="image/svg+xml">
+<link rel="icon" href="/mark-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/mark-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&amp;family=Hanken+Grotesk:wght@400;500&amp;family=EB+Garamond:ital,wght@0,500;1,400&amp;display=swap" rel="stylesheet">
+<style is:inline>
+html,body{margin:0;background:#fff;color:#1C1B1F;font-family:'Hanken Grotesk',sans-serif}
+a{color:inherit;text-decoration:none}
+a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
+.fold{position:relative;height:100vh;overflow:hidden}
+.stage{position:absolute;left:0;top:0;width:1512px;height:982px;transform-origin:0 0}
+.pageL{background:linear-gradient(100deg,#ffffff 0%,#fbfbf9 38%,#ffffff 52%,#f6f6f3 78%,#e9e8e4 96%,#d9d7d2 100%)}
+.pageR{background:linear-gradient(80deg,#d6d4cf 0%,#e8e7e3 4%,#f7f7f4 20%,#ffffff 46%,#fafaf8 70%,#ffffff 100%)}
+.sheen{background:linear-gradient(115deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.75) 42%,rgba(255,255,255,0) 54%)}
+.grain{position:absolute;inset:0;background:url(/desk/paper.jpg);background-size:900px auto;mix-blend-mode:multiply;opacity:.14;pointer-events:none}
+.back{position:absolute;left:56px;top:62px;padding:6px 0;font-size:15px;color:#A9452A;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.lab{margin:0;font-size:12px;letter-spacing:.24em;color:#8a837d}
+.q{font-family:'EB Garamond',serif;font-style:italic;color:#1C1B1F}
+.go{font-size:13px;color:#A9452A;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.mt{font-size:11px;letter-spacing:.18em;color:#8a837d}
+
+/* spread 1: the masthead panel */
+.panel{position:absolute;left:0;top:0;width:410px;height:982px;background:#F3E4DC}
+.panel .lab{position:absolute;left:56px;top:136px;color:#8a6a5d}
+.panel .rule{position:absolute;left:56px;top:162px;width:298px;border-top:1px solid rgba(169,69,42,.35)}
+.mast{position:absolute;left:56px;top:196px;margin:0;font-family:'EB Garamond',serif;font-weight:500;font-size:46px;line-height:1;color:#A9452A}
+.bio{position:absolute;left:56px;top:262px;width:290px;margin:0;font-family:'EB Garamond',serif;font-style:italic;font-size:21px;line-height:1.35;color:#4A4542}
+.stats{position:absolute;left:56px;top:400px;width:300px;margin:0;padding:0;list-style:none}
+.stats li{margin-bottom:22px}
+.stats b{display:block;font-family:Geist,sans-serif;font-weight:300;font-size:56px;line-height:1;letter-spacing:-.03em;color:#1C1B1F}
+.stats span{display:block;margin-top:4px;font-size:11px;letter-spacing:.22em;color:#8a6a5d}
+.personal{position:absolute;left:56px;top:790px;width:290px;margin:0;font-family:'EB Garamond',serif;font-style:italic;font-size:18px;line-height:1.35;color:#8a6a5d}
+.sub-btn{position:absolute;left:56px;top:850px;display:inline-flex;align-items:center;min-height:44px;padding:0 22px;border-radius:999px;background:#A9452A;color:#fff;font-family:Geist,sans-serif;font-weight:500;font-size:15px;transition:background .25s}
+.sub-btn:hover,.sub-btn:focus-visible{background:#8E3820;color:#fff}
+
+/* spread 1: heading, note, contents, lead */
+h1{position:absolute;left:470px;top:84px;margin:0;font-family:Geist,sans-serif;font-weight:600;font-size:64px;line-height:1.02;letter-spacing:-.02em;color:#1C1B1F}
+.note{position:absolute;left:470px;top:170px;width:560px;margin:0;font-size:18px;line-height:1.5;color:#4A4542}
+.toc{position:absolute;left:470px;top:270px;width:430px}
+.toc h2{margin:0 0 6px;font-family:Geist,sans-serif;font-weight:500;font-size:13px;letter-spacing:.04em;color:#A9452A}
+.toc .grp{margin-bottom:14px}
+.toc a{display:grid;grid-template-columns:44px 1fr;column-gap:8px;padding:5px 0}
+.toc .n{font-family:Geist,sans-serif;font-weight:300;font-size:26px;line-height:1;letter-spacing:-.02em;color:#1C1B1F;transition:color .25s}
+.toc .t{font-family:Geist,sans-serif;font-weight:500;font-size:15px;line-height:1.25;color:#1C1B1F}
+.toc .s{grid-column:2;margin-top:2px;font-size:13px;line-height:1.35;color:#6f6862}
+.toc a:hover .n,.toc a:focus-visible .n{color:#A9452A}
+.lead{position:absolute;left:960px;top:270px;width:480px;display:block}
+.lead .lab{margin-bottom:12px}
+.lead .pic{display:block;width:480px;height:300px;overflow:hidden;background:#efece6}
+.lead .pic img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.lead:hover .pic img,.lead:focus-visible .pic img{transform:scale(1.03)}
+.lead .q{display:block;margin-top:22px;font-size:38px;line-height:1.12}
+.lead .t{display:block;margin-top:18px;font-family:Geist,sans-serif;font-weight:500;font-size:19px;color:#1C1B1F}
+.lead .s{display:block;margin-top:4px;font-size:15px;color:#6f6862}
+.lead .mt{display:block;margin-top:12px}
+.lead .go{display:inline-block;margin-top:10px}
+.hint{position:absolute;left:1180px;top:900px;margin:0;font-size:13px;letter-spacing:.14em;color:#8a837d}
+
+/* spread 2: section labels */
+.sl{position:absolute;margin:0;font-family:Geist,sans-serif;font-weight:500;font-size:13px;letter-spacing:.04em;color:#A9452A}
+
+/* postcards: hover flips the card to its back */
+.pc{position:absolute;display:block;perspective:1400px}
+.pc .in{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.3,.7,.2,1)}
+.pc:hover .in,.pc:focus-visible .in{transform:rotateY(180deg)}
+.pc .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 10px 24px rgba(70,50,35,.18),0 1px 3px rgba(70,50,35,.18);background:#fbf8f2}
+.pc .front{padding:10px;box-sizing:border-box}
+.pc .front img{width:100%;height:100%;object-fit:cover;display:block}
+.pc .stamp{position:absolute;right:20px;top:20px;width:46px;height:56px;box-sizing:border-box;padding:4px;background:#fbf8f2;border:2px dashed #d9c4b8}
+.pc .stamp i{display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:#A9452A;color:#F3E4DC;font-family:'EB Garamond',serif;font-style:normal;font-size:16px}
+.pc .pm{position:absolute;right:52px;top:50px;width:84px;height:84px;border-radius:50%;border:1.5px solid rgba(28,27,31,.55);display:flex;align-items:center;justify-content:center;text-align:center;font-size:8.5px;line-height:1.3;letter-spacing:.14em;color:rgba(28,27,31,.7);text-transform:uppercase;transform:rotate(-14deg);background:rgba(251,248,242,.35)}
+.pc .back2{transform:rotateY(180deg);display:grid;grid-template-columns:1fr 1px 120px;gap:18px;padding:24px;box-sizing:border-box}
+.pc .back2 .line{background:rgba(28,27,31,.15)}
+.pc .back2 .q{font-size:21px;line-height:1.3}
+.pc .back2 .t{display:block;margin-top:10px;font-family:Geist,sans-serif;font-weight:500;font-size:14px;line-height:1.25}
+.pc .back2 .rt{display:flex;flex-direction:column;justify-content:flex-end;gap:8px}
+.pc .back2 .rt span{display:block;border-bottom:1px solid rgba(28,27,31,.2);padding-bottom:4px;font-size:11px;color:#6f6862}
+
+/* at work */
+.wk{position:absolute;display:block}
+.wk .t{display:block;font-family:Geist,sans-serif;font-weight:500;font-size:24px;line-height:1.15;color:#1C1B1F}
+.wk .s{display:block;margin-top:6px;font-size:14px;line-height:1.4;color:#6f6862}
+.wk .q{display:block;margin-top:22px;padding-top:18px;border-top:1px solid rgba(28,27,31,.15);font-size:27px;line-height:1.2}
+.wk .mt{display:block;margin-top:16px}
+.wk .go{display:inline-block;margin-top:8px}
+.margin{position:absolute;display:block;font-family:'EB Garamond',serif;font-style:italic;font-size:19px;line-height:1.3;color:#A9452A;transform:rotate(-3deg)}
+.margin:hover,.margin:focus-visible{color:#8E3820}
+
+/* at home, alone */
+.hm{position:absolute;display:block}
+.hm .pic{display:block;overflow:hidden;background:#efece6}
+.hm .pic img{width:100%;height:100%;object-fit:cover;display:block}
+.hm .t{display:block;font-family:Geist,sans-serif;font-weight:500;font-size:17px;color:#1C1B1F}
+.hm .s{display:block;margin-top:3px;font-size:13px;line-height:1.35;color:#6f6862}
+
+/* matters of the heart: three columns */
+.ht{position:absolute;display:block}
+.ht .cap{display:flex;gap:12px;margin-bottom:8px;font-size:12px;color:#4A4542;white-space:nowrap}
+.ht .cap b{font-weight:500;color:#8a837d}
+.ht .pic{display:block;height:200px;overflow:hidden;background:#efece6}
+.ht .pic img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.ht:hover .pic img,.ht:focus-visible .pic img{transform:scale(1.04)}
+.ht .q{display:block;margin-top:16px;font-size:22px;line-height:1.2}
+.ht .t{display:block;margin-top:14px;font-family:Geist,sans-serif;font-weight:500;font-size:16px;line-height:1.25;color:#1C1B1F}
+.ht .s{display:block;margin-top:4px;font-size:13px;line-height:1.4;color:#6f6862}
+.ht .mt{display:block;margin-top:10px}
+
+/* said out loud: plain, no tilt, no hover tricks */
+.ld{position:absolute;display:block;box-sizing:border-box;padding:30px 34px;background:#1C1B1F;color:#F3E4DC}
+.ld .lab{color:#c9a99a}
+.ld .q{display:block;margin-top:14px;font-size:34px;line-height:1.15;color:#fff}
+.ld .t{display:block;margin-top:16px;font-family:Geist,sans-serif;font-weight:500;font-size:17px;color:#fff}
+.ld .s{display:block;margin-top:4px;font-size:14px;color:#cfc8c2}
+.ld .mt{display:block;margin-top:12px;color:#a9a19b}
+.ld .go{position:absolute;right:34px;bottom:30px;color:#F3E4DC}
+.more{position:absolute;margin:0;font-family:'EB Garamond',serif;font-style:italic;font-size:21px;line-height:1.35;color:#8a837d}
+.more a{color:#A9452A;text-decoration:underline;text-underline-offset:3px}
+@media (prefers-reduced-motion: reduce){.pc .in,.ht .pic img,.lead .pic img{transition:none}}
+
+/* phones: one column */
+.m{display:none}
+@media (max-width: 767px){
+  .fold{display:none}
+  body{background:#fbfaf7}
+  .m{display:block;padding:48px 16px 40px;box-sizing:border-box}
+  .m .back{position:static;display:inline-block;min-height:32px}
+  .m h1{position:static;margin:6px 0 0;font-size:44px}
+  .m .note{position:static;width:auto;margin:14px 0 0;font-size:17px}
+  .m .mpanel{margin:28px -16px 0;padding:24px 16px;background:#F3E4DC}
+  .m .mpanel .lab{color:#8a6a5d}
+  .m .mast{position:static;margin:14px 0 0;font-size:38px}
+  .m .bio{position:static;width:auto;margin:10px 0 0;font-size:19px}
+  .m .stats{position:static;width:auto;display:flex;gap:22px;margin:22px 0 0}
+  .m .stats b{font-size:38px}
+  .m .stats span{font-size:10px}
+  .m .personal{position:static;width:auto;margin:6px 0 0;font-size:17px}
+  .m .sub-btn{position:static;margin-top:16px}
+  .m .msec{margin-top:40px}
+  .m .msec h2{margin:0 0 14px;font-family:Geist,sans-serif;font-weight:500;font-size:13px;letter-spacing:.04em;color:#A9452A}
+  .m .mp{display:block;margin-bottom:28px}
+  .m .mp .pic{display:block;aspect-ratio:4/3;overflow:hidden;background:#efece6}
+  .m .mp .pic img{width:100%;height:100%;object-fit:cover;display:block}
+  .m .mp .q{display:block;margin-top:12px;font-size:23px;line-height:1.2}
+  .m .mp .t{display:block;margin-top:10px;font-family:Geist,sans-serif;font-weight:500;font-size:18px;color:#1C1B1F}
+  .m .mp .s{display:block;margin-top:4px;font-size:15px;line-height:1.45;color:#4A4542}
+  .m .mp .mt{display:block;margin-top:8px}
+  .m .mp.dark{padding:22px 18px;background:#1C1B1F;color:#F3E4DC}
+  .m .mp.dark .q,.m .mp.dark .t{color:#fff}
+  .m .mp.dark .s{color:#cfc8c2}
+  .m .mnote{display:inline-block;margin-top:-12px;margin-bottom:28px;font-family:'EB Garamond',serif;font-style:italic;font-size:18px;color:#A9452A}
+  .m .more{position:static;margin-top:12px;font-size:19px}
+}
+.cb-yes,.cb-no{min-height:40px;padding:0 20px;border-radius:10px;font-family:inherit;font-size:14px;cursor:pointer}
+.cb-yes{border:0;background:#E8EBF0;color:#0B0A0F;font-weight:600}
+.cb-no{background:none;border:1px solid #3A3842;color:#E8EBF0}
+</style>
+<Analytics />
+</head>
+<body>
+<section class="fold fold1" aria-labelledby="title">
+<div class="stage">
+<div class="pageL" aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 756px; height: 982px"></div>
+<div class="pageR" aria-hidden="true" style="position: absolute; left: 756px; top: 0; width: 756px; height: 982px"></div>
+<div class="sheen" aria-hidden="true" style="position: absolute; inset: 0; opacity: .6"></div>
+<aside class="panel" aria-label="the masthead">
+<a class="back" href="/home-redo#desk">Back</a>
+<p class="lab">the masthead</p>
+<span class="rule" aria-hidden="true"></span>
+<p class="mast">VeryKritikal</p>
+<p class="bio">{BIO}</p>
+<ul class="stats">
+<li><b>{essays}</b><span>essays</span></li>
+<li><b>{words.toLocaleString('en-IN')}</b><span>words</span></li>
+<li><b>{since}</b><span>writing since</span></li>
+</ul>
+<p class="personal">{PERSONAL}</p>
+<a class="sub-btn" href={SUBSCRIBE} target="_blank" rel="noopener">subscribe, it’s free</a>
+</aside>
+<div class="grain" aria-hidden="true"></div>
+<h1 id="title">i write on Substack.</h1>
+<p class="note">{NOTE}</p>
+<nav class="toc" aria-label="contents">
+{numbered.map((c) => (
+<div class="grp">
+<h2>{c.name}</h2>
+{c.items.map((p: any) => (
+<a href={href(p.slug)} target="_blank" rel="noopener"><span class="n">{p.n}</span><span class="t">{p.title}</span><span class="s">{p.sub}</span></a>
+))}
+</div>
+))}
+</nav>
+<a class="lead" href={href(lead.slug)} target="_blank" rel="noopener">
+<p class="lab">the lead · most loved</p>
+<span class="pic"><img src={img(lead.cover, 1000)} alt="" loading="lazy"></span>
+<span class="q">“{lead.quote}”</span>
+<span class="t">{lead.title}</span>
+<span class="s">{lead.sub}</span>
+<span class="mt">{meta(lead)}</span>
+<span class="go">read on Substack</span>
+</a>
+<p class="hint" aria-hidden="true">the posts, over the page ↓</p>
+</div>
+</section>
+
+<section class="fold fold2" aria-label="the posts">
+<div class="stage">
+<div class="pageL" aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 756px; height: 982px"></div>
+<div class="pageR" aria-hidden="true" style="position: absolute; left: 756px; top: 0; width: 756px; height: 982px"></div>
+<div class="sheen" aria-hidden="true" style="position: absolute; inset: 0; opacity: .6"></div>
+<div class="grain" aria-hidden="true"></div>
+<p class="lab" style="position: absolute; left: 72px; top: 64px">the posts</p>
+
+<p class="sl" style="left: 72px; top: 108px">postcards</p>
+{[[pondi, 72, 140, -2.5], [goa, 96, 410, 2]].map(([p, x, y, r]: any) => (
+<a class="pc" href={href(p.slug)} target="_blank" rel="noopener" aria-label={`${p.title}, ${p.sub}`} style={`left: ${x}px; top: ${y}px; width: 360px; height: 232px; transform: rotate(${r}deg)`}>
+<span class="in">
+<span class="face front"><img src={img(p.cover)} alt="" loading="lazy"><span class="stamp" aria-hidden="true"><i>VK</i></span><span class="pm" aria-hidden="true">{postmark(p)}</span></span>
+<span class="face back2" aria-hidden="true"><span><span class="q">“{p.quote}”</span><span class="t">{p.title}</span></span><span class="line"></span><span class="rt"><span>{p.place}</span><span>{mins(p.words)} min read</span><span class="go">read on Substack</span></span></span>
+</span>
+</a>
+))}
+
+<p class="sl" style="left: 500px; top: 108px">at work</p>
+<a class="wk" href={href(work.slug)} target="_blank" rel="noopener" style="left: 500px; top: 144px; width: 210px">
+<span class="t">{work.title}</span>
+<span class="s">{work.sub}</span>
+<span class="q">“{work.quote}”</span>
+<span class="mt">{meta(work)}</span>
+<span class="go">read on Substack</span>
+</a>
+<a class="margin" href="/jobs" style="left: 500px; top: 560px; width: 200px">the work side of this story → work i have done.</a>
+
+<p class="sl" style="left: 72px; top: 700px">at home, alone</p>
+<a class="hm" href={href(home.slug)} target="_blank" rel="noopener" style="left: 72px; top: 732px; width: 628px">
+<span class="pic" style="width: 400px; height: 100px"><img src={img(home.cover)} alt="" loading="lazy"></span>
+<span style="position: absolute; left: 0; top: 114px; width: 400px"><span class="t">{home.title}</span><span class="s">{home.sub}</span><span class="mt" style="display: block; margin-top: 6px">{meta(home)}</span></span>
+<span class="q" style="position: absolute; left: 428px; top: 0; width: 200px; font-size: 22px; line-height: 1.2">“{home.quote}”</span>
+<span class="go" style="position: absolute; left: 428px; top: 120px">read on Substack</span>
+</a>
+
+<p class="sl" style="left: 812px; top: 108px">matters of the heart</p>
+{hearts.map((p, i) => (
+<a class="ht" href={href(p.slug)} target="_blank" rel="noopener" style={`left: ${812 + i * 220}px; top: 140px; width: 200px`}>
+<span class="cap"><b>[fig. 0{i + 1}]</b><span>{day(p.date)}</span></span>
+<span class="pic"><img src={img(p.cover, 500)} alt="" loading="lazy"></span>
+<span class="q">“{p.quote}”</span>
+<span class="t">{p.title}</span>
+<span class="s">{p.sub}</span>
+<span class="mt">{mins(p.words)} min read</span>
+</a>
+))}
+
+<a class="ld" href={href(loud.slug)} target="_blank" rel="noopener" style="left: 812px; top: 636px; width: 640px; height: 236px">
+<p class="lab">said out loud</p>
+<span class="q">“{loud.quote}”</span>
+<span class="t">{loud.title}</span>
+<span class="s">{loud.sub}</span>
+<span class="mt">{meta(loud)}</span>
+<span class="go">read on Substack</span>
+</a>
+<p class="more" style="left: 812px; top: 898px; width: 640px">new letters every few weeks. this page keeps growing.{fresh.length > 0 && <> just in: {fresh.slice(0, 2).map((p, i) => <>{i > 0 && ', '}<a href={href(p.slug)} target="_blank" rel="noopener">{p.title}</a></>)}</>}</p>
+</div>
+</section>
+
+<main class="m">
+<a class="back" href="/home-redo#desk">Back</a>
+<h1>i write on Substack.</h1>
+<p class="note">{NOTE}</p>
+<section class="mpanel" aria-label="the masthead">
+<p class="lab">the masthead</p>
+<p class="mast">VeryKritikal</p>
+<p class="bio">{BIO}</p>
+<ul class="stats">
+<li><b>{essays}</b><span>essays</span></li>
+<li><b>{words.toLocaleString('en-IN')}</b><span>words</span></li>
+<li><b>{since}</b><span>since</span></li>
+</ul>
+<p class="personal">{PERSONAL}</p>
+<a class="sub-btn" href={SUBSCRIBE} target="_blank" rel="noopener">subscribe, it’s free</a>
+</section>
+{[...(fresh.length ? [{ id: 'new', name: 'just in' }] : []), ...sections].map((s) => {
+  const list = s.id === 'new' ? fresh : inSec(s.id);
+  return (
+  <section class="msec" aria-label={s.name}>
+  <h2>{s.name}</h2>
+  {list.map((p: any) => (
+  <>
+  <a class={`mp${s.id === 'loud' ? ' dark' : ''}`} href={href(p.slug)} target="_blank" rel="noopener">
+  {p.cover && s.id !== 'loud' && <span class="pic"><img src={img(p.cover)} alt="" loading="lazy"></span>}
+  {p.quote && <span class="q">“{p.quote}”</span>}
+  <span class="t">{p.title}</span>
+  <span class="s">{p.sub}</span>
+  <span class="mt">{meta(p)}</span>
+  </a>
+  {s.id === 'work' && <a class="mnote" href="/jobs">the work side of this story → work i have done.</a>}
+  </>
+  ))}
+  </section>
+  );
+})}
+<p class="more">new letters every few weeks. this page keeps growing.</p>
+</main>
+
+<div id="consent" role="dialog" aria-label="Cookie choice" hidden style="position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 55; max-width: 360px; box-sizing: border-box; padding: 18px 20px; border-radius: 16px; background: #141319; border: 1px solid #3A3842; box-shadow: 0 20px 50px rgba(0,0,0,0.6); font-family: 'Hanken Grotesk', system-ui, sans-serif; font-size: 14px; line-height: 1.5; color: #C9CDD5">
+<p style="margin: 0 0 14px">Allow cookies on your visit so I know what you resonate with. No ads, I promise.</p>
+<div style="display: flex; gap: 10px">
+<button class="cb-yes" type="button" data-consent="yes">Yes!</button>
+<button class="cb-no" type="button" data-consent="no">No thanks</button>
+</div>
+</div>
+
+<script is:inline>
+// each spread is zoomed to cover the window, like the desk (stops at 18% trimmed on unusual window shapes)
+function fit(){var a=innerWidth/1512,b=innerHeight/982,lo=Math.min(a,b),s=Math.min(Math.max(a,b),lo/0.82);document.querySelectorAll('.stage').forEach(function(st){st.style.transform='scale('+s+')';st.style.left=((innerWidth-1512*s)/2)+'px';st.style.top=((innerHeight-982*s)*0.4)+'px';});}
+addEventListener('resize',fit);fit();
+</script>
+<script is:inline src="/kritikal-cursor.js" defer></script>
+</body>
+</html>
