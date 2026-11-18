@@ -1,1 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g transform="translate(32 32)"><path d="M0 -15.26A17 17 0 0 1 0 15.26A17 17 0 0 1 0 -15.26Z" fill="#d2453f"/><circle cx="-7.5" cy="0" r="17" fill="none" stroke="#efefee" stroke-width="3.2"/><circle cx="7.5" cy="0" r="17" fill="none" stroke="#efefee" stroke-width="3.2"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="11 11 42 42">
+<style>.m{stroke:#A9452A}.d{fill:#A9452A}@media (prefers-color-scheme: dark){.m{stroke:#E8957A}.d{fill:#E8957A}}</style>
+<path class="m" d="M14 23V14H23M41 14H50V23M50 41V50H41M23 50H14V41" fill="none" stroke-width="4" stroke-linecap="square"/>
+<circle class="d" cx="32" cy="32" r="5"/>
+</svg>
