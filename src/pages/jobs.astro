@@ -22,17 +22,18 @@ const skills = [
 // The grid, in reading order: words and pictures alternate. Swap any cell by editing this list.
 // kind 'words': a story in words. kind 'pic': a case study as a picture; hover shows date + about.
 const cells = [
-  { kind: 'words', at: 'Plane', title: 'GitHub stars from one debate', line: 'a calculated Hacker News debate, three months in: 82+ stars in 24 hours.', href: '' },
-  { kind: 'pic', title: 'Why Positioning matters?', date: 'apr 2025 → now', about: 'one page that decided who Nexus was for, what we said, and where we said it.', img: '/case/icp-nexus/one-pager.png', href: '/work/icp-positioning-messaging-nexus' },
-  { kind: 'words', at: 'Nexus', title: 'who nexus is for, and how i got there', line: 'from user stories to the merchants we were really building for.', href: '/work/who-nexus-is-for' },
-  { kind: 'pic', title: 'How I ran a pricing campaign', date: 'apr 2024', about: 'launching Plane One, a new paid plan, on Twitter: the tease, the reveal and the letter.', img: '/work/plane-one-campaign/img/reveal.jpg', href: '/work/plane-one-campaign/' },
-  { kind: 'words', at: 'Nexus', title: 'the metric that wouldn’t move', line: 'activation from 32% to 65.5% in a week, with PostHog and Intercom.', href: '/nexus' },
-  { kind: 'pic', title: 'How I would re-design Paper’s onboarding emails', date: 'coming soon', about: 'a teardown of Paper’s first emails: what they say, what they should, and why.', img: '/jobs/paper-envelope.png', href: '' }
+  { kind: 'pic', title: 'Why positioning matters. How to get there?', date: 'apr 2025 → now', about: 'one page that decided who Nexus was for, what we said, and where we said it.', img: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80&auto=format&fit=crop', href: '/work/icp-positioning-messaging-nexus' },
+  { kind: 'words', at: 'Plane', title: 'How to build a Twitter account from scratch', line: 'Plane’s Twitter from zero: 500+ posts and 20+ release notes, in step with every release.', href: '/work/grow-planes-twitter/' },
+  { kind: 'pic', title: 'How I ran a campaign for pricing launch', date: 'apr 2024', about: 'launching Plane One, a new paid plan, on Twitter: the tease, the reveal and the letter.', img: '/work/plane-one-campaign/img/reveal.jpg', href: '/work/plane-one-campaign/' },
+  { kind: 'pic', title: 'How I would re-design Paper’s onboarding emails', date: 'coming soon', about: 'a teardown of Paper’s first emails: what they say, what they should, and why.', img: '/jobs/paper-envelope.png', href: '' },
+  { kind: 'pic', title: 'How to build battle card for your competition', date: 'coming soon', about: 'battlecards for Nexus: who we were up against, where we won, and what to say when it came up.', img: 'https://images.unsplash.com/photo-1586165368502-1bad197a6461?w=800&q=80&auto=format&fit=crop', href: '' },
+  { kind: 'words', at: 'coming soon', title: 'How to use AI for market research', line: 'the prompts, the checks and the workflow i use to understand a market fast.', href: '' }
 ];
 // not on the page right now, kept for swapping in:
-//  words: 'building Nexus, then selling it' (Nexus, zero to one, 250+ installs in week one), 'What the Fork' (Marmeto, developer evenings)
-//  pictures: 'Building a Twitter account from scratch' (/work/grow-planes-twitter/, img/kanban.jpg, mar 2023 → may 2024),
-//            'what it was like to pull off a TEDx event' (/desk/tedx-x.png on the tint, jul 2021)
+//  words: 'GitHub stars from one debate' (Plane, 82+ stars in 24 hours), 'who nexus is for, and how i got there' (/work/who-nexus-is-for),
+//         'the metric that wouldn’t move' (/nexus), 'building Nexus, then selling it', 'What the Fork'
+//  pictures: 'what it was like to pull off a TEDx event' (/desk/tedx-x.png, jul 2021)
+// Positioning and battlecards use Unsplash photos as stand-ins (planning at a desk; two chess knights).
 // stamp grid: 3 columns x 2 rows, stamps sized in 18px steps so the perforations land evenly
 const SW = 252, SH = 270, GX = [470, 839, 1208], GY = [300, 612];
 const TILT = [-1.4, 1, -0.8, 1.2, -1, 0.8];
