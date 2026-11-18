@@ -2,8 +2,10 @@
 // /jobs, "work i have done." — opened from 4 on the desk (/home-redo).
 // Desktop: one magazine page (1512x982, scaled to fill the window), like the desk. A soft terracotta panel on the
 // left holds her skills (from her resume) in three groups. To its right: the heading on the left, a short note
-// (under 100 words) on the right, then a neat grid of six in two rows: plain images (no border) and plain text.
-// Hovering an image darkens all of it and shows the date, what it's about, and "Read more".
+// (under 100 words) on the right, then the six stories as a magazine layout: one big feature (01), a story in words
+// beside it, a line across the middle, and a staggered row of four below. Each story has a section name (kicker).
+// Images print in duotone (ink, terracotta, cream) and bloom into full colour on hover, where an overlay shows the
+// date, what it's about, and "Read more".
 // Below 768px: one column.
 import Analytics from '../components/Analytics.astro';
 
@@ -20,21 +22,23 @@ const skills = [
 
 // The grid, in reading order: words and pictures alternate. Swap any cell by editing this list.
 // kind 'words': a story in words. kind 'pic': a case study as a picture; hover shows date + about.
+// each story has a magazine section name (kicker). x, y, w, h place it on the page (h = image height).
 const cells = [
-  { kind: 'pic', title: 'Why positioning matters. How to get there?', date: 'apr 2025 → now', about: 'one page that decided who Nexus was for, what we said, and where we said it.', img: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80&auto=format&fit=crop', href: '/work/icp-positioning-messaging-nexus' },
-  { kind: 'words', at: 'Plane', title: 'How to build a Twitter account from scratch', line: 'Plane’s Twitter from zero: 500+ posts and 20+ release notes, in step with every release.', href: '/work/grow-planes-twitter/' },
-  { kind: 'pic', title: 'How I ran a campaign for pricing launch', date: 'apr 2024', about: 'launching Plane One, a new paid plan, on Twitter: the tease, the reveal and the letter.', img: '/work/plane-one-campaign/img/reveal.jpg', href: '/work/plane-one-campaign/' },
-  { kind: 'pic', title: 'How I would re-design Paper’s onboarding emails', date: 'coming soon', about: 'a teardown of Paper’s first emails: what they say, what they should, and why.', img: '/jobs/paper-envelope.png', href: '' },
-  { kind: 'pic', title: 'How to build battle card for your competition', date: 'coming soon', about: 'battlecards for Nexus: who we were up against, where we won, and what to say when it came up.', img: 'https://images.unsplash.com/photo-1586165368502-1bad197a6461?w=800&q=80&auto=format&fit=crop', href: '' },
-  { kind: 'words', at: 'coming soon', title: 'How to use AI for market research', line: 'the prompts, the checks and the workflow i use to understand a market fast.', href: '' }
+  { kind: 'pic', kicker: 'The Briefing', title: 'Why positioning matters. How to get there?', date: 'apr 2025 → now', about: 'one page that decided who Nexus was for, what we said, and where we said it.', img: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&q=80&auto=format&fit=crop', href: '/work/icp-positioning-messaging-nexus', x: 470, y: 296, w: 540, h: 250 },
+  { kind: 'words', kicker: 'Field Notes', at: 'Plane', title: 'How to build a Twitter account from scratch', line: 'Plane’s Twitter from zero: 500+ posts and 20+ release notes, in step with every release.', href: '/work/grow-planes-twitter/', x: 1090, y: 300, w: 340 },
+  { kind: 'pic', kicker: 'The Campaign', title: 'How I ran a campaign for pricing launch', date: 'apr 2024', about: 'launching Plane One, a new paid plan, on Twitter: the tease, the reveal and the letter.', img: '/work/plane-one-campaign/img/reveal.jpg', href: '/work/plane-one-campaign/', x: 470, y: 690, w: 220, h: 150 },
+  { kind: 'pic', kicker: 'The Teardown', title: 'How I would re-design Paper’s onboarding emails', date: 'coming soon', about: 'a teardown of Paper’s first emails: what they say, what they should, and why.', img: '/jobs/paper-envelope.png', href: '', x: 730, y: 718, w: 220, h: 150 },
+  { kind: 'pic', kicker: 'Match Report', title: 'How to build battle card for your competition', date: 'coming soon', about: 'battlecards for Nexus: who we were up against, where we won, and what to say when it came up.', img: 'https://images.unsplash.com/photo-1586165368502-1bad197a6461?w=800&q=80&auto=format&fit=crop', href: '', x: 990, y: 690, w: 220, h: 150 },
+  { kind: 'words', kicker: 'The Interview', at: 'coming soon', title: 'How to use AI for market research', line: 'the prompts, the checks and the workflow i use to understand a market fast.', href: '', x: 1250, y: 700, w: 200 }
 ];
+// the line in the middle of the page
+const MIDLINE = 'proof that overthinking can be a skill.';
 // not on the page right now, kept for swapping in:
 //  words: 'GitHub stars from one debate' (Plane, 82+ stars in 24 hours), 'who nexus is for, and how i got there' (/work/who-nexus-is-for),
 //         'the metric that wouldn’t move' (/nexus), 'building Nexus, then selling it', 'What the Fork'
 //  pictures: 'what it was like to pull off a TEDx event' (/desk/tedx-x.png, jul 2021)
 // Positioning and battlecards use Unsplash photos as stand-ins (planning at a desk; two chess knights).
-// grid: 3 columns x 2 rows; images are IW x IH with the caption below
-const GX = [470, 840, 1210], GY = [304, 612], CW = 250, IH = 172;
+
 ---
 <!doctype html>
 <html lang="en">
@@ -68,11 +72,17 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 h1{position:absolute;left:470px;top:92px;width:420px;margin:0;font-family:Geist,sans-serif;font-weight:600;font-size:64px;line-height:1.02;letter-spacing:-.02em;color:#1C1B1F}
 .note{position:absolute;left:1000px;top:100px;width:440px;margin:0;font-size:15px;line-height:1.6;color:#4A4542}
 .note .lead{display:block;margin-bottom:10px;color:#1C1B1F;font-weight:500}
-/* the grid: plain images (no border) and plain text */
+/* the stories: plain images (no border) and plain text, laid out like a magazine feature page */
+.kick{display:block;margin-bottom:6px;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#A9452A}
+.cell .pic .duo{position:absolute;inset:0;transition:opacity .5s ease}
+.cell .pic .duo img{filter:url(#duotone)}
+.cell:hover .pic .duo,.cell:focus-visible .pic .duo{opacity:0}
+.mid{position:absolute;left:470px;top:610px;width:990px;margin:0;text-align:center;font-family:'EB Garamond',serif;font-style:italic;font-size:32px;line-height:1.2;color:#A9452A}
+.mid::before,.mid::after{content:"";display:inline-block;width:56px;height:1px;margin:0 22px;vertical-align:middle;background:rgba(169,69,42,.5)}
 .cell{position:absolute;display:block}
 .cell .pic{position:relative;display:block;overflow:hidden;background:#efece6}
 .cell .pic img{width:100%;height:100%;object-fit:cover;display:block}
-.cell .cap{display:flex;gap:8px;align-items:baseline;margin-top:10px;font-size:12px;line-height:1.35;color:#4A4542}
+.cell .cap{display:flex;gap:8px;align-items:baseline;margin-top:8px;font-size:12px;line-height:1.35;color:#4A4542}
 .cell .cap b{font-family:Geist,sans-serif;font-weight:500;color:#A9452A}
 /* hover: the whole image darkens, then the date, what it's about, and Read more come up */
 .cell .ov{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:18px;box-sizing:border-box;background:rgba(28,27,31,.78);color:#fff;opacity:0;transition:opacity .35s ease}
@@ -84,14 +94,14 @@ h1{position:absolute;left:470px;top:92px;width:420px;margin:0;font-family:Geist,
 .cell:hover .rm,.cell:focus-visible .rm{opacity:1;transform:none}
 /* words */
 .cell.w{padding-top:2px}
-.cell .num{display:block;font-family:Geist,sans-serif;font-weight:300;font-size:60px;line-height:1;letter-spacing:-.03em;color:#1C1B1F;transition:color .25s}
-.cell .at{display:block;margin:12px 0 4px;font-size:11px;letter-spacing:.22em;color:#8a837d}
+.cell .num{display:block;font-family:Geist,sans-serif;font-weight:300;font-size:64px;line-height:1;letter-spacing:-.03em;color:#1C1B1F;transition:color .25s}
+.cell .at{display:block;margin:2px 0 8px;font-size:11px;letter-spacing:.18em;color:#8a837d}
 .cell .t{display:block;font-family:Geist,sans-serif;font-weight:500;font-size:16px;line-height:1.25;color:#1C1B1F}
 .cell .l{display:block;margin-top:8px;font-size:13px;line-height:1.5;color:#6f6862}
 .cell.w .rmw{display:inline-block;margin-top:12px;font-size:13px;color:#A9452A;text-decoration:underline;text-underline-offset:3px;opacity:0;transform:translateY(6px);transition:opacity .3s,transform .4s cubic-bezier(.3,1.4,.5,1)}
 .cell.w:hover .num,.cell.w:focus-visible .num{color:#A9452A}
 .cell.w:hover .rmw,.cell.w:focus-visible .rmw{opacity:1;transform:none}
-@media (prefers-reduced-motion: reduce){.cell .ov,.cell .ov *,.cell .rm,.cell .rmw{transition:none}}
+@media (prefers-reduced-motion: reduce){.cell .ov,.cell .ov *,.cell .rm,.cell .rmw,.cell .pic .duo{transition:none}}
 
 /* phones: one column of stamps */
 .m{display:none}
@@ -106,6 +116,8 @@ h1{position:absolute;left:470px;top:92px;width:420px;margin:0;font-family:Geist,
   .m .sk{position:static;width:auto;margin-bottom:18px}
   .m .mcells{display:grid;gap:28px;margin:36px 0 0}
   .m .cell{position:relative}
+  .m .mid{position:static;width:auto;margin:4px 0;font-size:26px}
+  .m .mid::before,.m .mid::after{width:28px;margin:0 12px}
   .m .cell .pic{aspect-ratio:4/3}
   .m .cell .ov{position:static;opacity:1;background:none;color:#4A4542;padding:8px 0 0}
   .m .cell .ov .d{color:#8a837d;transform:none}
@@ -139,14 +151,16 @@ h1{position:absolute;left:470px;top:92px;width:420px;margin:0;font-family:Geist,
 <p class="note"><span class="lead">{NOTE}</span>{HOWTO}</p>
 {cells.map((c, i) => {
   const n = String(i + 1).padStart(2, '0');
-  const st = `left: ${GX[i % 3]}px; top: ${GY[Math.floor(i / 3)]}px; width: ${CW}px`;
+  const st = `left: ${c.x}px; top: ${c.y}px; width: ${c.w}px`;
   const more = c.href ? 'Read more' : 'coming soon';
   const inner = c.kind === 'words'
-    ? <><span class="num">{n}</span><span class="at">{c.at}</span><span class="t">{c.title}</span><span class="l">{c.line}</span><span class="rmw">{more}</span></>
-    : <><span class="pic" style={`height: ${IH}px`}><img src={c.img} alt="" loading="lazy"><span class="ov"><span class="d">{c.date}</span><span class="a">{c.about}</span><span class="rm">{more}</span></span></span><span class="cap"><b>{n}</b><span>{c.title}</span></span></>;
+    ? <><span class="num">{n}</span><span class="kick">{c.kicker}</span><span class="at">{c.at}</span><span class="t">{c.title}</span><span class="l">{c.line}</span><span class="rmw">{more}</span></>
+    : <><span class="pic" style={`height: ${c.h}px`}><img src={c.img} alt="" loading="lazy"><span class="duo" aria-hidden="true"><img src={c.img} alt="" loading="lazy"></span><span class="ov"><span class="d">{c.date}</span><span class="a">{c.about}</span><span class="rm">{more}</span></span></span><span class="cap"><b>{n}</b><span><span class="kick" style="display: inline; margin-right: 8px">{c.kicker}</span>{c.title}</span></span></>;
   const cls = `cell ${c.kind === 'words' ? 'w' : 'p'}`;
   return c.href ? <a class={cls} href={c.href} style={st}>{inner}</a> : <div class={cls} tabindex="0" style={st}>{inner}</div>;
 })}
+<p class="mid">{MIDLINE}</p>
+<svg width="0" height="0" style="position: absolute" aria-hidden="true"><filter id="duotone" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="0"></feColorMatrix><feComponentTransfer><feFuncR type="table" tableValues="0.11 0.66 0.95"></feFuncR><feFuncG type="table" tableValues="0.106 0.27 0.89"></feFuncG><feFuncB type="table" tableValues="0.12 0.165 0.86"></feFuncB></feComponentTransfer></filter></svg>
 </div>
 </section>
 
@@ -162,10 +176,11 @@ h1{position:absolute;left:470px;top:92px;width:420px;margin:0;font-family:Geist,
   const n = String(i + 1).padStart(2, '0');
   const more = c.href ? 'Read more' : 'coming soon';
   const inner = c.kind === 'words'
-    ? <><span class="num">{n}</span><span class="at">{c.at}</span><span class="t">{c.title}</span><span class="l">{c.line}</span><span class="rmw">{more}</span></>
-    : <><span class="pic"><img src={c.img} alt="" loading="lazy"></span><span class="cap"><b>{n}</b><span>{c.title}</span></span><span class="ov"><span class="d">{c.date}</span><span class="a">{c.about}</span><span class="rm">{more}</span></span></>;
+    ? <><span class="num">{n}</span><span class="kick">{c.kicker}</span><span class="at">{c.at}</span><span class="t">{c.title}</span><span class="l">{c.line}</span><span class="rmw">{more}</span></>
+    : <><span class="pic"><img src={c.img} alt="" loading="lazy"><span class="duo" aria-hidden="true"><img src={c.img} alt="" loading="lazy"></span></span><span class="cap"><b>{n}</b><span><span class="kick" style="display: inline; margin-right: 8px">{c.kicker}</span>{c.title}</span></span><span class="ov"><span class="d">{c.date}</span><span class="a">{c.about}</span><span class="rm">{more}</span></span></>;
   const cls = `cell ${c.kind === 'words' ? 'w' : 'p'}`;
-  return c.href ? <a class={cls} href={c.href}>{inner}</a> : <div class={cls}>{inner}</div>;
+  const el = c.href ? <a class={cls} href={c.href}>{inner}</a> : <div class={cls}>{inner}</div>;
+  return i === 1 ? <>{el}<p class="mid">{MIDLINE}</p></> : el;
 })}
 </div>
 </main>
