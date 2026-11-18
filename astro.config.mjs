@@ -6,6 +6,9 @@ export default defineConfig({
   site: 'https://www.kritikal.work',
   output: 'static',
   redirects: {
-    '/icp-nexus': '/work/icp-positioning-messaging-nexus'
+    '/icp-nexus': '/work/icp-positioning-messaging-nexus',
+    // the revamp's pages moved to their final routes
+    '/journey': '/roadmap',
+    '/coffee': '/recommendations'
   }
 });

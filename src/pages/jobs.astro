@@ -1,0 +1,216 @@
+---
+// /jobs, "work i have done." — opened from 4 on the desk (/home-redo).
+// Desktop: two magazine spreads (1512x982 each, scaled to fill the window), like the desk.
+//  Spread 1, a contents page: a soft terracotta panel on the left with her skills (from her resume) in three groups,
+//  then the heading, her note, and the case studies she has written up as big numbers.
+//  Spread 2, case studies as pictures in different sizes, each with a figure caption; hovering shows the date and
+//  what it's about. Add more by adding to `tiles` below.
+// Below 768px: one column.
+import Analytics from '../components/Analytics.astro';
+
+const NOTE = 'i am a visual thinker who loves solving a logical problem with creativity and empathy. see my work to understand how.';
+
+// skills, from her resume, grouped
+const skills = [
+  { group: 'Creatives', items: ['Positioning & messaging', 'Product copy', 'Landing pages', 'Release notes', 'Help centre docs', 'Video scripts', 'Social media', 'Event curation'] },
+  { group: 'Technical', items: ['Go-to-market strategy', 'Competitive intelligence & battlecards', 'App Store optimisation', 'SEO via Google Search Console', 'Activation & churn diagnosis', 'PostHog, Mixpanel, GA4, Plausible', 'Intercom, Claude', 'Zero-to-one product building'] },
+  { group: 'People', items: ['Ideal customer profile (ICP)', 'Customer discovery (The Mom Test)', 'Developer communities', 'Hackathons', 'Partner ecosystems', 'Win-back campaigns', 'Sprint execution'] }
+];
+
+// the case studies she has written up, as words (x, y on spread 1)
+const stories = [
+  { n: '01', at: 'Plane', title: 'GitHub stars from one debate', line: 'a calculated Hacker News debate, three months in: 82+ stars in 24 hours.', href: '', x: 470, y: 330 },
+  { n: '02', at: 'Nexus', title: 'who nexus is for, and how i got there', line: 'from user stories to the merchants we were really building for.', href: '/work/who-nexus-is-for', x: 800, y: 300 },
+  { n: '03', at: 'Nexus', title: 'building Nexus, then selling it', line: 'zero to one on Shopify, then a launch: 250+ installs in the first week.', href: '', x: 1140, y: 330 },
+  { n: '04', at: 'Nexus', title: 'the metric that wouldn’t move', line: 'activation from 32% to 65.5% in a week, with PostHog and Intercom.', href: '/nexus', x: 620, y: 580 },
+  { n: '05', at: 'Marmeto', title: 'What the Fork', line: 'closed-door developer evenings on agency growth, and the partners they brought.', href: '', x: 980, y: 610 }
+];
+
+// case studies as pictures (spread 2). size: wide | tall | square. `href` empty = not written up yet.
+const tiles = [
+  { fig: '01', title: 'Why Positioning matters?', date: 'apr 2025 → now', about: 'one page that decided who Nexus was for, what we said, and where we said it.', img: '/case/icp-nexus/one-pager.png', href: '/work/icp-positioning-messaging-nexus', x: 72, y: 120, w: 628, h: 262 },
+  { fig: '02', title: 'How I ran a pricing campaign', date: 'apr 2024', about: 'launching Plane One, a new paid plan, on Twitter: the tease, the reveal and the letter.', img: '/work/plane-one-campaign/img/reveal.jpg', href: '/work/plane-one-campaign/', x: 72, y: 430, w: 300, h: 400 },
+  { fig: '03', title: 'How I would re-design Paper’s onboarding emails', date: 'coming soon', about: 'a teardown of Paper’s first emails: what they say, what they should, and why.', img: '/jobs/paper-envelope.png', href: '', x: 400, y: 430, w: 300, h: 400 },
+  { fig: '04', title: 'Building a Twitter account from scratch', date: 'mar 2023 → may 2024', about: 'Plane’s Twitter from zero: 500+ posts and 20+ release notes, in step with every release.', img: '/work/grow-planes-twitter/img/kanban.jpg', href: '/work/grow-planes-twitter/', x: 812, y: 120, w: 300, h: 320 },
+  { fig: '05', title: 'what it was like to pull off a TEDx event', date: 'jul 2021', about: 'six hours, nine speakers, 120 attendees and 5.5 lacs in sponsorships.', img: '/desk/tedx-x.png', href: '', x: 1140, y: 120, w: 300, h: 320, cut: true }
+];
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>kritika · work i have done.</title>
+<meta name="description" content="Kritika's work: skills, case studies and the stories behind them.">
+<link rel="icon" href="/mark.svg" type="image/svg+xml">
+<link rel="icon" href="/mark-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/mark-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&amp;family=Hanken+Grotesk:wght@400;500&amp;family=EB+Garamond:ital,wght@0,500;1,400&amp;display=swap" rel="stylesheet">
+<style is:inline>
+html,body{margin:0;background:#fff;color:#1C1B1F;font-family:'Hanken Grotesk',sans-serif}
+a{color:inherit;text-decoration:none}
+a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
+.fold{position:relative;height:100vh;overflow:hidden}
+.stage{position:absolute;left:0;top:0;width:1512px;height:982px;transform-origin:0 0}
+.pageL{background:linear-gradient(100deg,#ffffff 0%,#fbfbf9 38%,#ffffff 52%,#f6f6f3 78%,#e9e8e4 96%,#d9d7d2 100%)}
+.pageR{background:linear-gradient(80deg,#d6d4cf 0%,#e8e7e3 4%,#f7f7f4 20%,#ffffff 46%,#fafaf8 70%,#ffffff 100%)}
+.sheen{background:linear-gradient(115deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.75) 42%,rgba(255,255,255,0) 54%)}
+.grain{position:absolute;inset:0;background:url(/desk/paper.jpg);background-size:900px auto;mix-blend-mode:multiply;opacity:.14;pointer-events:none}
+.back{position:absolute;left:56px;top:62px;padding:6px 0;font-size:15px;color:#A9452A;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+/* the skills panel, a soft terracotta tint */
+.panel{position:absolute;left:0;top:0;width:410px;height:982px;background:#F3E4DC}
+.panel .lab{position:absolute;left:56px;top:136px;margin:0;font-size:12px;letter-spacing:.24em;color:#8a6a5d}
+.panel .rule{position:absolute;left:56px;top:162px;width:298px;border-top:1px solid rgba(169,69,42,.35)}
+.sk{position:absolute;left:56px;width:300px}
+.sk h3{margin:0 0 8px;font-family:Geist,sans-serif;font-weight:500;font-size:15px;color:#A9452A}
+.sk ul{list-style:none;margin:0;padding:0;font-size:14px;line-height:1.65;color:#4A4542}
+/* heading, note and the stories */
+h1{position:absolute;left:470px;top:84px;margin:0;font-family:Geist,sans-serif;font-weight:600;font-size:64px;line-height:1.02;letter-spacing:-.02em;color:#1C1B1F}
+.note{position:absolute;left:470px;top:170px;width:560px;margin:0;font-size:18px;line-height:1.5;color:#4A4542}
+.story{position:absolute;width:250px;display:block}
+.story .num{display:block;font-family:Geist,sans-serif;font-weight:300;font-size:72px;line-height:1;letter-spacing:-.03em;color:#1C1B1F;transition:color .25s}
+.story .at{display:block;margin:6px 0 4px;font-size:11px;letter-spacing:.22em;color:#8a837d}
+.story .t{display:block;font-family:Geist,sans-serif;font-weight:500;font-size:17px;line-height:1.25;color:#1C1B1F}
+.story .l{display:block;margin-top:6px;font-size:14px;line-height:1.45;color:#6f6862}
+a.story:hover .num,a.story:focus-visible .num{color:#A9452A}
+.hint{position:absolute;left:1180px;top:880px;margin:0;font-size:13px;letter-spacing:.14em;color:#8a837d}
+/* spread 2: case studies as pictures */
+.fold2 .lab2{position:absolute;left:72px;top:64px;margin:0;font-size:12px;letter-spacing:.24em;color:#8a837d}
+.tile{position:absolute;display:block}
+.tile .cap{position:absolute;left:0;bottom:calc(100% + 8px);display:flex;gap:16px;font-size:12px;color:#4A4542;white-space:nowrap}
+.tile .cap b{font-weight:500;color:#8a837d}
+.tile .pic{position:absolute;inset:0;overflow:hidden;background:#efece6}
+.tile .pic img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.tile .pic.cut{background:#F3E4DC;display:flex;align-items:center;justify-content:center}
+.tile .pic.cut img{width:46%;height:auto;object-fit:contain;filter:drop-shadow(0 8px 10px rgba(70,50,35,.2))}
+/* hover: an overlay rises with the date and what it's about */
+.tile .ov{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:22px;box-sizing:border-box;background:linear-gradient(0deg,rgba(28,27,31,.86) 0%,rgba(28,27,31,.55) 55%,rgba(28,27,31,.1) 100%);color:#fff;opacity:0;transition:opacity .4s ease}
+.tile .ov .d{font-size:11px;letter-spacing:.22em;color:#F3E4DC;transform:translateY(8px);transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.tile .ov .t2{margin-top:6px;font-family:Geist,sans-serif;font-weight:500;font-size:19px;line-height:1.2;transform:translateY(10px);transition:transform .55s cubic-bezier(.2,.7,.2,1)}
+.tile .ov .a{margin-top:8px;font-size:14px;line-height:1.45;color:#e9e6e1;transform:translateY(12px);transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.tile .ov .go{margin-top:12px;font-size:13px;color:#F3E4DC;text-decoration:underline;text-underline-offset:3px}
+.tile:hover .ov,.tile:focus-visible .ov{opacity:1}
+.tile:hover .ov *,.tile:focus-visible .ov *{transform:none}
+.tile:hover .pic img,.tile:focus-visible .pic img{transform:scale(1.03)}
+.more{position:absolute;left:812px;top:500px;width:520px;margin:0;font-family:'EB Garamond',serif;font-style:italic;font-size:24px;line-height:1.35;color:#8a837d}
+@media (prefers-reduced-motion: reduce){.tile .ov,.tile .ov *,.tile .pic img{transition:none}}
+
+/* phones: one column */
+.m{display:none}
+@media (max-width: 767px){
+  .fold{display:none}
+  body{background:#fbfaf7}
+  .m{display:block;padding:48px 16px 40px;box-sizing:border-box}
+  .m .back{position:static;display:inline-block;min-height:32px}
+  .m h1{position:static;margin:6px 0 0;font-size:44px}
+  .m .note{position:static;width:auto;margin:14px 0 0;font-size:17px}
+  .m .mskills{margin:28px -16px 0;padding:24px 16px;background:#F3E4DC}
+  .m .mskills .lab{margin:0 0 16px;font-size:12px;letter-spacing:.24em;color:#8a6a5d}
+  .m .sk{position:static;width:auto;margin-bottom:18px}
+  .m .mstories{display:grid;gap:26px;margin:32px 0 0}
+  .m .story{position:static;width:auto}
+  .m .story .num{font-size:56px}
+  .m .mtiles{display:grid;gap:28px;margin:40px 0 0}
+  .m .mt .pic{position:relative;aspect-ratio:4/3;overflow:hidden;background:#efece6}
+  .m .mt .pic img{width:100%;height:100%;object-fit:cover;display:block}
+  .m .mt .pic.cut{background:#F3E4DC;display:flex;align-items:center;justify-content:center}
+  .m .mt .pic.cut img{width:40%;height:auto;object-fit:contain}
+  .m .mt .d{margin:10px 0 0;font-size:11px;letter-spacing:.22em;color:#8a837d}
+  .m .mt .t2{margin:4px 0 0;font-family:Geist,sans-serif;font-weight:500;font-size:18px}
+  .m .mt .a{margin:6px 0 0;font-size:15px;line-height:1.5;color:#4A4542}
+}
+.cb-yes,.cb-no{min-height:40px;padding:0 20px;border-radius:10px;font-family:inherit;font-size:14px;cursor:pointer}
+.cb-yes{border:0;background:#E8EBF0;color:#0B0A0F;font-weight:600}
+.cb-no{background:none;border:1px solid #3A3842;color:#E8EBF0}
+</style>
+<Analytics />
+</head>
+<body>
+<section class="fold fold1" aria-labelledby="title">
+<div class="stage">
+<div class="pageL" aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 756px; height: 982px"></div>
+<div class="pageR" aria-hidden="true" style="position: absolute; left: 756px; top: 0; width: 756px; height: 982px"></div>
+<div class="sheen" aria-hidden="true" style="position: absolute; inset: 0; opacity: .6"></div>
+<aside class="panel" aria-label="skills">
+<a class="back" href="/home-redo#desk">Back</a>
+<p class="lab">skills</p>
+<span class="rule" aria-hidden="true"></span>
+{skills.map((g, i) => (
+<div class="sk" style={`top: ${200 + [0, 250, 520][i]}px`}>
+<h3>{g.group}</h3>
+<ul>{g.items.map((it) => <li>{it}</li>)}</ul>
+</div>
+))}
+</aside>
+<div class="grain" aria-hidden="true"></div>
+<h1 id="title">work i have done.</h1>
+<p class="note">{NOTE}</p>
+{stories.map((s) => {
+  const inner = <><span class="num">{s.n}</span><span class="at">{s.at}</span><span class="t">{s.title}</span><span class="l">{s.line}</span></>;
+  return s.href
+    ? <a class="story" href={s.href} style={`left: ${s.x}px; top: ${s.y}px`}>{inner}</a>
+    : <div class="story" style={`left: ${s.x}px; top: ${s.y}px`}>{inner}</div>;
+})}
+<p class="hint" aria-hidden="true">case studies, over the page ↓</p>
+</div>
+</section>
+
+<section class="fold fold2" aria-label="case studies">
+<div class="stage">
+<div class="pageL" aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 756px; height: 982px"></div>
+<div class="pageR" aria-hidden="true" style="position: absolute; left: 756px; top: 0; width: 756px; height: 982px"></div>
+<div class="sheen" aria-hidden="true" style="position: absolute; inset: 0; opacity: .6"></div>
+<div class="grain" aria-hidden="true"></div>
+<p class="lab2">case studies</p>
+{tiles.map((t) => {
+  const inner = <>
+    <span class="cap"><b>[fig. {t.fig}]</b><span>{t.title}</span></span>
+    <span class={`pic${t.cut ? ' cut' : ''}`}><img src={t.img} alt="" loading="lazy"></span>
+    <span class="ov"><span class="d">{t.date}</span><span class="t2">{t.title}</span><span class="a">{t.about}</span>{t.href && <span class="go">read the case study</span>}</span>
+  </>;
+  const st = `left: ${t.x}px; top: ${t.y}px; width: ${t.w}px; height: ${t.h}px`;
+  return t.href ? <a class="tile" href={t.href} style={st}>{inner}</a> : <div class="tile" tabindex="0" style={st}>{inner}</div>;
+})}
+<p class="more">more stories on the way. this page keeps growing.</p>
+</div>
+</section>
+
+<main class="m">
+<a class="back" href="/home-redo#desk">Back</a>
+<h1>work i have done.</h1>
+<p class="note">{NOTE}</p>
+<section class="mskills" aria-label="skills">
+<p class="lab">skills</p>
+{skills.map((g) => <div class="sk"><h3>{g.group}</h3><ul>{g.items.map((it) => <li>{it}</li>)}</ul></div>)}
+</section>
+<div class="mstories">
+{stories.map((s) => {
+  const inner = <><span class="num">{s.n}</span><span class="at">{s.at}</span><span class="t">{s.title}</span><span class="l">{s.line}</span></>;
+  return s.href ? <a class="story" href={s.href}>{inner}</a> : <div class="story">{inner}</div>;
+})}
+</div>
+<div class="mtiles">
+{tiles.map((t) => {
+  const inner = <><span class={`pic${t.cut ? ' cut' : ''}`} style="display: flex"><img src={t.img} alt="" loading="lazy"></span><p class="d">{t.date}</p><p class="t2">{t.title}</p><p class="a">{t.about}</p></>;
+  return t.href ? <a class="mt" href={t.href}>{inner}</a> : <div class="mt">{inner}</div>;
+})}
+</div>
+</main>
+
+<div id="consent" role="dialog" aria-label="Cookie choice" hidden style="position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 55; max-width: 360px; box-sizing: border-box; padding: 18px 20px; border-radius: 16px; background: #141319; border: 1px solid #3A3842; box-shadow: 0 20px 50px rgba(0,0,0,0.6); font-family: 'Hanken Grotesk', system-ui, sans-serif; font-size: 14px; line-height: 1.5; color: #C9CDD5">
+<p style="margin: 0 0 14px">Allow cookies on your visit so I know what you resonate with. No ads, I promise.</p>
+<div style="display: flex; gap: 10px">
+<button class="cb-yes" type="button" data-consent="yes">Yes!</button>
+<button class="cb-no" type="button" data-consent="no">No thanks</button>
+</div>
+</div>
+
+<script is:inline>
+// each spread is zoomed to cover the window, like the desk (stops at 18% trimmed on unusual window shapes)
+function fit(){var a=innerWidth/1512,b=innerHeight/982,lo=Math.min(a,b),s=Math.min(Math.max(a,b),lo/0.82);document.querySelectorAll('.stage').forEach(function(st){st.style.transform='scale('+s+')';st.style.left=((innerWidth-1512*s)/2)+'px';st.style.top=((innerHeight-982*s)*0.4)+'px';});}
+addEventListener('resize',fit);fit();
+</script>
+<script is:inline src="/kritikal-cursor.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,605 @@
+---
+// /home-redo: the new home, the desk spread ("/" is still the old home for now). Desktop is a fixed 1512x982 design
+// scaled to fill the window; below 768px it becomes one scrolling column. Images live in public/desk/.
+// Its pages: 1 /roadmap, 2 /recommendations, 3 /substacks, 4 /jobs, 5 /graveyard, 6 /playground.
+import Analytics from '../components/Analytics.astro';
+
+const WORK = '/work';
+const JOURNEY = '/roadmap';
+const TWITTER = 'https://x.com/verykritikal?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
+const SUBSTACK = 'https://substack.com/@verykritikal/posts?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
+const INSTAGRAM = 'https://www.instagram.com/verykritikal/?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
+const LINKEDIN = 'https://www.linkedin.com/in/kritika-upadhyay-2001/?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
+const EMAIL = 'mailto:kritikaupadhyay2001@gmail.com';
+const WHATSAPP = 'https://wa.me/919109079518';
+const BEANLORE = 'https://maps.app.goo.gl/cWP7aSNRVM3AXVjH9';
+const ext = (href: string) => href.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {};
+
+// Placeholders until their pages exist: tedx bitd, the world, she substacks.
+const COFFEE = '/recommendations';
+const JOBS = '/jobs';
+// Routes reserved for pages still being designed; the cutouts link to them once the pages exist.
+const SUBSTACKS = '/substacks', GRAVEYARD = '/graveyard', PLAYGROUND = '/playground';
+const TEDX = '#tedx', TAROT = '#tarot', COVER = '#substack';
+
+const planeLogo = `<svg class="logo" width="130" height="81" viewBox="0 0 579 361" role="img" aria-label="Plane logo"><path d="M0 20.6413C0 5.3174 16.1 -4.64793 29.7966 2.20067L147.972 61.3502V200.168C147.972 219.674 158.992 237.527 176.417 246.248L283.068 299.63V340.352C283.068 355.675 266.968 365.641 253.271 358.779L28.4447 246.248C11.0201 237.527 0 219.688 0 200.168V20.6413ZM147.972 20.6413C147.972 5.3174 164.072 -4.64793 177.769 2.21435L295.945 61.3638V200.182C295.945 219.688 306.965 237.541 324.39 246.262L431.041 299.643V340.366C431.041 355.689 414.94 365.654 401.244 358.792L283.068 299.643V160.826C283.068 141.306 272.048 123.466 254.623 114.744L147.972 61.3638V20.6413ZM295.931 20.6413C295.931 5.3174 312.032 -4.64793 325.728 2.21435L550.555 114.744C567.993 123.466 579 141.306 579 160.826V340.366C579 355.689 562.899 365.654 549.203 358.792L431.027 299.643V160.826C431.027 141.306 420.007 123.466 402.582 114.744L295.931 61.3638V20.6413Z" fill="#1C1B1F"></path></svg>`;
+// "she substacks": a cutout of a writer at her laptop
+const carrie = '<img src="/desk/carrie.png" alt="a woman writing at her laptop, thinking" style="max-width: 150px; max-height: 182px">';
+// "Tech jobs and their stories.": a little desk of her work, cut from her own photos: the laptop (showing
+// Plane's GitHub star history), the pen cup and the notebook stack. On hover they shift apart a little.
+const workGroup = `<span class="wgrp"><img class="wp" src="/desk/work-pens.png" alt="a mesh cup full of pens"><img class="wn" src="/desk/work-notebooks.png" alt="a notebook stack with yellow sticky notes on top"><img class="wc" src="/desk/iced-latte.png" alt="an iced latte in a tall glass"><img class="wl" src="/desk/work-laptop.png" alt="kritika's laptop showing plane's github star history climbing"></span>`;
+// "my coffee reccs!": a brunch, cut piece by piece from her photo: the croissant sandwich, the english breakfast,
+// the iced coffee and her shades. On hover they spread a little.
+const brunch = `<span class="brn"><img class="bc" src="/desk/brunch-croissant.png" alt="a croissant sandwich on an oval plate"><img class="bb" src="/desk/brunch-breakfast.png" alt="an english breakfast plate with pancakes, beans and hash browns"><img class="bk" src="/desk/brunch-coffee.png" alt="an iced coffee with a straw"><img class="bs" src="/desk/brunch-shades.png" alt="black sunglasses"></span>`;
+
+// Phone column, in number order.
+const items = [
+  { n: 1, name: "what's her story?", href: JOURNEY, say: true, art: '<img src="/desk/kritika-mirror.png" alt="kritika taking a mirror selfie in a white top and green checked trousers" style="max-width: 240px; max-height: 260px">' },
+  { n: 2, name: "places i swear by!", href: COFFEE, art: brunch },
+  { n: 3, name: "i write on Substack", href: COVER, art: carrie },
+  { n: 4, name: "work i have done.", href: JOBS, art: workGroup },
+  { n: 5, name: "ideas that never took off", href: TEDX, art: '<img src="/desk/tedx-x.png" alt="a big red handmade x from tedx bitd">' },
+  { n: 6, name: "things i do for fun", href: TAROT, art: '<img src="/desk/the-world-tarot.png" alt="the world tarot card">' }
+];
+
+const socials = [
+  { label: 'Twitter', href: TWITTER, svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A9452A" stroke-width="1.8" stroke-linecap="round"><path d="M4 4l16 16M20 4L4 20"></path></svg>' },
+  { label: 'Substack', href: SUBSTACK, svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A9452A" stroke-width="1.8" stroke-linejoin="round"><path d="M5 4h14M5 8h14M5 12h14v9l-7-4-7 4z"></path></svg>' },
+  { label: 'Instagram', href: INSTAGRAM, svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A9452A" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.2" cy="6.8" r=".8" fill="#A9452A"></circle></svg>' },
+  { label: 'LinkedIn', href: LINKEDIN, svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A9452A" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="3.5" width="17" height="17" rx="3"></rect><path d="M8 10.5v6M8 7.5v.1M12 16.5v-6M12 13c0-1.6 1-2.6 2.3-2.6S16.5 11.3 16.5 13v3.5"></path></svg>' },
+  { label: 'Email', href: EMAIL, svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A9452A" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="2"></rect><path d="M3.5 6.5l8.5 6.5 8.5-6.5"></path></svg>' },
+  { label: 'WhatsApp', href: WHATSAPP, svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A9452A" stroke-width="1.8" stroke-linejoin="round"><path d="M4 20l1.4-4.2A8 8 0 1 1 8.4 19z"></path><path d="M9.2 9.2c.3 2.4 2.2 4.4 4.6 4.9l1-1.1 1.6.8" stroke-linecap="round"></path></svg>' }
+];
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>kritika · darling, have you met Kritika?</title>
+<link rel="icon" href="/mark.svg" type="image/svg+xml">
+<link rel="icon" href="/mark-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/mark-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Hanken+Grotesk:ital,wght@0,400;0,500;1,400&amp;family=Archivo+Black&amp;family=EB+Garamond:ital@1&amp;display=swap" rel="stylesheet">
+<script is:inline>if (location.hash !== '#desk') document.documentElement.classList.add('intro-on');</script>
+<style is:inline>
+html,body{margin:0;height:100%;background:#f4f3f0;overflow:hidden}
+#stage{position:absolute;left:0;top:0;transform-origin:0 0}
+a{color:#B4502F;text-decoration:none}a:hover{color:#8F3C21}
+a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
+.desk{background-color:#FFEAD3;background-image:url(/desk/paper.jpg);background-size:1000px auto;background-blend-mode:multiply}
+.pageL{background:linear-gradient(100deg,#ffffff 0%,#fbfbf9 38%,#ffffff 52%,#f6f6f3 78%,#e9e8e4 96%,#d9d7d2 100%)}
+.pageR{background:linear-gradient(80deg,#d6d4cf 0%,#e8e7e3 4%,#f7f7f4 20%,#ffffff 46%,#fafaf8 70%,#ffffff 100%)}
+.sheen{background:linear-gradient(115deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.75) 42%,rgba(255,255,255,0) 54%)}
+.cut{position:absolute;display:block;width:170px;height:170px}
+.cut .box{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transition:transform .5s cubic-bezier(.3,1.4,.5,1)}
+.cut img,.cut svg.logo{max-width:150px;max-height:150px;filter:drop-shadow(0 7px 9px rgba(70,50,35,.20))}
+.cut:hover .box,.cut.hl .box{transform:translateY(-8px) rotate(0deg) !important}
+.fig{position:absolute;font-family:Geist,sans-serif;font-weight:500;font-size:15px;color:#B4502F}
+/* each cutout's number sits right by its image */
+.no{position:absolute;font-family:Geist,sans-serif;font-weight:500;font-size:17px;color:#B4502F;pointer-events:none}
+/* Tech jobs: pen cup at the back, laptop beside it, notebooks in front (hiding the cup's trimmed base) */
+.wgrp,.brn{position:relative;display:block}
+.wgrp{width:370px;height:232px}.brn{width:330px;height:250px}
+.wgrp img,.brn img{position:absolute;display:block;height:auto !important;max-width:none !important;max-height:none !important;filter:drop-shadow(0 7px 9px rgba(70,50,35,.20));transition:transform .6s cubic-bezier(.3,1.3,.5,1)}
+/* work: books and laptop share one baseline (y 228), pens peek from behind the books, the coffee stands between them */
+.wgrp .wp{left:24px;top:78px;width:74px;transform:rotate(-3deg)}
+.wgrp .wn{left:0;top:160px;width:150px}
+.wgrp .wl{left:214px;top:50px;width:156px}
+.wgrp .wc{left:154px;top:149px;width:56px}
+.cut:hover .wgrp .wp,.cut.hl .wgrp .wp,.cut:focus-visible .wgrp .wp{transform:translate(-10px,-6px) rotate(-8deg)}
+.cut:hover .wgrp .wn,.cut.hl .wgrp .wn,.cut:focus-visible .wgrp .wn{transform:translate(-8px,4px)}
+.cut:hover .wgrp .wl,.cut.hl .wgrp .wl,.cut:focus-visible .wgrp .wl{transform:translateY(-8px)}
+.cut:hover .wgrp .wc,.cut.hl .wgrp .wc,.cut:focus-visible .wgrp .wc{transform:translate(8px,-4px) rotate(4deg)}
+/* brunch: a flat lay */
+.brn .bc{left:0;top:6px;width:150px;transform:rotate(-8deg)}
+.brn .bb{left:128px;top:56px;width:176px}
+.brn .bk{left:148px;top:-4px;width:62px;transform:rotate(6deg)}
+.brn .bs{left:84px;top:160px;width:34px;transform:rotate(22deg)}
+.cut:hover .brn .bc,.cut.hl .brn .bc,.cut:focus-visible .brn .bc{transform:translate(-8px,-6px) rotate(-11deg)}
+.cut:hover .brn .bb,.cut.hl .brn .bb,.cut:focus-visible .brn .bb{transform:translate(6px,6px)}
+.cut:hover .brn .bk,.cut.hl .brn .bk,.cut:focus-visible .brn .bk{transform:translate(8px,-6px) rotate(10deg)}
+.cut:hover .brn .bs,.cut.hl .brn .bs,.cut:focus-visible .brn .bs{transform:translate(-8px,8px) rotate(30deg)}
+.m-item .wgrp,.m-item .brn{transform:scale(.9)}
+@media (prefers-reduced-motion: reduce){.wgrp img,.brn img{transition:none}}
+/* scrolling on the desk: everything nudges up together and settles back, with a note that this is the whole page */
+.desk .cut,.desk .toc{translate:0 var(--nudge,0px);transition:translate .55s cubic-bezier(.3,1.5,.5,1)}
+.desk.nudging .cut,.desk.nudging .toc{transition:translate .18s ease-out}
+.endnote{position:absolute;left:456px;top:872px;width:600px;margin:0;text-align:center;font-family:'Hanken Grotesk',sans-serif;font-size:15px;color:#8a837d;opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s;pointer-events:none}
+.endnote.on{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){.desk .cut,.desk .toc{transition:none}}
+/* contents: one paragraph, numbers in terracotta */
+.toc{position:absolute;left:960px;top:722px;width:470px;margin:0;font-family:'Hanken Grotesk',sans-serif;font-size:18px;line-height:1.4;color:#6f6862}
+.toc a{white-space:nowrap;margin-right:.55em}
+.toc b{font:inherit;font-weight:500;color:#B4502F;margin-right:.3em}
+.bubble{opacity:0;transform:scale(.7) translateY(8px);transform-origin:bottom right;transition:opacity .25s,transform .45s cubic-bezier(.3,1.6,.5,1)}
+.c-me:hover .bubble,.c-me.hl .bubble,.c-me:focus-visible .bubble,.say .bubble{opacity:1;transform:none}
+/* "say hello": an Apple Messages style bubble (sent, blue, tail at the bottom right pointing at her) */
+.imsg{position:absolute;box-sizing:border-box;max-width:236px;padding:8px 14px 9px;border-radius:19px;background:#0A84FF;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;font-size:17px;line-height:1.3;letter-spacing:-.01em;color:#fff;text-align:left;pointer-events:none;z-index:6}
+.imsg .tail{position:absolute;right:-5px;bottom:0;width:17px;height:21px;display:block}
+/* Going to /journey: the desk's right page turns over the spine like a magazine page; its back, and the page under it,
+   are already /journey (same title, Back and socials in the same places), so the new page lands without a jump. */
+.mag{position:fixed;inset:0;z-index:60;perspective:2600px;cursor:default}
+.mag-under,.mag-leaf,.mag-lshade{position:absolute;top:0;height:100%}
+.mag-under{left:50%;width:50%;overflow:hidden;background:#fff}
+.mag-lshade{left:0;width:50%;background:#000;opacity:0;pointer-events:none;animation:magL 1.3s cubic-bezier(.62,.04,.22,1) forwards}
+.mag-leaf{left:50%;width:50%;transform-origin:left center;transform-style:preserve-3d;animation:magTurn 1.15s cubic-bezier(.62,.04,.22,1) forwards}
+.mag-face{position:absolute;inset:0;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.mag-back{transform:rotateY(180deg);background:#fbfaf7}
+.mag-in{position:absolute;top:0;left:0;width:100vw;height:100%}
+.mag.phone .mag-under{background:#fbfaf7}
+/* a bending page: thin strips, each turning a little more than the one before (built by Bend() in the script) */
+.bend{position:absolute;top:0;transform-style:preserve-3d;pointer-events:none}
+.bs{position:absolute;top:0;height:100%;transform-origin:0 50%;transform-style:preserve-3d}
+.bf{position:absolute;top:0;left:0;width:calc(100% + 1px);height:100%;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.bf.bb{transform:rotateY(180deg)}
+.bc{position:absolute;top:0;height:100%}
+.bl{position:absolute;inset:0}
+.mag-sp{position:absolute;width:1512px;height:982px;transform-origin:0 0;font-family:'Hanken Grotesk',sans-serif;color:#1C1B1F;text-align:left}
+.mag-sp .mb{display:inline-block;padding:6px 0;font-size:15px;color:#A9452A;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.mag-sp .mh{font-family:Geist,sans-serif;font-weight:600;font-size:64px;line-height:1.02;letter-spacing:-.02em}
+.mag-sp .ms{position:absolute;display:flex;gap:18px;align-items:center}
+.mag-sp .ms a{display:flex}
+.mag-shade{position:absolute;inset:0;pointer-events:none}
+.mag-front .mag-shade{background:linear-gradient(90deg,rgba(0,0,0,0) 35%,rgba(0,0,0,.55) 100%);opacity:0;animation:magF 1.15s cubic-bezier(.62,.04,.22,1) forwards}
+.mag-back .mag-shade{background:linear-gradient(270deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.35) 100%);opacity:1;animation:magB 1.15s cubic-bezier(.62,.04,.22,1) forwards}
+.mag-under .mag-shade{background:linear-gradient(90deg,rgba(0,0,0,.35) 0%,rgba(0,0,0,0) 60%);animation:magB 1.3s cubic-bezier(.62,.04,.22,1) forwards}
+@keyframes magTurn{from{transform:rotateY(0)}to{transform:rotateY(-180deg)}}
+@keyframes magF{50%{opacity:.9}100%{opacity:.9}}
+@keyframes magB{0%{opacity:1}50%{opacity:1}100%{opacity:0}}
+@keyframes magL{0%{opacity:0}90%{opacity:.35}100%{opacity:.35}}
+.mag-j{position:absolute;inset:0;box-sizing:border-box;padding:76px 72px 56px;font-family:'Hanken Grotesk',sans-serif;color:#1C1B1F;text-align:left}
+.mag-j .mb{display:inline-block;padding:6px 0;font-size:15px;color:#A9452A;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.mag-j .mh{margin:6px 0 0;max-width:760px;font-family:Geist,sans-serif;font-weight:600;font-size:64px;line-height:1.02;letter-spacing:-.02em}
+.mag-j .ms{position:absolute;left:72px;bottom:56px;display:flex;gap:18px;align-items:center}
+.mag-j .ms a{display:flex}
+/* phones: the whole screen is the page, turning away to the left */
+.mag.phone{perspective:1400px}
+.mag.phone .mag-under,.mag.phone .mag-leaf{left:0;width:100%}
+.mag.phone .mag-under .mag-in{left:0}
+.mag.phone .mag-lshade{display:none}
+.mag.phone .mag-leaf{animation:magTurnP 1.05s cubic-bezier(.62,.04,.22,1) forwards;box-shadow:-20px 0 40px rgba(0,0,0,.3)}
+.mag.phone .mag-front{background-color:#FFEAD3;background-image:url(/desk/paper.jpg);background-size:cover;background-position:center;background-blend-mode:multiply}
+.mag.phone .mag-j{padding:48px 16px 32px}
+.mag.phone .mag-j .mb{min-height:32px;box-sizing:border-box}
+.mag.phone .mag-j .mh{font-size:44px}
+.mag.phone .mag-j .ms{left:4px;bottom:32px;gap:6px}
+.mag.phone .mag-j .ms a{width:44px;height:44px;align-items:center;justify-content:center}
+@keyframes magTurnP{from{transform:rotateY(0);opacity:1}to{transform:rotateY(-110deg);opacity:.2}}
+.navface .open{opacity:0}.navface:hover .open{opacity:1}.navface:hover .shut{opacity:0}
+.keyitem{color:#6f6862}.keyitem:hover{color:#1C1B1F}
+.spotted a{color:#A9452A;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px}
+.spotted a:hover{color:#8F3C21}
+.spot-pic{position:absolute;left:10px;top:calc(100% + 10px);width:120px;height:auto;display:block;border-radius:4px;box-shadow:0 8px 16px rgba(70,50,35,.22);opacity:0;transform:scale(.85) translateY(-6px);transform-origin:top left;transition:opacity .2s,transform .4s cubic-bezier(.3,1.6,.5,1);pointer-events:none;z-index:5}
+/* the photo shows on hover (class .on, set by JS), then follows the cursor until it is 15cm from the line */
+.spotted.on .spot-pic,.spotted:focus-within .spot-pic{opacity:1;transform:none}
+.back{position:absolute;left:72px;top:76px;margin:0;padding:6px 0;border:0;background:none;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-size:15px;color:#A9452A;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.back:hover{color:#8F3C21}
+@media (prefers-reduced-motion: reduce){.cut .box,.bubble,.spot-pic{transition:none}}
+
+/* Intro, "let yourself be": a dark spread whose right page turns over onto the desk.
+   JS sets --p (0 closed, 1 turned) and --lift (sin of the turn) on #intro / #m-intro; .anim adds the eased turn. */
+.black{background-color:#242826;background-image:url(/desk/black-paper.jpg);background-size:700px auto}
+.matte{position:absolute;inset:0;background:linear-gradient(118deg,rgba(255,255,255,0) 28%,rgba(255,255,255,.045) 42%,rgba(255,255,255,0) 56%)}
+.intro,.m-intro{display:none}
+.intro-on .intro{display:block}
+.intro{position:absolute;inset:0;z-index:20;perspective:2600px;--p:0;--lift:0}
+.i-left{position:absolute;left:0;top:0;width:756px;height:982px}
+.i-under{position:absolute;left:756px;top:0;width:756px;height:982px;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,.1) 60%);opacity:calc(1 - var(--p))}
+.i-leftShade{position:absolute;inset:0;pointer-events:none;background:rgba(0,0,0,.5);opacity:calc(var(--p) * .8)}
+.i-leaf{position:absolute;left:756px;top:0;width:756px;height:982px;transform-origin:left center;transform-style:preserve-3d;transform:rotateY(calc(var(--p) * -180deg))}
+.i-face{position:absolute;inset:0;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.i-front{box-shadow:calc(var(--lift) * -30px) 0 40px rgba(0,0,0,calc(var(--lift) * .45))}
+.i-back{transform:rotateY(180deg);background:#fff}
+.i-faceShade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.6) 100%);opacity:calc(var(--lift) * .9)}
+.i-backShade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(270deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.35) 100%);opacity:var(--lift)}
+.intro .i-leaf,.intro .i-front{transition:transform .06s linear,box-shadow .06s linear}
+.intro .i-under,.intro .i-leftShade,.intro .i-faceShade,.intro .i-backShade{transition:opacity .06s linear}
+.intro.anim .i-leaf,.intro.anim .i-front{transition:transform 1.15s cubic-bezier(.62,.04,.22,1),box-shadow 1.15s cubic-bezier(.62,.04,.22,1)}
+.intro.anim .i-under,.intro.anim .i-leftShade,.intro.anim .i-faceShade,.intro.anim .i-backShade{transition:opacity 1.15s cubic-bezier(.62,.04,.22,1)}
+.turn{font-family:'EB Garamond',serif;font-style:italic;font-size:18px;color:#a9aba6;background:none;border:0;padding:12px 4px;cursor:pointer;transition:color .3s}
+.turn:hover{color:#e4e3dd}
+.turn:focus-visible{outline:1px solid #a9aba6;outline-offset:4px}
+.m-intro{position:fixed;inset:0;z-index:30;perspective:1400px;touch-action:none;--p:0}
+.m-leaf{position:absolute;inset:0;transform-origin:left center;transform:rotateY(calc(var(--p) * -110deg));opacity:calc(1 - var(--p) * .8);box-shadow:-20px 0 40px rgba(0,0,0,calc(var(--p) * .35));transition:transform .06s linear,opacity .06s linear,box-shadow .06s linear}
+.m-intro.anim .m-leaf{transition:transform 1.05s cubic-bezier(.62,.04,.22,1),opacity 1.05s cubic-bezier(.62,.04,.22,1),box-shadow 1.05s cubic-bezier(.62,.04,.22,1)}
+.m-leaf.black{background-size:600px auto}
+.m-leaf .matte{background:linear-gradient(118deg,rgba(255,255,255,0) 28%,rgba(255,255,255,.05) 44%,rgba(255,255,255,0) 60%)}
+.nextbtn{font-family:'EB Garamond',serif;font-style:italic;font-size:20px;color:#242826;background:#e4e3dd;border:0;border-radius:999px;padding:14px 30px;min-height:48px;cursor:pointer}
+.nextbtn:focus-visible{outline:2px solid #e4e3dd;outline-offset:4px}
+@media (prefers-reduced-motion: reduce){.intro *,.m-leaf{transition:none !important}}
+
+/* Desktop: the space around the scaled spread continues it instead of showing grey bands:
+   white (the spread's outer edges are white), with the intro's black paper over it until the page is turned. */
+@media (min-width: 768px){
+  html,body{background:#ffffff}
+  html::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background-color:#242826;background-image:url(/desk/black-paper.jpg);background-size:calc(700px * var(--s, 1)) auto;opacity:0;transition:opacity .6s ease}
+  html.intro-on::before{opacity:1}
+  html.intro-on body{background:transparent}
+}
+
+/* Phones (under 768px): one scrolling column */
+.m{display:none}
+@media (max-width: 767px){
+  html,body{height:auto;overflow:auto}
+  body{background:transparent}
+  #stage{display:none}
+  .intro-on .m-intro{display:block}
+  .intro-on,.intro-on body{overflow:hidden}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;background-color:#FFEAD3;background-image:url(/desk/paper.jpg);background-size:cover;background-position:center;background-blend-mode:multiply}
+  .m{display:block;background:none;min-height:100vh;box-sizing:border-box;padding:48px 16px 40px;font-family:'Hanken Grotesk',sans-serif;color:#1C1B1F}
+  .m h1{margin:0 0 28px;font-family:Geist,sans-serif;font-weight:600;font-size:44px;line-height:1.02;letter-spacing:-.02em;color:#A9452A}
+  .m ul{list-style:none;margin:0;padding:0;display:grid;gap:16px}
+  .m-item{position:relative;display:flex;flex-direction:column;align-items:center;gap:12px;padding:20px 16px;border-radius:16px;background:rgba(255,255,255,.6);-webkit-tap-highlight-color:transparent}
+  .m-art{display:flex;align-items:center;justify-content:center;min-height:150px}
+  .m-art img,.m-art svg.logo{max-width:150px;max-height:150px;filter:drop-shadow(0 7px 9px rgba(70,50,35,.20))}
+  .m-name{font-size:17px;color:#1C1B1F}
+  .m-say{left:10px;top:10px;max-width:150px;padding:7px 12px 8px;font-size:15px}
+  .m-name b{font-family:Geist,sans-serif;font-weight:500;color:#B4502F;margin-right:6px}
+  .m h1{margin-bottom:12px}
+  .m-back{position:static;display:inline-block;margin:0 0 12px;min-height:44px}
+  .m-spotted{margin:0 0 28px;font-size:13px;color:#4A4542}
+  .m-socials{display:flex;flex-wrap:wrap;gap:6px;margin-top:28px}
+  .m-socials a{display:flex;align-items:center;justify-content:center;width:44px;height:44px}
+}
+.cb-yes,.cb-no{min-height:40px;padding:0 20px;border-radius:10px;font-family:inherit;font-size:14px;cursor:pointer}
+.cb-yes{border:0;background:#E8EBF0;color:#0B0A0F;font-weight:600}
+.cb-no{background:none;border:1px solid #3A3842;color:#E8EBF0}
+</style>
+<Analytics />
+</head>
+<body>
+<div id="stage">
+<div class="desk" style="position: relative; width: 1512px; height: 982px; overflow: hidden; font-family: 'Hanken Grotesk', sans-serif; color: #1C1B1F">
+
+<div id="intro" class="intro">
+<div class="black i-left"><div class="matte"></div><div style="position: absolute; right: 0; top: 0; width: 70px; height: 982px; background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.35) 100%)"></div><div class="i-leftShade"></div></div>
+<div class="i-under" aria-hidden="true"></div>
+<div class="i-leaf">
+<div class="i-face i-front black">
+<div class="matte"></div>
+<div style="position: absolute; left: 0; top: 0; width: 60px; height: 982px; background: linear-gradient(90deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,0) 100%)"></div>
+<p style="position: absolute; left: 150px; top: 452px; margin: 0; font-family: 'EB Garamond', serif; font-style: italic; font-size: 34px; letter-spacing: .005em; color: #d9d8d2">Let yourself be exactly who you are.</p>
+<div style="position: absolute; right: 56px; bottom: 44px"><button class="turn" type="button" data-turn aria-label="Turn the page to the homepage">scroll to turn the page.</button></div>
+<div class="i-faceShade"></div>
+</div>
+<div class="i-face i-back" aria-hidden="true" inert><div class="i-backShade"></div></div>
+</div>
+</div>
+
+<div class="pageL" aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 756px; height: 982px"></div>
+<div class="pageR" aria-hidden="true" style="position: absolute; left: 756px; top: 0; width: 756px; height: 982px"></div>
+<div class="sheen" aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 1512px; height: 982px; opacity: .6"></div>
+
+<button class="back" type="button" data-back>Back</button>
+<h1 style="position: absolute; left: 72px; top: 118px; width: 600px; margin: 0; font-family: Geist, sans-serif; font-weight: 600; font-size: 64px; line-height: 1.02; letter-spacing: -.02em; color: #A9452A">darling, have you met Kritika?</h1>
+
+<a href={JOURNEY} class="cut c-me" data-id="me" data-say data-cur="nav" aria-label="what's her story?" style="left: 590px; top: 292px; width: 340px; height: 368px">
+<div class="box"><img src="/desk/kritika-mirror.png" alt="kritika taking a mirror selfie in a white top and green checked trousers" style="max-width: 340px; max-height: 360px"></div>
+<div class="bubble imsg" style="left: -150px; top: -26px; width: 236px">i am Kritika! I am a creative. marketer. and a writer.<svg class="tail" viewBox="0 0 17 21" aria-hidden="true"><path d="M0 0 C1 9 5 16 17 21 C9 21.5 3.5 20 0 17.5 Z" fill="#0A84FF"></path></svg></div>
+<span class="no" aria-hidden="true" style="left: 94px; top: 2px">1</span>
+</a>
+
+<a href={COFFEE} class="cut c-coffee" data-id="coffee" aria-label="places i swear by!" style="left: 880px; top: 84px; width: 330px; height: 250px">
+<div class="box" set:html={brunch}></div>
+<span class="no" aria-hidden="true" style="left: 256px; top: 12px">2</span>
+</a>
+
+<a href={COVER} class="cut c-cover" data-cur="nav" data-id="cover" aria-label="i write on Substack" style="left: 996px; top: 452px; width: 170px; height: 190px">
+<div class="box" set:html={carrie}></div>
+<span class="no" aria-hidden="true" style="left: -16px; top: 12px">3</span>
+</a>
+
+<a href={JOBS} class="cut c-tech" data-id="tech" aria-label="work i have done." style="left: 214px; top: 474px; width: 370px; height: 232px">
+<div class="box" set:html={workGroup}></div>
+<span class="no" aria-hidden="true" style="left: 170px; top: 66px">4</span>
+</a>
+
+<a href={TEDX} class="cut c-x" data-cur="nav" data-id="x" aria-label="ideas that never took off" style="left: 40px; top: 392px">
+<div class="box" style="transform: rotate(-6deg)"><img src="/desk/tedx-x.png" alt="a big red handmade x from tedx bitd" style="max-width: 112px; max-height: 112px"></div>
+<span class="no" aria-hidden="true" style="left: 18px; top: 18px">5</span>
+</a>
+
+<a href={TAROT} class="cut c-tarot" data-cur="nav" data-id="tarot" aria-label="things i do for fun" style="left: 1204px; top: 340px">
+<div class="box" style="transform: rotate(5deg)"><img src="/desk/the-world-tarot.png" alt="the world tarot card"></div>
+<span class="no" aria-hidden="true" style="left: 150px; top: 148px">6</span>
+</a>
+
+<p class="endnote" aria-hidden="true">that's the whole page, darling. click on anything.</p>
+<nav aria-label="Contents"><p class="toc"><a href={JOURNEY} class="keyitem" data-for="me"><b>1.</b>what's her story?</a> <a href={COFFEE} class="keyitem" data-for="coffee"><b>2.</b>places i swear by!</a> <a href={COVER} class="keyitem" data-for="cover"><b>3.</b>i write on Substack</a> <a href={JOBS} class="keyitem" data-for="tech"><b>4.</b>work i have done.</a> <a href={TEDX} class="keyitem" data-for="x"><b>5.</b>ideas that never took off</a> <a href={TAROT} class="keyitem" data-for="tarot"><b>6.</b>things i do for fun</a></p></nav>
+
+<p class="spotted" style="position: absolute; left: 72px; top: 268px; margin: 0; font-size: 13px; color: #4A4542">last spotted at <a href={BEANLORE} target="_blank" rel="noopener">Beanlore, Kormangala</a>, reading in the sun.<img class="spot-pic" src="/desk/reading-in-the-sun.jpg" alt="kritika reading a book in the sun at Beanlore"></p>
+<nav aria-label="Socials" style="position: absolute; left: 72px; top: 864px; display: flex; gap: 18px; align-items: center">
+{socials.map((s) => <a href={s.href} aria-label={s.label} style="display: flex" {...ext(s.href)} set:html={s.svg}></a>)}
+</nav>
+
+</div>
+</div>
+
+<main class="m desk">
+<button class="back m-back" type="button" data-back>Back</button>
+<h1>darling, have you met Kritika?</h1>
+<p class="m-spotted spotted">last spotted at <a href={BEANLORE} target="_blank" rel="noopener">Beanlore, Kormangala</a>, reading in the sun.</p>
+<ul>
+{items.map((it) => <li><a class="m-item" href={it.href} data-say={it.say ? '' : undefined}>{it.say && <span class="bubble imsg m-say">i am Kritika! I am a creative. marketer. and a writer.<svg class="tail" viewBox="0 0 17 21" aria-hidden="true"><path d="M0 0 C1 9 5 16 17 21 C9 21.5 3.5 20 0 17.5 Z" fill="#0A84FF"></path></svg></span>}<span class="m-art" set:html={it.art}></span><span class="m-name"><b>{it.n}.</b>{it.name}</span></a></li>)}
+</ul>
+<nav class="m-socials" aria-label="Socials">
+{socials.map((s) => <a href={s.href} aria-label={s.label} {...ext(s.href)} set:html={s.svg}></a>)}
+</nav>
+</main>
+
+<div id="m-intro" class="m-intro">
+<div class="m-leaf black">
+<div class="matte"></div>
+<div style="position: absolute; left: 0; top: 0; width: 26px; height: 100%; background: linear-gradient(90deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,0) 100%)"></div>
+<p style="position: absolute; left: 44px; right: 36px; top: 44%; margin: 0; font-family: 'EB Garamond', serif; font-style: italic; font-size: 30px; line-height: 1.3; color: #d9d8d2">Let yourself be exactly who you are.</p>
+<div style="position: absolute; left: 0; right: 0; bottom: 56px; display: flex; justify-content: center">
+<button class="nextbtn" type="button" data-turn>scroll to continue...</button>
+</div>
+</div>
+</div>
+
+<div id="consent" role="dialog" aria-label="Cookie choice" hidden style="position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 55; max-width: 360px; box-sizing: border-box; padding: 18px 20px; border-radius: 16px; background: #141319; border: 1px solid #3A3842; box-shadow: 0 20px 50px rgba(0,0,0,0.6); font-family: 'Hanken Grotesk', system-ui, sans-serif; font-size: 14px; line-height: 1.5; color: #C9CDD5">
+<p style="margin: 0 0 14px">Allow cookies on your visit so I know what you resonate with. No ads, I promise.</p>
+<div style="display: flex; gap: 10px">
+<button class="cb-yes" type="button" data-consent="yes">Yes!</button>
+<button class="cb-no" type="button" data-consent="no">No thanks</button>
+</div>
+</div>
+
+<script is:inline>
+// scale the 1512x982 spread to fill the window
+// The spread is zoomed in to cover the whole window, centred, so nothing shows beside it; the overflow is trimmed
+// off the sides evenly and a little more from the bottom than the top. On very unusual window shapes it stops zooming at 18% trimmed, so Back and the socials stay in view.
+function fit(){var a=innerWidth/1512,b=innerHeight/982,lo=Math.min(a,b),s=Math.min(Math.max(a,b),lo/0.82),st=document.getElementById('stage');document.documentElement.style.setProperty('--s',s);st.style.transform='scale('+s+')';st.style.left=((innerWidth-1512*s)/2)+'px';st.style.top=((innerHeight-982*s)*0.4)+'px';}
+addEventListener('resize',fit);fit();
+// hovering a key item highlights its cutout
+document.querySelectorAll('[data-for]').forEach(function(a){var c=document.querySelector('.cut[data-id="'+a.dataset.for+'"]');a.addEventListener('mouseenter',function(){c&&c.classList.add('hl')});a.addEventListener('mouseleave',function(){c&&c.classList.remove('hl')});});
+
+// Bend: a page that bends as it turns, like a glossy magazine page rather than a stiff board.
+// It is cut into N thin strips, each hinged to the one before; mid-turn the outer strips turn further than the ones
+// by the spine, so the page curves. Light is drawn per strip from its angle: darker as it tilts away, with a soft
+// sheen sliding across the curve. host: an empty element at the spine (preserve-3d, under a perspective);
+// W x H: the page size; front() / back(): make a fresh copy of what each side shows (full page, positioned at 0,0).
+// Returns set(p), p from 0 (flat on the right) to 1 (turned over, flat on the left).
+function Bend(host, W, H, N, front, back){
+  var w = W / N, parts = [], par = host, G = [], gs = 0, i;
+  for (i = 0; i < N; i++) { G[i] = Math.pow((i + 1) / N, 1.7); gs += G[i]; }
+  for (i = 0; i < N; i++) G[i] /= gs;
+  function face(cls, node, off){
+    var f = document.createElement('div'), c = document.createElement('div'), l = document.createElement('div');
+    f.className = cls; c.className = 'bc'; c.style.left = off + 'px'; c.style.width = W + 'px'; l.className = 'bl';
+    c.appendChild(node); f.appendChild(c); f.appendChild(l); return { f: f, l: l };
+  }
+  host.style.width = W + 'px'; host.style.height = H + 'px'; host.setAttribute('aria-hidden', 'true'); host.inert = true;
+  for (i = 0; i < N; i++) {
+    var st = document.createElement('div'); st.className = 'bs'; st.style.left = (i ? w : 0) + 'px'; st.style.width = w + 'px';
+    var F = face('bf', front(), -i * w), B = face('bf bb', back(), -(W - (i + 1) * w));
+    st.appendChild(F.f); st.appendChild(B.f); par.appendChild(st); par = st;
+    parts.push({ s: st, f: F.l, b: B.l });
+  }
+  var R = Math.PI / 180, BEND = 80;
+  function lightF(a){ return [0.5 * (1 - Math.cos(a * R)), 0.16 * Math.max(0, 1 - Math.abs(a - 40) / 22)]; }
+  function lightB(a){ return [0.42 * (1 + Math.cos(a * R)), 0.14 * Math.max(0, 1 - Math.abs(a - 142) / 22)]; }
+  function grad(L0, L1){
+    return 'linear-gradient(90deg,rgba(255,255,255,' + L0[1].toFixed(3) + '),rgba(255,255,255,' + L1[1].toFixed(3) + ')),' +
+           'linear-gradient(90deg,rgba(0,0,0,' + L0[0].toFixed(3) + '),rgba(0,0,0,' + L1[0].toFixed(3) + '))';
+  }
+  return function(p){
+    var sn = Math.sin(p * Math.PI), a = 180 * p - BEND * sn / 2, A = [];
+    for (var k = 0; k < N; k++) { var d = BEND * sn * G[k]; a += d; A.push(a);
+      parts[k].s.style.transform = 'rotateY(' + (-(k ? d : a)).toFixed(3) + 'deg)'; }
+    for (k = 0; k < N; k++) {
+      var e0 = (A[Math.max(k - 1, 0)] + A[k]) / 2, e1 = (A[k] + A[Math.min(k + 1, N - 1)]) / 2;
+      parts[k].f.style.backgroundImage = grad(lightF(e0), lightF(e1));
+      parts[k].b.style.backgroundImage = grad(lightB(e1), lightB(e0)); // the back face is mirrored
+    }
+  };
+}
+// cubic-bezier(.62,.04,.22,1): slow lift, quick turn, soft landing
+function turnEase(x){
+  var t = x;
+  for (var j = 0; j < 6; j++) { var cx = 3 * .62 * t * (1 - t) * (1 - t) + 3 * .22 * t * t * (1 - t) + t * t * t - x,
+    dx = 3 * .62 * (1 - t) * (1 - 3 * t) + 3 * .22 * t * (2 - 3 * t) + 3 * t * t; if (Math.abs(dx) < 1e-6) break; t -= cx / dx; }
+  t = Math.max(0, Math.min(1, t));
+  return 3 * .04 * t * (1 - t) * (1 - t) + 3 * t * t * (1 - t) + t * t * t;
+}
+
+// Intro: scroll (or swipe) to turn the page onto the desk; holding a scroll ~0.7s or the button turns it fully.
+// Scrolling back up at the top brings it back.
+(function(){
+  var root = document.documentElement, D = document.getElementById('intro'), M = document.getElementById('m-intro');
+  var phone = matchMedia('(max-width: 767px)'), reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // the back of the turning page shows the desk's left half: a non-interactive copy of the desk
+  var desk = D.parentNode, copy = desk.cloneNode(true);
+  copy.querySelector('#intro').remove();
+  copy.querySelectorAll('[id],[data-id],[data-for]').forEach(function(n){ n.removeAttribute('id'); n.removeAttribute('data-id'); n.removeAttribute('data-for'); });
+  copy.style.position = 'absolute'; copy.style.left = '0'; copy.style.top = '0';
+  var back = D.querySelector('.i-back'); back.insertBefore(copy, back.firstChild);
+
+  var p = 0, done = !root.classList.contains('intro-on'), start = 0, last = 0, snap, fin, ty = null;
+  // Desktop: the turning page is a Bend (made the first time it is needed); the real page (with its button)
+  // shows only while it lies flat. shown eases toward p: a timed turn when anim, else a quick follow of the scroll.
+  var leaf = D.querySelector('.i-leaf'), host = null, bend = null, shown = 0, tw = null, raf = 0;
+  function ensure(){
+    if (bend) return;
+    host = document.createElement('div'); host.className = 'bend'; host.style.left = '756px';
+    D.appendChild(host);
+    var face = D.querySelector('.i-front');
+    bend = Bend(host, 756, 982, 16, function(){
+      var c = face.cloneNode(true);
+      c.querySelectorAll('.i-faceShade').forEach(function(n){ n.remove(); });
+      c.querySelectorAll('[data-turn]').forEach(function(n){ n.removeAttribute('data-turn'); });
+      c.className = 'black'; c.style.cssText = 'position:absolute;left:0;top:0;width:756px;height:982px'; return c;
+    }, function(){ return copy.cloneNode(true); });
+  }
+  function draw(q){
+    shown = q;
+    D.style.setProperty('--p', q); D.style.setProperty('--lift', Math.sin(q * Math.PI).toFixed(3));
+    if (q > 0 && !phone.matches) { ensure(); bend(q); host.style.visibility = 'visible'; leaf.style.visibility = 'hidden'; }
+    else { if (host) host.style.visibility = 'hidden'; leaf.style.visibility = ''; }
+  }
+  function loop(t){
+    if (tw) { var k = Math.min(1, (t - tw.t0) / tw.dur); draw(tw.from + (tw.to - tw.from) * turnEase(k)); if (k >= 1) tw = null; }
+    else { var q = shown + (p - shown) * 0.3; draw(Math.abs(p - q) < 0.002 ? p : q); }
+    raf = (tw || shown !== p) ? requestAnimationFrame(loop) : 0;
+  }
+  function render(anim){
+    M.classList.toggle('anim', !!anim && anim !== 2 && !reduce);
+    M.style.setProperty('--p', p); M.style.setProperty('--lift', Math.sin(p * Math.PI).toFixed(3));
+    if (reduce || anim === 2 || document.hidden) { tw = null; draw(p); return; }
+    if (anim) tw = { from: shown, to: p, t0: performance.now(), dur: Math.max(450, 1150 * Math.abs(p - shown)) };
+    if (!raf) raf = requestAnimationFrame(loop);
+  }
+  function finish(){ done = true; root.classList.remove('intro-on'); }
+  function turn(){ p = 1; render(true); clearTimeout(fin); fin = setTimeout(finish, reduce ? 0 : 1150); }
+  // On the desk (laptops), scrolling down can't go anywhere: everything nudges up together and settles back,
+  // and a note says this is the whole page. Each scroll gives the same little bounce.
+  var deskEl = D.parentNode, note = deskEl.querySelector('.endnote'), nudgeT, noteT;
+  function nudge(){
+    if (reduce) { note.classList.add('on'); clearTimeout(noteT); noteT = setTimeout(function(){ note.classList.remove('on'); }, 2200); return; }
+    deskEl.classList.add('nudging'); deskEl.style.setProperty('--nudge', '-22px');
+    clearTimeout(nudgeT); nudgeT = setTimeout(function(){ deskEl.classList.remove('nudging'); deskEl.style.setProperty('--nudge', '0px'); }, 140);
+    note.classList.add('on'); clearTimeout(noteT); noteT = setTimeout(function(){ note.classList.remove('on'); }, 2200);
+  }
+  function push(d){
+    if (done) {
+      if (d > 0 && !phone.matches) { nudge(); return; }
+      if (d >= 0 || (phone.matches && scrollY > 0)) return;
+      done = false; root.classList.add('intro-on'); render(2);
+    }
+    if (p >= 1 && d >= 0) return;
+    clearTimeout(fin);
+    var now = Date.now();
+    if (d > 0) { if (!start || now - last > 250) start = now; } else start = 0;
+    last = now;
+    clearTimeout(snap);
+    if (d > 0 && start && now - start >= 700) { start = 0; turn(); return; }
+    p = Math.max(0, Math.min(1, p + d / (phone.matches ? 1600 : 2200)));
+    render(false);
+    if (p >= 1) { fin = setTimeout(finish, 150); return; }
+    snap = setTimeout(function(){ if (p < 1) { p = 0; render(true); } }, 600);
+  }
+  addEventListener('wheel', function(e){ push(e.deltaY || 0); }, { passive: true });
+  addEventListener('touchstart', function(e){ ty = e.touches[0].clientY; }, { passive: true });
+  addEventListener('touchmove', function(e){ if (ty === null) return; var y = e.touches[0].clientY; push((ty - y) * 2); ty = y; }, { passive: true });
+  addEventListener('touchend', function(){ ty = null; }, { passive: true });
+  addEventListener('keydown', function(e){
+    if (!done && /^(ArrowDown|PageDown| |Spacebar)$/.test(e.key) && !(e.target.closest && e.target.closest('button,a'))) { e.preventDefault(); turn(); }
+  });
+  document.querySelectorAll('[data-turn]').forEach(function(b){ b.addEventListener('click', turn); });
+  // Back: lay the turned page down again, then turn it back over to the intro
+  function turnBack(){
+    clearTimeout(fin); clearTimeout(snap); start = 0;
+    if (phone.matches) scrollTo(0, 0);
+    done = false; p = 1; root.classList.add('intro-on'); render(2);
+    void D.offsetWidth; void M.offsetWidth;
+    setTimeout(function(){ p = 0; render(true); }, 30);
+    var b = (phone.matches ? M : D).querySelector('[data-turn]'); if (b) b.focus({ preventScroll: true });
+  }
+  document.querySelectorAll('[data-back]').forEach(function(b){ b.addEventListener('click', turnBack); });
+})();
+
+// "say hello" (the centre photo): on a laptop, hovering or clicking shows the message bubble, and a click
+// turns the page over to /journey about 2 seconds later. On touch screens, the first tap shows the bubble and the
+// second tap turns the page.
+(function(){
+  var canHover = matchMedia('(hover: hover) and (pointer: fine)'), phone = matchMedia('(max-width: 767px)');
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches, going = false;
+  function hush(){ document.querySelectorAll('.say').forEach(function(n){ n.classList.remove('say'); }); }
+  function strip(n){ n.querySelectorAll('[id],[data-id],[data-for],[data-say],[data-back],[data-turn]').forEach(function(e){ ['id','data-id','data-for','data-say','data-back','data-turn'].forEach(function(k){ e.removeAttribute(k); }); }); n.removeAttribute('id'); return n; }
+  // the top of /journey, drawn here so the turning page can carry it
+  // On a laptop it is the journey spread (same pages as the desk), placed and scaled like #stage; dx shifts it for a
+  // layer that starts at the middle of the window. On a phone it is the top of the one-column page.
+  function journey(dx){
+    if (phone.matches) return '<div class="mag-j"><span class="mb">Back</span><p class="mh">i prefer the scenic route.</p></div>';
+    var st = document.getElementById('stage');
+    return '<div class="mag-sp" style="left:' + (parseFloat(st.style.left) - dx) + 'px;top:' + st.style.top + ';transform:' + st.style.transform + '">' +
+      '<div class="pageL" style="position:absolute;left:0;top:0;width:756px;height:982px"></div>' +
+      '<div class="pageR" style="position:absolute;left:756px;top:0;width:756px;height:982px"></div>' +
+      '<div class="sheen" style="position:absolute;left:0;top:0;width:1512px;height:982px;opacity:.6"></div>' +
+      '<span class="mb" style="position:absolute;left:72px;top:76px">Back</span>' +
+      '<p class="mh" style="position:absolute;left:72px;top:118px;width:600px;margin:0">i prefer the scenic route.</p>' +
+      '</div>';
+  }
+  function fold(href){
+    if (going) return; going = true;
+    if (reduce) { location.href = href; return; }
+    var m = document.createElement('div'), P = phone.matches;
+    m.className = 'mag' + (P ? ' phone' : ''); m.setAttribute('aria-hidden', 'true'); m.inert = true;
+    if (P) { // phones: the whole screen turns away to the left
+      m.innerHTML = '<div class="mag-under"><div class="mag-in">' + journey(0) + '</div><div class="mag-shade"></div></div>' +
+        '<div class="mag-leaf"><div class="mag-face mag-front"></div></div>';
+      var c = strip(document.querySelector('main.m').cloneNode(true));
+      c.style.cssText = 'position:absolute;left:0;right:0;top:' + (-scrollY) + 'px;background:none';
+      m.querySelector('.mag-front').appendChild(c);
+      document.body.appendChild(m);
+      setTimeout(function(){ location.href = href; }, 1000);
+      return;
+    }
+    // laptops: the desk's right page bends over the spine; its back, and the page under it, are /journey
+    var W = innerWidth / 2, H = innerHeight, st = document.getElementById('stage');
+    m.innerHTML = '<div class="mag-under"><div class="mag-in">' + journey(W) + '</div><div class="mag-shade"></div></div><div class="mag-lshade"></div>';
+    var host = document.createElement('div'); host.className = 'bend'; host.style.left = W + 'px'; m.appendChild(host);
+    var set = Bend(host, W, H, 16, function(){
+      var d = strip(st.cloneNode(true)), i = d.querySelector('.intro'); if (i) i.remove();
+      d.style.position = 'absolute'; d.style.transformOrigin = '0 0'; d.style.top = st.style.top; d.style.left = (parseFloat(st.style.left) - W) + 'px';
+      return d;
+    }, function(){
+      var b = document.createElement('div'); b.className = 'mag-in'; b.style.background = '#fff'; b.innerHTML = journey(0); return b;
+    });
+    set(0); document.body.appendChild(m);
+    var t0 = performance.now(), DUR = 1300;
+    (function step(t){
+      var k = Math.min(1, (t - t0) / DUR); set(turnEase(k));
+      if (k < 1) requestAnimationFrame(step); else location.href = href;
+    })(t0);
+    setTimeout(function(){ location.href = href; }, DUR + 400); // in case the tab is in the background
+  }
+  addEventListener('pageshow', function(){ going = false; document.querySelectorAll('.mag').forEach(function(n){ n.remove(); }); });
+  document.querySelectorAll('[data-say]').forEach(function(a){
+    var t;
+    a.addEventListener('click', function(e){
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; // opening in a new tab: let it
+      if (canHover.matches) {
+        e.preventDefault(); a.classList.add('say');
+        clearTimeout(t); t = setTimeout(function(){ fold(a.href); }, 900);
+      } else if (!a.classList.contains('say')) {
+        e.preventDefault(); hush(); a.classList.add('say');
+      } else { e.preventDefault(); fold(a.href); }
+    });
+  });
+  document.addEventListener('click', function(e){ if (!(e.target.closest && e.target.closest('[data-say]'))) hush(); });
+  addEventListener('pageshow', hush); // coming back with the browser's back button
+})();
+
+// "last spotted" photo: shows only while the cursor is on the line, sitting 5px right of and below the cursor
+// (with a slight drag). Leaving the line hides it.
+(function(){
+  var lines = document.querySelectorAll('#stage p.spotted'), line = lines[lines.length - 1]; // last one is the real desk (the first is the page-turn copy)
+  if (!line) return;
+  var pic = line.querySelector('.spot-pic');
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var on = false, tx = 5, ty = 0, x = 5, y = 0, raf = 0;
+  function aim(cx, cy){
+    var r = line.getBoundingClientRect(), s = r.width / line.offsetWidth || 1; // the desk is scaled to the window
+    tx = (cx - r.left) / s + 5; ty = (cy - r.top) / s + 5;
+  }
+  function tick(){
+    var k = reduce ? 1 : 0.35;
+    x += (tx - x) * k; y += (ty - y) * k;
+    pic.style.left = x.toFixed(1) + 'px'; pic.style.top = y.toFixed(1) + 'px';
+    raf = (on && (Math.abs(tx - x) > 0.3 || Math.abs(ty - y) > 0.3)) ? requestAnimationFrame(tick) : 0;
+  }
+  line.addEventListener('mouseenter', function(e){
+    aim(e.clientX, e.clientY); x = tx; y = ty; pic.style.left = x + 'px'; pic.style.top = y + 'px';
+    on = true; line.classList.add('on');
+  });
+  line.addEventListener('mousemove', function(e){ aim(e.clientX, e.clientY); if (!raf) raf = requestAnimationFrame(tick); });
+  line.addEventListener('mouseleave', function(){ on = false; line.classList.remove('on'); });
+})();
+</script>
+<script is:inline src="/kritikal-cursor.js" defer></script>
+</body>
+</html>
