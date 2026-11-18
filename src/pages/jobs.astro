@@ -57,7 +57,6 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 .grain{position:absolute;inset:0;background:url(/desk/paper.jpg);background-size:900px auto;mix-blend-mode:multiply;opacity:.14;pointer-events:none}
 .back{position:absolute;left:72px;top:56px;padding:6px 0;font-size:15px;color:#A9452A;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
 .rule{position:absolute;background:rgba(28,27,31,.18)}
-.folio{position:absolute;top:930px;margin:0;font-size:11px;letter-spacing:.2em;color:#8a837d}
 /* right page, top half: the heading, huge */
 h1{position:absolute;left:812px;top:52px;width:660px;margin:0;font-family:Anton,'Geist',sans-serif;font-weight:400;font-size:212px;line-height:.9;letter-spacing:-.005em;color:#1C1B1F}
 .dek{position:absolute;left:812px;top:444px;margin:0;font-family:'EB Garamond',serif;font-style:italic;font-size:22px;color:#A9452A}
@@ -146,7 +145,6 @@ h1{position:absolute;left:812px;top:52px;width:660px;margin:0;font-family:Anton,
   const st = `left: ${PLACES[i][0]}px; top: ${PLACES[i][1]}px${c.wide ? '; width: 632px' : ''}`;
   return c.href ? <a class="cell" href={c.href} style={st}>{inner}</a> : <div class="cell" tabindex="0" style={st}>{inner}</div>;
 })}
-<p class="folio" style="left: 72px">case files · p. 01</p>
 
 <!-- right page -->
 <h1 id="title">case<br>files.</h1>
@@ -161,7 +159,6 @@ h1{position:absolute;left:812px;top:52px;width:660px;margin:0;font-family:Anton,
 <aside class="skills" aria-label="skills">
 {skills.map((g) => <div class="sk"><h3>{g.group}</h3><ul>{g.items.map((it) => <li>{it}</li>)}</ul></div>)}
 </aside>
-<p class="folio" style="left: 1340px">p. 02</p>
 
 <svg width="0" height="0" style="position: absolute" aria-hidden="true"><filter id="duotone" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="0"></feColorMatrix><feComponentTransfer><feFuncR type="table" tableValues="0.11 0.66 0.95"></feFuncR><feFuncG type="table" tableValues="0.106 0.27 0.89"></feFuncG><feFuncB type="table" tableValues="0.12 0.165 0.86"></feFuncB></feComponentTransfer></filter></svg>
 </div>
