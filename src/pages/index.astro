@@ -479,14 +479,14 @@ function turnEase(x){
   // layer that starts at the middle of the window. On a phone it is the top of the one-column page.
   function journey(dx){
     var soc = document.querySelector('#stage nav[aria-label="Socials"]'), icons = soc ? soc.innerHTML : '';
-    if (phone.matches) return '<div class="mag-j"><span class="mb">Back</span><p class="mh">i could never do things straight!</p><div class="ms">' + icons + '</div></div>';
+    if (phone.matches) return '<div class="mag-j"><span class="mb">Back</span><p class="mh">i prefer the scenic route.</p><div class="ms">' + icons + '</div></div>';
     var st = document.getElementById('stage');
     return '<div class="mag-sp" style="left:' + (parseFloat(st.style.left) - dx) + 'px;top:' + st.style.top + ';transform:' + st.style.transform + '">' +
       '<div class="pageL" style="position:absolute;left:0;top:0;width:756px;height:982px"></div>' +
       '<div class="pageR" style="position:absolute;left:756px;top:0;width:756px;height:982px"></div>' +
       '<div class="sheen" style="position:absolute;left:0;top:0;width:1512px;height:982px;opacity:.6"></div>' +
       '<span class="mb" style="position:absolute;left:72px;top:76px">Back</span>' +
-      '<p class="mh" style="position:absolute;left:72px;top:118px;width:600px;margin:0">i could never do things straight!</p>' +
+      '<p class="mh" style="position:absolute;left:72px;top:118px;width:600px;margin:0">i prefer the scenic route.</p>' +
       '<div class="ms" style="left:72px;top:864px">' + icons + '</div></div>';
   }
   function fold(href){
