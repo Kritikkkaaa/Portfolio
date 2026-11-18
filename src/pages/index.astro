@@ -10,7 +10,8 @@ const SUBSTACK = 'https://substack.com/@verykritikal/posts?utm_source=Portfolio&
 const INSTAGRAM = 'https://www.instagram.com/verykritikal/?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
 const LINKEDIN = 'https://www.linkedin.com/in/kritika-upadhyay-2001/?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
 const EMAIL = 'mailto:kritikaupadhyay2001@gmail.com';
-const WHATSAPP = '#whatsapp'; // set to 'https://wa.me/<number with country code, no +>'
+const WHATSAPP = 'https://wa.me/919109079518';
+const BEANLORE = 'https://maps.app.goo.gl/cWP7aSNRVM3AXVjH9';
 const ext = (href: string) => href.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {};
 
 // Placeholders until their pages exist: say hello, coffee, tedx bitd, the world, she substacks.
@@ -21,7 +22,7 @@ const coverCard = `<div style="position: relative; width: 116px; height: 155px; 
 
 // Phone column, in number order.
 const items = [
-  { n: 1, name: 'say hello', href: HELLO, art: '<img src="/desk/kritika.png" alt="kritika smiling, long hair" style="max-width: 240px; max-height: 230px">' },
+  { n: 1, name: 'say hello', href: HELLO, art: '<img src="/desk/kritika-glam.png" alt="kritika smiling in a white shirt and a black sequin top" style="max-width: 240px; max-height: 230px">' },
   { n: 2, name: 'plane', href: WORK, art: planeLogo },
   { n: 3, name: 'coffee', href: COFFEE, art: '<img src="/desk/coffee.png" alt="kritika\'s hand holding a takeaway coffee">' },
   { n: 4, name: 'nexus', href: WORK, art: '<img src="/desk/nexus.png" alt="Nexus logo" style="width: 150px">' },
@@ -49,7 +50,8 @@ const socials = [
 <link rel="icon" href="/mark-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="/mark-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Hanken+Grotesk:ital,wght@0,400;0,500;1,400&amp;family=Archivo+Black&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Hanken+Grotesk:ital,wght@0,400;0,500;1,400&amp;family=Archivo+Black&amp;family=EB+Garamond:ital@1&amp;display=swap" rel="stylesheet">
+<script is:inline>document.documentElement.classList.add('intro-on');</script>
 <style is:inline>
 html,body{margin:0;height:100%;background:#f4f3f0;overflow:hidden}
 #stage{position:absolute;left:0;top:0;transform-origin:0 0}
@@ -68,7 +70,43 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 .c-me:hover .bubble,.c-me.hl .bubble{opacity:1;transform:none}
 .navface .open{opacity:0}.navface:hover .open{opacity:1}.navface:hover .shut{opacity:0}
 .keyitem{color:#6f6862}.keyitem:hover{color:#1C1B1F}
-@media (prefers-reduced-motion: reduce){.cut .box,.bubble{transition:none}}
+.spotted a{color:#A9452A;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px}
+.spotted a:hover{color:#8F3C21}
+.spot-pic{position:absolute;left:10px;top:calc(100% + 10px);width:120px;height:auto;display:block;border-radius:4px;box-shadow:0 8px 16px rgba(70,50,35,.22);opacity:0;transform:scale(.85) translateY(-6px);transform-origin:top left;transition:opacity .2s,transform .4s cubic-bezier(.3,1.6,.5,1);pointer-events:none;z-index:5}
+.spotted:hover .spot-pic,.spotted:focus-within .spot-pic{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){.cut .box,.bubble,.spot-pic{transition:none}}
+
+/* Intro, "let yourself be": a dark spread whose right page turns over onto the desk.
+   JS sets --p (0 closed, 1 turned) and --lift (sin of the turn) on #intro / #m-intro; .anim adds the eased turn. */
+.black{background-color:#242826;background-image:url(/desk/black-paper.jpg);background-size:700px auto}
+.matte{position:absolute;inset:0;background:linear-gradient(118deg,rgba(255,255,255,0) 28%,rgba(255,255,255,.045) 42%,rgba(255,255,255,0) 56%)}
+.intro,.m-intro{display:none}
+.intro-on .intro{display:block}
+.intro{position:absolute;inset:0;z-index:20;perspective:2600px;--p:0;--lift:0}
+.i-left{position:absolute;left:0;top:0;width:756px;height:982px}
+.i-under{position:absolute;left:756px;top:0;width:756px;height:982px;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,.1) 60%);opacity:calc(1 - var(--p))}
+.i-leftShade{position:absolute;inset:0;pointer-events:none;background:rgba(0,0,0,.5);opacity:calc(var(--p) * .8)}
+.i-leaf{position:absolute;left:756px;top:0;width:756px;height:982px;transform-origin:left center;transform-style:preserve-3d;transform:rotateY(calc(var(--p) * -180deg))}
+.i-face{position:absolute;inset:0;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.i-front{box-shadow:calc(var(--lift) * -30px) 0 40px rgba(0,0,0,calc(var(--lift) * .45))}
+.i-back{transform:rotateY(180deg);background:#fff}
+.i-faceShade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.6) 100%);opacity:calc(var(--lift) * .9)}
+.i-backShade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(270deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.35) 100%);opacity:var(--lift)}
+.intro .i-leaf,.intro .i-front{transition:transform .06s linear,box-shadow .06s linear}
+.intro .i-under,.intro .i-leftShade,.intro .i-faceShade,.intro .i-backShade{transition:opacity .06s linear}
+.intro.anim .i-leaf,.intro.anim .i-front{transition:transform 1.15s cubic-bezier(.62,.04,.22,1),box-shadow 1.15s cubic-bezier(.62,.04,.22,1)}
+.intro.anim .i-under,.intro.anim .i-leftShade,.intro.anim .i-faceShade,.intro.anim .i-backShade{transition:opacity 1.15s cubic-bezier(.62,.04,.22,1)}
+.turn{font-family:'EB Garamond',serif;font-style:italic;font-size:18px;color:#a9aba6;background:none;border:0;padding:12px 4px;cursor:pointer;transition:color .3s}
+.turn:hover{color:#e4e3dd}
+.turn:focus-visible{outline:1px solid #a9aba6;outline-offset:4px}
+.m-intro{position:fixed;inset:0;z-index:30;perspective:1400px;touch-action:none;--p:0}
+.m-leaf{position:absolute;inset:0;transform-origin:left center;transform:rotateY(calc(var(--p) * -110deg));opacity:calc(1 - var(--p) * .8);box-shadow:-20px 0 40px rgba(0,0,0,calc(var(--p) * .35));transition:transform .06s linear,opacity .06s linear,box-shadow .06s linear}
+.m-intro.anim .m-leaf{transition:transform 1.05s cubic-bezier(.62,.04,.22,1),opacity 1.05s cubic-bezier(.62,.04,.22,1),box-shadow 1.05s cubic-bezier(.62,.04,.22,1)}
+.m-leaf.black{background-size:600px auto}
+.m-leaf .matte{background:linear-gradient(118deg,rgba(255,255,255,0) 28%,rgba(255,255,255,.05) 44%,rgba(255,255,255,0) 60%)}
+.nextbtn{font-family:'EB Garamond',serif;font-style:italic;font-size:20px;color:#242826;background:#e4e3dd;border:0;border-radius:999px;padding:14px 30px;min-height:48px;cursor:pointer}
+.nextbtn:focus-visible{outline:2px solid #e4e3dd;outline-offset:4px}
+@media (prefers-reduced-motion: reduce){.intro *,.m-leaf{transition:none !important}}
 
 /* Phones (under 768px): one scrolling column */
 .m{display:none}
@@ -76,6 +114,8 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
   html,body{height:auto;overflow:auto}
   body{background:transparent}
   #stage{display:none}
+  .intro-on .m-intro{display:block}
+  .intro-on,.intro-on body{overflow:hidden}
   body::before{content:"";position:fixed;inset:0;z-index:-1;background-color:#FFEAD3;background-image:url(/desk/paper.jpg);background-size:cover;background-position:center;background-blend-mode:multiply}
   .m{display:block;background:none;min-height:100vh;box-sizing:border-box;padding:48px 16px 40px;font-family:'Hanken Grotesk',sans-serif;color:#1C1B1F}
   .m h1{margin:0 0 28px;font-family:Geist,sans-serif;font-weight:600;font-size:44px;line-height:1.02;letter-spacing:-.02em;color:#A9452A}
@@ -85,8 +125,9 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
   .m-art img,.m-art svg.logo{max-width:150px;max-height:150px;filter:drop-shadow(0 7px 9px rgba(70,50,35,.20))}
   .m-name{font-size:17px;color:#1C1B1F}
   .m-name b{font-family:Geist,sans-serif;font-weight:500;color:#B4502F;margin-right:6px}
-  .m-foot{margin:32px 0 0;font-size:13px;color:#4A4542}
-  .m-socials{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+  .m h1{margin-bottom:12px}
+  .m-spotted{margin:0 0 28px;font-size:13px;color:#4A4542}
+  .m-socials{display:flex;flex-wrap:wrap;gap:6px;margin-top:28px}
   .m-socials a{display:flex;align-items:center;justify-content:center;width:44px;height:44px}
 }
 .cb-yes,.cb-no{min-height:40px;padding:0 20px;border-radius:10px;font-family:inherit;font-size:14px;cursor:pointer}
@@ -98,6 +139,21 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 <body>
 <div id="stage">
 <div class="desk" style="position: relative; width: 1512px; height: 982px; overflow: hidden; font-family: 'Hanken Grotesk', sans-serif; color: #1C1B1F">
+
+<div id="intro" class="intro">
+<div class="black i-left"><div class="matte"></div><div style="position: absolute; right: 0; top: 0; width: 70px; height: 982px; background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.35) 100%)"></div><div class="i-leftShade"></div></div>
+<div class="i-under" aria-hidden="true"></div>
+<div class="i-leaf">
+<div class="i-face i-front black">
+<div class="matte"></div>
+<div style="position: absolute; left: 0; top: 0; width: 60px; height: 982px; background: linear-gradient(90deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,0) 100%)"></div>
+<p style="position: absolute; left: 150px; top: 452px; margin: 0; font-family: 'EB Garamond', serif; font-style: italic; font-size: 34px; letter-spacing: .005em; color: #d9d8d2">Let yourself be exactly who you are.</p>
+<div style="position: absolute; right: 56px; bottom: 44px"><button class="turn" type="button" data-turn aria-label="Turn the page to the homepage">scroll to turn the page.</button></div>
+<div class="i-faceShade"></div>
+</div>
+<div class="i-face i-back" aria-hidden="true" inert><div class="i-backShade"></div></div>
+</div>
+</div>
 
 <div class="pageL" aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 756px; height: 982px"></div>
 <div class="pageR" aria-hidden="true" style="position: absolute; left: 756px; top: 0; width: 756px; height: 982px"></div>
@@ -121,7 +177,7 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 </a>
 
 <a href={HELLO} class="cut c-me" data-id="me" aria-label="say hello" style="left: 596px; top: 330px; width: 320px; height: 310px">
-<div class="box"><img src="/desk/kritika.png" alt="kritika smiling, long hair" style="max-width: 320px; max-height: 300px"></div>
+<div class="box"><img src="/desk/kritika-glam.png" alt="kritika smiling in a white shirt and a black sequin top" style="max-width: 320px; max-height: 300px"></div>
 <div class="bubble" style="position: absolute; left: -190px; top: -20px; width: 200px; padding: 14px 18px; border-radius: 18px 18px 4px 18px; background: #BFE7EA; font-family: 'Hanken Grotesk', sans-serif; font-size: 17px; line-height: 1.35; color: #1C1B1F">hey there! want to build something with me?</div>
 <span class="fig" style="left: 10px; top: 0">1.</span>
 </a>
@@ -141,18 +197,18 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 <span class="fig" style="left: 0; top: 0">7.</span>
 </a>
 
-<nav aria-label="Contents" style="position: absolute; left: 1010px; top: 690px; width: 400px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; row-gap: 10px; font-family: 'Hanken Grotesk', sans-serif; font-size: 14px">
-<a href={HELLO} class="keyitem" data-for="me" style="display: grid; grid-template-columns: 22px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">1.</span><span>say hello</span></a>
-<a href={WORK} class="keyitem" data-for="plane" style="display: grid; grid-template-columns: 22px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">2.</span><span>plane</span></a>
-<a href={COFFEE} class="keyitem" data-for="coffee" style="display: grid; grid-template-columns: 22px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">3.</span><span>coffee</span></a>
-<a href={WORK} class="keyitem" data-for="nexus" style="display: grid; grid-template-columns: 22px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">4.</span><span>nexus</span></a>
-<a href={TEDX} class="keyitem" data-for="x" style="display: grid; grid-template-columns: 22px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">5.</span><span>tedx bitd</span></a>
-<a href={TAROT} class="keyitem" data-for="tarot" style="display: grid; grid-template-columns: 22px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">6.</span><span>the world</span></a>
-<a href={COVER} class="keyitem" data-for="cover" style="display: grid; grid-template-columns: 22px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">7.</span><span>she substacks</span></a>
+<nav aria-label="Contents" style="position: absolute; left: 960px; top: 722px; width: 488px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 48px; row-gap: 14px; font-family: 'Hanken Grotesk', sans-serif; font-size: 18px">
+<a href={HELLO} class="keyitem" data-for="me" style="display: grid; grid-template-columns: 30px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">1.</span><span>say hello</span></a>
+<a href={WORK} class="keyitem" data-for="plane" style="display: grid; grid-template-columns: 30px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">2.</span><span>plane</span></a>
+<a href={COFFEE} class="keyitem" data-for="coffee" style="display: grid; grid-template-columns: 30px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">3.</span><span>coffee</span></a>
+<a href={WORK} class="keyitem" data-for="nexus" style="display: grid; grid-template-columns: 30px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">4.</span><span>nexus</span></a>
+<a href={TEDX} class="keyitem" data-for="x" style="display: grid; grid-template-columns: 30px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">5.</span><span>tedx bitd</span></a>
+<a href={TAROT} class="keyitem" data-for="tarot" style="display: grid; grid-template-columns: 30px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">6.</span><span>the world</span></a>
+<a href={COVER} class="keyitem" data-for="cover" style="display: grid; grid-template-columns: 30px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">7.</span><span>she substacks</span></a>
 </nav>
 
-<p style="position: absolute; left: 72px; top: 872px; margin: 0; font-size: 13px; color: #4A4542">last spotted at Beanlore, Kormangala, reading in the sun.</p>
-<nav aria-label="Socials" style="position: absolute; right: 64px; top: 864px; display: flex; gap: 18px; align-items: center">
+<p class="spotted" style="position: absolute; left: 72px; top: 268px; margin: 0; font-size: 13px; color: #4A4542">last spotted at <a href={BEANLORE} target="_blank" rel="noopener">Beanlore, Kormangala</a>, reading in the sun.<img class="spot-pic" src="/desk/reading-in-the-sun.jpg" alt="kritika reading a book in the sun at Beanlore"></p>
+<nav aria-label="Socials" style="position: absolute; left: 72px; top: 864px; display: flex; gap: 18px; align-items: center">
 {socials.map((s) => <a href={s.href} aria-label={s.label} style="display: flex" {...ext(s.href)} set:html={s.svg}></a>)}
 </nav>
 
@@ -161,14 +217,25 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 
 <main class="m desk">
 <h1>darling, have you met Kritika?</h1>
+<p class="m-spotted spotted">last spotted at <a href={BEANLORE} target="_blank" rel="noopener">Beanlore, Kormangala</a>, reading in the sun.</p>
 <ul>
 {items.map((it) => <li><a class="m-item" href={it.href}><span class="m-art" set:html={it.art}></span><span class="m-name"><b>{it.n}.</b>{it.name}</span></a></li>)}
 </ul>
-<p class="m-foot">last spotted at Beanlore, Kormangala, reading in the sun.</p>
 <nav class="m-socials" aria-label="Socials">
 {socials.map((s) => <a href={s.href} aria-label={s.label} {...ext(s.href)} set:html={s.svg}></a>)}
 </nav>
 </main>
+
+<div id="m-intro" class="m-intro">
+<div class="m-leaf black">
+<div class="matte"></div>
+<div style="position: absolute; left: 0; top: 0; width: 26px; height: 100%; background: linear-gradient(90deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,0) 100%)"></div>
+<p style="position: absolute; left: 44px; right: 36px; top: 44%; margin: 0; font-family: 'EB Garamond', serif; font-style: italic; font-size: 30px; line-height: 1.3; color: #d9d8d2">Let yourself be exactly who you are.</p>
+<div style="position: absolute; left: 0; right: 0; bottom: 56px; display: flex; justify-content: center">
+<button class="nextbtn" type="button" data-turn>scroll to continue...</button>
+</div>
+</div>
+</div>
 
 <div id="consent" role="dialog" aria-label="Cookie choice" hidden style="position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 55; max-width: 360px; box-sizing: border-box; padding: 18px 20px; border-radius: 16px; background: #141319; border: 1px solid #3A3842; box-shadow: 0 20px 50px rgba(0,0,0,0.6); font-family: 'Hanken Grotesk', system-ui, sans-serif; font-size: 14px; line-height: 1.5; color: #C9CDD5">
 <p style="margin: 0 0 14px">Allow cookies on your visit so I know what you resonate with. No ads, I promise.</p>
@@ -184,6 +251,56 @@ function fit(){var s=Math.min(innerWidth/1512,innerHeight/982),st=document.getEl
 addEventListener('resize',fit);fit();
 // hovering a key item highlights its cutout
 document.querySelectorAll('[data-for]').forEach(function(a){var c=document.querySelector('.cut[data-id="'+a.dataset.for+'"]');a.addEventListener('mouseenter',function(){c&&c.classList.add('hl')});a.addEventListener('mouseleave',function(){c&&c.classList.remove('hl')});});
+
+// Intro: scroll (or swipe) to turn the page onto the desk; holding a scroll ~0.7s or the button turns it fully.
+// Scrolling back up at the top brings it back.
+(function(){
+  var root = document.documentElement, D = document.getElementById('intro'), M = document.getElementById('m-intro');
+  var phone = matchMedia('(max-width: 767px)'), reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // the back of the turning page shows the desk's left half: a non-interactive copy of the desk
+  var desk = D.parentNode, copy = desk.cloneNode(true);
+  copy.querySelector('#intro').remove();
+  copy.querySelectorAll('[id],[data-id],[data-for]').forEach(function(n){ n.removeAttribute('id'); n.removeAttribute('data-id'); n.removeAttribute('data-for'); });
+  copy.style.position = 'absolute'; copy.style.left = '0'; copy.style.top = '0';
+  var back = D.querySelector('.i-back'); back.insertBefore(copy, back.firstChild);
+
+  var p = 0, done = false, start = 0, last = 0, snap, fin, ty = null;
+  function el(){ return phone.matches ? M : D; }
+  function render(anim){
+    [D, M].forEach(function(e){
+      e.classList.toggle('anim', !!anim && !reduce);
+      e.style.setProperty('--p', p);
+      e.style.setProperty('--lift', Math.sin(p * Math.PI).toFixed(3));
+    });
+  }
+  function finish(){ done = true; root.classList.remove('intro-on'); }
+  function turn(){ p = 1; render(true); clearTimeout(fin); fin = setTimeout(finish, reduce ? 0 : 1150); }
+  function push(d){
+    if (done) {
+      if (d >= 0 || (phone.matches && scrollY > 0)) return;
+      done = false; root.classList.add('intro-on'); render(false);
+    }
+    if (p >= 1 && d >= 0) return;
+    clearTimeout(fin);
+    var now = Date.now();
+    if (d > 0) { if (!start || now - last > 250) start = now; } else start = 0;
+    last = now;
+    clearTimeout(snap);
+    if (d > 0 && start && now - start >= 700) { start = 0; turn(); return; }
+    p = Math.max(0, Math.min(1, p + d / (phone.matches ? 1600 : 2200)));
+    render(false);
+    if (p >= 1) { fin = setTimeout(finish, 150); return; }
+    snap = setTimeout(function(){ if (p < 1) { p = 0; render(true); } }, 600);
+  }
+  addEventListener('wheel', function(e){ push(e.deltaY || 0); }, { passive: true });
+  addEventListener('touchstart', function(e){ ty = e.touches[0].clientY; }, { passive: true });
+  addEventListener('touchmove', function(e){ if (ty === null) return; var y = e.touches[0].clientY; push((ty - y) * 2); ty = y; }, { passive: true });
+  addEventListener('touchend', function(){ ty = null; }, { passive: true });
+  addEventListener('keydown', function(e){
+    if (!done && /^(ArrowDown|PageDown| |Spacebar)$/.test(e.key) && !(e.target.closest && e.target.closest('button,a'))) { e.preventDefault(); turn(); }
+  });
+  document.querySelectorAll('[data-turn]').forEach(function(b){ b.addEventListener('click', turn); });
+})();
 </script>
 </body>
 </html>
