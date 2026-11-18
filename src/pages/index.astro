@@ -14,7 +14,7 @@ const WHATSAPP = 'https://wa.me/919109079518';
 const BEANLORE = 'https://maps.app.goo.gl/cWP7aSNRVM3AXVjH9';
 const ext = (href: string) => href.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {};
 
-// Placeholders until their pages exist: say hello, coffee, tedx bitd, the world, she substacks.
+// Placeholders until their pages exist: say hello, my coffee reccs!, tedx bitd, the world, she substacks.
 const HELLO = '#hello', COFFEE = '#coffee', TEDX = '#tedx', TAROT = '#tarot', COVER = '#substack';
 
 const planeLogo = `<svg class="logo" width="130" height="81" viewBox="0 0 579 361" role="img" aria-label="Plane logo"><path d="M0 20.6413C0 5.3174 16.1 -4.64793 29.7966 2.20067L147.972 61.3502V200.168C147.972 219.674 158.992 237.527 176.417 246.248L283.068 299.63V340.352C283.068 355.675 266.968 365.641 253.271 358.779L28.4447 246.248C11.0201 237.527 0 219.688 0 200.168V20.6413ZM147.972 20.6413C147.972 5.3174 164.072 -4.64793 177.769 2.21435L295.945 61.3638V200.182C295.945 219.688 306.965 237.541 324.39 246.262L431.041 299.643V340.366C431.041 355.689 414.94 365.654 401.244 358.792L283.068 299.643V160.826C283.068 141.306 272.048 123.466 254.623 114.744L147.972 61.3638V20.6413ZM295.931 20.6413C295.931 5.3174 312.032 -4.64793 325.728 2.21435L550.555 114.744C567.993 123.466 579 141.306 579 160.826V340.366C579 355.689 562.899 365.654 549.203 358.792L431.027 299.643V160.826C431.027 141.306 420.007 123.466 402.582 114.744L295.931 61.3638V20.6413Z" fill="#1C1B1F"></path></svg>`;
@@ -24,7 +24,7 @@ const coverCard = `<div style="position: relative; width: 116px; height: 155px; 
 const items = [
   { n: 1, name: 'say hello', href: HELLO, art: '<img src="/desk/kritika-glam.png" alt="kritika smiling in a white shirt and a black sequin top" style="max-width: 240px; max-height: 230px">' },
   { n: 2, name: 'plane', href: WORK, art: planeLogo },
-  { n: 3, name: 'coffee', href: COFFEE, art: '<img src="/desk/coffee.png" alt="kritika\'s hand holding a takeaway coffee">' },
+  { n: 3, name: 'my coffee reccs!', href: COFFEE, art: '<img src="/desk/coffee-tray.png" alt="a wooden tray of four iced coffees">' },
   { n: 4, name: 'nexus', href: WORK, art: '<img src="/desk/nexus.png" alt="Nexus logo" style="width: 150px">' },
   { n: 5, name: 'tedx bitd', href: TEDX, art: '<img src="/desk/tedx-x.png" alt="a big red handmade x from tedx bitd">' },
   { n: 6, name: 'the world', href: TAROT, art: '<img src="/desk/the-world-tarot.png" alt="the world tarot card">' },
@@ -73,7 +73,10 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 .spotted a{color:#A9452A;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px}
 .spotted a:hover{color:#8F3C21}
 .spot-pic{position:absolute;left:10px;top:calc(100% + 10px);width:120px;height:auto;display:block;border-radius:4px;box-shadow:0 8px 16px rgba(70,50,35,.22);opacity:0;transform:scale(.85) translateY(-6px);transform-origin:top left;transition:opacity .2s,transform .4s cubic-bezier(.3,1.6,.5,1);pointer-events:none;z-index:5}
-.spotted:hover .spot-pic,.spotted:focus-within .spot-pic{opacity:1;transform:none}
+/* the photo shows on hover (class .on, set by JS), then follows the cursor until it is 15cm from the line */
+.spotted.on .spot-pic,.spotted:focus-within .spot-pic{opacity:1;transform:none}
+.back{position:absolute;left:72px;top:76px;margin:0;padding:6px 0;border:0;background:none;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-size:15px;color:#A9452A;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.back:hover{color:#8F3C21}
 @media (prefers-reduced-motion: reduce){.cut .box,.bubble,.spot-pic{transition:none}}
 
 /* Intro, "let yourself be": a dark spread whose right page turns over onto the desk.
@@ -126,6 +129,7 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
   .m-name{font-size:17px;color:#1C1B1F}
   .m-name b{font-family:Geist,sans-serif;font-weight:500;color:#B4502F;margin-right:6px}
   .m h1{margin-bottom:12px}
+  .m-back{position:static;display:inline-block;margin:0 0 12px;min-height:44px}
   .m-spotted{margin:0 0 28px;font-size:13px;color:#4A4542}
   .m-socials{display:flex;flex-wrap:wrap;gap:6px;margin-top:28px}
   .m-socials a{display:flex;align-items:center;justify-content:center;width:44px;height:44px}
@@ -159,6 +163,7 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 <div class="pageR" aria-hidden="true" style="position: absolute; left: 756px; top: 0; width: 756px; height: 982px"></div>
 <div class="sheen" aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 1512px; height: 982px; opacity: .6"></div>
 
+<button class="back" type="button" data-back>Back</button>
 <h1 style="position: absolute; left: 72px; top: 118px; width: 600px; margin: 0; font-family: Geist, sans-serif; font-weight: 600; font-size: 64px; line-height: 1.02; letter-spacing: -.02em; color: #A9452A">darling, have you met Kritika?</h1>
 
 <a href={WORK} class="cut c-plane" data-id="plane" aria-label="plane" style="left: 80px; top: 380px">
@@ -166,8 +171,8 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 <span class="fig" style="left: 0; top: 0">2.</span>
 </a>
 
-<a href={COFFEE} class="cut c-coffee" data-id="coffee" aria-label="coffee" style="left: 330px; top: 470px">
-<div class="box" style="transform: rotate(5deg)"><img src="/desk/coffee.png" alt="kritika's hand holding a takeaway coffee"></div>
+<a href={COFFEE} class="cut c-coffee" data-id="coffee" aria-label="my coffee reccs!" style="left: 330px; top: 470px">
+<div class="box" style="transform: rotate(5deg)"><img src="/desk/coffee-tray.png" alt="a wooden tray of four iced coffees"></div>
 <span class="fig" style="left: 0; top: 0">3.</span>
 </a>
 
@@ -200,7 +205,7 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 <nav aria-label="Contents" style="position: absolute; left: 960px; top: 722px; width: 488px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 48px; row-gap: 14px; font-family: 'Hanken Grotesk', sans-serif; font-size: 18px">
 <a href={HELLO} class="keyitem" data-for="me" style="display: grid; grid-template-columns: 30px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">1.</span><span>say hello</span></a>
 <a href={WORK} class="keyitem" data-for="plane" style="display: grid; grid-template-columns: 30px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">2.</span><span>plane</span></a>
-<a href={COFFEE} class="keyitem" data-for="coffee" style="display: grid; grid-template-columns: 30px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">3.</span><span>coffee</span></a>
+<a href={COFFEE} class="keyitem" data-for="coffee" style="display: grid; grid-template-columns: 30px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">3.</span><span>my coffee reccs!</span></a>
 <a href={WORK} class="keyitem" data-for="nexus" style="display: grid; grid-template-columns: 30px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">4.</span><span>nexus</span></a>
 <a href={TEDX} class="keyitem" data-for="x" style="display: grid; grid-template-columns: 30px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">5.</span><span>tedx bitd</span></a>
 <a href={TAROT} class="keyitem" data-for="tarot" style="display: grid; grid-template-columns: 30px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">6.</span><span>the world</span></a>
@@ -216,6 +221,7 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 </div>
 
 <main class="m desk">
+<button class="back m-back" type="button" data-back>Back</button>
 <h1>darling, have you met Kritika?</h1>
 <p class="m-spotted spotted">last spotted at <a href={BEANLORE} target="_blank" rel="noopener">Beanlore, Kormangala</a>, reading in the sun.</p>
 <ul>
@@ -300,6 +306,50 @@ document.querySelectorAll('[data-for]').forEach(function(a){var c=document.query
     if (!done && /^(ArrowDown|PageDown| |Spacebar)$/.test(e.key) && !(e.target.closest && e.target.closest('button,a'))) { e.preventDefault(); turn(); }
   });
   document.querySelectorAll('[data-turn]').forEach(function(b){ b.addEventListener('click', turn); });
+  // Back: lay the turned page down again, then turn it back over to the intro
+  function turnBack(){
+    clearTimeout(fin); clearTimeout(snap); start = 0;
+    if (phone.matches) scrollTo(0, 0);
+    done = false; p = 1; root.classList.add('intro-on'); render(false);
+    void D.offsetWidth; void M.offsetWidth;
+    setTimeout(function(){ p = 0; render(true); }, 30);
+    var b = (phone.matches ? M : D).querySelector('[data-turn]'); if (b) b.focus({ preventScroll: true });
+  }
+  document.querySelectorAll('[data-back]').forEach(function(b){ b.addEventListener('click', turnBack); });
+})();
+
+// "last spotted" photo: pops up when the line is hovered, then follows the cursor (with a slight drag);
+// once the cursor is more than 15cm from the line, it fades out. Hovering the line again brings it back.
+(function(){
+  var lines = document.querySelectorAll('#stage p.spotted'), line = lines[lines.length - 1]; // last one is the real desk (the first is the page-turn copy)
+  if (!line) return;
+  var pic = line.querySelector('.spot-pic');
+  var FAR = 15 * 96 / 2.54; // 15cm in CSS pixels (~567px); browsers can't know the true physical size of a screen
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var on = false, tx = 10, ty = 0, x = 10, y = 0, raf = 0;
+  function aim(cx, cy){
+    var r = line.getBoundingClientRect(), s = r.width / line.offsetWidth || 1; // the desk is scaled to the window
+    tx = (cx - r.left) / s + 10; ty = (cy - r.top) / s + 10;
+  }
+  function tick(){
+    var k = reduce ? 1 : 0.3;
+    x += (tx - x) * k; y += (ty - y) * k;
+    pic.style.left = x.toFixed(1) + 'px'; pic.style.top = y.toFixed(1) + 'px';
+    raf = (on && (Math.abs(tx - x) > 0.3 || Math.abs(ty - y) > 0.3)) ? requestAnimationFrame(tick) : 0;
+  }
+  function follow(){ if (!raf) raf = requestAnimationFrame(tick); }
+  line.addEventListener('mouseenter', function(e){
+    aim(e.clientX, e.clientY);
+    if (!on) { x = tx; y = ty; pic.style.left = x + 'px'; pic.style.top = y + 'px'; }
+    on = true; line.classList.add('on');
+  });
+  addEventListener('mousemove', function(e){
+    if (!on) return;
+    var r = line.getBoundingClientRect();
+    var dx = Math.max(r.left - e.clientX, 0, e.clientX - r.right), dy = Math.max(r.top - e.clientY, 0, e.clientY - r.bottom);
+    if (Math.hypot(dx, dy) > FAR) { on = false; line.classList.remove('on'); return; }
+    aim(e.clientX, e.clientY); follow();
+  });
 })();
 </script>
 </body>
