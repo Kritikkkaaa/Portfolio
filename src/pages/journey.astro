@@ -73,17 +73,15 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 .back{position:absolute;left:72px;top:76px;padding:6px 0;font-size:15px;color:#A9452A;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
 h1{position:absolute;left:72px;top:118px;width:600px;margin:0;font-family:Geist,sans-serif;font-weight:600;font-size:64px;line-height:1.02;letter-spacing:-.02em;color:#1C1B1F}
 /* "now you and i can work together!": a pinned tear-off flyer, like the ones on a cafe noticeboard. One line, then
-   tear-off chits with her socials (one chit already taken). Hovering a chit peels it. */
-.flyer{position:absolute;left:964px;top:58px;margin:0;background:#fff;box-shadow:0 12px 26px rgba(70,50,35,.14),0 1px 3px rgba(70,50,35,.10);transform:rotate(1.6deg);transform-origin:50% 0}
+   tear-off chits with her socials across the full width. The page shows through. Hovering a chit peels it. */
+.flyer{position:absolute;left:964px;top:58px;margin:0;background:transparent;border:1px solid rgba(28,27,31,.55);transform:rotate(1.6deg);transform-origin:50% 0}
 .flyer .pin{position:absolute;left:50%;top:-7px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#A9452A;box-shadow:0 2px 3px rgba(0,0,0,.25),inset -2px -2px 0 rgba(0,0,0,.15)}
 .flyer .fh{margin:0;padding:24px 22px 18px;font-family:Geist,sans-serif;font-weight:500;font-size:19px;letter-spacing:-.01em;white-space:nowrap;color:#1C1B1F}
-.flyer .tabs{display:flex;border-top:1.5px dashed #c9c4bd}
-.flyer .tab{width:46px;height:74px;display:flex;align-items:center;justify-content:center;transform-origin:50% 0;border-left:1px dashed #d8d3cc;background:#fff;transition:transform .45s cubic-bezier(.3,1.5,.5,1),box-shadow .3s}
+.flyer .tabs{display:flex;border-top:1.5px dashed rgba(28,27,31,.4)}
+.flyer .tab{flex:1;min-width:46px;height:74px;display:flex;align-items:center;justify-content:center;transform-origin:50% 0;border-left:1px dashed rgba(28,27,31,.3);background:transparent;transition:transform .45s cubic-bezier(.3,1.5,.5,1),box-shadow .3s}
 .flyer .tab:first-child{border-left:0}
 .flyer .tab svg{display:block}
-.flyer .tab:hover,.flyer .tab:focus-visible{transform:rotate(-8deg) translateY(3px);box-shadow:0 6px 10px rgba(70,50,35,.16)}
-.flyer .tab.gone{flex:1;width:auto;background:transparent;border-left:1px dashed transparent;pointer-events:none}
-.flyer .tab.gone::after{content:"";display:block;width:100%;height:8px;align-self:flex-start;background:#fff;clip-path:polygon(0 0,100% 0,100% 40%,85% 100%,70% 45%,55% 100%,40% 50%,25% 100%,10% 45%,0 90%)}
+.flyer .tab:hover,.flyer .tab:focus-visible{transform:rotate(-8deg) translateY(3px);background:#fbfaf7;box-shadow:0 6px 10px rgba(70,50,35,.16)}
 @media (prefers-reduced-motion: reduce){.flyer .tab{transition:none}}
 .lines{position:absolute;left:0;top:0;width:1512px;height:982px;overflow:visible;pointer-events:none}
 .lines path{fill:none;stroke-linecap:round;stroke-linejoin:round}
@@ -171,7 +169,6 @@ h1{position:absolute;left:72px;top:118px;width:600px;margin:0;font-family:Geist,
 <p class="fh">now you and i can work together!</p>
 <div class="tabs">
 {socials.map((c) => <a class="tab" href={c.href} aria-label={c.label} {...ext(c.href)} set:html={c.svg}></a>)}
-<span class="tab gone" aria-hidden="true"></span>
 </div>
 </aside>
 
