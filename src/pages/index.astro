@@ -111,6 +111,15 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 .nextbtn:focus-visible{outline:2px solid #e4e3dd;outline-offset:4px}
 @media (prefers-reduced-motion: reduce){.intro *,.m-leaf{transition:none !important}}
 
+/* Desktop: the space around the scaled spread continues it instead of showing grey bands:
+   white (the spread's outer edges are white), with the intro's black paper over it until the page is turned. */
+@media (min-width: 768px){
+  html,body{background:#ffffff}
+  html::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background-color:#242826;background-image:url(/desk/black-paper.jpg);background-size:calc(700px * var(--s, 1)) auto;opacity:0;transition:opacity .6s ease}
+  html.intro-on::before{opacity:1}
+  html.intro-on body{background:transparent}
+}
+
 /* Phones (under 768px): one scrolling column */
 .m{display:none}
 @media (max-width: 767px){
@@ -253,7 +262,7 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 
 <script is:inline>
 // scale the 1512x982 spread to fill any desktop window
-function fit(){var s=Math.min(innerWidth/1512,innerHeight/982),st=document.getElementById('stage');st.style.transform='scale('+s+')';st.style.left=((innerWidth-1512*s)/2)+'px';st.style.top=((innerHeight-982*s)/2)+'px';}
+function fit(){var s=Math.min(innerWidth/1512,innerHeight/982),st=document.getElementById('stage');document.documentElement.style.setProperty('--s',s);st.style.transform='scale('+s+')';st.style.left=((innerWidth-1512*s)/2)+'px';st.style.top=((innerHeight-982*s)/2)+'px';}
 addEventListener('resize',fit);fit();
 // hovering a key item highlights its cutout
 document.querySelectorAll('[data-for]').forEach(function(a){var c=document.querySelector('.cut[data-id="'+a.dataset.for+'"]');a.addEventListener('mouseenter',function(){c&&c.classList.add('hl')});a.addEventListener('mouseleave',function(){c&&c.classList.remove('hl')});});
