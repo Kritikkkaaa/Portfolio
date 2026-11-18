@@ -5,6 +5,7 @@
 import Analytics from '../components/Analytics.astro';
 
 const WORK = '/work';
+const JOURNEY = '/journey';
 const TWITTER = 'https://x.com/verykritikal?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
 const SUBSTACK = 'https://substack.com/@verykritikal/posts?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
 const INSTAGRAM = 'https://www.instagram.com/verykritikal/?utm_source=Portfolio&utm_medium=Footer&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
@@ -14,15 +15,15 @@ const WHATSAPP = 'https://wa.me/919109079518';
 const BEANLORE = 'https://maps.app.goo.gl/cWP7aSNRVM3AXVjH9';
 const ext = (href: string) => href.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {};
 
-// Placeholders until their pages exist: say hello, my coffee reccs!, tedx bitd, the world, she substacks.
-const HELLO = '#hello', COFFEE = '#coffee', TEDX = '#tedx', TAROT = '#tarot', COVER = '#substack';
+// Placeholders until their pages exist: my coffee reccs!, tedx bitd, the world, she substacks.
+const COFFEE = '#coffee', TEDX = '#tedx', TAROT = '#tarot', COVER = '#substack';
 
 const planeLogo = `<svg class="logo" width="130" height="81" viewBox="0 0 579 361" role="img" aria-label="Plane logo"><path d="M0 20.6413C0 5.3174 16.1 -4.64793 29.7966 2.20067L147.972 61.3502V200.168C147.972 219.674 158.992 237.527 176.417 246.248L283.068 299.63V340.352C283.068 355.675 266.968 365.641 253.271 358.779L28.4447 246.248C11.0201 237.527 0 219.688 0 200.168V20.6413ZM147.972 20.6413C147.972 5.3174 164.072 -4.64793 177.769 2.21435L295.945 61.3638V200.182C295.945 219.688 306.965 237.541 324.39 246.262L431.041 299.643V340.366C431.041 355.689 414.94 365.654 401.244 358.792L283.068 299.643V160.826C283.068 141.306 272.048 123.466 254.623 114.744L147.972 61.3638V20.6413ZM295.931 20.6413C295.931 5.3174 312.032 -4.64793 325.728 2.21435L550.555 114.744C567.993 123.466 579 141.306 579 160.826V340.366C579 355.689 562.899 365.654 549.203 358.792L431.027 299.643V160.826C431.027 141.306 420.007 123.466 402.582 114.744L295.931 61.3638V20.6413Z" fill="#1C1B1F"></path></svg>`;
 const coverCard = `<div style="position: relative; width: 116px; height: 155px; overflow: hidden; box-shadow: 0 8px 14px rgba(70,50,35,.22)"><img src="/desk/substack-cover.jpg" alt="kritika's outfit, red heels and a printed tote" style="width: 116px; height: 155px; max-width: none; max-height: none; object-fit: cover; filter: none"><p style="position: absolute; left: 8px; top: 8px; right: 6px; margin: 0; font-family: 'Archivo Black', sans-serif; font-size: 17px; line-height: .95; color: #FFEAD3">She Substacks!</p></div>`;
 
 // Phone column, in number order.
 const items = [
-  { n: 1, name: 'say hello', href: HELLO, art: '<img src="/desk/kritika-sun.png" alt="kritika smiling on a sofa in the afternoon sun" style="max-width: 240px; max-height: 230px">' },
+  { n: 1, name: 'say hello', href: JOURNEY, say: true, art: '<img src="/desk/kritika-mirror.png" alt="kritika taking a mirror selfie in a white top and green checked trousers" style="max-width: 240px; max-height: 260px">' },
   { n: 2, name: 'plane', href: WORK, art: planeLogo },
   { n: 3, name: 'my coffee reccs!', href: COFFEE, art: '<img src="/desk/iced-latte.png" alt="an iced latte in a tall glass">' },
   { n: 4, name: 'nexus', href: WORK, art: '<img src="/desk/nexus.png" alt="Nexus logo" style="width: 150px">' },
@@ -51,7 +52,7 @@ const socials = [
 <link rel="apple-touch-icon" href="/mark-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Hanken+Grotesk:ital,wght@0,400;0,500;1,400&amp;family=Archivo+Black&amp;family=EB+Garamond:ital@1&amp;display=swap" rel="stylesheet">
-<script is:inline>document.documentElement.classList.add('intro-on');</script>
+<script is:inline>if (location.hash !== '#desk') document.documentElement.classList.add('intro-on');</script>
 <style is:inline>
 html,body{margin:0;height:100%;background:#f4f3f0;overflow:hidden}
 #stage{position:absolute;left:0;top:0;transform-origin:0 0}
@@ -67,7 +68,10 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 .cut:hover .box,.cut.hl .box{transform:translateY(-8px) rotate(0deg) !important}
 .fig{position:absolute;font-family:Geist,sans-serif;font-weight:500;font-size:15px;color:#B4502F}
 .bubble{opacity:0;transform:scale(.7) translateY(8px);transform-origin:bottom right;transition:opacity .25s,transform .45s cubic-bezier(.3,1.6,.5,1)}
-.c-me:hover .bubble,.c-me.hl .bubble{opacity:1;transform:none}
+.c-me:hover .bubble,.c-me.hl .bubble,.c-me:focus-visible .bubble,.say .bubble{opacity:1;transform:none}
+/* "say hello": an Apple Messages style bubble (sent, blue, tail at the bottom right pointing at her) */
+.imsg{position:absolute;box-sizing:border-box;max-width:236px;padding:8px 14px 9px;border-radius:19px;background:#0A84FF;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;font-size:17px;line-height:1.3;letter-spacing:-.01em;color:#fff;text-align:left;pointer-events:none;z-index:6}
+.imsg .tail{position:absolute;right:-5px;bottom:0;width:17px;height:21px;display:block}
 .navface .open{opacity:0}.navface:hover .open{opacity:1}.navface:hover .shut{opacity:0}
 .keyitem{color:#6f6862}.keyitem:hover{color:#1C1B1F}
 .spotted a{color:#A9452A;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px}
@@ -132,10 +136,11 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
   .m{display:block;background:none;min-height:100vh;box-sizing:border-box;padding:48px 16px 40px;font-family:'Hanken Grotesk',sans-serif;color:#1C1B1F}
   .m h1{margin:0 0 28px;font-family:Geist,sans-serif;font-weight:600;font-size:44px;line-height:1.02;letter-spacing:-.02em;color:#A9452A}
   .m ul{list-style:none;margin:0;padding:0;display:grid;gap:16px}
-  .m-item{display:flex;flex-direction:column;align-items:center;gap:12px;padding:20px 16px;border-radius:16px;background:rgba(255,255,255,.6);-webkit-tap-highlight-color:transparent}
+  .m-item{position:relative;display:flex;flex-direction:column;align-items:center;gap:12px;padding:20px 16px;border-radius:16px;background:rgba(255,255,255,.6);-webkit-tap-highlight-color:transparent}
   .m-art{display:flex;align-items:center;justify-content:center;min-height:150px}
   .m-art img,.m-art svg.logo{max-width:150px;max-height:150px;filter:drop-shadow(0 7px 9px rgba(70,50,35,.20))}
   .m-name{font-size:17px;color:#1C1B1F}
+  .m-say{left:10px;top:10px;max-width:150px;padding:7px 12px 8px;font-size:15px}
   .m-name b{font-family:Geist,sans-serif;font-weight:500;color:#B4502F;margin-right:6px}
   .m h1{margin-bottom:12px}
   .m-back{position:static;display:inline-block;margin:0 0 12px;min-height:44px}
@@ -190,9 +195,9 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 <span class="fig" style="left: 0; top: 0">4.</span>
 </a>
 
-<a href={HELLO} class="cut c-me" data-id="me" aria-label="say hello" style="left: 596px; top: 330px; width: 320px; height: 310px">
-<div class="box"><img src="/desk/kritika-sun.png" alt="kritika smiling on a sofa in the afternoon sun" style="max-width: 320px; max-height: 300px"></div>
-<div class="bubble" style="position: absolute; left: -190px; top: -20px; width: 200px; padding: 14px 18px; border-radius: 18px 18px 4px 18px; background: #BFE7EA; font-family: 'Hanken Grotesk', sans-serif; font-size: 17px; line-height: 1.35; color: #1C1B1F">hey there! want to build something with me?</div>
+<a href={JOURNEY} class="cut c-me" data-id="me" data-say aria-label="say hello" style="left: 590px; top: 292px; width: 340px; height: 368px">
+<div class="box"><img src="/desk/kritika-mirror.png" alt="kritika taking a mirror selfie in a white top and green checked trousers" style="max-width: 340px; max-height: 360px"></div>
+<div class="bubble imsg" style="left: -150px; top: -26px; width: 236px">i am Kritika! I am a creative. marketer. and a writer.<svg class="tail" viewBox="0 0 17 21" aria-hidden="true"><path d="M0 0 C1 9 5 16 17 21 C9 21.5 3.5 20 0 17.5 Z" fill="#0A84FF"></path></svg></div>
 <span class="fig" style="left: 10px; top: 0">1.</span>
 </a>
 
@@ -212,7 +217,7 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 </a>
 
 <nav aria-label="Contents" style="position: absolute; left: 960px; top: 722px; width: 488px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 48px; row-gap: 14px; font-family: 'Hanken Grotesk', sans-serif; font-size: 18px">
-<a href={HELLO} class="keyitem" data-for="me" style="display: grid; grid-template-columns: 30px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">1.</span><span>say hello</span></a>
+<a href={JOURNEY} class="keyitem" data-for="me" style="display: grid; grid-template-columns: 30px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">1.</span><span>say hello</span></a>
 <a href={WORK} class="keyitem" data-for="plane" style="display: grid; grid-template-columns: 30px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">2.</span><span>plane</span></a>
 <a href={COFFEE} class="keyitem" data-for="coffee" style="display: grid; grid-template-columns: 30px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">3.</span><span>my coffee reccs!</span></a>
 <a href={WORK} class="keyitem" data-for="nexus" style="display: grid; grid-template-columns: 30px 1fr; align-items: baseline"><span style="font-family: Geist, sans-serif; font-weight: 500; color: #B4502F">4.</span><span>nexus</span></a>
@@ -234,7 +239,7 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 <h1>darling, have you met Kritika?</h1>
 <p class="m-spotted spotted">last spotted at <a href={BEANLORE} target="_blank" rel="noopener">Beanlore, Kormangala</a>, reading in the sun.</p>
 <ul>
-{items.map((it) => <li><a class="m-item" href={it.href}><span class="m-art" set:html={it.art}></span><span class="m-name"><b>{it.n}.</b>{it.name}</span></a></li>)}
+{items.map((it) => <li><a class="m-item" href={it.href} data-say={it.say ? '' : undefined}>{it.say && <span class="bubble imsg m-say">i am Kritika! I am a creative. marketer. and a writer.<svg class="tail" viewBox="0 0 17 21" aria-hidden="true"><path d="M0 0 C1 9 5 16 17 21 C9 21.5 3.5 20 0 17.5 Z" fill="#0A84FF"></path></svg></span>}<span class="m-art" set:html={it.art}></span><span class="m-name"><b>{it.n}.</b>{it.name}</span></a></li>)}
 </ul>
 <nav class="m-socials" aria-label="Socials">
 {socials.map((s) => <a href={s.href} aria-label={s.label} {...ext(s.href)} set:html={s.svg}></a>)}
@@ -279,7 +284,7 @@ document.querySelectorAll('[data-for]').forEach(function(a){var c=document.query
   copy.style.position = 'absolute'; copy.style.left = '0'; copy.style.top = '0';
   var back = D.querySelector('.i-back'); back.insertBefore(copy, back.firstChild);
 
-  var p = 0, done = false, start = 0, last = 0, snap, fin, ty = null;
+  var p = 0, done = !root.classList.contains('intro-on'), start = 0, last = 0, snap, fin, ty = null;
   function el(){ return phone.matches ? M : D; }
   function render(anim){
     [D, M].forEach(function(e){
@@ -325,6 +330,27 @@ document.querySelectorAll('[data-for]').forEach(function(a){var c=document.query
     var b = (phone.matches ? M : D).querySelector('[data-turn]'); if (b) b.focus({ preventScroll: true });
   }
   document.querySelectorAll('[data-back]').forEach(function(b){ b.addEventListener('click', turnBack); });
+})();
+
+// "say hello" (the centre photo): on a laptop, hovering or clicking shows the message bubble, and a click
+// goes to /journey 2 seconds later. On touch screens, the first tap shows the bubble and the second tap goes.
+(function(){
+  var canHover = matchMedia('(hover: hover) and (pointer: fine)');
+  function hush(){ document.querySelectorAll('.say').forEach(function(n){ n.classList.remove('say'); }); }
+  document.querySelectorAll('[data-say]').forEach(function(a){
+    var t;
+    a.addEventListener('click', function(e){
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; // opening in a new tab: let it
+      if (canHover.matches) {
+        e.preventDefault(); a.classList.add('say');
+        clearTimeout(t); t = setTimeout(function(){ location.href = a.href; }, 2000);
+      } else if (!a.classList.contains('say')) {
+        e.preventDefault(); hush(); a.classList.add('say');
+      }
+    });
+  });
+  document.addEventListener('click', function(e){ if (!(e.target.closest && e.target.closest('[data-say]'))) hush(); });
+  addEventListener('pageshow', hush); // coming back with the browser's back button
 })();
 
 // "last spotted" photo: pops up when the line is hovered, then follows the cursor (with a slight drag);
