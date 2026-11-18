@@ -1,11 +1,11 @@
 ---
 // /jobs, "work i have done." — opened from 4 on the desk (/home-redo).
 // Desktop: one magazine spread (1512x982, scaled to fill the window), like the desk.
-//  Right page: the top half is the heading, set huge; the bottom half splits into two quarters, the left one
+//  Right page: the top half is the heading ("case files."), set huge; the bottom half splits into two quarters, the left one
 //  the whole "Why positioning matters" picture (the chess linocut, zoomed to fill), the right one her skills.
-//  Left page: a grid of 2 columns x 3 rows, one case study per cell: a portrait picture (15:20) with its
-//  number, section name and title beside it. Pictures print in duotone and bloom into colour on hover, where an
-//  overlay shows the date, what it's about, and "Read more".
+//  Left page: a grid of 2 columns x 3 rows: 02 spans both columns, then 03 and 04, then 05 on its own.
+//  Each has a picture (15:20, or wide), its number, section name and title. Pictures are black and white;
+//  hovering darkens the picture and shows "Read more".
 // Below 768px: one column.
 import Analytics from '../components/Analytics.astro';
 
@@ -13,22 +13,23 @@ import Analytics from '../components/Analytics.astro';
 const DEK = 'proof that overthinking can be a skill.';
 
 const skills = [
-  { group: 'Creatives', items: ['Positioning & messaging', 'Product copy', 'Landing pages', 'Video scripts', 'Event curation'] },
-  { group: 'Technical', items: ['Go-to-market strategy', 'Competitive intelligence & battlecards', 'Activation & churn diagnosis', 'SEO & App Store optimisation', 'PostHog, Mixpanel, GA4'] },
-  { group: 'People', items: ['Ideal customer profile (ICP)', 'Customer discovery (The Mom Test)', 'Developer communities', 'Partner ecosystems', 'Win-back campaigns'] }
+  { group: 'Creatives', items: ['Positioning & messaging', 'Product copy', 'Landing pages'] },
+  { group: 'Technical', items: ['Go-to-market strategy', 'Competitive intelligence & battlecards', 'Activation & churn diagnosis'] },
+  { group: 'People', items: ['Ideal customer profile (ICP)', 'Customer discovery (The Mom Test)', 'Developer communities'] }
 ];
 
-// the case studies, in reading order (left page, row by row)
+// the case studies on the left page (01, positioning, is the big picture on the right page).
+// n is the number shown; wide spans both columns.
 const cells = [
-  { kicker: 'The Briefing', title: 'Why positioning matters. How to get there?', date: 'apr 2025 → now', about: 'one page that decided who Nexus was for, what we said, and where we said it.', img: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&q=80&auto=format&fit=crop', href: '/work/icp-positioning-messaging-nexus' },
-  { kicker: 'Field Notes', title: 'How to build a Twitter account from scratch', date: 'mar 2023 → may 2024', about: 'Plane’s Twitter from zero: 500+ posts and 20+ release notes, in step with every release.', img: '/work/grow-planes-twitter/img/kanban.jpg', href: '/work/grow-planes-twitter/' },
-  { kicker: 'The Campaign', title: 'How I ran a campaign for pricing launch', date: 'apr 2024', about: 'launching Plane One, a new paid plan, on Twitter: the tease, the reveal and the letter.', img: '/work/plane-one-campaign/img/reveal.jpg', href: '/work/plane-one-campaign/' },
-  { kicker: 'The Teardown', title: 'How I would re-design Paper’s onboarding emails', date: 'coming soon', about: 'a teardown of Paper’s first emails: what they say, what they should, and why.', img: '/jobs/paper-envelope.png', href: '' },
-  { kicker: 'Match Report', title: 'How to build battle card for your competition', date: 'coming soon', about: 'battlecards for Nexus: who we were up against, where we won, and what to say when it came up.', img: 'https://images.unsplash.com/photo-1586165368502-1bad197a6461?w=600&q=80&auto=format&fit=crop', href: '' },
-  { kicker: 'The Interview', title: 'How to use AI for market research', date: 'coming soon', about: 'the prompts, the checks and the workflow i use to understand a market fast.', img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80&auto=format&fit=crop', href: '' }
+  { n: '02', kicker: 'Field Notes', title: 'How to build a Twitter account from scratch', date: 'mar 2023 → may 2024', about: 'Plane’s Twitter from zero: 500+ posts and 20+ release notes, in step with every release.', img: '/jobs/twitter-network.webp', href: '/work/grow-planes-twitter/', wide: true },
+  { n: '03', kicker: 'The Campaign', title: 'How I ran a campaign for pricing launch', date: 'apr 2024', about: 'launching Plane One, a new paid plan, on Twitter: the tease, the reveal and the letter.', img: '/jobs/pricing-invoice.webp', href: '/work/plane-one-campaign/' },
+  { n: '04', kicker: 'The Teardown', title: 'How I would re-design Paper’s onboarding emails', date: 'coming soon', about: 'a teardown of Paper’s first emails: what they say, what they should, and why.', img: '/jobs/paper-envelope.png', href: '' },
+  { n: '05', kicker: 'The Interview', title: 'how do i use AI in market research', date: 'coming soon', about: 'the prompts, the checks and the workflow i use to understand a market fast.', img: '/jobs/ai-scribble.webp', href: '' }
 ];
-// left page grid: 2 columns x 3 rows; pictures are 15:20 (IW x IH)
-const GX = [72, 404], GY = [118, 380, 642], IW = 138, IH = 184;
+// left page grid: 2 columns x 3 rows; row 1 is the wide one, row 2 two side by side, row 3 one on the left.
+// pictures are 15:20 (IW x IH); the wide one is WW x IH.
+const PLACES = [[72, 118], [72, 380], [404, 380], [72, 642]];
+const IW = 138, IH = 184, WW = 420;
 // the big positioning picture, bottom-left quarter of the right page
 const FEATURE = { kicker: 'The Briefing', title: 'Why positioning matters. How to get there?', img: '/jobs/chess-linocut.png', href: '/work/icp-positioning-messaging-nexus', date: 'apr 2025 → now', about: 'one page that decided who Nexus was for, what we said, and where we said it.' };
 ---
@@ -37,7 +38,7 @@ const FEATURE = { kicker: 'The Briefing', title: 'Why positioning matters. How t
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>kritika · work i have done.</title>
+<title>kritika · case files.</title>
 <meta name="description" content="Kritika's work: case studies, the stories behind them, and the skills she leans on.">
 <link rel="icon" href="/mark.svg" type="image/svg+xml">
 <link rel="icon" href="/mark-32.png" type="image/png" sizes="32x32">
@@ -58,7 +59,7 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 .rule{position:absolute;background:rgba(28,27,31,.18)}
 .folio{position:absolute;top:930px;margin:0;font-size:11px;letter-spacing:.2em;color:#8a837d}
 /* right page, top half: the heading, huge */
-h1{position:absolute;left:812px;top:70px;width:640px;margin:0;font-family:Anton,'Geist',sans-serif;font-weight:400;font-size:132px;line-height:.92;letter-spacing:-.005em;color:#1C1B1F}
+h1{position:absolute;left:812px;top:52px;width:660px;margin:0;font-family:Anton,'Geist',sans-serif;font-weight:400;font-size:212px;line-height:.9;letter-spacing:-.005em;color:#1C1B1F}
 .dek{position:absolute;left:812px;top:444px;margin:0;font-family:'EB Garamond',serif;font-style:italic;font-size:22px;color:#A9452A}
 /* right page, bottom-left quarter: the positioning picture */
 .feat{position:absolute;left:812px;top:512px;width:300px;height:398px;display:block;overflow:hidden;background:#111}
@@ -76,22 +77,22 @@ h1{position:absolute;left:812px;top:70px;width:640px;margin:0;font-family:Anton,
 .cell .pic{position:relative;flex:none;overflow:hidden;background:#efece6}
 .cell .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .cell .pic .duo{position:absolute;inset:0;transition:opacity .5s ease}
-.cell .pic .duo img{filter:url(#duotone)}
+.cell .pic .duo img{filter:grayscale(1) contrast(1.05)}
 .cell .txt{display:flex;flex-direction:column;padding-top:2px}
 .cell .num{font-family:Anton,'Geist',sans-serif;font-size:40px;line-height:1;color:#1C1B1F;transition:color .25s}
 .cell .k{margin-top:10px;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:#A9452A}
 .cell .t{margin-top:6px;font-family:Geist,sans-serif;font-weight:500;font-size:15px;line-height:1.3;color:#1C1B1F}
 /* hover: the picture blooms into colour under a full overlay with the date, the line, and Read more */
-.ov{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:12px;box-sizing:border-box;background:rgba(28,27,31,.8);color:#fff;opacity:0;transition:opacity .35s ease}
+.ov{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:12px;box-sizing:border-box;background:rgba(28,27,31,.8);color:#fff;opacity:0;transition:opacity .35s ease}
 .ov .d{font-size:9px;letter-spacing:.2em;color:#F3E4DC}
 .ov .a{margin-top:5px;font-size:11px;line-height:1.4;color:#f1eeea}
-.ov .rm{align-self:flex-start;margin-top:8px;padding:5px 9px;border:1px solid #F3E4DC;font-size:11px;color:#fff;opacity:0;transform:translateY(8px) scale(.94);transition:opacity .3s ease .08s,transform .45s cubic-bezier(.3,1.4,.5,1) .08s}
+.ov .rm{padding:7px 14px;border:1px solid #F3E4DC;font-size:13px;color:#fff;opacity:0;transform:translateY(8px) scale(.94);transition:opacity .3s ease .08s,transform .45s cubic-bezier(.3,1.4,.5,1) .08s}
 .cell:hover .duo,.cell:focus-visible .duo{opacity:0}
 .cell:hover .ov,.cell:focus-visible .ov,.feat:hover .ov,.feat:focus-visible .ov{opacity:1}
 .cell:hover .rm,.cell:focus-visible .rm,.feat:hover .rm,.feat:focus-visible .rm{opacity:1;transform:none}
 .cell:hover .num,.cell:focus-visible .num{color:#A9452A}
 .feat .ov{padding:18px;justify-content:center}
-.feat .ov .d{font-size:11px}.feat .ov .a{font-size:14px}.feat .ov .rm{font-size:13px;padding:8px 14px}
+.feat .ov .rm{font-size:14px;padding:9px 16px}
 .feat:hover img,.feat:focus-visible img{transform:scale(1.18)}
 @media (prefers-reduced-motion: reduce){.ov,.ov .rm,.cell .pic .duo,.feat img{transition:none}}
 
@@ -102,7 +103,7 @@ h1{position:absolute;left:812px;top:70px;width:640px;margin:0;font-family:Anton,
   body{background:#fbfaf7}
   .m{display:block;padding:48px 16px 48px;box-sizing:border-box}
   .m .back{position:static;display:inline-block;min-height:32px}
-  .m h1{position:static;width:auto;margin:10px 0 0;font-size:84px}
+  .m h1{position:static;width:auto;margin:10px 0 0;font-size:110px}
   .m .dek{position:static;margin:10px 0 0;font-size:20px}
   .m .feat{position:relative;left:auto;top:auto;width:auto;height:340px;margin:24px 0 0}
   .m .feat .ov{display:none}
@@ -131,25 +132,24 @@ h1{position:absolute;left:812px;top:70px;width:640px;margin:0;font-family:Anton,
 
 <!-- left page: the case studies -->
 {cells.map((c, i) => {
-  const n = String(i + 1).padStart(2, '0');
   const more = c.href ? 'Read more' : 'coming soon';
   const inner = <>
-    <span class="pic" style={`width: ${IW}px; height: ${IH}px`}><img src={c.img} alt="" loading="lazy"><span class="duo" aria-hidden="true"><img src={c.img} alt="" loading="lazy"></span><span class="ov"><span class="d">{c.date}</span><span class="a">{c.about}</span><span class="rm">{more}</span></span></span>
-    <span class="txt"><span class="num">{n}</span><span class="k">{c.kicker}</span><span class="t">{c.title}</span></span>
+    <span class="pic" style={`width: ${c.wide ? WW : IW}px; height: ${IH}px`}><img src={c.img} alt="" loading="lazy"><span class="duo" aria-hidden="true"><img src={c.img} alt="" loading="lazy"></span><span class="ov"><span class="rm">{more}</span></span></span>
+    <span class="txt"><span class="num">{c.n}</span><span class="k">{c.kicker}</span><span class="t">{c.title}</span></span>
   </>;
-  const st = `left: ${GX[i % 2]}px; top: ${GY[Math.floor(i / 2)]}px`;
+  const st = `left: ${PLACES[i][0]}px; top: ${PLACES[i][1]}px${c.wide ? '; width: 632px' : ''}`;
   return c.href ? <a class="cell" href={c.href} style={st}>{inner}</a> : <div class="cell" tabindex="0" style={st}>{inner}</div>;
 })}
-<p class="folio" style="left: 72px">work i have done · p. 01</p>
+<p class="folio" style="left: 72px">case files · p. 01</p>
 
 <!-- right page -->
-<h1 id="title">work i<br>have<br>done.</h1>
+<h1 id="title">case<br>files.</h1>
 <p class="dek">{DEK}</p>
 <span class="rule" aria-hidden="true" style="left: 812px; top: 486px; width: 640px; height: 1px"></span>
 <a class="feat" href={FEATURE.href}>
 <img src={FEATURE.img} alt="a black and white linocut of a chess board with figures" loading="lazy">
 <span class="lbl"><span class="k">{FEATURE.kicker}</span><span class="t">{FEATURE.title}</span></span>
-<span class="ov"><span class="d">{FEATURE.date}</span><span class="a">{FEATURE.about}</span><span class="rm">Read more</span></span>
+<span class="ov"><span class="rm">Read more</span></span>
 </a>
 <span class="rule" aria-hidden="true" style="left: 1137px; top: 512px; width: 1px; height: 398px"></span>
 <aside class="skills" aria-label="skills">
@@ -163,7 +163,7 @@ h1{position:absolute;left:812px;top:70px;width:640px;margin:0;font-family:Anton,
 
 <main class="m">
 <a class="back" href="/home-redo#desk">Back</a>
-<h1>work i have done.</h1>
+<h1>case files.</h1>
 <p class="dek">{DEK}</p>
 <a class="feat" href={FEATURE.href}><img src={FEATURE.img} alt="a black and white linocut of a chess board with figures" loading="lazy"><span class="lbl"><span class="k">{FEATURE.kicker}</span><span class="t">{FEATURE.title}</span></span></a>
 <aside class="skills" aria-label="skills">
@@ -171,10 +171,9 @@ h1{position:absolute;left:812px;top:70px;width:640px;margin:0;font-family:Anton,
 </aside>
 <div class="mcells">
 {cells.map((c, i) => {
-  const n = String(i + 1).padStart(2, '0');
   const inner = <>
     <span class="pic" style={`width: ${IW}px; height: ${IH}px`}><img src={c.img} alt="" loading="lazy"><span class="duo" aria-hidden="true"><img src={c.img} alt="" loading="lazy"></span></span>
-    <span class="txt"><span class="num">{n}</span><span class="k">{c.kicker}</span><span class="t">{c.title}</span><span class="a2">{c.date} · {c.about}</span><span class="rm2">{c.href ? 'Read more' : 'coming soon'}</span></span>
+    <span class="txt"><span class="num">{c.n}</span><span class="k">{c.kicker}</span><span class="t">{c.title}</span><span class="a2">{c.date} · {c.about}</span><span class="rm2">{c.href ? 'Read more' : 'coming soon'}</span></span>
   </>;
   return c.href ? <a class="cell" href={c.href}>{inner}</a> : <div class="cell">{inner}</div>;
 })}
