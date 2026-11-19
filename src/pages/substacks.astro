@@ -1,5 +1,5 @@
 ---
-// /substacks, "i write on Substack." — opened from the desk (/home-revamp).
+// /substacks, "i write on Substack." — opened from 3 on the desk (/home-redo).
 // Desktop: one magazine spread (1512x982, scaled to fill the window), like /jobs.
 //  Left page, after an Observer Magazine page: three pictures from her posts set close together across the top,
 //  then a giant initial with the story of how she started writing on Substack beside it.
@@ -10,24 +10,35 @@
 import Analytics from '../components/Analytics.astro';
 
 const PUB = 'https://verykritikal.substack.com';
+// the call to action under the story. WhatsApp for now; it moves to a contact page once that exists
+const CTA = 'Ask me to write something about you →';
+const CTA_HREF = 'https://wa.me/919109079518';
 const UTM = 'utm_source=Portfolio&utm_medium=Substacks+page&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
 
-// the story of how she started (100–120 words). DRAFT — to be replaced with her own words.
-const STORY = 'Substack started as a postcard. In September 2025 I came back from a long weekend in Pondicherry with more to say than a caption could hold, so I wrote it down instead. Then I kept going. Since then I have written about the things I am still figuring out: love, living alone, work, and the places that change me a little. Some of it is funny, some of it is hard to read, and most of it began as a conversation I could not stop thinking about. Eight letters in, this is the most honest version of me on the internet.';
+// the story of how she started, in her words. two paragraphs; the first letter becomes the giant initial.
+const STORY = [
+  'Writing on Substack started as a joke last year, when I had just come back from Pondicherry. What I brought back was too tender for an Instagram caption, so I wrote it down instead. That’s how I began embracing the way I feel things, all of it, out loud.',
+  'Some of it is funny, some of it is hard to read, and most of it began as a conversation I couldn’t stop thinking about. This is the most honest version of me you’ll find anywhere on the internet.'
+];
+const INITIAL = STORY[0][0];
 
 // the three pictures across the top of the left page
 const TOP = ['gunshot-diary', 'was-he-a-fckboy', 'love-is-usually-just-around-the-corner'];
 
+// posts left out of the list on the right (and on phones)
+const HIDE = ['to-monish-aastha-tanay-krishna-and', 'on-being-watched-being-warned-and'];
+
 // her posts, newest first. `desc` is the description under each picture (her Substack subtitles for now).
 // title/date/cover are the fallback if Substack can't be reached. `quote` stands in for a missing cover.
+// `pic` is a different picture from inside the post, for posts whose cover is already used across the top of the left page.
 const posts = [
   { slug: 'a-house-by-the-beach-someday', desc: 'a post card from Goa', title: 'A house by the beach, someday', date: '2026-10-20T09:20:23.602Z', words: 821, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/22851840-4fb3-40a3-8e5c-47cdf4798ccb_736x736.jpeg' },
   { slug: 'on-being-watched-being-warned-and', desc: 'Small rules, quiet costs, and one uncomfortable morning', title: 'On being watched, being warned, and never being asked', date: '2026-10-10T10:59:03.893Z', words: 1274, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/43338fa9-9fb3-43a1-bb64-4c89ad6477cb_1080x1349.jpeg' },
-  { slug: 'love-is-usually-just-around-the-corner', desc: 'but are you someone who won’t scare it away?', title: 'love is usually just around the corner', date: '2026-08-15T10:07:58.364Z', words: 731, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/5d2fa710-31d8-4d0c-91de-b5783773b674_736x538.jpeg' },
+  { slug: 'love-is-usually-just-around-the-corner', pic: 'https://substack-post-media.s3.amazonaws.com/public/images/eac18482-2254-4a7d-b8ea-d8f9981510ea_914x775.jpeg', desc: 'but are you someone who won’t scare it away?', title: 'love is usually just around the corner', date: '2026-08-15T10:07:58.364Z', words: 731, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/5d2fa710-31d8-4d0c-91de-b5783773b674_736x538.jpeg' },
   { slug: 'unthought-known', desc: 'Some things are known before they are ever thought. This is one of those stories.', title: 'Unthought known', date: '2026-07-02T14:50:30.012Z', words: 1075, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/bb1646bf-5cdd-4839-8308-b33d54c4d672_1584x396.png' },
   { slug: 'data-vs-instincts', desc: 'And why what you can see is not enough!', title: 'Data vs Instincts', date: '2026-06-15T10:31:17.888Z', words: 1329, cover: '', quote: 'I defended first and answered after.' },
-  { slug: 'was-he-a-fckboy', desc: 'On charm, damage, and the art of finally seeing them clearly', title: 'Was he a F*ckboy?', date: '2026-05-28T12:41:35.055Z', words: 862, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/4775d1f2-7a05-47ce-b211-73d7730dc316_1602x1190.jpeg' },
-  { slug: 'gunshot-diary', desc: 'A story about an elongated sleepover with a stranger', title: 'Gunshot diary', date: '2026-03-27T11:40:06.497Z', words: 1474, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/ebc3dc39-5c4d-46f8-afe2-ad528a0a3e18_1170x892.png' },
+  { slug: 'was-he-a-fckboy', pic: 'https://substack-post-media.s3.amazonaws.com/public/images/6b54bb5d-a4b8-4d0b-9afb-f008eb81706d_1509x1795.jpeg', desc: 'On charm, damage, and the art of finally seeing them clearly', title: 'Was he a F*ckboy?', date: '2026-05-28T12:41:35.055Z', words: 862, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/4775d1f2-7a05-47ce-b211-73d7730dc316_1602x1190.jpeg' },
+  { slug: 'gunshot-diary', pic: 'https://substack-post-media.s3.amazonaws.com/public/images/910cc456-35a5-4ef2-a5ed-09b4ce85719c_1535x1833.jpeg', desc: 'A story about an elongated sleepover with a stranger', title: 'Gunshot diary', date: '2026-03-27T11:40:06.497Z', words: 1474, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/ebc3dc39-5c4d-46f8-afe2-ad528a0a3e18_1170x892.png' },
   { slug: 'to-monish-aastha-tanay-krishna-and', desc: 'a postcard from Pondicherry 💌', title: 'to Monish, Aastha, Tanay, Krishna and others', date: '2025-09-01T08:39:02.886Z', words: 1509, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/f22b8cdd-bec9-4e95-a8ec-6ff0ab7f0a4f_3912x2373.jpeg' }
 ];
 
@@ -55,9 +66,13 @@ const day = (d: string) => new Date(d).toLocaleDateString('en-GB', { day: '2-dig
 const top = TOP.map((s) => all.find((p) => p.slug === s)).filter(Boolean);
 
 // three columns, filled top to bottom, newest first. pictures get uneven heights (weights) so the columns don't line up.
-const per = Math.ceil(all.length / 3);
-const weights = [[1.35, 0.9, 1.1], [0.85, 1.4, 1], [1.2, 1, 0.9]];
-const cols = [0, 1, 2].map((c) => all.slice(c * per, c * per + per).map((p, i) => ({ ...p, w: weights[c][i % 3] })));
+// the order on the right, filled column by column (two per column). new posts not listed here go first.
+const ORDER = ['a-house-by-the-beach-someday', 'gunshot-diary', 'unthought-known', 'data-vs-instincts', 'was-he-a-fckboy', 'love-is-usually-just-around-the-corner'];
+const rank = (slug: string) => { const i = ORDER.indexOf(slug); return i < 0 ? -1 : i; };
+const shown = all.filter((p) => !HIDE.includes(p.slug)).sort((a, b) => rank(a.slug) - rank(b.slug));
+const per = Math.ceil(shown.length / 3);
+const weights = [[1.3, 0.9, 1.1], [0.8, 1.25, 1], [1.1, 1, 0.9]];
+const cols = [0, 1, 2].map((c) => shown.slice(c * per, c * per + per).map((p, i) => ({ ...p, w: weights[c][i % 3] })));
 ---
 <!doctype html>
 <html lang="en">
@@ -86,16 +101,19 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 
 /* left page: three pictures set close together */
 .trio{position:absolute;left:64px;top:96px;width:636px;height:420px;display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
-.trio a{display:block;overflow:hidden;background:#efece6}
-.trio img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
-.trio a:hover img,.trio a:focus-visible img{transform:scale(1.04)}
+.trio span{display:block;overflow:hidden;background:#efece6}
+.trio img{width:100%;height:100%;object-fit:cover;display:block}
 /* the giant initial, bleeding off the left edge, and the story beside it */
-.cap{position:absolute;left:-40px;top:516px;margin:0;font-family:Geist,sans-serif;font-weight:600;font-size:500px;line-height:1;letter-spacing:-.04em;color:#1C1B1F;pointer-events:none}
+.cap{position:absolute;left:-150px;top:516px;margin:0;font-family:Geist,sans-serif;font-weight:600;font-size:500px;line-height:1;letter-spacing:-.04em;color:#1C1B1F;pointer-events:none}
+.cta{position:absolute;left:372px;padding:6px 0;font-family:Geist,sans-serif;font-weight:500;font-size:16px;color:#A9452A;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px;transition:color .25s}
+.cta:hover,.cta:focus-visible{color:#8E3820}
 .story{position:absolute;left:372px;top:574px;width:328px;margin:0;font-family:'EB Garamond',serif;font-size:17.5px;line-height:1.36;color:#1C1B1F;text-align:justify;hyphens:auto}
+.story p,.m .mstory p{margin:0}
+.story p+p,.m .mstory p+p{margin-top:14px}
 
 /* right page: three columns, tall pictures of uneven height */
 .cols{position:absolute;left:812px;top:56px;width:640px;height:880px;display:grid;grid-template-columns:repeat(3,1fr);gap:0 14px}
-.col{display:flex;flex-direction:column;gap:20px;min-height:0}
+.col{display:flex;flex-direction:column;gap:36px;min-height:0}
 .en{display:flex;flex-direction:column;min-height:0}
 .en .pic{flex:1 1 0;min-height:60px;overflow:hidden;background:#efece6}
 .en .pic img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
@@ -105,7 +123,7 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 .en:hover .t,.en:focus-visible .t{color:#A9452A}
 .en .d{display:block;margin-top:3px;font-size:12.5px;line-height:1.38;color:#6f6862}
 .en .mt{display:block;margin-top:5px;font-size:10px;letter-spacing:.18em;color:#8a837d}
-@media (prefers-reduced-motion: reduce){.trio img,.en .pic img{transition:none}}
+@media (prefers-reduced-motion: reduce){.en .pic img{transition:none}}
 
 /* phones: one column */
 .m{display:none}
@@ -117,6 +135,7 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
   .m .trio{position:static;width:auto;height:240px;margin-top:12px;gap:4px}
   .m .mstory{position:relative;margin-top:22px;font-family:'EB Garamond',serif;font-size:18px;line-height:1.42;color:#1C1B1F}
   .m .mstory .big{float:left;margin:-2px 10px 0 -4px;font-family:Geist,sans-serif;font-weight:600;font-size:118px;line-height:.78;letter-spacing:-.04em}
+  .m .cta{position:static;display:inline-block;margin-top:14px}
   .m .list{display:grid;gap:30px;margin-top:40px}
   .m .en .pic{flex:none;aspect-ratio:4/5}
   .m .en .pic.none{aspect-ratio:auto;min-height:160px}
@@ -136,26 +155,27 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 <div class="pageR" aria-hidden="true" style="position: absolute; left: 756px; top: 0; width: 756px; height: 982px"></div>
 <div class="sheen" aria-hidden="true" style="position: absolute; inset: 0; opacity: .6"></div>
 <div class="grain" aria-hidden="true"></div>
-<a class="back" href="/home-revamp">Back</a>
+<a class="back" href="/home-redo#desk">Back</a>
 <h1 class="sr">i write on Substack.</h1>
 
-<div class="trio">
-{top.map((p) => <a href={href(p.slug)} target="_blank" rel="noopener" aria-label={p.title}><img src={img(p.cover)} alt="" loading="lazy"></a>)}
+<div class="trio" data-cur="">
+{top.map((p) => <span><img src={img(p.cover)} alt="" loading="lazy"></span>)}
 </div>
-<p class="cap" aria-hidden="true">{STORY[0]}</p>
-<p class="story"><span class="sr">{STORY[0]}</span>{STORY.slice(1)}</p>
+<p class="cap" aria-hidden="true">{INITIAL}</p>
+<div class="story"><p><span class="sr">{INITIAL}</span>{STORY[0].slice(1)}</p>{STORY.slice(1).map((t) => <p>{t}</p>)}</div>
+<a class="cta" href={CTA_HREF} target="_blank" rel="noopener" style="top: 868px">{CTA}</a>
 
 <div class="cols">
 {cols.map((col) => (
 <div class="col">
 {col.map((p) => (
 <a class="en" href={href(p.slug)} target="_blank" rel="noopener" style={`flex: ${p.w} 1 0`}>
-{p.cover
-  ? <span class="pic"><img src={img(p.cover)} alt="" loading="lazy"></span>
+{(p.pic || p.cover)
+  ? <span class="pic"><img src={img(p.pic || p.cover)} alt="" loading="lazy"></span>
   : <span class="pic none">“{p.quote || p.title}”</span>}
 <span class="t">{p.title}</span>
 <span class="d">{p.desc}</span>
-<span class="mt">{day(p.date)} · {mins(p.words)} min read</span>
+<span class="mt">{mins(p.words)} {mins(p.words) === 1 ? 'min' : 'mins'}</span>
 </a>
 ))}
 </div>
@@ -165,21 +185,22 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 </section>
 
 <main class="m">
-<a class="back" href="/home-revamp">Back</a>
+<a class="back" href="/home-redo#desk">Back</a>
 <h1 class="sr">i write on Substack.</h1>
-<div class="trio">
-{top.map((p) => <a href={href(p.slug)} target="_blank" rel="noopener" aria-label={p.title}><img src={img(p.cover)} alt="" loading="lazy"></a>)}
+<div class="trio" data-cur="">
+{top.map((p) => <span><img src={img(p.cover)} alt="" loading="lazy"></span>)}
 </div>
-<p class="mstory"><span class="big" aria-hidden="true">{STORY[0]}</span><span class="sr">{STORY[0]}</span>{STORY.slice(1)}</p>
+<div class="mstory"><p><span class="big" aria-hidden="true">{INITIAL}</span><span class="sr">{INITIAL}</span>{STORY[0].slice(1)}</p>{STORY.slice(1).map((t) => <p>{t}</p>)}</div>
+<a class="cta" href={CTA_HREF} target="_blank" rel="noopener">{CTA}</a>
 <div class="list">
-{all.map((p) => (
+{shown.map((p) => (
 <a class="en" href={href(p.slug)} target="_blank" rel="noopener">
-{p.cover
-  ? <span class="pic"><img src={img(p.cover)} alt="" loading="lazy"></span>
+{(p.pic || p.cover)
+  ? <span class="pic"><img src={img(p.pic || p.cover)} alt="" loading="lazy"></span>
   : <span class="pic none">“{p.quote || p.title}”</span>}
 <span class="t">{p.title}</span>
 <span class="d">{p.desc}</span>
-<span class="mt">{day(p.date)} · {mins(p.words)} min read</span>
+<span class="mt">{mins(p.words)} {mins(p.words) === 1 ? 'min' : 'mins'}</span>
 </a>
 ))}
 </div>
@@ -198,5 +219,6 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 function fit(){var a=innerWidth/1512,b=innerHeight/982,lo=Math.min(a,b),s=Math.min(Math.max(a,b),lo/0.82);document.querySelectorAll('.stage').forEach(function(st){st.style.transform='scale('+s+')';st.style.left=((innerWidth-1512*s)/2)+'px';st.style.top=((innerHeight-982*s)*0.4)+'px';});}
 addEventListener('resize',fit);fit();
 </script>
+<script is:inline src="/kritikal-cursor.js" defer></script>
 </body>
 </html>
