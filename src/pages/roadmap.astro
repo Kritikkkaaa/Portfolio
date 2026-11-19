@@ -134,7 +134,7 @@ h1{position:absolute;left:72px;top:118px;width:600px;margin:0;font-family:Geist,
   .m{display:flex;flex-direction:column;min-height:100vh;min-height:100svh;box-sizing:border-box;padding:48px 16px 32px}
   .m .back{position:static;align-self:flex-start;min-height:32px;box-sizing:border-box}
   .m h1{position:static;width:auto;margin:6px 0 0;font-size:44px}
-  .m .mflyer{position:static;margin:24px 0 0;transform:none}
+  .m .mflyer{position:static;margin:8px 0 0;transform:none}
   .m .mflyer .fh{padding:20px 16px 16px;font-size:17px;white-space:normal}
   .m .mflyer .tab{flex:1;width:auto;height:64px}
   .m .mhead{margin:32px 0 10px;font-size:12px;letter-spacing:.24em}
@@ -205,14 +205,6 @@ h1{position:absolute;left:72px;top:118px;width:600px;margin:0;font-family:Geist,
 <main class="m">
 <a class="back" href="/home-redo#desk">Back</a>
 <h1>i prefer the scenic route.</h1>
-<aside class="flyer mflyer" aria-label="so where are you and i going to next?">
-<p class="fh">so where are you and i going to next?</p>
-<div class="tabs">{socials.map((c) => <a class="tab" href={c.href} aria-label={c.label} {...ext(c.href)} set:html={c.svg}></a>)}</div>
-</aside>
-<p class="mhead" style="color: #4A4542">what i wanted to do</p>
-<ol class="mplans">
-{plans.map((p) => <li>{p.text}</li>)}
-</ol>
 <div class="mlines" aria-hidden="true">
 <svg class="lines" viewBox="0 280 1512 480" style="position: static">
 <path class="plan" d={`M-20 ${MID} L1540 ${MID}`} pathLength="1"></path>
@@ -220,9 +212,13 @@ h1{position:absolute;left:72px;top:118px;width:600px;margin:0;font-family:Geist,
 </svg>
 </div>
 <p class="mhead" style="color: #A9452A">My journey so far!</p>
-<ol class="mstops">
-{stops.map((s) => <li><span class="name">{s.name}</span><span class="date">{s.date}</span><p class="q">{s.learnt}</p></li>)}
+<ol class="mstops" aria-label="My journey so far, latest first">
+{[...stops].reverse().map((s) => <li><span class="name">{s.name}</span><span class="date">{s.date}</span><p class="q">{s.learnt}</p></li>)}
 </ol>
+<aside class="flyer mflyer" aria-label="so where are you and i going to next?">
+<p class="fh">so where are you and i going to next?</p>
+<div class="tabs">{socials.map((c) => <a class="tab" href={c.href} aria-label={c.label} {...ext(c.href)} set:html={c.svg}></a>)}</div>
+</aside>
 </main>
 
 <div id="consent" role="dialog" aria-label="Cookie choice" hidden style="position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 55; max-width: 360px; box-sizing: border-box; padding: 18px 20px; border-radius: 16px; background: #141319; border: 1px solid #3A3842; box-shadow: 0 20px 50px rgba(0,0,0,0.6); font-family: 'Hanken Grotesk', system-ui, sans-serif; font-size: 14px; line-height: 1.5; color: #C9CDD5">

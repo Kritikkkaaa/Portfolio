@@ -25,6 +25,8 @@
 */
 (function () {
   if (!window.matchMedia || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  // phone-sized windows (the mobile layout, under 768px) keep the normal cursor
+  if (window.matchMedia('(max-width: 767px)').matches) return;
 
   var TERRACOTTA = '#A9452A', INK = '#2a2724', GREY = '#9a948c';
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -54,7 +56,8 @@
     '.kc-iris{position:fixed;left:50%;top:50%;width:0;height:0;transform:translate(-50%,-50%);border-radius:50%;' +
       'box-shadow:0 0 0 200vmax #111311;pointer-events:none;z-index:2147483647;display:none}' +
     '@keyframes kc-iris-close{from{width:250vmax;height:250vmax}to{width:0;height:0}}' +
-    '@keyframes kc-iris-open{from{width:0;height:0}to{width:250vmax;height:250vmax}}';
+    '@keyframes kc-iris-open{from{width:0;height:0}to{width:250vmax;height:250vmax}}' +
+    '@media (max-width: 767px){html.kc-on, html.kc-on *{cursor:auto !important}.kc-box{display:none !important}}';
   document.head.appendChild(css);
 
   /* ---------- elements ---------- */

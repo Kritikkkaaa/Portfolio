@@ -1,19 +1,10 @@
 ---
 // /recommendations (was /coffee), "Genuine reccos." — from Kritika's coffee/index.html design (the exact reference; layout, copy and
 // casing unchanged). Desktop: a fixed 1512x982 spread scaled to fill the window, with a hand-drawn map; hovering a
-// dot opens a card. Below 768px: heading, the article in one column, then the places as tappable cards (no map).
+// dot opens a card. Below 768px: heading and the article in one column, with links to the places list (/recommendations/list).
 // Photos and the video live in public/coffee/.
 import Analytics from '../components/Analytics.astro';
-
-const L = [
-      { id: 'maize', name: 'Maize & Malt', area: 'Mahadevapura, Bengaluru', x: 575, y: 732, mx: 150, my: 430, href: 'https://maps.app.goo.gl/28oTarv8uJ7Lba8j6' , line: 'amazing vegetarian food and starters. probably the only club where the food will exceed your expectation, over drinks.', kind: 'video', media: '/coffee/maize-and-malt.mp4', alt: 'friends dancing at maize & malt' },
-      { id: 'kopi', name: 'Kopitiam Lah', area: 'Indiranagar, Bengaluru', x: 551, y: 741, mx: 150, my: 430, href: 'https://maps.app.goo.gl/GDwtF5ZaTJTMu5LR6' , line: 'experimental malaysian food. you will not order enough but then will regret it. yep, you are definitely gonna over eat.', kind: 'img', media: '/coffee/kopitiam-lah.jpg', alt: 'the lit-up entrance of kopitiam lah' },
-      { id: 'gato', name: 'Gato House', area: 'HSR Layout, Bengaluru', x: 537, y: 762, mx: 150, my: 430, href: 'https://maps.app.goo.gl/XW6wz3fjqmS3a2vT6' , line: "new find. good music. wide menu. haven't tried coffee. slapping hot chocolate.", kind: 'img', media: '/coffee/gato-house.jpg', alt: 'hot chocolate and toast at gato house' },
-      { id: 'amin', name: 'Amintiri', area: 'HSR Layout, Bengaluru', x: 551, y: 774, mx: 150, my: 430, href: 'https://maps.app.goo.gl/X19gvWodnExo6XVi9' , line: "people think it's a dessert place. but then you visit one time at 10.30. and then it becomes home.", kind: 'img', media: '/coffee/amintiri.jpg', alt: 'a plate of noodle salad on marble at amintiri' },
-      { id: 'aurum', name: 'Aurum', area: 'HSR Layout, Bengaluru', x: 565, y: 764, mx: 150, my: 430, href: 'https://maps.app.goo.gl/hStk3j6JExN2ZuT58' , line: 'the official hideout for mercury retrograde. amazing maggie and momos!', kind: 'img', media: '/coffee/aurum.jpg', alt: 'a round wooden table with a potted flower at aurum' },
-      { id: 'kohe', name: 'Kohe', area: 'Hyderabad', x: 634, y: 288, mx: 200, my: 250, href: 'https://maps.app.goo.gl/SxnuhXHzEZUEzjCx6' , line: 'a hole in the wall with daily menu and experimental coffee. the barista there is hot!', kind: 'img', media: '/coffee/kohe.jpg', alt: 'kohe at night, string lights and hanging plants' },
-      { id: 'artjuna', name: 'Artjuna', area: 'Anjuna, Goa', x: 166, y: 488, mx: 230, my: 250, href: 'https://maps.app.goo.gl/MCdXCbK6bYBWVdiM7', line: 'you can get lost in the paintings there man! also food is over priced but yum.', kind: 'img', media: '/coffee/artjuna.jpg', alt: 'friends at a table at artjuna, paintings on the walls' }
-];
+import { L } from '../data/places';
 ---
 <!doctype html>
 <html lang="en">
@@ -54,16 +45,8 @@ a:focus-visible{outline:2px solid #A9452A;outline-offset:4px}
   .m article p{margin:0 0 12px}
   .m article .pull{margin:4px 0 14px;font-style:italic;color:#A9452A;font-size:21px;line-height:1.3}
   .m article .glasses{margin-top:8px;aspect-ratio:628/240;object-position:center 45%}
-  .m ul{list-style:none;margin:36px 0 0;padding:0;display:grid;gap:16px}
-  .m-card{display:block;background:#fff;box-shadow:0 10px 28px rgba(70,50,35,.16),0 1px 4px rgba(70,50,35,.08);overflow:hidden;color:#1C1B1F;-webkit-tap-highlight-color:transparent}
-  .m-card img,.m-card video{display:block;width:100%;height:190px;object-fit:cover;background:#efece6}
-  .m-card .in{padding:16px 18px 18px}
-  .m-card .nm{margin:0;font-family:Geist,sans-serif;font-weight:600;font-size:20px;color:#A9452A}
-  .m-card .ar{margin:2px 0 0;font-size:13px;color:#6f6862}
-  .m-card .ln{margin:10px 0 0;font-family:'EB Garamond',serif;font-style:italic;font-size:18px;line-height:1.35;color:#2a2724}
-  .m-card .mp{display:inline-block;margin-top:12px;font-size:14px;color:#A9452A;text-decoration:underline;text-underline-offset:3px}
-  .m-talk{margin:32px 0 0;font-size:14px;line-height:1.5;color:#6f6862}
-  .m-talk a{text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+  .m-list{display:inline-flex;align-items:center;min-height:44px;margin:-14px 0 14px;font-size:15px;color:#A9452A;text-decoration:underline;text-underline-offset:3px}
+  .m-list-end{display:flex;justify-content:center;margin:28px 0 0;font-family:Geist,sans-serif;font-weight:600;font-size:24px;letter-spacing:-.01em;text-decoration:none}
 }
 .cb-yes,.cb-no{min-height:40px;padding:0 20px;border-radius:10px;font-family:inherit;font-size:14px;cursor:pointer}
 .cb-yes{border:0;background:#E8EBF0;color:#0B0A0F;font-weight:600}
@@ -125,6 +108,7 @@ a:focus-visible{outline:2px solid #A9452A;outline-offset:4px}
 <main class="m">
 <a class="m-home" href="/home-redo#desk">Back</a>
 <h1>Genuine reccos.</h1>
+<a class="m-list" href="/recommendations/list">directly see the list &rarr;</a>
 <article>
 <img src="/coffee/cafe.jpg" alt="the coffee counter at a cafe, chalkboard menus and warm pendant lights">
 <h2>i like to hangout alone at a crowded cafe. <span style="color: #A9452A">but why?</span></h2>
@@ -135,17 +119,7 @@ a:focus-visible{outline:2px solid #A9452A;outline-offset:4px}
 <p>but i have come to realise that Bangalore is a city of choices. and people here live like an adult. could that be why, hanging out at cafes alone caught on. it's a choice to be alone and not owe an answer to anyone. <span style="color: #A9452A">what do you think?</span></p>
 <img class="glasses" src="/coffee/glasses.jpg" alt="two iced coffees on a round black table">
 </article>
-<ul aria-label="places">
-{L.map((p) => (
-<li><a class="m-card" href={p.href} target="_blank" rel="noopener">
-{p.kind === 'video'
-  ? <video src={p.media} autoplay muted loop playsinline aria-label={p.alt}></video>
-  : <img src={p.media} alt={p.alt} loading="lazy">}
-<div class="in"><p class="nm">{p.name}</p><p class="ar">{p.area}</p><p class="ln">{p.line}</p><span class="mp">see on maps</span></div>
-</a></li>
-))}
-</ul>
-<p class="m-talk">if you liked how i described these places, imagine what i’d write about yours. <a href="mailto:kritikaupadhyay2001@gmail.com">let’s talk</a></p>
+<a class="m-list m-list-end" href="/recommendations/list">directly see the list &rarr;</a>
 </main>
 
 <div id="consent" role="dialog" aria-label="Cookie choice" hidden style="position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 55; max-width: 360px; box-sizing: border-box; padding: 18px 20px; border-radius: 16px; background: #141319; border: 1px solid #3A3842; box-shadow: 0 20px 50px rgba(0,0,0,0.6); font-family: 'Hanken Grotesk', system-ui, sans-serif; font-size: 14px; line-height: 1.5; color: #C9CDD5">
@@ -192,8 +166,6 @@ render();
 // on very unusual window shapes it stops at 18% trimmed.
 function fit(){var a=innerWidth/1512,b=innerHeight/982,lo=Math.min(a,b),k=Math.min(Math.max(a,b),lo/0.82),st=document.getElementById('stage');st.style.transform='scale('+k+')';st.style.left=((innerWidth-1512*k)/2)+'px';st.style.top=((innerHeight-982*k)*0.4)+'px';}
 addEventListener('resize',fit);fit();
-// phones: make sure the card videos play muted inline
-document.querySelectorAll('.m video').forEach(function(v){v.muted=true;v.play&&v.play().catch(function(){});});
 </script>
 <script is:inline src="/kritikal-cursor.js" defer></script>
 </body>
