@@ -35,8 +35,8 @@ const faqs = [
 // `col`/`row` place each tile so the zoom grows inward from its spot on the page.
 type Tile = { band?: string; pitch?: boolean; ch?: typeof ch.x; faq?: number; bg: string; col: number; row: number };
 const W = '#FFFFFF', T = '#9C4A31', G1 = W, G2 = W, G3 = W;
-// the 30-40 word note on the right page. DRAFT.
-const PITCH = 'if you’re checking this out, you already know you want to talk to me. so stop pretending you’re just browsing. we could be friends. we could build something loud. either way, pick a stage.';
+// the creator's note on the right page.
+const PITCH = 'if you are still checking this out, thank you! means a lot. but what would mean more, is if you picked up your phone and gave me a call.';
 const tiles: Tile[] = [
   { band: 'TALK', bg: W, col: 0, row: 0 },                                                                  { ch: ch.email, bg: W, col: 3, row: 0 }, { faq: 3, bg: T, col: 4, row: 0 }, { ch: ch.whatsapp, bg: W, col: 5, row: 0 },
   { ch: ch.x, bg: W, col: 0, row: 1 }, { faq: 0, bg: T, col: 1, row: 1 }, { ch: ch.linkedin, bg: W, col: 2, row: 1 }, { faq: 4, bg: T, col: 3, row: 1 }, { pitch: true, bg: W, col: 4, row: 1 }, { faq: 5, bg: T, col: 5, row: 1 },
@@ -136,7 +136,7 @@ a:focus-visible,button:focus-visible{outline:2px solid #9C4A31;outline-offset:-4
   const o = `transform-origin: ${origin(t)}; background: ${t.bg}`;
   if (t.band === 'TALK') return <div class="tl bd talk"><span aria-hidden="true">TALK</span><p class="cover">pick your stage, darling!<svg viewBox="0 0 300 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 9c60-6 140-8 296-3" fill="none" stroke="#9C4A31" stroke-width="2.4" stroke-linecap="round"/></svg></p></div>;
   if (t.band) return <div class="tl bd" aria-hidden="true">{t.band}</div>;
-  if (t.pitch) return <div class="tl pt" style={`background: ${t.bg}`}><span class="lb">a note, before you scroll away</span><p>{PITCH}</p></div>;
+  if (t.pitch) return <div class="tl pt" style={`background: ${t.bg}`}><span class="lb">creator’s note.</span><p>{PITCH}</p></div>;
   if (t.ch) return <div class="tl"><a class="chn" href={t.ch.href} aria-label={`${t.ch.name}: ${t.ch.btn}`} style={`background: ${t.bg}`} {...ext(t.ch.href)}><span class="pic"><img src={t.ch.img} alt="" loading="lazy" style={`object-position: ${t.ch.pos}`}></span><span class="tag"><Fragment set:html={t.ch.svg} /><span>{t.ch.name}</span></span><span class="ov" aria-hidden="true"><span class="msg">{t.ch.msg}</span><span class="btn">{t.ch.btn}</span></span></a></div>;
   const f = faqs[t.faq!];
   return <div class="tl"><button class="z qa" type="button" aria-expanded="false" style={o}><span class="n">{f.n}</span><span class="c">{f.cat}</span><span class="q">{f.q}</span><span class="a">{f.a}</span></button></div>;
