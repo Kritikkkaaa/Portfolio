@@ -282,7 +282,7 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 
 <a href={JOURNEY} class="cut c-me" data-id="me" data-say data-cur="nav" aria-label="who am i?" style="left: 590px; top: 292px; width: 340px; height: 368px">
 <div class="box"><img src="/desk/kritika-flower.png" alt="kritika taking a mirror selfie in a grey tee, a yellow flower tucked behind her ear" style="max-width: 300px; max-height: 318px"></div>
-<div class="bubble imsg" style="left: -258px; top: -30px; width: 236px">hello love! i am Kritika. i think in references and write how i talk.<svg class="tail" viewBox="0 0 17 21" aria-hidden="true"><path d="M0 0 C1 9 5 16 17 21 C9 21.5 3.5 20 0 17.5 Z" fill="#0A84FF"></path></svg></div>
+<div class="bubble imsg" style="right: calc(100% + 22px); top: -30px; white-space: nowrap">hello love! i am Kritika.<svg class="tail" viewBox="0 0 17 21" aria-hidden="true"><path d="M0 0 C1 9 5 16 17 21 C9 21.5 3.5 20 0 17.5 Z" fill="#0A84FF"></path></svg></div>
 <span class="no" aria-hidden="true" style="left: 46px; top: 2px">1</span>
 </a>
 
@@ -323,7 +323,7 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 <h1>current open tabs?</h1>
 <p class="m-spotted spotted">last spotted at <a href={BEANLORE} target="_blank" rel="noopener">Beanlore, Kormangala</a>, reading in the sun.</p>
 <ul>
-{items.map((it) => <li><a class="m-item" href={it.href} data-say={it.say ? '' : undefined}>{it.say && <span class="bubble imsg m-say">hello love! i am Kritika. i think in references and write how i talk.<svg class="tail" viewBox="0 0 17 21" aria-hidden="true"><path d="M0 0 C1 9 5 16 17 21 C9 21.5 3.5 20 0 17.5 Z" fill="#0A84FF"></path></svg></span>}<span class="m-art" set:html={it.art}></span><span class="m-name"><b>{it.n}.</b>{it.name}</span></a></li>)}
+{items.map((it) => <li><a class="m-item" href={it.href} data-say={it.say ? '' : undefined}>{it.say && <span class="bubble imsg m-say">hello love! i am Kritika.<svg class="tail" viewBox="0 0 17 21" aria-hidden="true"><path d="M0 0 C1 9 5 16 17 21 C9 21.5 3.5 20 0 17.5 Z" fill="#0A84FF"></path></svg></span>}<span class="m-art" set:html={it.art}></span><span class="m-name"><b>{it.n}.</b>{it.name}</span></a></li>)}
 </ul>
 <nav class="m-socials" aria-label="Socials">
 {socials.map((s) => <a href={s.href} aria-label={s.label} {...ext(s.href)} set:html={s.svg}></a>)}
