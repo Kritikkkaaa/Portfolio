@@ -1,7 +1,7 @@
 ---
 // /jobs, "work i have done." — opened from 4 on the desk (/home-redo).
 // Desktop: one magazine spread (1512x982, scaled to fill the window), like the desk.
-//  Right page: the top half is the heading ("case files."), set huge; the bottom half splits into two quarters, the left one
+//  Right page: the top half is the heading ("projects and studies."), set huge; the bottom half splits into two quarters, the left one
 //  the whole "Why positioning matters" picture (the chess linocut, zoomed to fill), the right one her skills.
 //  Left page: a grid of 2 columns x 3 rows: 02 spans both columns, then 03 and 04, then 05 on its own.
 //  Each has a picture (15:20, or wide), its number, section name and title. Pictures are black and white;
@@ -38,7 +38,7 @@ const FEATURE = { kicker: 'The Briefing', title: 'Why positioning matters. How t
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>kritika · case files.</title>
+<title>kritika · projects and studies.</title>
 <meta name="description" content="Kritika's work: case studies, the stories behind them, and the skills she leans on.">
 <link rel="icon" href="/mark.svg" type="image/svg+xml">
 <link rel="icon" href="/mark-32.png" type="image/png" sizes="32x32">
@@ -58,7 +58,7 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 .back{position:absolute;left:72px;top:56px;padding:6px 0;font-size:15px;color:#A9452A;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
 .rule{position:absolute;background:rgba(28,27,31,.18)}
 /* right page, top half: the heading, huge */
-h1{position:absolute;left:812px;top:52px;width:660px;margin:0;font-family:Anton,'Geist',sans-serif;font-weight:400;font-size:212px;line-height:.9;letter-spacing:-.005em;color:#1C1B1F}
+h1{position:absolute;left:812px;top:52px;width:660px;margin:0;font-family:Anton,'Geist',sans-serif;font-weight:400;font-size:132px;line-height:.92;letter-spacing:-.005em;color:#1C1B1F}
 .dek{position:absolute;left:812px;top:444px;margin:0;font-family:'EB Garamond',serif;font-style:italic;font-size:22px;color:#A9452A}
 /* right page, bottom-left quarter: the positioning picture */
 .feat{position:absolute;left:812px;top:512px;width:300px;height:398px;display:block;overflow:hidden;background:#111}
@@ -102,7 +102,7 @@ h1{position:absolute;left:812px;top:52px;width:660px;margin:0;font-family:Anton,
   body{background:#fbfaf7}
   .m{display:block;padding:48px 16px 48px;box-sizing:border-box}
   .m .back{position:static;display:inline-block;min-height:32px}
-  .m h1{position:static;width:auto;margin:10px 0 0;font-size:110px}
+  .m h1{position:static;width:auto;margin:10px 0 0;font-size:72px;line-height:.95}
   .m .dek{position:static;margin:10px 0 0;font-size:20px}
   .m .skills{position:static;width:auto;margin:36px 0 0;padding:28px 0 4px;border-top:1px solid rgba(28,27,31,.15)}
   .m .sk{margin:0 0 30px}
@@ -147,7 +147,7 @@ h1{position:absolute;left:812px;top:52px;width:660px;margin:0;font-family:Anton,
 })}
 
 <!-- right page -->
-<h1 id="title">case<br>files.</h1>
+<h1 id="title">projects<br>and<br>studies.</h1>
 <p class="dek">{DEK}</p>
 <span class="rule" aria-hidden="true" style="left: 812px; top: 486px; width: 640px; height: 1px"></span>
 <a class="feat" href={FEATURE.href}>
@@ -166,7 +166,7 @@ h1{position:absolute;left:812px;top:52px;width:660px;margin:0;font-family:Anton,
 
 <main class="m">
 <a class="back" href="/home-redo#desk">Back</a>
-<h1>case files.</h1>
+<h1>projects and studies.</h1>
 <p class="dek">{DEK}</p>
 <aside class="skills" aria-label="skills">
 {skills.map((g) => <div class="sk"><h3>{g.group}</h3><ul>{g.items.map((it) => <li>{it}</li>)}</ul></div>)}

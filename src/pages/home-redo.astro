@@ -105,13 +105,17 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 .m-item .pola{transform:rotate(-2deg)}
 @media (prefers-reduced-motion: reduce){.brn img,.pola{transition:none}}
 /* scrolling on the desk: everything nudges up together and settles back, with a note that this is the whole page */
-.desk .cut,.desk .toc{translate:0 var(--nudge,0px);transition:translate .55s cubic-bezier(.3,1.5,.5,1)}
-.desk.nudging .cut,.desk.nudging .toc{transition:translate .18s ease-out}
+.desk .cut,.desk .toc{translate:0 var(--nudge,0px);transition:translate .55s cubic-bezier(.3,1.5,.5,1),opacity .35s ease}
+/* hovering the centre photo (or its bubble showing) fades the other cutouts and hides its own number, so nothing overlaps */
+.desk:has(.c-me:hover) .cut:not(.c-me),.desk:has(.c-me.say) .cut:not(.c-me),.desk:has(.c-me:focus-visible) .cut:not(.c-me){opacity:.12}
+.c-me .no{transition:opacity .25s ease}
+.c-me:hover .no,.c-me.say .no,.c-me:focus-visible .no{opacity:0}
+.desk.nudging .cut,.desk.nudging .toc{transition:translate .18s ease-out,opacity .35s ease}
 .endnote{position:absolute;left:456px;top:872px;width:600px;margin:0;text-align:center;font-family:'Hanken Grotesk',sans-serif;font-size:15px;color:#8a837d;opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s;pointer-events:none}
 .endnote.on{opacity:1;transform:none}
 @media (prefers-reduced-motion: reduce){.desk .cut,.desk .toc{transition:none}}
 /* contents: one paragraph, numbers in terracotta */
-.toc{position:absolute;left:960px;top:722px;width:470px;margin:0;font-family:'Hanken Grotesk',sans-serif;font-size:18px;line-height:1.4;color:#6f6862}
+.toc{position:absolute;left:960px;top:722px;width:470px;margin:0;font-family:'Hanken Grotesk',sans-serif;font-size:15px;line-height:1.5;color:#4A4542}
 .toc a{white-space:nowrap;margin-right:.55em}
 .toc b{font:inherit;font-weight:500;color:#B4502F;margin-right:.3em}
 .bubble{opacity:0;transform:scale(.7) translateY(8px);transform-origin:bottom right;transition:opacity .25s,transform .45s cubic-bezier(.3,1.6,.5,1)}
@@ -169,7 +173,7 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 .mag.phone .mag-j .ms a{width:44px;height:44px;align-items:center;justify-content:center}
 @keyframes magTurnP{from{transform:rotateY(0);opacity:1}to{transform:rotateY(-110deg);opacity:.2}}
 .navface .open{opacity:0}.navface:hover .open{opacity:1}.navface:hover .shut{opacity:0}
-.keyitem{color:#6f6862}.keyitem:hover{color:#1C1B1F}
+.keyitem{color:#4A4542}.keyitem:hover{color:#1C1B1F}
 .spotted a{color:#A9452A;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px}
 .spotted a:hover{color:#8F3C21}
 .spot-pic{position:absolute;left:10px;top:calc(100% + 10px);width:120px;height:auto;display:block;border-radius:4px;box-shadow:0 8px 16px rgba(70,50,35,.22);opacity:0;transform:scale(.85) translateY(-6px);transform-origin:top left;transition:opacity .2s,transform .4s cubic-bezier(.3,1.6,.5,1);pointer-events:none;z-index:5}
@@ -278,7 +282,7 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 
 <a href={JOURNEY} class="cut c-me" data-id="me" data-say data-cur="nav" aria-label="what's her story?" style="left: 590px; top: 292px; width: 340px; height: 368px">
 <div class="box"><img src="/desk/kritika-flower.png" alt="kritika taking a mirror selfie in a grey tee, a yellow flower tucked behind her ear" style="max-width: 340px; max-height: 360px"></div>
-<div class="bubble imsg" style="left: -150px; top: -26px; width: 236px">i am Kritika! I am a creative. marketer. and a writer.<svg class="tail" viewBox="0 0 17 21" aria-hidden="true"><path d="M0 0 C1 9 5 16 17 21 C9 21.5 3.5 20 0 17.5 Z" fill="#0A84FF"></path></svg></div>
+<div class="bubble imsg" style="left: -258px; top: -30px; width: 236px">i am Kritika! I am a creative. marketer. and a writer.<svg class="tail" viewBox="0 0 17 21" aria-hidden="true"><path d="M0 0 C1 9 5 16 17 21 C9 21.5 3.5 20 0 17.5 Z" fill="#0A84FF"></path></svg></div>
 <span class="no" aria-hidden="true" style="left: -12px; top: 40px">1</span>
 </a>
 
