@@ -12,7 +12,7 @@ import Analytics from '../components/Analytics.astro';
 const PUB = 'https://verykritikal.substack.com';
 // the call to action under the story. WhatsApp for now; it moves to a contact page once that exists
 const CTA = 'Ask me to write something about you →';
-const CTA_HREF = 'https://wa.me/919109079518';
+const CTA_HREF = '/lets-talk';
 const UTM = 'utm_source=Portfolio&utm_medium=Substacks+page&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
 
 // the story of how she started, in her words. two paragraphs; the first letter becomes the giant initial.
@@ -163,7 +163,7 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 </div>
 <p class="cap" aria-hidden="true">{INITIAL}</p>
 <div class="story"><p><span class="sr">{INITIAL}</span>{STORY[0].slice(1)}</p>{STORY.slice(1).map((t) => <p>{t}</p>)}</div>
-<a class="cta" href={CTA_HREF} target="_blank" rel="noopener" style="top: 868px">{CTA}</a>
+<a class="cta" href={CTA_HREF} style="top: 868px">{CTA}</a>
 
 <div class="cols">
 {cols.map((col) => (
@@ -191,7 +191,7 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 {top.map((p) => <span><img src={img(p.cover)} alt="" loading="lazy"></span>)}
 </div>
 <div class="mstory"><p><span class="big" aria-hidden="true">{INITIAL}</span><span class="sr">{INITIAL}</span>{STORY[0].slice(1)}</p>{STORY.slice(1).map((t) => <p>{t}</p>)}</div>
-<a class="cta" href={CTA_HREF} target="_blank" rel="noopener">{CTA}</a>
+<a class="cta" href={CTA_HREF}>{CTA}</a>
 <div class="list">
 {shown.map((p) => (
 <a class="en" href={href(p.slug)} target="_blank" rel="noopener">

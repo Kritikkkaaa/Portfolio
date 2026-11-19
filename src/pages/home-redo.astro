@@ -215,6 +215,9 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 .nextbtn{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:#a9aba6;background:none;border:0;padding:12px 20px;min-height:44px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .nextbtn:focus-visible{outline:1px solid #a9aba6;outline-offset:4px}
 @media (prefers-reduced-motion: reduce){.intro *,.m-leaf{transition:none !important}}
+/* phones: opening an item slides the page off to the left, same motion as the intro */
+.slide{position:fixed;inset:0;z-index:60;overflow:hidden;background:#fff;box-shadow:20px 0 40px rgba(0,0,0,0);transition:transform .8s cubic-bezier(.65,0,.35,1),box-shadow .8s cubic-bezier(.65,0,.35,1);pointer-events:none}
+.slide.go{transform:translateX(-100%);box-shadow:20px 0 40px rgba(0,0,0,.12)}
 
 /* Desktop: the space around the scaled spread continues it instead of showing grey bands:
    white (the spread's outer edges are white), with the intro's black paper over it until the page is turned. */
@@ -246,8 +249,6 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
   .m h1{margin-bottom:12px}
   .m-back{position:static;display:inline-block;margin:0 0 12px;min-height:44px}
   .m-spotted{margin:0 0 28px;font-size:13px;color:#4A4542}
-  .m-socials{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:28px}
-  .m-socials a{display:flex;align-items:center;justify-content:center;width:44px;height:44px}
 }
 .cb-yes,.cb-no{min-height:40px;padding:0 20px;border-radius:10px;font-family:inherit;font-size:14px;cursor:pointer}
 .cb-yes{border:0;background:#E8EBF0;color:#0B0A0F;font-weight:600}
@@ -326,9 +327,6 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 <ul>
 {items.map((it) => <li><a class="m-item" href={it.href} data-say={it.say ? '' : undefined}>{it.say && <span class="bubble imsg m-say">hello love! i am Kritika. i think in references and write how i talk.<svg class="tail" viewBox="0 0 17 21" aria-hidden="true"><path d="M0 0 C1 9 5 16 17 21 C9 21.5 3.5 20 0 17.5 Z" fill="#0A84FF"></path></svg></span>}<span class="m-art" set:html={it.art}></span><span class="m-name"><b>{it.n}.</b>{it.name}</span></a></li>)}
 </ul>
-<nav class="m-socials" aria-label="Socials">
-{socials.map((s) => <a href={s.href} aria-label={s.label} {...ext(s.href)} set:html={s.svg}></a>)}
-</nav>
 </main>
 
 <div id="m-intro" class="m-intro">
@@ -455,7 +453,7 @@ function turnEase(x){
     if (!raf) raf = requestAnimationFrame(loop);
   }
   function finish(){ done = true; root.classList.remove('intro-on'); }
-  function turn(){ p = 1; render(true); clearTimeout(fin); fin = setTimeout(finish, reduce ? 0 : 1150); }
+  function turn(){ if (done) return; clearTimeout(snap); start = 0; p = 1; render(true); clearTimeout(fin); fin = setTimeout(finish, reduce ? 0 : 1150); }
   // On the desk (laptops), scrolling down can't go anywhere: everything nudges up together and settles back,
   // and a note says this is the whole page. Each scroll gives the same little bounce.
   var deskEl = D.parentNode, note = deskEl.querySelector('.endnote'), nudgeT, noteT;
@@ -484,13 +482,21 @@ function turnEase(x){
     snap = setTimeout(function(){ if (p < 1) { p = 0; render(true); } }, 600);
   }
   addEventListener('wheel', function(e){ push(e.deltaY || 0); }, { passive: true });
-  addEventListener('touchstart', function(e){ ty = e.touches[0].clientY; }, { passive: true });
+  // Phones: a tap anywhere on the intro continues, even if the finger shifts a little while tapping (a slightly
+  // moving tap counts as a swipe and the browser then sends no click).
+  var tx0 = 0, ty0 = 0;
+  addEventListener('touchstart', function(e){ ty = e.touches[0].clientY; tx0 = e.touches[0].clientX; ty0 = ty; }, { passive: true });
   addEventListener('touchmove', function(e){ if (ty === null) return; var y = e.touches[0].clientY; push((ty - y) * 2); ty = y; }, { passive: true });
-  addEventListener('touchend', function(){ ty = null; }, { passive: true });
+  addEventListener('touchend', function(e){
+    var t = e.changedTouches && e.changedTouches[0];
+    if (!done && phone.matches && t && M.contains(e.target) && Math.abs(t.clientX - tx0) < 24 && Math.abs(t.clientY - ty0) < 24) turn();
+    ty = null;
+  }, { passive: true });
+  M.addEventListener('click', turn);
   addEventListener('keydown', function(e){
     if (!done && /^(ArrowDown|PageDown| |Spacebar)$/.test(e.key) && !(e.target.closest && e.target.closest('button,a'))) { e.preventDefault(); turn(); }
   });
-  document.querySelectorAll('[data-turn]').forEach(function(b){ b.addEventListener('click', turn); });
+  document.querySelectorAll('#intro [data-turn]').forEach(function(b){ b.addEventListener('click', turn); });
   // Back: lay the turned page down again, then turn it back over to the intro
   function turnBack(){
     clearTimeout(fin); clearTimeout(snap); start = 0;
@@ -529,14 +535,14 @@ function turnEase(x){
     if (reduce) { location.href = href; return; }
     var m = document.createElement('div'), P = phone.matches;
     m.className = 'mag' + (P ? ' phone' : ''); m.setAttribute('aria-hidden', 'true'); m.inert = true;
-    if (P) { // phones: the whole screen turns away to the left
-      m.innerHTML = '<div class="mag-under"><div class="mag-in">' + journey(0) + '</div><div class="mag-shade"></div></div>' +
-        '<div class="mag-leaf"><div class="mag-face mag-front"></div></div>';
+    if (P) { // phones: the page slides off to the left (like the intro), then the next page opens
+      m.className = 'slide'; m.style.top = '0';
       var c = strip(document.querySelector('main.m').cloneNode(true));
-      c.style.cssText = 'position:absolute;left:0;right:0;top:' + (-scrollY) + 'px;background:none';
-      m.querySelector('.mag-front').appendChild(c);
-      document.body.appendChild(m);
-      setTimeout(function(){ location.href = href; }, 1000);
+      c.style.cssText = 'position:absolute;left:0;right:0;top:' + (-scrollY) + 'px';
+      m.appendChild(c); document.body.appendChild(m);
+      document.querySelector('main.m').style.visibility = 'hidden';
+      void m.offsetWidth; m.classList.add('go');
+      setTimeout(function(){ location.href = href; }, 800);
       return;
     }
     // laptops: the desk's right page bends over the spine; its back, and the page under it, are /journey
@@ -558,7 +564,14 @@ function turnEase(x){
     })(t0);
     setTimeout(function(){ location.href = href; }, DUR + 400); // in case the tab is in the background
   }
-  addEventListener('pageshow', function(){ going = false; document.querySelectorAll('.mag').forEach(function(n){ n.remove(); }); });
+  addEventListener('pageshow', function(){ going = false; document.querySelectorAll('.mag,.slide').forEach(function(n){ n.remove(); }); var mm = document.querySelector('main.m'); if (mm) mm.style.visibility = ''; });
+  // phones: the other five items slide the page away too (1 shows its bubble first, below)
+  document.querySelectorAll('main.m .m-item:not([data-say])').forEach(function(a){
+    a.addEventListener('click', function(e){
+      if (!phone.matches || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target === '_blank') return;
+      e.preventDefault(); fold(a.href);
+    });
+  });
   document.querySelectorAll('[data-say]').forEach(function(a){
     var t;
     a.addEventListener('click', function(e){

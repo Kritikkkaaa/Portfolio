@@ -4,7 +4,8 @@
 //  Both pages are a 3x3 grid of tiles on white: a TALK band, a FAQs band, terracotta question tiles and pictures, one 6x3 page:
 //  left page = where to find her (H E Y, "i can be found on...", and the five channels as pictures),
 //  right page = FAQs (F A Q and six questions). Hovering or tapping a tile zooms it; a question shows its answer.
-// Below 768px: one column (channel cards, then the questions).
+// Below 768px: a note that the page is best on desktop, the channels as square tiles two to a row (tap shows the
+// note, tap again opens), then the questions.
 import Analytics from '../components/Analytics.astro';
 
 const UTM = 'utm_source=Portfolio&utm_medium=Lets+talk&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
@@ -115,7 +116,24 @@ a:focus-visible,button:focus-visible{outline:2px solid #9C4A31;outline-offset:-4
   .m .z{position:relative;inset:auto}
   .m .z:hover,.m .z:focus-visible,.m .z.open{transform:none;box-shadow:none}
   .m .chn{position:relative;inset:auto;height:220px}
-  .m .chn .ov{display:none}
+  /* channels: square tiles, two to a row. The first tap shows the note and button, a second tap opens it. */
+  .m .list.sq{grid-template-columns:1fr 1fr;gap:10px}
+  .m .sq .chn{height:auto;aspect-ratio:1}
+  .m .sq .chn .tag{height:40px;padding:0 12px;gap:7px;font-size:10px;letter-spacing:.16em}
+  .m .sq .chn .ov{gap:10px;padding:14px 12px;pointer-events:none}
+  .m .sq .chn.on .ov{opacity:1}
+  .m .sq .chn:hover .ov{opacity:0}
+  .m .sq .chn.on:hover .ov{opacity:1}
+  .m .sq .chn .msg{font-size:15px;line-height:1.3}
+  .m .sq .chn .btn{min-height:32px;padding:0 11px;font-size:11px;letter-spacing:.02em;white-space:nowrap}
+  .m .sq .chn .btn::after{margin-left:6px}
+  /* the desktop-mode note */
+  .m .dm{display:flex;align-items:center;gap:12px;margin:18px 0 4px;padding:14px 16px;border:1px solid rgba(156,74,49,.35);border-radius:14px;background:#FBEFE6;font-size:15px;line-height:1.4;color:#9C4A31;animation:dmIn .7s cubic-bezier(.2,.7,.2,1) .3s both}
+  .m .dm svg{flex:none;animation:dmNod 1.6s ease-in-out 1.1s 2}
+  .m .dm a{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+  @keyframes dmIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+  @keyframes dmNod{0%,100%{transform:none}30%{transform:rotate(-8deg)}60%{transform:rotate(6deg)}}
+  @media (prefers-reduced-motion: reduce){.m .dm,.m .dm svg{animation:none}}
   .m .qa{padding:20px 18px}
   .m .qa .n{font-size:40px}
   .m .qa .a{display:none;font-size:15px;opacity:1}
@@ -152,9 +170,10 @@ a:focus-visible,button:focus-visible{outline:2px solid #9C4A31;outline-offset:-4
 <main class="m">
 <a class="back" href="/home-redo#desk">Back</a>
 <h1 class="sr">Let's talk!</h1>
+<p class="dm"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9C4A31" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="11" rx="1.5"></rect><path d="M2 19h20"></path></svg><span>This page is best experienced in <a href="https://www.google.com/search?q=how+to+enable+desktop+mode" target="_blank" rel="noopener">desktop mode</a>.</span></p>
 <h2>i can be found on...</h2>
-<div class="list">
-{channels.map((c, i) => <a class="z chn" href={c.href} aria-label={c.name} style={`background: ${[G2, G1, G2, G3, G2][i]}`} {...ext(c.href)}><span class="pic"><img src={c.img} alt="" loading="lazy" style={`object-position: ${c.pos}`}></span><span class="tag"><Fragment set:html={c.svg} /><span>{c.name}</span></span></a>)}
+<div class="list sq">
+{channels.map((c, i) => <a class="z chn" href={c.href} aria-label={`${c.name}: ${c.btn}`} style={`background: ${[G2, G1, G2, G3, G2][i]}`} {...ext(c.href)}><span class="ov" aria-hidden="true"><span class="msg">{c.msg}</span><span class="btn">{c.btn}</span></span><span class="pic"><img src={c.img} alt="" loading="lazy" style={`object-position: ${c.pos}`}></span><span class="tag"><Fragment set:html={c.svg} /><span>{c.name}</span></span></a>)}
 </div>
 <h2>FAQs</h2>
 <div class="list">
@@ -171,6 +190,10 @@ a:focus-visible,button:focus-visible{outline:2px solid #9C4A31;outline-offset:-4
 </div>
 
 <script is:inline>
+// phones: the first tap on a channel shows its note and button; a second tap opens it
+document.querySelectorAll('.m .sq .chn').forEach(function(a){a.addEventListener('click',function(e){if(a.classList.contains('on'))return;e.preventDefault();document.querySelectorAll('.m .sq .chn.on').forEach(function(o){o.classList.remove('on')});a.classList.add('on')})});
+document.addEventListener('click',function(e){if(!(e.target.closest&&e.target.closest('.m .sq .chn')))document.querySelectorAll('.m .sq .chn.on').forEach(function(o){o.classList.remove('on')})});
+addEventListener('pageshow',function(){document.querySelectorAll('.m .sq .chn.on').forEach(function(o){o.classList.remove('on')})});
 // tap (or click) a question to keep it open; opening another closes the last one
 document.querySelectorAll('.qa').forEach(function(b){b.addEventListener('click',function(){var was=b.classList.contains('open');document.querySelectorAll('.qa.open').forEach(function(o){o.classList.remove('open');o.setAttribute('aria-expanded','false')});if(!was){b.classList.add('open');b.setAttribute('aria-expanded','true')}})});
 // the spread fills the window exactly: scaled to fit, then the grid stretches to the window's shape, so no row is ever cut off
