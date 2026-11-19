@@ -310,11 +310,7 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 <p class="endnote" aria-hidden="true">that's the whole page, darling. click on anything.</p>
 <nav aria-label="Contents"><p class="toc"><a href={JOURNEY} class="keyitem" data-for="me"><b>1.</b>what's her story?</a> <a href={COFFEE} class="keyitem" data-for="coffee"><b>2.</b>places i swear by!</a> <a href={COVER} class="keyitem" data-for="cover"><b>3.</b>i write on Substack</a> <a href={JOBS} class="keyitem" data-for="tech"><b>4.</b>work i have done.</a> <a href={PLAYGROUND} class="keyitem" data-for="tarot"><b>5.</b>things i do for fun</a> <a href={LETSTALK} class="keyitem" data-for="phone"><b>6.</b>Let's talk!</a></p></nav>
 
-<p class="spotted" style="position: absolute; left: 72px; top: 268px; margin: 0; font-size: 13px; color: #4A4542">last spotted at <a href={BEANLORE} target="_blank" rel="noopener">Beanlore, Kormangala</a>, reading in the sun.<img class="spot-pic" src="/desk/reading-in-the-sun.jpg" alt="kritika reading a book in the sun at Beanlore"></p>
-<nav aria-label="Socials" style="position: absolute; left: 72px; top: 864px; display: flex; gap: 18px; align-items: center">
-{socials.map((s) => <a href={s.href} aria-label={s.label} style="display: flex" {...ext(s.href)} set:html={s.svg}></a>)}
-</nav>
-
+<p class="spotted" style="position: absolute; left: 72px; top: 866px; margin: 0; font-size: 13px; color: #4A4542">last spotted at <a href={BEANLORE} target="_blank" rel="noopener">Beanlore, Kormangala</a>, reading in the sun.<img class="spot-pic" src="/desk/reading-in-the-sun.jpg" alt="kritika reading a book in the sun at Beanlore"></p>
 </div>
 </div>
 
@@ -575,7 +571,7 @@ function turnEase(x){
   addEventListener('pageshow', hush); // coming back with the browser's back button
 })();
 
-// "last spotted" photo: shows only while the cursor is on the line, sitting 5px right of and below the cursor
+// "last spotted" photo: shows only while the cursor is on the line, sitting 5px right of and above the cursor (the line is at the foot of the page)
 // (with a slight drag). Leaving the line hides it.
 (function(){
   var lines = document.querySelectorAll('#stage p.spotted'), line = lines[lines.length - 1]; // last one is the real desk (the first is the page-turn copy)
@@ -585,7 +581,7 @@ function turnEase(x){
   var on = false, tx = 5, ty = 0, x = 5, y = 0, raf = 0;
   function aim(cx, cy){
     var r = line.getBoundingClientRect(), s = r.width / line.offsetWidth || 1; // the desk is scaled to the window
-    tx = (cx - r.left) / s + 5; ty = (cy - r.top) / s + 5;
+    tx = (cx - r.left) / s + 5; ty = (cy - r.top) / s - 5 - (pic.offsetHeight || 160);
   }
   function tick(){
     var k = reduce ? 1 : 0.35;
