@@ -35,7 +35,7 @@ const brunch = `<span class="brn"><img class="bc" src="/desk/brunch-croissant.pn
 
 // Phone column, in number order.
 const items = [
-  { n: 1, name: "what's her story?", href: JOURNEY, say: true, art: '<img src="/desk/kritika-mirror.png" alt="kritika taking a mirror selfie in a white top and green checked trousers" style="max-width: 240px; max-height: 260px">' },
+  { n: 1, name: "what's her story?", href: JOURNEY, say: true, art: '<img src="/desk/kritika-flower.png" alt="kritika taking a mirror selfie in a grey tee, a yellow flower tucked behind her ear" style="max-width: 240px; max-height: 260px">' },
   { n: 2, name: "places i swear by!", href: COFFEE, art: brunch },
   { n: 3, name: "i write on Substack", href: COVER, art: carrie },
   { n: 4, name: "work i have done.", href: JOBS, art: workGroup },
@@ -105,13 +105,17 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 .m-item .pola{transform:rotate(-2deg)}
 @media (prefers-reduced-motion: reduce){.brn img,.pola{transition:none}}
 /* scrolling on the desk: everything nudges up together and settles back, with a note that this is the whole page */
-.desk .cut,.desk .toc{translate:0 var(--nudge,0px);transition:translate .55s cubic-bezier(.3,1.5,.5,1)}
-.desk.nudging .cut,.desk.nudging .toc{transition:translate .18s ease-out}
+.desk .cut,.desk .toc{translate:0 var(--nudge,0px);transition:translate .55s cubic-bezier(.3,1.5,.5,1),opacity .35s ease}
+/* hovering the centre photo (or its bubble showing) fades the other cutouts and hides its own number, so nothing overlaps */
+.desk:has(.c-me:hover) .cut:not(.c-me),.desk:has(.c-me.say) .cut:not(.c-me),.desk:has(.c-me:focus-visible) .cut:not(.c-me){opacity:.12}
+.c-me .no{transition:opacity .25s ease}
+.c-me:hover .no,.c-me.say .no,.c-me:focus-visible .no{opacity:0}
+.desk.nudging .cut,.desk.nudging .toc{transition:translate .18s ease-out,opacity .35s ease}
 .endnote{position:absolute;left:456px;top:872px;width:600px;margin:0;text-align:center;font-family:'Hanken Grotesk',sans-serif;font-size:15px;color:#8a837d;opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s;pointer-events:none}
 .endnote.on{opacity:1;transform:none}
 @media (prefers-reduced-motion: reduce){.desk .cut,.desk .toc{transition:none}}
 /* contents: one paragraph, numbers in terracotta */
-.toc{position:absolute;left:960px;top:722px;width:470px;margin:0;font-family:'Hanken Grotesk',sans-serif;font-size:18px;line-height:1.4;color:#6f6862}
+.toc{position:absolute;left:960px;top:722px;width:470px;margin:0;font-family:'Hanken Grotesk',sans-serif;font-size:15px;line-height:1.5;color:#4A4542}
 .toc a{white-space:nowrap;margin-right:.55em}
 .toc b{font:inherit;font-weight:500;color:#B4502F;margin-right:.3em}
 .bubble{opacity:0;transform:scale(.7) translateY(8px);transform-origin:bottom right;transition:opacity .25s,transform .45s cubic-bezier(.3,1.6,.5,1)}
@@ -169,7 +173,7 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 .mag.phone .mag-j .ms a{width:44px;height:44px;align-items:center;justify-content:center}
 @keyframes magTurnP{from{transform:rotateY(0);opacity:1}to{transform:rotateY(-110deg);opacity:.2}}
 .navface .open{opacity:0}.navface:hover .open{opacity:1}.navface:hover .shut{opacity:0}
-.keyitem{color:#6f6862}.keyitem:hover{color:#1C1B1F}
+.keyitem{color:#4A4542}.keyitem:hover{color:#1C1B1F}
 .spotted a{color:#A9452A;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px}
 .spotted a:hover{color:#8F3C21}
 .spot-pic{position:absolute;left:10px;top:calc(100% + 10px);width:120px;height:auto;display:block;border-radius:4px;box-shadow:0 8px 16px rgba(70,50,35,.22);opacity:0;transform:scale(.85) translateY(-6px);transform-origin:top left;transition:opacity .2s,transform .4s cubic-bezier(.3,1.6,.5,1);pointer-events:none;z-index:5}
@@ -277,9 +281,9 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 <h1 style="position: absolute; left: 72px; top: 118px; width: 600px; margin: 0; font-family: Geist, sans-serif; font-weight: 600; font-size: 64px; line-height: 1.02; letter-spacing: -.02em; color: #A9452A">darling, have you met Kritika?</h1>
 
 <a href={JOURNEY} class="cut c-me" data-id="me" data-say data-cur="nav" aria-label="what's her story?" style="left: 590px; top: 292px; width: 340px; height: 368px">
-<div class="box"><img src="/desk/kritika-mirror.png" alt="kritika taking a mirror selfie in a white top and green checked trousers" style="max-width: 340px; max-height: 360px"></div>
-<div class="bubble imsg" style="left: -150px; top: -26px; width: 236px">i am Kritika! I am a creative. marketer. and a writer.<svg class="tail" viewBox="0 0 17 21" aria-hidden="true"><path d="M0 0 C1 9 5 16 17 21 C9 21.5 3.5 20 0 17.5 Z" fill="#0A84FF"></path></svg></div>
-<span class="no" aria-hidden="true" style="left: 94px; top: 2px">1</span>
+<div class="box"><img src="/desk/kritika-flower.png" alt="kritika taking a mirror selfie in a grey tee, a yellow flower tucked behind her ear" style="max-width: 340px; max-height: 360px"></div>
+<div class="bubble imsg" style="left: -258px; top: -30px; width: 236px">i am Kritika! I am a creative. marketer. and a writer.<svg class="tail" viewBox="0 0 17 21" aria-hidden="true"><path d="M0 0 C1 9 5 16 17 21 C9 21.5 3.5 20 0 17.5 Z" fill="#0A84FF"></path></svg></div>
+<span class="no" aria-hidden="true" style="left: -12px; top: 40px">1</span>
 </a>
 
 <a href={COFFEE} class="cut c-coffee" data-id="coffee" aria-label="places i swear by!" style="left: 880px; top: 84px; width: 330px; height: 250px">
@@ -310,11 +314,7 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 <p class="endnote" aria-hidden="true">that's the whole page, darling. click on anything.</p>
 <nav aria-label="Contents"><p class="toc"><a href={JOURNEY} class="keyitem" data-for="me"><b>1.</b>what's her story?</a> <a href={COFFEE} class="keyitem" data-for="coffee"><b>2.</b>places i swear by!</a> <a href={COVER} class="keyitem" data-for="cover"><b>3.</b>i write on Substack</a> <a href={JOBS} class="keyitem" data-for="tech"><b>4.</b>work i have done.</a> <a href={PLAYGROUND} class="keyitem" data-for="tarot"><b>5.</b>things i do for fun</a> <a href={LETSTALK} class="keyitem" data-for="phone"><b>6.</b>Let's talk!</a></p></nav>
 
-<p class="spotted" style="position: absolute; left: 72px; top: 268px; margin: 0; font-size: 13px; color: #4A4542">last spotted at <a href={BEANLORE} target="_blank" rel="noopener">Beanlore, Kormangala</a>, reading in the sun.<img class="spot-pic" src="/desk/reading-in-the-sun.jpg" alt="kritika reading a book in the sun at Beanlore"></p>
-<nav aria-label="Socials" style="position: absolute; left: 72px; top: 864px; display: flex; gap: 18px; align-items: center">
-{socials.map((s) => <a href={s.href} aria-label={s.label} style="display: flex" {...ext(s.href)} set:html={s.svg}></a>)}
-</nav>
-
+<p class="spotted" style="position: absolute; left: 72px; top: 866px; margin: 0; font-size: 13px; color: #4A4542">last spotted at <a href={BEANLORE} target="_blank" rel="noopener">Beanlore, Kormangala</a>, reading in the sun.<img class="spot-pic" src="/desk/reading-in-the-sun.jpg" alt="kritika reading a book in the sun at Beanlore"></p>
 </div>
 </div>
 
@@ -575,7 +575,7 @@ function turnEase(x){
   addEventListener('pageshow', hush); // coming back with the browser's back button
 })();
 
-// "last spotted" photo: shows only while the cursor is on the line, sitting 5px right of and below the cursor
+// "last spotted" photo: shows only while the cursor is on the line, sitting 5px right of and above the cursor (the line is at the foot of the page)
 // (with a slight drag). Leaving the line hides it.
 (function(){
   var lines = document.querySelectorAll('#stage p.spotted'), line = lines[lines.length - 1]; // last one is the real desk (the first is the page-turn copy)
@@ -585,7 +585,7 @@ function turnEase(x){
   var on = false, tx = 5, ty = 0, x = 5, y = 0, raf = 0;
   function aim(cx, cy){
     var r = line.getBoundingClientRect(), s = r.width / line.offsetWidth || 1; // the desk is scaled to the window
-    tx = (cx - r.left) / s + 5; ty = (cy - r.top) / s + 5;
+    tx = (cx - r.left) / s + 5; ty = (cy - r.top) / s - 5 - (pic.offsetHeight || 160);
   }
   function tick(){
     var k = reduce ? 1 : 0.35;
