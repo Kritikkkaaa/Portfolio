@@ -1,0 +1,225 @@
+---
+// /playground, "things i do for fun." — opened from 6 on the desk (/home-redo). Her most-her page: ideas and words.
+// A zine laid flat on matte black: A4 pages in spreads, two spreads to a row, with pages left empty on purpose
+// and the word "Play" set in one of the empty spaces.
+// Hover zooms a page; clicking opens a card with pictures on the left and her notes on the right.
+// Phones: one spread per row, and the card stacks (pictures, then notes).
+//
+// To add a page: add an entry to `pages`. Either give it `img` (a poster image in /public/playground/) or let it
+// draw a typographic poster from `words` + `look`. `pics` are the pictures in the card (defaults to the poster),
+// `notes` are paragraphs. Entries marked PLACEHOLDER are stand-ins until her own posters and notes arrive.
+import Analytics from '../components/Analytics.astro';
+
+type Page = { id: string; title: string; look: string; words?: string[]; img?: string; fit?: 'contain'; pics?: string[]; notes?: string[]; date?: string };
+
+
+// her pages, in spread order (pairs sit side by side). `fit: 'contain'` keeps a wide picture whole on a white page.
+// notes are still to come.
+const pages: Page[] = [
+  { id: 'moon', title: 'the moon', look: 'image', img: '/playground/moon.jpg' },
+  { id: 'golden-circle', title: 'the golden circle', look: 'image', img: '/playground/golden-circle.webp' },
+  { id: 'overthinker', title: 'the overthinker', look: 'image', img: '/playground/overthinker.webp' },
+  { id: 'creative-process', title: 'the creative process is not linear', look: 'image', img: '/playground/creative-process.webp' },
+  { id: 'heart', title: 'a heart full of small things', look: 'image', img: '/playground/heart.webp' },
+  { id: 'everyone', title: 'everyone', look: 'image', img: '/playground/everyone.png' },
+  { id: 'roses', title: 'roses, just because', look: 'image', img: '/playground/roses.webp' },
+  { id: 'time-travel', title: 'time travel', look: 'image', img: '/playground/time-travel.png', fit: 'contain' },
+  { id: 'reading', title: 'reading by the sea', look: 'image', img: '/playground/reading-by-the-sea.webp' },
+  { id: 'laptop-tears', title: 'crying into my laptop', look: 'image', img: '/playground/laptop-tears.png', fit: 'contain' }
+];
+
+// the booklet, spread by spread: [left page, right page]. null leaves that page empty on purpose (negative space).
+const SPREADS: (string | null)[][] = [
+  ['moon', null],
+  [null, 'overthinker'],
+  ['golden-circle', 'play'],
+  ['creative-process', 'heart'],
+  ['everyone', 'roses'],
+  ['time-travel', null],
+  [null, 'reading'],
+  ['laptop-tears', null]
+];
+const play: Page = { id: 'play', title: 'Play', look: 'play' };
+const byId = new Map([play, ...pages].map((p) => [p.id, p]));
+const placed = new Set(SPREADS.flat());
+// any page not placed above gets its own spread at the end, so nothing goes missing
+const extra = pages.filter((p) => !placed.has(p.id));
+const spreads: (Page | null)[][] = [
+  ...SPREADS.map((sp) => sp.map((id) => (id ? byId.get(id) || null : null))),
+  ...Array.from({ length: Math.ceil(extra.length / 2) }, (_, i) => [extra[i * 2], extra[i * 2 + 1] || null])
+];
+
+const NOTE_PLACEHOLDER = 'the story behind this one goes here.';
+const cards = pages.map((p) => ({ id: p.id, title: p.title, date: p.date || '', notes: p.notes && p.notes.length ? p.notes : [NOTE_PLACEHOLDER], placeholder: !(p.notes && p.notes.length), pics: p.pics || (p.img ? [p.img] : []) }));
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>kritika · things i do for fun.</title>
+<meta name="description" content="Kritika's playground: ideas and words, laid out like a zine.">
+<link rel="icon" href="/mark.svg" type="image/svg+xml">
+<link rel="icon" href="/mark-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/mark-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&amp;family=Geist:wght@400;500;600&amp;family=Hanken+Grotesk:wght@400;500&amp;family=EB+Garamond:ital,wght@0,500;1,400&amp;display=swap" rel="stylesheet">
+<style is:inline>
+html,body{margin:0;background:#151413;color:#E8E3DC;font-family:'Hanken Grotesk',sans-serif}
+a{color:inherit;text-decoration:none}
+a:focus-visible,button:focus-visible{outline:2px solid #F2B84B;outline-offset:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.matte{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:radial-gradient(ellipse at 50% 40%,rgba(255,255,255,.035),rgba(0,0,0,.35) 100%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.wall,.label{position:relative;z-index:1}
+.back{position:fixed;left:24px;top:20px;z-index:5;padding:6px 0;font-size:15px;color:#E8A48C;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+
+/* the wall: two spreads to a row; pages inside a spread touch */
+.wall{max-width:1000px;margin:0 auto;padding:72px 32px 28px;box-sizing:border-box;display:grid;grid-template-columns:repeat(2,1fr);gap:22px 30px}
+.spread{display:grid;grid-template-columns:1fr 1fr}
+.slot{aspect-ratio:210/297}
+.slot.play{display:flex;align-items:center;justify-content:center;font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(34px,6vw,64px);letter-spacing:-.01em;color:#E8E3DC}
+.label{margin:6px 0 40px;text-align:center;font-size:15px;color:#cfc9c1}
+
+/* a page: hover zooms it above its neighbours */
+.pg{position:relative;display:block;width:100%;aspect-ratio:210/297;padding:0;border:0;margin:0;cursor:pointer;overflow:hidden;font:inherit;color:inherit;text-align:left;transition:transform .45s cubic-bezier(.2,.7,.2,1),box-shadow .45s ease;transform-origin:center}
+.pg:hover,.pg:focus-visible{transform:scale(1.12);z-index:3;box-shadow:0 22px 50px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.06)}
+.pg.static{cursor:default}
+.pg.static:hover{transform:none;box-shadow:none}
+.pg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;background:#fff}
+.pg img.contain{object-fit:contain;padding:6%;box-sizing:border-box}
+.pg .grain{position:absolute;inset:0;background:url(/desk/paper.jpg);background-size:500px auto;mix-blend-mode:multiply;opacity:.28;pointer-events:none}
+@media (prefers-reduced-motion: reduce){.pg{transition:none}}
+
+/* the poster looks (typographic stand-ins until her posters arrive) */
+.p{position:absolute;inset:0;display:flex;flex-direction:column;box-sizing:border-box;padding:9%}
+.stars{background-color:#F2B84B;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26'%3E%3Cpath d='M13 7l1.5 3.6 3.9.3-3 2.5.9 3.8L13 15.2 9.7 17.2l.9-3.8-3-2.5 3.9-.3z' fill='%23FFE7B0' fill-opacity='.75'/%3E%3C/svg%3E");background-size:22px 22px}
+.cover{justify-content:center;align-items:center;text-align:center}
+.cover .w{font-family:'Archivo Black',sans-serif;font-size:clamp(14px,2.6vw,27px);line-height:.95;color:#D7321F;text-transform:lowercase}
+.cover .by{position:absolute;left:6%;right:6%;bottom:5%;padding:3px 0;background:#D7321F;color:#FFE7B0;font-family:Geist,sans-serif;font-weight:600;font-size:clamp(5px,.75vw,8px);letter-spacing:.2em;text-align:center}
+.cream-stack{background:#EFE8DA;color:#1C1B1F;font-family:Geist,sans-serif;font-weight:500;font-size:clamp(8px,1.15vw,12px);line-height:1.15;justify-content:center;padding-left:34%}
+.cream-stack span:nth-child(odd){margin-left:-12%}
+.cream-stack span:last-child{font-family:'EB Garamond',serif;font-style:italic;font-size:1.4em}
+.teal-big{background:#8DBBC1;color:#F4EFE6;font-family:'EB Garamond',serif;font-weight:500;font-size:clamp(17px,3.2vw,33px);line-height:.92;letter-spacing:-.02em;justify-content:center}
+.teal-big span:last-child{font-style:italic;color:#20343A}
+.tickets{background:#F2B84B;justify-content:space-evenly;padding:12% 12%}
+.tickets span{display:block;padding:7% 4%;border:1.5px dashed rgba(28,27,31,.45);border-radius:6px;background:#F6E7C4;color:#2a2724;font-family:'Courier New',monospace;font-weight:700;font-size:clamp(8px,1.25vw,13px);text-align:center;letter-spacing:.06em}
+.sun{background:#F4D7B8;color:#7A2E1C;font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,2.5vw,26px);line-height:1;justify-content:flex-end}
+.sun::before{content:'';position:absolute;left:50%;top:16%;width:46%;aspect-ratio:1;border-radius:50%;background:#E5603C;transform:translateX(-50%)}
+.sun::after{content:'';position:absolute;left:0;right:0;top:46%;height:16%;background:repeating-linear-gradient(0deg,#5C8FA8 0 6%,#F4D7B8 6% 12%)}
+.sun span{position:relative}
+.navy{background:#1E2A44;color:#7FA8C9;font-family:'EB Garamond',serif;font-weight:500;font-size:clamp(18px,3.4vw,36px);line-height:.9;justify-content:flex-start}
+.navy span:last-child{align-self:flex-end;font-style:italic;color:#E8E3DC}
+.hearts{background:#2b2626;color:#F1EAE2;font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(9px,1.4vw,15px);line-height:1.15;justify-content:flex-end;background-image:radial-gradient(circle at 20% 18%,#E0475B 0 4%,transparent 4.5%),radial-gradient(circle at 70% 12%,#E0475B 0 3%,transparent 3.5%),radial-gradient(circle at 48% 34%,#E0475B 0 5%,transparent 5.5%),radial-gradient(circle at 82% 44%,#E0475B 0 3.5%,transparent 4%),radial-gradient(circle at 16% 56%,#E0475B 0 3%,transparent 3.5%),radial-gradient(circle at 60% 62%,#E0475B 0 4%,transparent 4.5%)}
+.hearts span:last-child{font-size:2.2em;color:#E0475B}
+.terracotta{background:#A9452A;color:#F3E4DC;font-family:'Archivo Black',sans-serif;font-size:clamp(20px,3.9vw,40px);line-height:.9;justify-content:center;text-transform:lowercase}
+.terracotta span:last-child{font-family:'EB Garamond',serif;font-style:italic;font-weight:400;text-transform:none}
+.pink{background:#E9798A;color:#FBE3E3;font-family:'EB Garamond',serif;font-size:clamp(18px,3.4vw,35px);line-height:.95;justify-content:flex-start}
+.pink span:nth-child(2){padding-left:30%;font-style:italic;color:#7D1F2E}
+.mustard-plain{background:#E8A33C;color:#3A1F0E;font-family:Geist,sans-serif;font-weight:600;font-size:clamp(11px,1.9vw,20px);line-height:1.05;justify-content:center;text-align:right}
+
+/* the card: pictures left, notes right */
+dialog.card{width:min(980px,calc(100vw - 32px));max-height:calc(100vh - 48px);padding:0;border:0;border-radius:6px;background:#F7F3EC;color:#1C1B1F;overflow:hidden}
+html.kc-on dialog.card,html.kc-on dialog.card *{cursor:auto !important}
+html.kc-on dialog.card .x{cursor:pointer !important}
+dialog.card::backdrop{background:rgba(0,0,0,.78)}
+dialog.card[open]{animation:cardin .35s cubic-bezier(.2,.7,.2,1)}
+@keyframes cardin{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){dialog.card[open]{animation:none}}
+.cw{display:grid;grid-template-columns:1.1fr 1fr;max-height:calc(100vh - 48px)}
+.pics{display:grid;gap:8px;padding:18px;background:#111;overflow:auto;align-content:start}
+.pics .pg{pointer-events:none;width:auto;height:min(640px,calc(100vh - 84px));margin:0 auto;transform:none;box-shadow:none}
+.pics img{width:100%;display:block}
+.notes{position:relative;padding:44px 40px 40px;overflow:auto}
+.notes .k{margin:0;font-size:11px;letter-spacing:.24em;color:#8a837d}
+.notes h2{margin:10px 0 18px;font-family:Geist,sans-serif;font-weight:600;font-size:30px;line-height:1.05;letter-spacing:-.01em}
+.notes p.n{margin:0 0 14px;font-family:'EB Garamond',serif;font-size:19px;line-height:1.45}
+.notes p.ph{color:#9a948c;font-style:italic}
+.x{position:absolute;right:14px;top:12px;width:40px;height:40px;border:0;border-radius:50%;background:transparent;font-size:24px;line-height:1;color:#1C1B1F;cursor:pointer}
+.x:hover{background:rgba(28,27,31,.07)}
+
+/* phones: one spread per row; the card stacks */
+@media (max-width: 767px){
+  .back{position:absolute;left:16px;top:14px}
+  .wall{grid-template-columns:1fr;gap:14px;padding:56px 16px 20px}
+  .pg:hover,.pg:focus-visible{transform:none;box-shadow:none}
+  .cw{grid-template-columns:1fr;overflow:auto}
+  .pics{overflow:visible;padding:12px}
+  .pics .pg{width:100%;height:auto}
+  .notes{padding:26px 20px 28px;overflow:visible}
+  .notes h2{font-size:26px}
+}
+.cb-yes,.cb-no{min-height:40px;padding:0 20px;border-radius:10px;font-family:inherit;font-size:14px;cursor:pointer}
+.cb-yes{border:0;background:#E8EBF0;color:#0B0A0F;font-weight:600}
+.cb-no{background:none;border:1px solid #3A3842;color:#E8EBF0}
+</style>
+<Analytics />
+</head>
+<body>
+<div class="matte" aria-hidden="true"></div>
+<a class="back" href="/home-redo#desk">Back</a>
+<h1 class="sr">things i do for fun.</h1>
+
+<main class="wall" aria-label="the zine">
+{spreads.map((sp) => (
+<div class="spread">
+{sp.map((p) => {
+  if (!p) return <span class="slot" aria-hidden="true"></span>;
+  if (p.look === 'play') return <span class="slot play"><span>Play</span></span>;
+  const face = p.img
+    ? <img src={p.img} alt="" loading="lazy" class={p.fit === 'contain' ? 'contain' : undefined}>
+    : <span class={`p ${p.look}`}>{(p.words || []).map((w) => <span>{w}</span>)}</span>;
+  return <button class="pg" type="button" data-open={p.id} aria-label={`open: ${p.title}`}>{face}<span class="grain"></span></button>;
+})}
+</div>
+))}
+</main>
+<p class="label">playground.jpg</p>
+
+<dialog class="card" aria-labelledby="card-title">
+<div class="cw">
+<div class="pics" id="card-pics"></div>
+<div class="notes">
+<button class="x" type="button" aria-label="Close">×</button>
+<p class="k" id="card-date">from the playground</p>
+<h2 id="card-title"></h2>
+<div id="card-notes"></div>
+</div>
+</div>
+</dialog>
+
+<script is:inline define:vars={{ cards }}>
+var dlg = document.querySelector('dialog.card');
+var picsEl = document.getElementById('card-pics'), titleEl = document.getElementById('card-title'), notesEl = document.getElementById('card-notes'), dateEl = document.getElementById('card-date');
+var lastBtn = null;
+function open(id, btn) {
+  var c = cards.find(function (x) { return x.id === id; }); if (!c) return;
+  lastBtn = btn;
+  titleEl.textContent = c.title;
+  dateEl.textContent = c.date || 'from the playground';
+  picsEl.innerHTML = '';
+  if (c.pics.length) {
+    c.pics.forEach(function (src) { var i = document.createElement('img'); i.src = src; i.alt = ''; picsEl.appendChild(i); });
+  } else {
+    // no pictures yet: show the poster itself
+    var clone = btn.cloneNode(true); clone.removeAttribute('data-open'); clone.setAttribute('tabindex', '-1'); clone.setAttribute('aria-hidden', 'true'); picsEl.appendChild(clone);
+  }
+  notesEl.innerHTML = '';
+  c.notes.forEach(function (t) { var p = document.createElement('p'); p.className = 'n' + (c.placeholder ? ' ph' : ''); p.textContent = t; notesEl.appendChild(p); });
+  dlg.showModal();
+}
+document.querySelectorAll('[data-open]').forEach(function (b) { b.addEventListener('click', function () { open(b.getAttribute('data-open'), b); }); });
+dlg.querySelector('.x').addEventListener('click', function () { dlg.close(); });
+dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+dlg.addEventListener('close', function () { if (lastBtn) lastBtn.focus(); });
+</script>
+
+<div id="consent" role="dialog" aria-label="Cookie choice" hidden style="position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 55; max-width: 360px; box-sizing: border-box; padding: 18px 20px; border-radius: 16px; background: #141319; border: 1px solid #3A3842; box-shadow: 0 20px 50px rgba(0,0,0,0.6); font-family: 'Hanken Grotesk', system-ui, sans-serif; font-size: 14px; line-height: 1.5; color: #C9CDD5">
+<p style="margin: 0 0 14px">Allow cookies on your visit so I know what you resonate with. No ads, I promise.</p>
+<div style="display: flex; gap: 10px">
+<button class="cb-yes" type="button" data-consent="yes">Yes!</button>
+<button class="cb-no" type="button" data-consent="no">No thanks</button>
+</div>
+</div>
+<script is:inline src="/kritikal-cursor.js" defer></script>
+</body>
+</html>

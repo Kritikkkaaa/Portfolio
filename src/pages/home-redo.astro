@@ -19,7 +19,7 @@ const ext = (href: string) => href.startsWith('http') ? { target: '_blank', rel:
 const COFFEE = '/recommendations';
 const JOBS = '/jobs';
 // Routes reserved for pages still being designed; the cutouts link to them once the pages exist.
-const SUBSTACKS = '/substacks', GRAVEYARD = '/graveyard', PLAYGROUND = '/playground';
+const SUBSTACKS = '/substacks', GRAVEYARD = '/graveyard', PLAYGROUND = '/playground', LETSTALK = '/lets-talk';
 const TEDX = '#tedx', TAROT = '#tarot', COVER = SUBSTACKS;
 
 const planeLogo = `<svg class="logo" width="130" height="81" viewBox="0 0 579 361" role="img" aria-label="Plane logo"><path d="M0 20.6413C0 5.3174 16.1 -4.64793 29.7966 2.20067L147.972 61.3502V200.168C147.972 219.674 158.992 237.527 176.417 246.248L283.068 299.63V340.352C283.068 355.675 266.968 365.641 253.271 358.779L28.4447 246.248C11.0201 237.527 0 219.688 0 200.168V20.6413ZM147.972 20.6413C147.972 5.3174 164.072 -4.64793 177.769 2.21435L295.945 61.3638V200.182C295.945 219.688 306.965 237.541 324.39 246.262L431.041 299.643V340.366C431.041 355.689 414.94 365.654 401.244 358.792L283.068 299.643V160.826C283.068 141.306 272.048 123.466 254.623 114.744L147.972 61.3638V20.6413ZM295.931 20.6413C295.931 5.3174 312.032 -4.64793 325.728 2.21435L550.555 114.744C567.993 123.466 579 141.306 579 160.826V340.366C579 355.689 562.899 365.654 549.203 358.792L431.027 299.643V160.826C431.027 141.306 420.007 123.466 402.582 114.744L295.931 61.3638V20.6413Z" fill="#1C1B1F"></path></svg>`;
@@ -27,7 +27,7 @@ const planeLogo = `<svg class="logo" width="130" height="81" viewBox="0 0 579 36
 const carrie = '<img src="/desk/carrie.png" alt="a woman writing at her laptop, thinking" style="max-width: 150px; max-height: 182px">';
 // "Tech jobs and their stories.": a little desk of her work, cut from her own photos: the laptop (showing
 // Plane's GitHub star history), the pen cup and the notebook stack. On hover they shift apart a little.
-const workGroup = `<span class="wgrp"><img class="wp" src="/desk/work-pens.png" alt="a mesh cup full of pens"><img class="wn" src="/desk/work-notebooks.png" alt="a notebook stack with yellow sticky notes on top"><img class="wc" src="/desk/iced-latte.png" alt="an iced latte in a tall glass"><img class="wl" src="/desk/work-laptop.png" alt="kritika's laptop showing plane's github star history climbing"></span>`;
+const workGroup = `<span class="wgrp"><img class="wn" src="/desk/work-notebooks.png" alt="a notebook stack with yellow sticky notes on top"><img class="wc" src="/desk/iced-latte.png" alt="an iced latte in a tall glass"></span>`;
 // "my coffee reccs!": a brunch, cut piece by piece from her photo: the croissant sandwich, the english breakfast,
 // the iced coffee and her shades. On hover they spread a little.
 const brunch = `<span class="brn"><img class="bc" src="/desk/brunch-croissant.png" alt="a croissant sandwich on an oval plate"><img class="bb" src="/desk/brunch-breakfast.png" alt="an english breakfast plate with pancakes, beans and hash browns"><img class="bk" src="/desk/brunch-coffee.png" alt="an iced coffee with a straw"><img class="bs" src="/desk/brunch-shades.png" alt="black sunglasses"></span>`;
@@ -38,8 +38,8 @@ const items = [
   { n: 2, name: "places i swear by!", href: COFFEE, art: brunch },
   { n: 3, name: "i write on Substack", href: COVER, art: carrie },
   { n: 4, name: "work i have done.", href: JOBS, art: workGroup },
-  { n: 5, name: "ideas that never took off", href: TEDX, art: '<img src="/desk/tedx-x.png" alt="a big red handmade x from tedx bitd">' },
-  { n: 6, name: "things i do for fun", href: TAROT, art: '<img src="/desk/the-world-tarot.png" alt="the world tarot card">' }
+  { n: 5, name: "things i do for fun", href: PLAYGROUND, art: '<img src="/desk/the-world-tarot.png" alt="the world tarot card">' },
+  { n: 6, name: "Let's talk!", href: LETSTALK, art: '<img src="/desk/rotary-phone.png" alt="a black vintage rotary phone" style="max-width: 170px">' }
 ];
 
 const socials = [
@@ -81,16 +81,12 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 .no{position:absolute;font-family:Geist,sans-serif;font-weight:500;font-size:17px;color:#B4502F;pointer-events:none}
 /* Tech jobs: pen cup at the back, laptop beside it, notebooks in front (hiding the cup's trimmed base) */
 .wgrp,.brn{position:relative;display:block}
-.wgrp{width:370px;height:232px}.brn{width:330px;height:250px}
+.wgrp{width:212px;height:100px}.brn{width:330px;height:250px}
 .wgrp img,.brn img{position:absolute;display:block;height:auto !important;max-width:none !important;max-height:none !important;filter:drop-shadow(0 7px 9px rgba(70,50,35,.20));transition:transform .6s cubic-bezier(.3,1.3,.5,1)}
 /* work: books and laptop share one baseline (y 228), pens peek from behind the books, the coffee stands between them */
-.wgrp .wp{left:24px;top:78px;width:74px;transform:rotate(-3deg)}
-.wgrp .wn{left:0;top:160px;width:150px}
-.wgrp .wl{left:214px;top:50px;width:156px}
-.wgrp .wc{left:154px;top:149px;width:56px}
-.cut:hover .wgrp .wp,.cut.hl .wgrp .wp,.cut:focus-visible .wgrp .wp{transform:translate(-10px,-6px) rotate(-8deg)}
+.wgrp .wn{left:0;top:31px;width:150px}
+.wgrp .wc{left:156px;top:20px;width:56px}
 .cut:hover .wgrp .wn,.cut.hl .wgrp .wn,.cut:focus-visible .wgrp .wn{transform:translate(-8px,4px)}
-.cut:hover .wgrp .wl,.cut.hl .wgrp .wl,.cut:focus-visible .wgrp .wl{transform:translateY(-8px)}
 .cut:hover .wgrp .wc,.cut.hl .wgrp .wc,.cut:focus-visible .wgrp .wc{transform:translate(8px,-4px) rotate(4deg)}
 /* brunch: a flat lay */
 .brn .bc{left:0;top:6px;width:150px;transform:rotate(-8deg)}
@@ -286,28 +282,28 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 <span class="no" aria-hidden="true" style="left: 256px; top: 12px">2</span>
 </a>
 
-<a href={COVER} class="cut c-cover" data-cur="nav" data-id="cover" aria-label="i write on Substack" style="left: 996px; top: 452px; width: 170px; height: 190px">
+<a href={COVER} class="cut c-cover" data-cur="nav" data-id="cover" aria-label="i write on Substack" style="left: 340px; top: 340px; width: 170px; height: 190px">
 <div class="box" set:html={carrie}></div>
 <span class="no" aria-hidden="true" style="left: -16px; top: 12px">3</span>
 </a>
 
-<a href={JOBS} class="cut c-tech" data-id="tech" aria-label="work i have done." style="left: 214px; top: 474px; width: 370px; height: 232px">
+<a href={JOBS} class="cut c-tech" data-id="tech" aria-label="work i have done." style="left: 340px; top: 575px; width: 212px; height: 100px">
 <div class="box" set:html={workGroup}></div>
-<span class="no" aria-hidden="true" style="left: 170px; top: 66px">4</span>
+<span class="no" aria-hidden="true" style="left: 222px; top: -6px">4</span>
 </a>
 
-<a href={TEDX} class="cut c-x" data-cur="nav" data-id="x" aria-label="ideas that never took off" style="left: 40px; top: 392px">
-<div class="box" style="transform: rotate(-6deg)"><img src="/desk/tedx-x.png" alt="a big red handmade x from tedx bitd" style="max-width: 112px; max-height: 112px"></div>
-<span class="no" aria-hidden="true" style="left: 18px; top: 18px">5</span>
-</a>
-
-<a href={TAROT} class="cut c-tarot" data-cur="nav" data-id="tarot" aria-label="things i do for fun" style="left: 1204px; top: 340px">
+<a href={PLAYGROUND} class="cut c-tarot" data-cur="nav" data-id="tarot" aria-label="things i do for fun" style="left: 1010px; top: 440px">
 <div class="box" style="transform: rotate(5deg)"><img src="/desk/the-world-tarot.png" alt="the world tarot card"></div>
-<span class="no" aria-hidden="true" style="left: 150px; top: 148px">6</span>
+<span class="no" aria-hidden="true" style="left: 150px; top: 148px">5</span>
+</a>
+
+<a href={LETSTALK} class="cut c-phone" data-cur="nav" data-id="phone" aria-label="Let's talk!" style="left: 676px; top: 690px">
+<div class="box" style="transform: rotate(-4deg)"><img src="/desk/rotary-phone.png" alt="a black vintage rotary phone" style="max-width: 170px"></div>
+<span class="no" aria-hidden="true" style="left: 184px; top: 6px">6</span>
 </a>
 
 <p class="endnote" aria-hidden="true">that's the whole page, darling. click on anything.</p>
-<nav aria-label="Contents"><p class="toc"><a href={JOURNEY} class="keyitem" data-for="me"><b>1.</b>what's her story?</a> <a href={COFFEE} class="keyitem" data-for="coffee"><b>2.</b>places i swear by!</a> <a href={COVER} class="keyitem" data-for="cover"><b>3.</b>i write on Substack</a> <a href={JOBS} class="keyitem" data-for="tech"><b>4.</b>work i have done.</a> <a href={TEDX} class="keyitem" data-for="x"><b>5.</b>ideas that never took off</a> <a href={TAROT} class="keyitem" data-for="tarot"><b>6.</b>things i do for fun</a></p></nav>
+<nav aria-label="Contents"><p class="toc"><a href={JOURNEY} class="keyitem" data-for="me"><b>1.</b>what's her story?</a> <a href={COFFEE} class="keyitem" data-for="coffee"><b>2.</b>places i swear by!</a> <a href={COVER} class="keyitem" data-for="cover"><b>3.</b>i write on Substack</a> <a href={JOBS} class="keyitem" data-for="tech"><b>4.</b>work i have done.</a> <a href={PLAYGROUND} class="keyitem" data-for="tarot"><b>5.</b>things i do for fun</a> <a href={LETSTALK} class="keyitem" data-for="phone"><b>6.</b>Let's talk!</a></p></nav>
 
 <p class="spotted" style="position: absolute; left: 72px; top: 268px; margin: 0; font-size: 13px; color: #4A4542">last spotted at <a href={BEANLORE} target="_blank" rel="noopener">Beanlore, Kormangala</a>, reading in the sun.<img class="spot-pic" src="/desk/reading-in-the-sun.jpg" alt="kritika reading a book in the sun at Beanlore"></p>
 <nav aria-label="Socials" style="position: absolute; left: 72px; top: 864px; display: flex; gap: 18px; align-items: center">
