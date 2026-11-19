@@ -502,9 +502,8 @@ function turnEase(x){
   document.querySelectorAll('[data-back]').forEach(function(b){ b.addEventListener('click', turnBack); });
 })();
 
-// "say hello" (the centre photo): on a laptop, hovering or clicking shows the message bubble, and a click
-// turns the page over to /journey about 2 seconds later. On touch screens, the first tap shows the bubble and the
-// second tap turns the page.
+// "what's her story?" (the centre photo): on a laptop, hovering shows the message bubble and a click opens /roadmap
+// straight away. On touch screens, a tap shows the bubble and the page turns to /roadmap 1.2 seconds later.
 (function(){
   var canHover = matchMedia('(hover: hover) and (pointer: fine)'), phone = matchMedia('(max-width: 767px)');
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches, going = false;
@@ -563,12 +562,13 @@ function turnEase(x){
     var t;
     a.addEventListener('click', function(e){
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; // opening in a new tab: let it
-      if (canHover.matches) {
-        e.preventDefault(); a.classList.add('say');
-        clearTimeout(t); t = setTimeout(function(){ fold(a.href); }, 900);
-      } else if (!a.classList.contains('say')) {
-        e.preventDefault(); hush(); a.classList.add('say');
-      } else { e.preventDefault(); fold(a.href); }
+      // laptops: the bubble already shows on hover, so a click opens the next page straight away
+      if (canHover.matches) return;
+      // phones: a tap shows the bubble, then the next page opens 1.2s later (a second tap goes right away)
+      e.preventDefault();
+      if (a.classList.contains('say')) { clearTimeout(t); fold(a.href); return; }
+      hush(); a.classList.add('say');
+      clearTimeout(t); t = setTimeout(function(){ fold(a.href); }, 1200);
     });
   });
   document.addEventListener('click', function(e){ if (!(e.target.closest && e.target.closest('[data-say]'))) hush(); });
