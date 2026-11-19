@@ -27,7 +27,7 @@ const planeLogo = `<svg class="logo" width="130" height="81" viewBox="0 0 579 36
 const carrie = '<img src="/desk/writer-at-desk.png" alt="a woman at her desk, feet up, writing on her laptop" style="max-width: 210px; max-height: 210px">';
 // "Tech jobs and their stories.": a little desk of her work, cut from her own photos: the laptop (showing
 // Plane's GitHub star history), the pen cup and the notebook stack. On hover they shift apart a little.
-// "work i have done.": a polaroid of her actual desk, captioned in her hand
+// "what's next in my work?": a polaroid of her actual desk, captioned in her hand
 const workGroup = `<span class="pola"><span class="ph"><img src="/desk/her-desk.jpg" alt="kritika's desk: laptop, glasses, a water bottle, notebooks and the bookshelf"></span><span class="cap">her work.</span></span>`;
 // "my coffee reccs!": a brunch, cut piece by piece from her photo: the croissant sandwich, the english breakfast,
 // the iced coffee and her shades. On hover they spread a little.
@@ -35,12 +35,12 @@ const brunch = `<span class="brn"><img class="bc" src="/desk/brunch-croissant.pn
 
 // Phone column, in number order.
 const items = [
-  { n: 1, name: "what's her story?", href: JOURNEY, say: true, art: '<img src="/desk/kritika-flower.png" alt="kritika taking a mirror selfie in a grey tee, a yellow flower tucked behind her ear" style="max-width: 240px; max-height: 260px">' },
-  { n: 2, name: "places i swear by!", href: COFFEE, art: brunch },
-  { n: 3, name: "i write on Substack", href: COVER, art: carrie },
-  { n: 4, name: "work i have done.", href: JOBS, art: workGroup },
-  { n: 5, name: "things i do for fun", href: PLAYGROUND, art: '<img src="/desk/tarot-reading.png" alt="hands laying out tarot cards on a red velvet mat, with a deck and a rose quartz crystal" style="max-width: 200px; max-height: 213px">' },
-  { n: 6, name: "Let's talk!", href: LETSTALK, art: '<img src="/desk/rotary-phone.png" alt="a black vintage rotary phone" style="max-width: 170px">' }
+  { n: 1, name: "who am i?", href: JOURNEY, say: true, art: '<img src="/desk/kritika-flower.png" alt="kritika taking a mirror selfie in a grey tee, a yellow flower tucked behind her ear" style="max-width: 240px; max-height: 260px">' },
+  { n: 2, name: "what's my next meal?", href: COFFEE, art: brunch },
+  { n: 3, name: "did i write today?", href: COVER, art: carrie },
+  { n: 4, name: "what's next in my work?", href: JOBS, art: workGroup },
+  { n: 5, name: "all new urges.", href: PLAYGROUND, art: '<img src="/desk/tarot-reading.png" alt="hands laying out tarot cards on a red velvet mat, with a deck and a rose quartz crystal" style="max-width: 200px; max-height: 213px">' },
+  { n: 6, name: "did anyone text me?", href: LETSTALK, art: '<img src="/desk/rotary-phone.png" alt="a black vintage rotary phone" style="max-width: 170px">' }
 ];
 
 const socials = [
@@ -280,39 +280,39 @@ a:focus-visible,button:focus-visible{outline:2px solid #5B3FD9;outline-offset:4p
 <button class="back" type="button" data-back>Back</button>
 <h1 style="position: absolute; left: 72px; top: 118px; width: 600px; margin: 0; font-family: Geist, sans-serif; font-weight: 600; font-size: 64px; line-height: 1.02; letter-spacing: -.02em; color: #A9452A">current open tabs?</h1>
 
-<a href={JOURNEY} class="cut c-me" data-id="me" data-say data-cur="nav" aria-label="what's her story?" style="left: 590px; top: 292px; width: 340px; height: 368px">
+<a href={JOURNEY} class="cut c-me" data-id="me" data-say data-cur="nav" aria-label="who am i?" style="left: 590px; top: 292px; width: 340px; height: 368px">
 <div class="box"><img src="/desk/kritika-flower.png" alt="kritika taking a mirror selfie in a grey tee, a yellow flower tucked behind her ear" style="max-width: 300px; max-height: 318px"></div>
 <div class="bubble imsg" style="left: -258px; top: -30px; width: 236px">hello love! i am Kritika. i think in references and write how i talk.<svg class="tail" viewBox="0 0 17 21" aria-hidden="true"><path d="M0 0 C1 9 5 16 17 21 C9 21.5 3.5 20 0 17.5 Z" fill="#0A84FF"></path></svg></div>
 <span class="no" aria-hidden="true" style="left: 46px; top: 2px">1</span>
 </a>
 
-<a href={COFFEE} class="cut c-coffee" data-id="coffee" aria-label="places i swear by!" style="left: 820px; top: 104px; width: 330px; height: 250px">
+<a href={COFFEE} class="cut c-coffee" data-id="coffee" aria-label="what's my next meal?" style="left: 820px; top: 104px; width: 330px; height: 250px">
 <div class="box" set:html={brunch}></div>
 <span class="no" aria-hidden="true" style="left: 296px; top: 24px">2</span>
 </a>
 
-<a href={COVER} class="cut c-cover" data-cur="nav" data-id="cover" aria-label="i write on Substack" style="left: 310px; top: 320px; width: 230px; height: 200px">
+<a href={COVER} class="cut c-cover" data-cur="nav" data-id="cover" aria-label="did i write today?" style="left: 310px; top: 320px; width: 230px; height: 200px">
 <div class="box" set:html={carrie}></div>
 <span class="no" aria-hidden="true" style="left: -16px; top: 12px">3</span>
 </a>
 
-<a href={JOBS} class="cut c-tech" data-id="tech" aria-label="work i have done." style="left: 975px; top: 440px; width: 240px; height: 150px">
+<a href={JOBS} class="cut c-tech" data-id="tech" aria-label="what's next in my work?" style="left: 975px; top: 440px; width: 240px; height: 150px">
 <div class="box" set:html={workGroup}></div>
 <span class="no" aria-hidden="true" style="left: 248px; top: 4px">4</span>
 </a>
 
-<a href={PLAYGROUND} class="cut c-tarot" data-cur="nav" data-id="tarot" aria-label="things i do for fun" style="left: 335px; top: 535px; width: 220px; height: 234px">
+<a href={PLAYGROUND} class="cut c-tarot" data-cur="nav" data-id="tarot" aria-label="all new urges." style="left: 335px; top: 535px; width: 220px; height: 234px">
 <div class="box" style="transform: rotate(3deg)"><img src="/desk/tarot-reading.png" alt="hands laying out tarot cards on a red velvet mat, with a deck and a rose quartz crystal" style="max-width: 200px; max-height: 213px"></div>
 <span class="no" aria-hidden="true" style="left: 226px; top: 170px">5</span>
 </a>
 
-<a href={LETSTALK} class="cut c-phone" data-cur="nav" data-id="phone" aria-label="Let's talk!" style="left: 676px; top: 690px">
+<a href={LETSTALK} class="cut c-phone" data-cur="nav" data-id="phone" aria-label="did anyone text me?" style="left: 676px; top: 690px">
 <div class="box" style="transform: rotate(-4deg)"><img src="/desk/rotary-phone.png" alt="a black vintage rotary phone" style="max-width: 200px"></div>
 <span class="no" aria-hidden="true" style="left: 184px; top: 6px">6</span>
 </a>
 
 <p class="endnote" aria-hidden="true">that's the whole page, darling. click on anything.</p>
-<nav aria-label="Contents"><p class="toc"><a href={JOURNEY} class="keyitem" data-for="me"><b>1.</b>what's her story?</a> <a href={COFFEE} class="keyitem" data-for="coffee"><b>2.</b>places i swear by!</a> <a href={COVER} class="keyitem" data-for="cover"><b>3.</b>i write on Substack</a> <a href={JOBS} class="keyitem" data-for="tech"><b>4.</b>work i have done.</a> <a href={PLAYGROUND} class="keyitem" data-for="tarot"><b>5.</b>things i do for fun</a> <a href={LETSTALK} class="keyitem" data-for="phone"><b>6.</b>Let's talk!</a></p></nav>
+<nav aria-label="Contents"><p class="toc"><a href={JOURNEY} class="keyitem" data-for="me"><b>1.</b>who am i?</a> <a href={COFFEE} class="keyitem" data-for="coffee"><b>2.</b>what's my next meal?</a> <a href={COVER} class="keyitem" data-for="cover"><b>3.</b>did i write today?</a> <a href={JOBS} class="keyitem" data-for="tech"><b>4.</b>what's next in my work?</a> <a href={PLAYGROUND} class="keyitem" data-for="tarot"><b>5.</b>all new urges.</a> <a href={LETSTALK} class="keyitem" data-for="phone"><b>6.</b>did anyone text me?</a></p></nav>
 
 <p class="spotted" style="position: absolute; left: 72px; top: 866px; margin: 0; font-size: 13px; color: #4A4542">last spotted at <a href={BEANLORE} target="_blank" rel="noopener">Beanlore, Kormangala</a>, reading in the sun.<img class="spot-pic" src="/desk/reading-in-the-sun.jpg" alt="kritika reading a book in the sun at Beanlore"></p>
 </div>
@@ -502,7 +502,7 @@ function turnEase(x){
   document.querySelectorAll('[data-back]').forEach(function(b){ b.addEventListener('click', turnBack); });
 })();
 
-// "what's her story?" (the centre photo): on a laptop, hovering shows the message bubble and a click opens /roadmap
+// "who am i?" (the centre photo): on a laptop, hovering shows the message bubble and a click opens /roadmap
 // straight away. On touch screens, a tap shows the bubble and the page turns to /roadmap 1.2 seconds later.
 (function(){
   var canHover = matchMedia('(hover: hover) and (pointer: fine)'), phone = matchMedia('(max-width: 767px)');
