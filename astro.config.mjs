@@ -9,6 +9,7 @@ export default defineConfig({
     '/icp-nexus': '/work/icp-positioning-messaging-nexus',
     // the revamp's pages moved to their final routes
     '/journey': '/roadmap',
-    '/coffee': '/recommendations'
+    '/coffee': '/recommendations',
+    '/substacks': '/substack'
   }
 });
