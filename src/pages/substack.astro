@@ -12,12 +12,15 @@ const PUB = 'https://verykritikal.substack.com';
 // the call to action under the story
 const CTA = 'Let me write something for you →';
 const CTA_HREF = '/lets-talk';
+// the second button, under the first
+const WORK_CTA = 'See my work →';
+const WORK_HREF = '/work';
 const UTM = 'utm_source=Portfolio&utm_medium=Substacks+page&utm_campaign=Portfolio+launch&utm_id=kritikal-work';
 
-// the story of how she started, in her words. two paragraphs; the first letter becomes the giant initial.
+// the letter on the typewriter: how she started, in a few short lines.
 const STORY = [
-  'Writing on Substack started as a joke last year, when I had just come back from Pondicherry. What I brought back was too tender for an Instagram caption, so I wrote it down instead. That’s how I began embracing the way I feel things, all of it, out loud.',
-  'Some of it is funny, some of it is hard to read, and most of it began as a conversation I couldn’t stop thinking about. This is the most honest version of me you’ll find anywhere on the internet.'
+  'Writing on Substack started as a joke. I came back from Pondicherry with something too tender for an Instagram caption, so I wrote it down instead.',
+  'Some of it is funny, some of it is hard to read. All of it is the most honest version of me on the internet.'
 ];
 const INITIAL = STORY[0][0];
 
@@ -60,8 +63,8 @@ const all: any[] = live.length
 const img = (url: string, w = 600) => !url ? '' : url.includes('substackcdn.com/image/fetch') ? url : `https://substackcdn.com/image/fetch/w_${w},c_limit,f_auto,q_auto:good,fl_progressive:steep/${encodeURIComponent(url)}`;
 const href = (slug: string) => `${PUB}/p/${slug}?${UTM}`;
 const mins = (w: number) => Math.max(1, Math.round(w / 215));
-const day = (d: string) => new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' }).toLowerCase();
 
+const meta = (p: any) => p.words ? `${mins(p.words)} min read ↗` : 'read on Substack ↗';
 const top = TOP.map((s) => all.find((p) => p.slug === s)).filter(Boolean);
 
 // three columns, filled top to bottom, newest first. pictures get uneven heights (weights) so the columns don't line up.
@@ -80,13 +83,20 @@ const cols = [0, 1, 2].map((c) => shown.slice(c * per, c * per + per).map((p, i)
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>kritika · i write on Substack.</title>
 <meta name="description" content="Kritika's Substack, VeryKritikal: essays on love, living alone, work, and the places that change her a little.">
+<link rel="stylesheet" href="/buttons.css">
 <link rel="icon" href="/mark.svg" type="image/svg+xml">
 <link rel="icon" href="/mark-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="/mark-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&amp;family=Hanken+Grotesk:wght@400;500&amp;family=EB+Garamond:ital,wght@0,400;0,500;1,400&amp;family=Courier+Prime:ital,wght@0,400;0,700;1,400&amp;family=Cormorant+Garamond:ital,wght@1,500;1,600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&amp;family=Marcellus&amp;family=Courier+Prime:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet">
 <style is:inline>
-html,body{margin:0;background:#fff;color:#1C1B1F;font-family:'Hanken Grotesk',sans-serif}
+html,body{margin:0;background:#f6f1e8;color:#3d2430;font-family:'Courier Prime',ui-monospace,monospace}
+/* past the spread's edges (very wide or tall windows) each page carries on: jasmine on the left, ivory on the right */
+@media (min-width: 768px){
+  html{background:#f6f1e8}
+  body{background:transparent}
+  body::before{content:"";position:fixed;left:0;top:0;bottom:0;width:50%;z-index:-1;background:url(/desk/jasmine.jpg) center/cover no-repeat;transform:scaleX(-1);filter:saturate(.72) contrast(.9) brightness(1.03)}
+}
 a{color:inherit;text-decoration:none}
 a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
@@ -95,32 +105,20 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 .pageL{background:linear-gradient(100deg,#ffffff 0%,#fbfbf9 38%,#ffffff 52%,#f6f6f3 78%,#e9e8e4 96%,#d9d7d2 100%)}
 .pageR{background:linear-gradient(80deg,#d6d4cf 0%,#e8e7e3 4%,#f7f7f4 20%,#ffffff 46%,#fafaf8 70%,#ffffff 100%)}
 .sheen{background:linear-gradient(115deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.75) 42%,rgba(255,255,255,0) 54%)}
-.grain{position:absolute;inset:0;background:url(/desk/paper.jpg);background-size:900px auto;mix-blend-mode:multiply;opacity:.14;pointer-events:none}
-.back{position:absolute;left:64px;top:40px;padding:6px 0;font-size:15px;color:#A9452A;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.back{position:absolute;left:64px;top:40px;z-index:3;min-height:40px;padding:8px 18px}
 
 
-/* right page: pink paper, and a typewriter at the foot of it; her story is typed onto the sheet in the roller */
-.lphoto{position:absolute;left:756px;top:0;width:756px;height:982px;background:#d9a3a3 url(/desk/pink-paper.jpg) center/cover no-repeat}
-.rcol{position:absolute;left:756px;top:0;width:756px;height:982px;display:flex;flex-direction:column;align-items:center;justify-content:space-between}
-.rtitle{margin:52px 0 0;font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;font-size:72px;line-height:1;letter-spacing:-.01em;color:#9C2F55}
-.tw{position:relative;width:560px;filter:drop-shadow(0 18px 30px rgba(80,30,40,.28))}
-.tw-sheet{position:relative;margin-left:16%;width:66.4%;box-sizing:border-box;padding:34px;background:#f2eadf;border-top-left-radius:26px 12px;font-family:'Courier Prime',ui-monospace,monospace;font-size:13.4px;line-height:1.62;color:#2a2420;text-shadow:0 0 .5px rgba(42,36,32,.55)}
-.tw-sheet p{margin:0}
-.tw-sheet p+p{margin-top:12px}
-.tw-base{display:block;width:100%;height:auto;margin-top:-2px}
-.tw-sheet .cta{position:static;display:block;margin-top:18px;padding:0;text-align:right;font-family:inherit;font-size:inherit;font-weight:700;color:#2a2420;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;opacity:0;transition:opacity .5s ease}
-.tw-sheet.done .cta{opacity:1}
-.tw-sheet.now .cta{transition:none}
-.tw-sheet .w{white-space:nowrap}
-.tw-sheet .k{visibility:hidden}
-.tw-sheet .k.on{visibility:visible}
-.caret{display:inline-block;width:.55em;height:1.05em;margin-left:1px;vertical-align:-.15em;background:#2a2420;animation:blink 1s steps(1) infinite}
-@keyframes blink{50%{opacity:0}}
-/* Back: a small paper tag in the typed font, framed in the same ink as the pictures */
-.back{z-index:3;left:64px !important;top:36px !important;display:inline-flex;align-items:center;gap:8px;padding:7px 14px 7px 12px !important;background:#f2eadf;color:#2a2420 !important;font-family:'Courier Prime',ui-monospace,monospace !important;font-size:14px !important;font-weight:700;letter-spacing:.02em;text-decoration:none !important;outline:2px solid #2a2420;box-shadow:3px 3px 0 #2a2420;transform:rotate(-2deg);transition:transform .2s ease,box-shadow .2s ease}
-.back:hover,.back:focus-visible{transform:rotate(-2deg) translate(-1px,-1px);box-shadow:4px 4px 0 #2a2420}
-.back:active{transform:rotate(-2deg) translate(2px,2px);box-shadow:1px 1px 0 #2a2420}
-@media (prefers-reduced-motion: reduce){.caret{animation:none}.back{transition:none}}
+/* right page: quiet ivory. A small-caps heading in the engraved Roman style, then a short letter in the typewriter font */
+.rcol{position:absolute;left:756px;top:0;width:756px;height:982px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-sizing:border-box;background:linear-gradient(180deg,#f9f5ed 0%,#f3ede2 100%);border-left:1px solid rgba(110,30,43,.16)}
+.rtitle{margin:0 0 34px;display:flex;flex-direction:column;align-items:center;text-align:center;font-family:Cinzel,serif;text-transform:uppercase;color:#6E1E2B}
+.rt-a{font-weight:600;font-size:20px;letter-spacing:.5em;margin-right:-.5em}
+.rt-b{margin-top:12px;font-weight:500;font-size:78px;line-height:1;letter-spacing:.1em;margin-right:-.1em}
+.rt-line{display:block;width:56px;height:1px;margin-top:28px;background:rgba(110,30,43,.45)}
+.letter{width:480px;font-family:'Courier Prime',ui-monospace,monospace;font-size:18px;line-height:1.7;color:#3d2430}
+.letter p{margin:0}
+.letter p+p{margin-top:16px}
+.letter .kbtn{display:flex;width:max-content;max-width:100%;margin:32px auto 0}
+.letter .kbtn+.kbtn{margin-top:14px}
 
 /* left page: three pictures set close together */
 .trio{position:absolute;left:64px;top:96px;width:636px;height:420px;display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
@@ -128,8 +126,6 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 .trio img{width:100%;height:100%;object-fit:cover;display:block}
 /* the giant initial, bleeding off the left edge, and the story beside it */
 .cap{position:absolute;left:-150px;top:516px;margin:0;font-family:Geist,sans-serif;font-weight:600;font-size:500px;line-height:1;letter-spacing:-.04em;color:#1C1B1F;pointer-events:none}
-.cta{position:absolute;left:372px;padding:6px 0;font-family:Geist,sans-serif;font-weight:500;font-size:16px;color:#A9452A;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px;transition:color .25s}
-.cta:hover,.cta:focus-visible{color:#8E3820}
 .story{position:absolute;left:372px;top:574px;width:328px;margin:0;font-family:'EB Garamond',serif;font-size:17.5px;line-height:1.36;color:#1C1B1F;text-align:justify;hyphens:auto}
 .story p,.m .mstory p{margin:0}
 .story p+p,.m .mstory p+p{margin-top:14px}
@@ -142,55 +138,57 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 .en .pic img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
 .en .pic.none{display:flex;align-items:center;padding:16px;box-sizing:border-box;background:#F3E4DC;font-family:'EB Garamond',serif;font-style:italic;font-size:22px;line-height:1.2;color:#A9452A}
 .en:hover .pic img,.en:focus-visible .pic img{transform:scale(1.04)}
-.en .t{display:block;margin-top:9px;font-family:Geist,sans-serif;font-weight:500;font-size:14.5px;line-height:1.25;color:#1C1B1F;transition:color .25s}
-.en:hover .t,.en:focus-visible .t{color:#A9452A}
+.en .t{display:block;margin-top:9px;font-family:Marcellus,Georgia,serif;font-weight:400;font-size:17px;line-height:1.25;color:#3d2430;transition:color .25s}
+.en:hover .t,.en:focus-visible .t{color:#6E1E2B}
 .en .d{display:block;margin-top:3px;font-size:12.5px;line-height:1.38;color:#6f6862}
-.en .mt{display:block;margin-top:5px;font-size:10px;letter-spacing:.18em;color:#8a837d}
+.en .mt{display:block;margin-top:5px;font-size:13px;line-height:1.3;color:#5f4d4d}
 @media (prefers-reduced-motion: reduce){.en .pic img{transition:none}}
 
 
 /* left page: her jasmine-tree photo, mirrored and softened so it stays calm; the posts sit
    on it in a grid, three across, each framed: a paper mat with an ink line around it in the story's colour */
-.tree{position:absolute;left:0;top:0;width:756px;height:982px;overflow:hidden;background:#6f5a4a}
+.tree{position:absolute;left:0;top:0;width:756px;height:982px;overflow:hidden;isolation:isolate;background:#6f5a4a}
 .tree .still{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1);filter:saturate(.72) contrast(.9) brightness(1.03)}
+.tree::before{content:"";position:absolute;inset:0;z-index:1;background:radial-gradient(ellipse 72% 64% at 50% 52%,rgba(250,243,232,.62) 0%,rgba(250,243,232,.44) 50%,rgba(250,243,232,0) 100%);pointer-events:none}
 .tree::after{content:"";position:absolute;inset:0;background:url(/desk/paper.jpg);background-size:900px auto;mix-blend-mode:multiply;opacity:.12}
 .leaves{position:absolute;left:68px;top:0;width:620px;height:982px;display:grid;grid-template-columns:repeat(3,1fr);align-content:center;gap:30px 28px}
-.leaf{position:relative;display:block;aspect-ratio:4/5;overflow:hidden;background:#efe7d8}
-.leaf img{position:relative}
-.leaf > *{overflow:hidden}
+.leaf{position:relative;display:flex;flex-direction:column;box-sizing:border-box;padding:6px 6px 12px;background:#faf6ee;box-shadow:0 1px 2px rgba(20,12,6,.18),0 10px 22px rgba(20,12,6,.2)}
+.leaf .pic{display:block;aspect-ratio:4/5;overflow:hidden;background:#efe7d8}
 .leaf img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.92) contrast(.98);transition:transform .8s cubic-bezier(.2,.7,.2,1);clip-path:inset(0)}
-.leaf.none{display:flex;align-items:center;padding:16px;box-sizing:border-box;background:#F3E4DC;font-family:'EB Garamond',serif;font-style:italic;font-size:20px;line-height:1.2;color:#A9452A}
+.leaf .pic.none{display:flex;align-items:center;padding:16px;box-sizing:border-box;background:#efe6da;font-family:'Courier Prime',ui-monospace,monospace;font-style:italic;font-size:17px;line-height:1.4;color:#6E1E2B}
+.leaf .lt{display:block;margin-top:10px;padding:0 4px;font-family:Marcellus,Georgia,serif;font-weight:400;font-size:17.5px;line-height:1.25;color:#3d2430;transition:color .25s}
+.leaf .lm{display:block;margin-top:6px;padding:0 4px;font-size:13.5px;line-height:1.3;color:#5f4d4d}
 .leaf:hover img,.leaf:focus-visible img{transform:scale(1.03)}
+.leaf:hover .lt,.leaf:focus-visible .lt{color:#6E1E2B}
 @media (prefers-reduced-motion: reduce){.leaf img{transition:none}}
 
 /* phones: one column */
 .m{display:none}
 @media (max-width: 767px){
   .fold{display:none}
-  body{background:#fbfaf7}
+  body{background:#f6f1e8}
   .m{display:block;padding:0 16px 40px;box-sizing:border-box}
-  .m .mhero{margin:0 -16px;padding:max(16px,env(safe-area-inset-top)) 16px 0;background:#d9a3a3 url(/desk/pink-paper.jpg) center/cover no-repeat;overflow:hidden}
-  .m .mhero .back{position:relative;display:inline-flex;min-height:40px;box-sizing:border-box;margin:6px 0 0 4px}
-  /* the typewriter: the sheet is a real block (so the whole story fits), sitting in the roller of the machine below */
-  .m .rtitle{margin:18px 0 0;font-size:48px}
-  .m .tw-m{position:relative;margin:22px -16px 0;filter:drop-shadow(0 14px 22px rgba(80,30,40,.25))}
-  .m .tw-sheet{position:relative;margin-left:16%;width:66.4%;box-sizing:border-box;padding:20px;background:#f2eadf;border-top-left-radius:22px 10px;font-family:'Courier Prime',ui-monospace,monospace;font-size:13.5px;line-height:1.6;color:#2a2420}
-  .m .tw-sheet p{margin:0}
-  .m .tw-sheet p+p{margin-top:12px}
-  .m .tw-base{display:block;width:100%;height:auto;margin-top:-2px}
-  .m .back{position:static;display:inline-block;min-height:32px}
+  .m .mhero{margin:0 -16px;min-height:100svh;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top)) 22px 48px;background:linear-gradient(180deg,#f9f5ed 0%,#f3ede2 100%);position:relative}
+  .m .mhero .back{position:absolute;left:16px;top:max(16px,env(safe-area-inset-top));min-height:40px;padding:8px 14px;box-sizing:border-box}
+  .m .rtitle{margin:56px 0 28px}
+  .m .rt-a{font-size:14px;letter-spacing:.42em;margin-right:-.42em}
+  .m .rt-b{font-size:40px;letter-spacing:.08em;margin-right:-.08em;margin-top:10px}
+  .m .rt-line{margin-top:22px}
+  .m .letter{width:100%;max-width:420px;font-size:16px;line-height:1.65}
   .m .trio{position:static;width:auto;height:240px;margin-top:12px;gap:4px}
   .m .mstory{position:relative;margin-top:0;font-family:'EB Garamond',serif;font-size:18px;line-height:1.42;color:#1C1B1F}
   .m .mstory .big{float:left;margin:-2px 10px 0 -4px;font-family:Geist,sans-serif;font-weight:600;font-size:118px;line-height:.78;letter-spacing:-.04em}
-  .m .cta{position:static;display:inline-block;margin-top:14px}
   /* the posts: pictures only, two across, printed flat on the jasmine tree like on the laptop */
-  .m .list{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:20px 18px;margin:0 -16px -40px;padding:28px 16px 44px;background:#f3eee6;isolation:isolate}
+  .m .list{position:relative;display:grid;grid-template-columns:repeat(2,1fr);align-content:center;gap:18px 14px;min-height:100svh;box-sizing:border-box;margin:0 -16px -40px;padding:40px 22px max(40px,env(safe-area-inset-bottom));background:#f3eee6;isolation:isolate}
+  .m .list::after{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse 85% 70% at 50% 50%,rgba(250,243,232,.6) 0%,rgba(250,243,232,.42) 55%,rgba(250,243,232,0) 100%)}
   .m .list::before{content:"";position:absolute;inset:0;z-index:-1;background:url(/desk/jasmine.jpg) center/cover no-repeat;transform:scaleX(-1);filter:saturate(.72) contrast(.9) brightness(1.03)}
   .m .en{-webkit-tap-highlight-color:transparent;transition:opacity .15s ease}
   .m .en:active{opacity:.8}
+  .m .en{background:#f2eadf;padding:6px 6px 10px;box-shadow:0 2px 4px rgba(20,12,6,.25),0 14px 28px rgba(20,12,6,.38)}
   .m .en .pic{flex:none;aspect-ratio:4/5;overflow:hidden;background:#efe7d8}
+  .m .en .t,.m .en .mt{padding:0 3px}
   .m .en .pic img{clip-path:inset(0)}
-  .m .en .pic.none{aspect-ratio:4/5;font-size:18px}
+  .m .en .pic.none{aspect-ratio:4/5;padding:12px;font-size:15px}
 }
 .cb-yes,.cb-no{min-height:40px;padding:0 20px;border-radius:10px;font-family:inherit;font-size:14px;cursor:pointer}
 .cb-yes{border:0;background:#E8EBF0;color:#0B0A0F;font-weight:600}
@@ -202,24 +200,24 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 <section class="fold" aria-label="i write on Substack">
 <div class="stage">
 <div class="tree" aria-hidden="true"><img class="still" src="/desk/jasmine.jpg" alt=""></div>
-<div class="lphoto" aria-hidden="true"></div>
-<div class="grain" aria-hidden="true"></div>
-<a class="back" href="/home-redo#desk">Back</a>
+<a class="back kbtn" href="/home-redo#desk">← Back</a>
 <div class="rcol">
-<h1 class="rtitle">i write on Substack.</h1>
-<div class="tw">
-<div class="tw-sheet" data-type>
+<h1 class="rtitle"><span class="rt-a">i write on</span><span class="rt-b">Substack</span><span class="rt-line" aria-hidden="true"></span></h1>
+<div class="letter">
 {STORY.map((t) => <p>{t}</p>)}
-<a class="cta" href={CTA_HREF}>{CTA}</a>
-</div>
-<img class="tw-base" src="/desk/typewriter-base.png" alt="" aria-hidden="true">
+<a class="kbtn kbtn-primary" href={CTA_HREF}>{CTA}</a>
+<a class="kbtn" href={WORK_HREF}>{WORK_CTA}</a>
 </div>
 </div>
 
 <div class="leaves">
 {shown.map((p) => (
-<a class={`leaf${(p.pic || p.cover) ? '' : ' none'}`} href={href(p.slug)} target="_blank" rel="noopener" aria-label={p.title} title={p.title}>
-{(p.pic || p.cover) ? <img src={img(p.pic || p.cover, 500)} alt="" loading="lazy"> : `“${p.quote || p.title}”`}
+<a class="leaf" href={href(p.slug)} target="_blank" rel="noopener" aria-label={`${p.title}, opens on Substack`}>
+{(p.pic || p.cover)
+  ? <span class="pic"><img src={img(p.pic || p.cover, 500)} alt="" loading="lazy"></span>
+  : <span class="pic none">“{p.quote || p.title}”</span>}
+<span class="lt">{p.title}</span>
+<span class="lm">{meta(p)}</span>
 </a>
 ))}
 </div>
@@ -229,22 +227,22 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 
 <main class="m">
 <div class="mhero">
-<a class="back" href="/home-redo#desk">Back</a>
-<h1 class="rtitle">i write on Substack.</h1>
-<div class="tw-m">
-<div class="tw-sheet" data-type>
+<a class="back kbtn" href="/home-redo#desk">← Back</a>
+<h1 class="rtitle"><span class="rt-a">i write on</span><span class="rt-b">Substack</span><span class="rt-line" aria-hidden="true"></span></h1>
+<div class="letter">
 {STORY.map((t) => <p>{t}</p>)}
-<a class="cta" href={CTA_HREF}>{CTA}</a>
-</div>
-<img class="tw-base" src="/desk/typewriter-base.png" alt="" aria-hidden="true">
+<a class="kbtn kbtn-primary" href={CTA_HREF}>{CTA}</a>
+<a class="kbtn" href={WORK_HREF}>{WORK_CTA}</a>
 </div>
 </div>
 <div class="list">
 {shown.map((p) => (
-<a class="en" href={href(p.slug)} target="_blank" rel="noopener" aria-label={p.title}>
+<a class="en" href={href(p.slug)} target="_blank" rel="noopener" aria-label={`${p.title}, opens on Substack`}>
 {(p.pic || p.cover)
   ? <span class="pic"><img src={img(p.pic || p.cover)} alt="" loading="lazy"></span>
   : <span class="pic none">“{p.quote || p.title}”</span>}
+<span class="t">{p.title}</span>
+<span class="mt">{meta(p)}</span>
 </a>
 ))}
 </div>
@@ -262,33 +260,8 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 // the spread is zoomed to cover the window, like the desk (stops at 18% trimmed on unusual window shapes)
 function fit(){var a=innerWidth/1512,b=innerHeight/982,lo=Math.min(a,b),s=Math.min(Math.max(a,b),lo/0.82);document.querySelectorAll('.stage').forEach(function(st){st.style.transform='scale('+s+')';st.style.left=((innerWidth-1512*s)/2)+'px';st.style.top=((innerHeight-982*s)*0.4)+'px';});}
 addEventListener('resize',fit);fit();
-// the story types itself onto the sheet, letter by letter, once per visit; then the link appears
-(function(){
-  var el=[].slice.call(document.querySelectorAll('[data-type]')).filter(function(n){return n.offsetParent!==null})[0];
-  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(reduce)document.querySelectorAll('.tree video').forEach(function(v){v.pause();v.removeAttribute('autoplay');});
-  if(!el)return;
-  var seen=false;try{seen=sessionStorage.getItem('substack-typed')==='1'}catch(e){}
-  if(seen||reduce){el.classList.add('done','now');return;}
-  var ks=[];
-  el.querySelectorAll('p').forEach(function(p){
-    var text=p.textContent;p.textContent='';
-    text.split(' ').forEach(function(word,i,all){
-      var w=document.createElement('span');w.className='w';
-      for(var j=0;j<word.length;j++){var k=document.createElement('span');k.className='k';k.textContent=word[j];w.appendChild(k);ks.push(k);}
-      p.appendChild(w);if(i<all.length-1)p.appendChild(document.createTextNode(' '));
-    });
-  });
-  var caret=document.createElement('span');caret.className='caret';caret.setAttribute('aria-hidden','true');
-  var i=0;
-  function step(){
-    if(i>=ks.length){el.classList.add('done');setTimeout(function(){caret.remove();},2400);try{sessionStorage.setItem('substack-typed','1')}catch(e){}return;}
-    var k=ks[i++];k.classList.add('on');k.after(caret);
-    setTimeout(step,/[.,!?]/.test(k.textContent)?240:26+Math.random()*30);
-  }
-  setTimeout(step,800);
-})();
 </script>
 <script is:inline src="/kritikal-cursor.js" defer></script>
+<script is:inline src="/stack.js?v=2" defer></script>
 </body>
 </html>

@@ -1,0 +1,10 @@
+---
+// /work/<slug>: one page per case study, built from src/data/cases.
+import CaseStudy from '../../components/CaseStudy.astro';
+import { cases } from '../../data/cases';
+export function getStaticPaths() {
+  return cases.map((c) => ({ params: { slug: c.slug }, props: { c } }));
+}
+const { c } = Astro.props;
+---
+<CaseStudy c={c} />

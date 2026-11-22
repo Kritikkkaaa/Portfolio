@@ -1,0 +1,53 @@
+---
+// The page shown for any address that doesn't exist: a work-in-progress sign on the maroon wall, one line, and a way home.
+// Astro builds this as 404.html and the host serves it for unknown addresses.
+import Analytics from '../components/Analytics.astro';
+const HOME = '/home-redo';
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>kritika · still building this page</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="/buttons.css">
+<link rel="icon" href="/mark.svg" type="image/svg+xml">
+<link rel="icon" href="/mark-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/mark-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&amp;display=swap" rel="stylesheet">
+<style is:inline>
+html,body{margin:0;height:100%;background:#5a1626;color:#f6f1e8}
+a{color:inherit;text-decoration:none}
+a:focus-visible{outline:2px solid #f6f1e8;outline-offset:3px}
+main{min-height:100vh;min-height:100svh;box-sizing:border-box;padding:32px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.sign{display:block;width:clamp(150px,26vh,260px);height:auto;transform-origin:50% 100%}
+p{margin:clamp(22px,4vh,40px) 0 clamp(22px,4vh,36px);font-family:Marcellus,Georgia,serif;font-weight:400;font-size:clamp(26px,3.4vw,42px);line-height:1.2;color:#f6f1e8}
+@media (prefers-reduced-motion: no-preference){
+  .sign{animation:sway 4.2s ease-in-out infinite}
+  @keyframes sway{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
+}
+.cb-yes,.cb-no{min-height:40px;padding:0 20px;border-radius:10px;font-family:inherit;font-size:14px;cursor:pointer}
+.cb-yes{border:0;background:#E8EBF0;color:#0B0A0F;font-weight:600}
+.cb-no{background:none;border:1px solid #3A3842;color:#E8EBF0}
+</style>
+<Analytics />
+</head>
+<body>
+<main>
+<img class="sign" src="/error/work-in-progress.png" alt="A hand-drawn work in progress sign">
+<p>I am still building this page!</p>
+<a class="kbtn" href={HOME}>Go to Home</a>
+</main>
+
+<div id="consent" role="dialog" aria-label="Cookie choice" hidden style="position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 55; max-width: 360px; box-sizing: border-box; padding: 18px 20px; border-radius: 16px; background: #141319; border: 1px solid #3A3842; box-shadow: 0 20px 50px rgba(0,0,0,0.6); font-family: 'Hanken Grotesk', system-ui, sans-serif; font-size: 14px; line-height: 1.5; color: #C9CDD5">
+<p style="margin: 0 0 14px; font-family: inherit; font-size: 14px; line-height: 1.5; color: #C9CDD5">Allow cookies on your visit so I know what you resonate with. No ads, I promise.</p>
+<div style="display: flex; gap: 10px">
+<button class="cb-yes" type="button" data-consent="yes">Yes!</button>
+<button class="cb-no" type="button" data-consent="no">No thanks</button>
+</div>
+</div>
+<script is:inline src="/kritikal-cursor.js" defer></script>
+</body>
+</html>

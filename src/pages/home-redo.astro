@@ -3,8 +3,8 @@
 // Kritika's postcard on the left, Contents on the right (six cutouts in an oval, each swinging a paper tag on hover).
 // Desktop is a fixed 1512x982 spread scaled to the window; under 768px it is one column (postcard, then cards).
 import Analytics from '../components/Analytics.astro';
-const PROJECTS = '/work'; // placeholder until there is a projects page
-const JOURNEY = '/roadmap', COFFEE = '/recommendations', COVER = '/substack', JOBS = '/jobs', PLAYGROUND = '/playground', LETSTALK = '/lets-talk';
+const PROJECTS = '/work-redo'; // the new work page
+const JOURNEY = '/roadmap', COFFEE = '/recommendations', COVER = '/substack', PLAYGROUND = '/playground', LETSTALK = '/lets-talk';
 const LINKEDIN = 'https://www.linkedin.com/in/kritika-upadhyay-2001/';
 const SUBSTACK = 'https://substack.com/@verykritikal/posts';
 const INSTAGRAM = 'https://www.instagram.com/verykritikal/';
@@ -39,12 +39,11 @@ const crossword = (() => {
 // Placeholder note for the postcard (about 55 words) until Kritika writes hers.
 // Phone: the six as cards, in number order (same art, labels and links as the desktop oval).
 const phoneItems = [
-  { n: 1, label: 'How I got here', href: JOURNEY, art: crossword },
-  { n: 2, label: 'Recommendations', href: COFFEE, art: '<img src="/desk/fries.png" alt="black-and-white collage hands holding a paper bag of golden fries">' },
-  { n: 3, label: 'Projects', href: PROJECTS, art: '<img class="still" src="/desk/tangled-thoughts-still.png" alt=""><img class="moving" src="/desk/tangled-thoughts.png" alt="an illustrated figure with a tangled scribble for thoughts, slowly unwinding it into a ball of yarn">' },
-  { n: 4, label: 'Find me on substack', href: COVER, art: '<img src="/desk/typewriter.png" alt="a green typewriter with torn pages of Hamlet in its roller">' },
-  { n: 5, label: 'My playground', href: PLAYGROUND, art: '<img src="/desk/traffic-pole.png" alt="a New York street-sign pole with traffic lights, a stop sign and two pigeons fighting over a slice of pizza">' },
-  { n: 6, label: "Let's talk", href: LETSTALK, art: '<img src="/desk/rotary-phone.png" alt="a black vintage rotary phone">' }
+  { n: 1, label: 'Recommendations', href: COFFEE, art: '<img src="/desk/fries.png" alt="black-and-white collage hands holding a paper bag of golden fries">' },
+  { n: 2, label: 'Work', href: PROJECTS, art: '<img src="/desk/work-illustration.png" alt="an illustrated laptop with colour swatches, sticky notes and a mug that says Well Cast">' },
+  { n: 3, label: 'Substack', href: COVER, art: '<img src="/desk/typewriter.png" alt="a green typewriter with torn pages of Hamlet in its roller">' },
+  { n: 4, label: 'Playground', href: PLAYGROUND, art: '<img src="/desk/traffic-pole.png" alt="a New York street-sign pole with traffic lights, a stop sign and two pigeons fighting over a slice of pizza">' },
+  { n: 5, label: 'Contact', href: LETSTALK, art: '<img src="/desk/rotary-phone.png" alt="a black vintage rotary phone">' }
 ];
 const NOTE = "you probably have too many tabs open too. pull up a chair.\n\nby day, i'm a marketer and a writer. i connect small ideas into something meaningful, then put it on the internet to get people talking. when i log off, i feel deeply, write it all down and try to create more than i consume.\n\nclick whatever calls to you. love, K";
 
@@ -57,7 +56,7 @@ const NOTE = "you probably have too many tabs open too. pull up a chair.\n\nby d
 <title>kritika · contents</title>
 <link rel="icon" href="/mark.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Hanken+Grotesk:ital,wght@0,400;0,500;1,400&amp;family=Caveat:wght@500&amp;family=EB+Garamond:ital,wght@0,400;1,400&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Hanken+Grotesk:ital,wght@0,400;0,500;1,400&amp;family=Caveat:wght@500&amp;family=Cinzel:wght@500;600&amp;family=Courier+Prime:wght@400;700&amp;family=EB+Garamond:ital,wght@0,400;1,400&amp;display=swap" rel="stylesheet">
 <script is:inline>if (location.hash !== '#desk') document.documentElement.classList.add('intro-on');</script>
 <style is:inline>
 html,body{margin:0;height:100%;overflow:hidden;background:#efe7d6}
@@ -88,11 +87,8 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 .card .rule{position:absolute;inset:16px;border:1px solid rgba(169,69,42,.45);border-radius:10px;pointer-events:none}
 .photo{position:absolute;left:44px;right:44px;top:44px;height:214px;margin:0;overflow:hidden;border-radius:2px;box-shadow:0 0 0 1px rgba(60,20,20,.12)}
 .photo img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 30%}
-.note{position:absolute;left:44px;right:44px;top:286px;margin:0;font-family:'EB Garamond',serif;font-style:italic;font-size:21px;line-height:1.45;color:#5a2a26}
+.note{position:absolute;left:44px;right:44px;top:286px;margin:0;font-family:'Courier Prime',ui-monospace,monospace;font-size:17px;line-height:1.6;color:#5a2a26}
 .note{white-space:pre-line}
-.note .w{white-space:nowrap}
-.note .c{opacity:0;filter:blur(2px);transition:opacity .35s ease,filter .35s ease}
-.note .c.on{opacity:1;filter:none}
 .stamp{position:absolute;right:40px;bottom:40px;width:84px;height:100px}
 .stamp .pic{position:absolute;inset:0;padding:5px;background:#fbf8f2;
   -webkit-mask:radial-gradient(circle 3px at 50% 50%,transparent 98%,#000) -3px -3px/8px 8px,linear-gradient(#000,#000) 4px 4px/calc(100% - 8px) calc(100% - 8px) no-repeat;
@@ -127,12 +123,11 @@ html.kc-on.kc-plain .kc-box{opacity:0 !important}
 html.kc-on.kc-plain,html.kc-on.kc-plain *{cursor:auto !important}
 html.kc-on.kc-plain a,html.kc-on.kc-plain a *{cursor:pointer !important}
 /* 3: holds still until hovered, then the thread starts unwinding */
-.cut .box .moving{display:none}
-.cut:hover .box .moving,.cut.is-focus .box .moving,.cut:focus-visible .box .moving{display:block}
-.cut:hover .box .still,.cut.is-focus .box .still,.cut:focus-visible .box .still{display:none}
 /* right page: the title sits in the middle of the oval, the six in three rows (1 2 / 3 / 4 5 6), every tile the same 180x180 */
-.rtitle{position:absolute;left:1034px;top:450px;width:200px;height:160px;margin:0;display:flex;align-items:center;justify-content:center;text-align:center;font-family:Geist,sans-serif;font-weight:600;font-size:40px;line-height:1;letter-spacing:-.02em;color:#6E1E2B;pointer-events:none}
 .tile{width:180px;height:180px}
+.lbl{position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:6px;white-space:nowrap;font-family:Cinzel,serif;font-weight:600;font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:#6E1E2B;pointer-events:none;transition:opacity .2s ease}
+.cut:hover .lbl,.cut.is-focus .lbl,.cut:focus-visible .lbl{opacity:0}
+@media (hover: none){.lbl{display:none}}
 /* the crossword: paper cells ruled in red, solid red blocks, small clue numbers */
 .xw{width:180px;height:auto;display:block;filter:drop-shadow(0 8px 10px rgba(70,50,35,.22));transform:rotate(-2deg)}
 .xw .xc{fill:#f6f1ea;stroke:#C2453A;stroke-width:1}
@@ -171,36 +166,33 @@ html.kc-on.kc-plain a,html.kc-on.kc-plain a *{cursor:pointer !important}
   .ph{display:block;font-family:'Hanken Grotesk',sans-serif;color:#1C1B1F}
   .ph a{-webkit-tap-highlight-color:transparent}
   /* the lotus page */
-  .ph-l{position:relative;min-height:100svh;box-sizing:border-box;padding:max(16px,env(safe-area-inset-top)) 16px 28px;display:flex;flex-direction:column;overflow:hidden;background:#3a0f16}
+  .ph-l{position:relative;min-height:100svh;box-sizing:border-box;padding:max(24px,env(safe-area-inset-top)) 16px 76px;display:flex;flex-direction:column;overflow:hidden;background:#3a0f16}
   .ph-l .bg{position:absolute;inset:0;background:url(/desk/lotus-wall.jpg) left top/auto 100% no-repeat;filter:saturate(.82) brightness(.88) contrast(.96)}
   .ph-l .dim{position:absolute;inset:0;background:linear-gradient(90deg,rgba(40,8,14,.30) 0%,rgba(40,8,14,.45) 100%)}
   .ph-l .shine{position:absolute;inset:0;background:linear-gradient(118deg,rgba(255,255,255,0) 18%,rgba(255,255,255,.14) 32%,rgba(255,255,255,0) 46%)}
   .ph-back{position:relative;align-self:flex-start;display:inline-flex;align-items:center;min-height:44px;font-size:15px;color:#f1e6dc;text-decoration:underline;text-underline-offset:3px}
-  .ph-post{position:relative;margin:8px auto 0;width:100%;max-width:420px;filter:drop-shadow(0 14px 22px rgba(20,4,8,.42))}
+  .ph-post{position:relative;margin:auto;width:100%;max-width:420px;filter:drop-shadow(0 14px 22px rgba(20,4,8,.42))}
   .ph-post .card{position:relative;inset:auto;padding:30px 28px 26px}
   .ph-post .rule{inset:14px}
   .ph-post .photo{position:relative;left:auto;right:auto;top:auto;height:auto;aspect-ratio:2/1}
-  .ph-post .note{position:relative;left:auto;right:auto;top:auto;margin:18px 0 0;font-size:18px;line-height:1.5}
+  .ph-post .note{position:relative;left:auto;right:auto;top:auto;margin:18px 0 0;font-size:15px;line-height:1.6}
   .ph-post .foot{position:relative;height:96px;margin-top:6px}
   .ph-post .stamp{right:0;bottom:0;width:72px;height:86px}
   .ph-post .postmark{right:32px;bottom:22px;width:104px;height:60px}
-  .ph-next{position:relative;align-self:center;margin-top:auto;padding-top:22px;display:inline-flex;align-items:center;gap:8px;min-height:44px;font-family:'EB Garamond',serif;font-style:italic;font-size:18px;color:#f1e6dc}
+  .ph-next{position:absolute;left:0;right:0;bottom:max(14px,env(safe-area-inset-bottom));justify-content:center;margin:0;padding:0;display:inline-flex;align-items:center;gap:8px;min-height:44px;font-family:'EB Garamond',serif;font-style:italic;font-size:18px;color:#f1e6dc}
   .ph-next span{display:inline-block;animation:nudge 1.8s ease-in-out infinite}
   @keyframes nudge{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
   /* Contents */
   .ph-r{position:relative;padding:40px 16px max(40px,env(safe-area-inset-bottom));background:#f2e3de;overflow:hidden}
   .ph-r::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,0) 0 64px,rgba(255,255,255,.75) 64px 66px,rgba(110,30,43,.12) 66px 67px,rgba(255,255,255,0) 67px 70px);pointer-events:none}
   .ph-r::after{content:"";position:absolute;left:0;right:0;top:0;height:28px;background:linear-gradient(180deg,rgba(90,20,30,.20),rgba(90,20,30,0));pointer-events:none}
-  .ph-r h2{position:relative;margin:0 0 22px;text-align:center;font-family:Geist,sans-serif;font-weight:600;font-size:40px;letter-spacing:-.02em;color:#6E1E2B}
+  .ph-r h2{position:relative;margin:0 0 22px;text-align:center;font-family:Cinzel,serif;font-weight:500;font-size:30px;letter-spacing:.14em;text-transform:uppercase;color:#6E1E2B}
   .ph-grid{position:relative;list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:14px}
   .ph-item{display:flex;flex-direction:column;align-items:center;height:100%;box-sizing:border-box;padding:18px 10px 16px;border-radius:16px;background:rgba(251,246,243,.94);box-shadow:0 1px 0 rgba(110,30,43,.06),0 8px 18px rgba(110,30,43,.08);transition:transform .15s ease}
   .ph-item:active{transform:scale(.97)}
   .ph-art{display:flex;align-items:center;justify-content:center;height:128px;width:100%}
   .ph-art img{max-width:124px;max-height:124px;filter:drop-shadow(0 7px 9px rgba(70,50,35,.22))}
   .ph-art .xw{width:138px;filter:drop-shadow(0 6px 8px rgba(70,50,35,.2))}
-  .ph-art .moving{display:none}
-  .ph-item.inview .ph-art .moving{display:block}
-  .ph-item.inview .ph-art .still{display:none}
   /* the tag, always showing on phones; it swings once when its card first scrolls into view */
   .ph-tag{position:relative;margin-top:20px;width:min(100%,132px);box-sizing:border-box;padding:20px 8px 9px;background:#f6efe2;border-radius:3px;text-align:center;
     clip-path:polygon(22% 0,78% 0,100% 16%,100% 100%,0 100%,0 16%);transform-origin:50% -18px;filter:drop-shadow(0 4px 4px rgba(70,30,30,.18))}
@@ -283,6 +275,25 @@ html.intro-on .kc-lab{color:#e4e3dd !important}
 .cb-yes,.cb-no{min-height:40px;padding:0 20px;border-radius:10px;font-family:inherit;font-size:14px;cursor:pointer}
 .cb-yes{border:0;background:#E8EBF0;color:#0B0A0F;font-weight:600}
 .cb-no{background:none;border:1px solid #3A3842;color:#E8EBF0}
+
+/* the alert in the middle of the screen when someone tries to scroll the spread */
+.nudge-alert{position:fixed;left:50%;top:50%;z-index:70;display:flex;align-items:center;gap:12px;padding:14px 26px 15px 20px;border-radius:999px;background:#f4f0e9;color:#6E1E2B;font-family:'EB Garamond',serif;font-style:italic;font-size:21px;line-height:1;white-space:nowrap;box-shadow:0 0 0 1px rgba(110,30,43,.22),0 16px 34px rgba(40,8,14,.32);opacity:0;transform:translate(-50%,-50%) scale(.92);transition:opacity .25s ease,transform .45s cubic-bezier(.3,1.5,.5,1);pointer-events:none}
+.nudge-alert.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.nudge-alert svg{width:22px;height:22px;flex:none;fill:none;stroke:#6E1E2B;stroke-width:1.6}
+.nudge-alert svg circle:first-child{fill:#6E1E2B;stroke:none}
+.nudge-alert .ring{transform-origin:12px 12px;animation:tapring 1.4s ease-out infinite}
+@keyframes tapring{0%{transform:scale(.45);opacity:1}100%{transform:scale(1.15);opacity:0}}
+#stage{transition:translate .5s cubic-bezier(.3,1.5,.5,1)}
+#stage.nudging{transition:translate .15s ease-out}
+@media (prefers-reduced-motion: reduce){.nudge-alert,.nudge-alert .ring,#stage{transition:none;animation:none}}
+/* touch screens with the spread (iPad held sideways): no hover, so the tags simply hang there */
+@media (hover: none){.cut .tag{opacity:1 !important;transform:none !important;animation:none !important}}
+/* iPad held upright (pages stacked by /stack.js): the phone intro, which slides away on a tap */
+@media (min-width: 768px) and (orientation: portrait){
+  .intro-on .intro{display:none !important}
+  .intro-on .m-intro{display:block}
+  .intro-on,.intro-on body{overflow:hidden}
+}
 </style>
 <Analytics />
 </head>
@@ -311,7 +322,6 @@ html.intro-on .kc-lab{color:#e4e3dd !important}
 <div class="spine" aria-hidden="true"></div>
 
 <div class="lotus" aria-hidden="true"><div class="img"></div><div class="dim"></div><div class="shine"></div></div>
-<button class="back" type="button" data-back>Back</button>
 <div class="card-wrap"><div class="card">
 <div class="rule" aria-hidden="true"></div>
 <figure class="photo"><img src="/desk/postcard-me.jpg" alt="kritika smiling in glasses, in front of a maroon wall hung with old Bengaluru paintings"></figure>
@@ -326,41 +336,39 @@ html.intro-on .kc-lab{color:#e4e3dd !important}
 <div class="stamp" aria-hidden="true"><div class="pic"><span></span></div><span class="val">₹5</span></div>
 </div></div>
 
-<h2 class="rtitle">Contents</h2>
-<p class="endnote" aria-hidden="true">that's the whole page, darling. click on anything.</p>
-
-<a href={JOURNEY} data-cur="nav" class="cut tile" data-id="me" aria-label="How I got here" style="left: 1044px; top: 695px">
-<div class="box" set:html={crossword}></div>
-<span class="tag" aria-hidden="true" style="left: 162px; top: 58px"><span class="str"></span><span class="tcard"><i class="hole"></i><b>1</b><span class="t">How I got here</span></span></span></a>
-
-<a href={COFFEE} data-cur="nav" class="cut tile" data-id="coffee" aria-label="Recommendations" style="left: 1234px; top: 305px">
+<a href={COFFEE} data-cur="nav" class="cut tile" data-id="coffee" aria-label="Recommendations" style="left: 1194px; top: 646px">
 <div class="box" style="transform: rotate(2deg)"><img src="/desk/fries.png" alt="black-and-white collage hands holding a paper bag of golden fries"></div>
-<span class="tag" aria-hidden="true" style="left: 150px; top: 22px"><span class="str"></span><span class="tcard"><i class="hole"></i><b>2</b><span class="t">Recommendations</span></span></span></a>
+<span class="lbl">Recommendations</span>
+<span class="tag" aria-hidden="true" style="left: 150px; top: 22px"><span class="str"></span><span class="tcard"><i class="hole"></i><b>5</b><span class="t">Recommendations</span></span></span></a>
 
-<a href={PROJECTS} data-cur="nav" class="cut tile" data-id="cover" aria-label="Projects" style="left: 854px; top: 305px">
-<div class="box"><img class="still" src="/desk/tangled-thoughts-still.png" alt=""><img class="moving" src="/desk/tangled-thoughts.png" alt="an illustrated figure with a tangled scribble for thoughts, slowly unwinding it into a ball of yarn"></div>
-<span class="tag" aria-hidden="true" style="left: 148px; top: 26px"><span class="str"></span><span class="tcard"><i class="hole"></i><b>3</b><span class="t">Projects</span></span></span></a>
+<a href={PROJECTS} data-cur="nav" class="cut tile" data-id="cover" aria-label="Work" style="left: 1044px; top: 116px">
+<div class="box"><img src="/desk/work-illustration.png" alt="an illustrated laptop with colour swatches, sticky notes and a mug that says Well Cast"></div>
+<span class="lbl">Work</span>
+<span class="tag" aria-hidden="true" style="left: 148px; top: 26px"><span class="str"></span><span class="tcard"><i class="hole"></i><b>1</b><span class="t">Work</span></span></span></a>
 
-<a href={COVER} data-cur="nav" class="cut tile" data-id="tech" aria-label="Find me on substack" style="left: 1044px; top: 185px">
+<a href={COVER} data-cur="nav" class="cut tile" data-id="tech" aria-label="Find me on substack" style="left: 894px; top: 381px">
 <div class="box" style="transform: rotate(-3deg)"><img src="/desk/typewriter.png" alt="a green typewriter with torn pages of Hamlet in its roller"></div>
-<span class="tag" aria-hidden="true" style="left: 150px; top: 26px"><span class="str"></span><span class="tcard"><i class="hole"></i><b>4</b><span class="t">Find me on substack</span></span></span></a>
+<span class="lbl">Substack</span>
+<span class="tag" aria-hidden="true" style="left: 150px; top: 26px"><span class="str"></span><span class="tcard"><i class="hole"></i><b>2</b><span class="t">Find me on substack</span></span></span></a>
 
-<a href={PLAYGROUND} data-cur="nav" class="cut tile" data-id="tarot" aria-label="My playground" style="left: 1234px; top: 575px">
+<a href={PLAYGROUND} data-cur="nav" class="cut tile" data-id="tarot" aria-label="My playground" style="left: 894px; top: 646px">
 <div class="box" style="transform: rotate(3deg)"><img src="/desk/traffic-pole.png" alt="a New York street-sign pole with traffic lights, a stop sign and two pigeons fighting over a slice of pizza"></div>
-<span class="tag" aria-hidden="true" style="left: 128px; top: 22px"><span class="str"></span><span class="tcard"><i class="hole"></i><b>5</b><span class="t">My playground</span></span></span></a>
+<span class="lbl">Playground</span>
+<span class="tag" aria-hidden="true" style="left: 128px; top: 22px"><span class="str"></span><span class="tcard"><i class="hole"></i><b>4</b><span class="t">My playground</span></span></span></a>
 
-<a href={LETSTALK} data-cur="nav" class="cut tile" data-id="phone" aria-label="Let's talk" style="left: 854px; top: 575px">
+<a href={LETSTALK} data-cur="nav" class="cut tile" data-id="phone" aria-label="Let's talk" style="left: 1194px; top: 381px">
 <div class="box" style="transform: rotate(-4deg)"><img src="/desk/rotary-phone.png" alt=""></div>
-<span class="tag" aria-hidden="true" style="left: 150px; top: 42px"><span class="str"></span><span class="tcard"><i class="hole"></i><b>6</b><span class="t">Let's talk</span></span></span></a>
+<span class="lbl" style="left: calc(50% + 18px)">Contact</span>
+<span class="tag" aria-hidden="true" style="left: 150px; top: 42px"><span class="str"></span><span class="tcard"><i class="hole"></i><b>3</b><span class="t">Let's talk</span></span></span></a>
 
 </div>
 </div>
 <div id="edge" aria-hidden="true"></div>
+<div id="nudge-alert" class="nudge-alert" role="status" aria-live="polite"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"></circle><circle class="ring" cx="12" cy="12" r="8"></circle></svg><span>Click on any content to continue</span></div>
 
 <main class="ph">
 <section class="ph-l">
 <div class="bg" aria-hidden="true"></div><div class="dim" aria-hidden="true"></div><div class="shine" aria-hidden="true"></div>
-<button class="ph-back" type="button" data-back>Back</button>
 <div class="ph-post"><div class="card">
 <div class="rule" aria-hidden="true"></div>
 <figure class="photo"><img src="/desk/postcard-me.jpg" alt="kritika smiling in glasses, in front of a maroon wall hung with old Bengaluru paintings"></figure>
@@ -476,7 +484,7 @@ function turnEase(x){
 // Scrolling back up at the top brings it back.
 (function(){
   var root = document.documentElement, D = document.getElementById('intro'), M = document.getElementById('m-intro');
-  var phone = matchMedia('(max-width: 767px)'), reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var phone = matchMedia('(max-width: 767px), (min-width: 768px) and (orientation: portrait)'), reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   // the back of the turning page shows the desk's left half: a non-interactive copy of the desk
   var desk = D.parentNode, copy = desk.cloneNode(true);
   copy.querySelector('#intro').remove();
@@ -520,21 +528,19 @@ function turnEase(x){
   }
   function finish(){ done = true; root.classList.remove('intro-on'); }
   function turn(){ if (done) return; clearTimeout(snap); start = 0; p = 1; render(true); clearTimeout(fin); fin = setTimeout(finish, reduce ? 0 : 1150); }
-  // On the desk (laptops), scrolling down can't go anywhere: everything nudges up together and settles back,
-  // and a note says this is the whole page. Each scroll gives the same little bounce.
-  var deskEl = D.parentNode, note = deskEl.querySelector('.endnote'), nudgeT, noteT;
-  function nudge(){
-    if (reduce) { note.classList.add('on'); clearTimeout(noteT); noteT = setTimeout(function(){ note.classList.remove('on'); }, 2200); return; }
-    deskEl.classList.add('nudging'); deskEl.style.setProperty('--nudge', '-22px');
-    clearTimeout(nudgeT); nudgeT = setTimeout(function(){ deskEl.classList.remove('nudging'); deskEl.style.setProperty('--nudge', '0px'); }, 140);
-    note.classList.add('on'); clearTimeout(noteT); noteT = setTimeout(function(){ note.classList.remove('on'); }, 2200);
+  // On the spread nothing scrolls: any scroll (up, down, left, right) nudges the whole page that way and back,
+  // and an alert in the middle says to click something. It never goes back to the intro.
+  var stageEl = document.getElementById('stage'), alertEl = document.getElementById('nudge-alert'), nudgeT, alertT;
+  function nudge(dx, dy){
+    if (alertEl) { alertEl.classList.add('on'); clearTimeout(alertT); alertT = setTimeout(function(){ alertEl.classList.remove('on'); }, 2000); }
+    if (reduce) return;
+    var ax = Math.abs(dx) > Math.abs(dy), k = 22;
+    stageEl.classList.add('nudging');
+    stageEl.style.translate = ax ? ((dx > 0 ? -k : k) + 'px 0') : ('0 ' + (dy > 0 ? -k : k) + 'px');
+    clearTimeout(nudgeT); nudgeT = setTimeout(function(){ stageEl.classList.remove('nudging'); stageEl.style.translate = '0 0'; }, 150);
   }
-  function push(d){
-    if (done) {
-      if (d > 0 && !phone.matches) { nudge(); return; }
-      if (d >= 0 || (phone.matches && scrollY > 0)) return;
-      done = false; root.classList.add('intro-on'); render(2);
-    }
+  function push(d, dx){
+    if (done) { if (!phone.matches && (d || dx)) nudge(dx || 0, d || 0); return; }
     if (p >= 1 && d >= 0) return;
     clearTimeout(fin);
     var now = Date.now();
@@ -547,7 +553,11 @@ function turnEase(x){
     if (p >= 1) { fin = setTimeout(finish, 150); return; }
     snap = setTimeout(function(){ if (p < 1) { p = 0; render(true); } }, 600);
   }
-  addEventListener('wheel', function(e){ push(e.deltaY || 0); }, { passive: true });
+  var wheelT = 0;
+  addEventListener('wheel', function(e){
+    if (done) { var now = Date.now(); if (now - wheelT < 450) return; wheelT = now; } // one nudge per flick, not per wheel tick
+    push(e.deltaY || 0, e.deltaX || 0);
+  }, { passive: true });
   // Phones: a tap anywhere on the intro continues, even if the finger shifts a little while tapping
   var tx0 = 0, ty0 = 0;
   addEventListener('touchstart', function(e){ ty = e.touches[0].clientY; tx0 = e.touches[0].clientX; ty0 = ty; }, { passive: true });
@@ -559,49 +569,14 @@ function turnEase(x){
   }, { passive: true });
   M.addEventListener('click', turn);
   addEventListener('keydown', function(e){
-    if (!done && /^(ArrowDown|PageDown| |Spacebar)$/.test(e.key) && !(e.target.closest && e.target.closest('button,a'))) { e.preventDefault(); turn(); }
+    if (!done && /^(ArrowDown|PageDown| |Spacebar)$/.test(e.key) && !(e.target.closest && e.target.closest('button,a'))) { e.preventDefault(); turn(); return; }
+    var dirs = { ArrowDown: [0, 1], PageDown: [0, 1], ' ': [0, 1], ArrowUp: [0, -1], PageUp: [0, -1], ArrowLeft: [-1, 0], ArrowRight: [1, 0], Home: [0, -1], End: [0, 1] };
+    if (done && !phone.matches && dirs[e.key] && !(e.target.closest && e.target.closest('input,textarea'))) { e.preventDefault(); nudge(dirs[e.key][0], dirs[e.key][1]); }
   });
   document.querySelectorAll('#intro [data-turn]').forEach(function(b){ b.addEventListener('click', turn); });
-  // Back: lay the turned page down again, then turn it back over to the intro
-  function turnBack(){
-    clearTimeout(fin); clearTimeout(snap); start = 0;
-    if (phone.matches) scrollTo(0, 0);
-    done = false; p = 1; root.classList.add('intro-on'); render(2);
-    void D.offsetWidth; void M.offsetWidth;
-    setTimeout(function(){ p = 0; render(true); }, 30);
-    var b = (phone.matches ? M : D).querySelector('[data-turn]'); if (b) b.focus({ preventScroll: true });
-  }
-  document.querySelectorAll('[data-back]').forEach(function(b){ b.addEventListener('click', turnBack); });
+  // there is no way back to the intro from the spread; only a refresh shows it again
 })();
 
-// The note writes itself in, letter by letter, once per visit (sessionStorage); after that it is simply there.
-(function(){
-  var p=[].slice.call(document.querySelectorAll('[data-note]')).filter(function(n){return n.offsetParent!==null})[0];if(!p)return;
-  var seen=false;try{seen=sessionStorage.getItem('note-written')==='1'}catch(e){}
-  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(seen||reduce)return;
-  var text=p.textContent;p.textContent='';p.setAttribute('aria-hidden','false');
-  var cs=[];
-  text.split('\n\n').forEach(function(para,pi,paras){
-    para.split(' ').forEach(function(word,i,all){
-      var w=document.createElement('span');w.className='w';
-      for(var k=0;k<word.length;k++){var c=document.createElement('span');c.className='c';c.textContent=word[k];w.appendChild(c);cs.push(c);}
-      p.appendChild(w);if(i<all.length-1){p.appendChild(document.createTextNode(' '));}
-    });
-    if(pi<paras.length-1)p.appendChild(document.createTextNode('\n\n'));
-  });
-  var i=0;
-  function step(){
-    if(i>=cs.length){try{sessionStorage.setItem('note-written','1')}catch(e){}return;}
-    var ch=cs[i++];ch.classList.add('on');
-    // a pen pauses a little longer after punctuation
-    setTimeout(step,/[.,!?]/.test(ch.textContent)?260:34+Math.random()*26);
-  }
-  var root=document.documentElement;
-  function go(){setTimeout(step,700);}
-  if(!root.classList.contains('intro-on'))go();
-  else{var mo=new MutationObserver(function(){if(!root.classList.contains('intro-on')){mo.disconnect();go();}});mo.observe(root,{attributes:true,attributeFilter:['class']});}
-})();
 // Phones: each card's tag swings once as the card scrolls into view (and the illustration starts moving).
 (function(){
   var items=document.querySelectorAll('.ph-item');if(!items.length)return;
@@ -619,5 +594,6 @@ function turnEase(x){
 })();
 </script>
 <script is:inline src="/kritikal-cursor.js" defer></script>
+<script is:inline src="/stack.js?v=2" defer></script>
 </body>
 </html>

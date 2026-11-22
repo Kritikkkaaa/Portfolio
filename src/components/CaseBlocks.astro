@@ -1,0 +1,104 @@
+---
+// The building blocks of a case study's story (see src/data/cases/types.ts). One block per piece of the original page:
+// text, lists, pictures, videos, a swipe row, the three kinds of numbers (charts), comparison columns, an interview.
+import type { Block } from '../data/cases/types';
+interface Props { blocks: Block[] }
+const { blocks } = Astro.props as Props;
+
+// donut: every part is a slice of the ring. pie: the first part is the slice that is pulled out.
+const DC = 2 * Math.PI * 84;
+const donutOf = (parts: { value: number; color: string; label: string; share: string }[]) => {
+  const total = parts.reduce((a, p) => a + p.value, 0);
+  let at = 0;
+  return parts.map((p) => { const len = (p.value / total) * DC; const seg = { ...p, len: Math.max(len - 3, 1), off: at }; at += len; return seg; });
+};
+const pieOf = (share: number) => {
+  const cx = 110, cy = 110, r = 100, a0 = -Math.PI / 2, a1 = a0 + share * 2 * Math.PI, am = (a0 + a1) / 2;
+  const ox = Math.cos(am) * 10, oy = Math.sin(am) * 10;
+  const p = (a: number, dx = 0, dy = 0) => `${(cx + dx + r * Math.cos(a)).toFixed(2)} ${(cy + dy + r * Math.sin(a)).toFixed(2)}`;
+  return {
+    slice: `M ${cx + ox} ${cy + oy} L ${p(a0, ox, oy)} A ${r} ${r} 0 ${share > 0.5 ? 1 : 0} 1 ${p(a1, ox, oy)} Z`,
+    rest: `M ${cx} ${cy} L ${p(a1)} A ${r} ${r} 0 ${share > 0.5 ? 0 : 1} 1 ${p(a0)} Z`
+  };
+};
+---
+{blocks.map((b) => (
+  <>
+    {b.t === 'p' && <p>{b.text}</p>}
+    {b.t === 'label' && <p class="cb-label">{b.text}</p>}
+    {b.t === 'fact' && <p class="cb-fact">{b.text}</p>}
+    {b.t === 'list' && <ol class="nl">{b.items.map((t) => <li>{t}</li>)}</ol>}
+    {b.t === 'bullets' && <ul class="bl">{b.items.map((t) => <li>{t}</li>)}</ul>}
+    {b.t === 'qlist' && <ul class="ql">{b.items.map((t) => <li><span class="qm" aria-hidden="true">?</span><span>{t}</span></li>)}</ul>}
+
+    {b.t === 'figs' && (
+      <div class={`figs${b.figs.length % 2 === 0 ? ' two' : ''}`}>
+        {b.figs.map((f) => <figure><figcaption>{f.cap}</figcaption><img src={f.src} alt={f.alt} loading="lazy" width={f.w} height={f.h}></figure>)}
+      </div>
+    )}
+
+    {b.t === 'video' && (
+      <figure class="vid">
+        <figcaption>{b.cap}</figcaption>
+        <video muted loop playsinline preload="metadata" poster={b.poster} width={b.w} height={b.h} aria-label={b.alt ?? b.cap}><source src={b.src} type="video/mp4"></video>
+      </figure>
+    )}
+
+    {b.t === 'chart' && b.kind === 'donut' && (
+      <figure class="chart">
+        <figcaption>{b.cap}</figcaption>
+        <div class="chart-in">
+          <svg class="donut" viewBox="0 0 220 220" role="img" aria-label={`${b.cap}: ${b.parts.map((p) => `${p.label} ${p.share}`).join(', ')}.`}>
+            {donutOf(b.parts).map((d) => <circle cx="110" cy="110" r="84" class="dseg" stroke={d.color} stroke-dasharray={`${d.len} ${DC - d.len}`} stroke-dashoffset={-d.off}></circle>)}
+            {b.centre && <><text x="110" y="108" class="dn">{b.centre.n}</text><text x="110" y="134" class="dl">{b.centre.l}</text></>}
+          </svg>
+          <ul class="legend">{b.parts.map((p) => <li><i style={`background:${p.color}`}></i><span>{p.label}</span><b>{p.share}</b></li>)}</ul>
+        </div>
+        {b.note && <p class="chart-note">{b.note}</p>}
+      </figure>
+    )}
+    {b.t === 'chart' && b.kind === 'pie' && (
+      <figure class="chart">
+        <figcaption>{b.cap}</figcaption>
+        <div class="chart-in">
+          <svg class="pie" viewBox="-10 -10 240 240" role="img" aria-label={`${b.cap}: ${b.parts.map((p) => `${p.label} ${p.share}`).join(', ')}.`}>
+            <path d={pieOf(b.parts[0].value / b.parts.reduce((a, p) => a + p.value, 0)).rest} fill={b.parts[1].color}></path>
+            <path d={pieOf(b.parts[0].value / b.parts.reduce((a, p) => a + p.value, 0)).slice} fill={b.parts[0].color}></path>
+          </svg>
+          <ul class="legend">{b.parts.map((p) => <li><i style={`background:${p.color}`}></i><span>{p.label}</span><b>{p.share}</b></li>)}</ul>
+        </div>
+      </figure>
+    )}
+
+    {b.t === 'compare' && (
+      <div class="cmp-set">
+        {b.groups.map((g) => (
+          <section class="cmp">
+            <h4>{g.label}</h4>
+            <div class="cmp-cols">
+              <div><p class="cmp-k">{b.oldH}</p><ol>{g.old.map((t) => <li>{t}</li>)}</ol></div>
+              <div class="now"><p class="cmp-k">{b.nowH}</p><ol>{g.now.map((t) => <li>{t}</li>)}</ol></div>
+            </div>
+            <p class="cmp-k">Messaging</p>
+            <p class="cmp-mh">{g.msgH}</p>
+            <p class="cmp-m">{g.msg}</p>
+          </section>
+        ))}
+      </div>
+    )}
+
+    {b.t === 'qa' && <dl class="qa">{b.pairs.map(([q, a]) => <div><dt>{q}</dt><dd>{a}</dd></div>)}</dl>}
+
+    {b.t === 'shift' && (
+      <div class="shift">
+        <p class="cb-label">{b.fromLabel}</p>
+        <p class="from">{b.from}</p>
+        <p class="arrow" aria-hidden="true">↓</p>
+        <p class="cb-label">{b.toLabel}</p>
+        <p class="to">{b.to}</p>
+      </div>
+    )}
+
+    {b.t === 'learnt' && <aside class="learnt"><p class="cb-label">{b.label}</p><p>{b.text}</p></aside>}
+  </>
+))}
