@@ -1,7 +1,10 @@
 ---
-// / (the home page): the new home. A black intro page ("oh, you came!") turns over onto a spread: the lotus page with
+// / is the one-time intro: a black intro page ("oh, you came!") turns over onto a spread: the lotus page with
 // Kritika's postcard on the left, Contents on the right (six cutouts in an oval, each swinging a paper tag on hover).
 // Desktop is a fixed 1512x982 spread scaled to the window; under 768px it is one column (postcard, then cards).
+// /home shows this same page without the intro (home.astro passes intro={false}); / shows the intro and, once the page has
+// turned, the address becomes /home, so the desk always reads as /home.
+const { intro = true } = Astro.props;
 import Analytics from '../components/Analytics.astro';
 const PROJECTS = '/work'; // the new work page
 const JOURNEY = '/roadmap', COFFEE = '/recommendations', COVER = '/substack', PLAYGROUND = '/playground', LETSTALK = '/contact';
@@ -70,7 +73,7 @@ const NOTE = NOTE_HELLO + NOTE_ROLE + NOTE_TOP + NOTE_CTA + "\n" + NOTE_SIGN;
 <link rel="preload" as="image" href="/desk/traffic-pole.webp" type="image/webp">
 <link rel="preload" as="image" href="/desk/fries.webp" type="image/webp">
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Hanken+Grotesk:ital,wght@0,400;0,500;1,400&amp;family=Caveat:wght@500&amp;family=Cinzel:wght@500;600&amp;family=Courier+Prime:wght@400;700&amp;family=EB+Garamond:ital,wght@0,400;1,400&amp;display=swap" rel="stylesheet">
-<script is:inline>if (location.hash !== '#desk') document.documentElement.classList.add('intro-on');</script>
+<script is:inline define:vars={{ intro }}>window.__intro = intro; if (intro && location.hash !== '#desk') document.documentElement.classList.add('intro-on'); else if (intro) { try { history.replaceState(null, '', '/home'); } catch (e) {} }</script>
 <style is:inline>
 html,body{margin:0;height:100%;overflow:hidden;background:#efe7d6}
 #stage{position:absolute;left:0;top:0;transform-origin:0 0}
@@ -545,7 +548,7 @@ function turnEase(x){
     if (anim) tw = { from: shown, to: p, t0: performance.now(), dur: Math.max(450, 1150 * Math.abs(p - shown)) };
     if (!raf) raf = requestAnimationFrame(loop);
   }
-  function finish(){ done = true; root.classList.remove('intro-on'); }
+  function finish(){ done = true; root.classList.remove('intro-on'); if (window.__intro) { try { history.replaceState(null, '', '/home'); } catch (e) {} } }
   function turn(){ if (done) return; clearTimeout(snap); start = 0; p = 1; render(true); clearTimeout(fin); fin = setTimeout(finish, reduce ? 0 : 1150); }
   // On the spread nothing scrolls: any scroll (or arrow key) pulls attention to the five cutouts instead. Each one
   // pulses for a second, one after another (Work 1, Substack 2, Contact 3, Playground 4, Recommendations 5).

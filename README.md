@@ -12,7 +12,8 @@ npm run build    # static site in dist/
 ## Live routes
 | Route | What it is | File |
 |---|---|---|
-| `/` | Home: the desk, with the postcard and the Contents cutouts | `src/pages/index.astro` |
+| `/` | The one-time intro ("oh, you came!"). When the page has turned, the address becomes `/home` | `src/pages/index.astro` |
+| `/home` | Home: the desk, with the postcard and the Contents cutouts, no intro. Every Back link comes here | `src/pages/home.astro` (renders `index.astro` without the intro) |
 | `/work` | Proof of work: folders and film-strip cards | `src/pages/work.astro` |
 | `/work/<slug>` | One page per case study | `src/pages/work/[slug].astro`, data in `src/data/cases/` |
 | `/substack` | She Substacks (typewriter) | `src/pages/substack.astro` |
@@ -22,7 +23,7 @@ npm run build    # static site in dist/
 | `/roadmap` | The journey | `src/pages/roadmap.astro` |
 | anything else | The 404 page | `src/pages/404.astro` |
 
-Redirects (set in `astro.config.mjs`): `/home` → `/`, `/jobs` → `/work`, `/journey` → `/roadmap`, `/coffee` → `/recommendations`, `/substacks` → `/substack`, and the old Nexus case study addresses → `/work/who-nexus-is-for`.
+Redirects (set in `astro.config.mjs`): `/jobs` → `/work`, `/journey` → `/roadmap`, `/coffee` → `/recommendations`, `/substacks` → `/substack`, and the old Nexus case study addresses → `/work/who-nexus-is-for`.
 
 Removed, now showing the 404 page: `/home-redo`, `/work-redo`, `/home-revamp`, `/lets-talk`.
 

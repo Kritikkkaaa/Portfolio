@@ -10,18 +10,18 @@ import Analytics from '../components/Analytics.astro';
 
 // 'paper' and 'ai' are not listed in any folder for now. Add their keys to a folder's `cases` when they are ready.
 const CASES: Record<string, { title: string; line: string; img: string; href?: string; mins?: number; soon?: boolean }> = {
-  twitter: { title: 'Growing Plane’s Twitter', line: 'Plane’s Twitter from zero: 500+ posts and 20+ release notes.', img: '/jobs/twitter-network.webp', href: '/work/grow-planes-twitter', mins: 3 },
-  pricing: { title: 'Pricing launch campaign', line: 'Launching Plane One on Twitter: the tease, the reveal and the letter.', img: '/jobs/pricing-invoice.webp', href: '/work/plane-one-campaign', mins: 3 },
-  nexus: { title: 'Who Nexus is for', line: 'How I brought a product manager’s understanding of users into Nexus’s ideal customer profile and positioning.', img: '/jobs/chess-linocut.png', href: '/work/who-nexus-is-for', mins: 3 },
+  twitter: { title: 'Growing Plane’s Twitter', line: '2.5k followers in 6 months. 500+ posts and 20+ release notes.', img: '/jobs/twitter-network.webp', href: '/work/grow-planes-twitter', mins: 3 },
+  pricing: { title: 'Plane One launch', line: 'Launching Plane One on Twitter: the tease, the reveal and the letter.', img: '/jobs/pricing-invoice.webp', href: '/work/plane-one-campaign', mins: 3 },
+  nexus: { title: 'Who Nexus is for', line: 'How I defined Nexus’s ideal customer profile (ICP) and sharpened its positioning.', img: '/jobs/chess-linocut.png', href: '/work/who-nexus-is-for', mins: 3 },
   paper: { title: 'Paper’s onboarding emails', line: 'A teardown of what the first emails say, what they should, and why.', img: '/jobs/paper-envelope.png', soon: true },
   ai: { title: 'AI in market research', line: 'The prompts, checks and workflow I use to understand a market fast.', img: '/jobs/ai-scribble.webp', soon: true }
 };
 
 // the three folders, top to bottom.
 const FOLDERS = [
-  { id: 'grow', label: 'Grow an audience', dek: 'audiences built from zero.', cases: ['twitter', 'pricing'] },
-  { id: 'content', label: 'Create content', dek: 'words, campaigns and teardowns.', cases: ['pricing', 'nexus'] },
-  { id: 'events', label: 'Curate events', dek: 'gatherings, thoughtfully put together.', cases: [] as string[] }
+  { id: 'grow', label: 'Grow an audience', dek: 'An audience built from zero.', cases: ['twitter'] },
+  { id: 'content', label: 'Create content', dek: 'Messaging, positioning and launch campaigns.', cases: ['pricing', 'nexus'] },
+  { id: 'events', label: 'Curate events', dek: 'Events people talk about afterwards.', cases: [] as string[] }
 ];
 const RESUME = { label: 'View resume', href: 'https://drive.google.com/file/d/1N3Y5Ox7I9qyHALM9LQUa7119Z-LBgCR6/view?usp=sharing&utm_source=portfolio&utm_medium=website&utm_campaign=hunt-2026&utm_id=kritikal-work-resume' };
 
@@ -73,7 +73,8 @@ h1{position:absolute;left:56px;top:150px;width:644px;margin:0;font-family:Cinzel
 .f1{--c:#d9cfc0;--ring:rgba(61,21,32,.4);--deco:url(/work-decor/vine.png);top:460px;z-index:1}.f1 .tb{left:656px}
 .f2{--c:#4a7568;--t:#f6f1e8;--ring:rgba(246,241,232,.45);--deco:url(/work-decor/lotus.png);top:580px;z-index:2}.f2 .tb{left:900px}
 .f3{--c:#2a2724;--t:#f6f1e8;--ring:rgba(246,241,232,.45);--deco:url(/work-decor/lace.png);top:700px;z-index:3}.f3 .tb{left:710px}
-.ctas{position:absolute;left:56px;top:232px;z-index:30;display:flex;gap:14px;white-space:nowrap}
+.ask{position:absolute;left:56px;top:228px;margin:0;z-index:30;font-family:'Courier Prime',ui-monospace,monospace;font-size:18px;color:rgba(246,241,232,.9)}
+.ctas{position:absolute;left:56px;top:272px;z-index:30;display:flex;gap:14px;white-space:nowrap}
 /* on the maroon wall the buttons swap colours: Let's talk is the ivory one, View resume an outline */
 .ctas .kbtn-primary{background:#f6f1e8;color:#5a1626;border-color:#f6f1e8}
 .ctas .kbtn-primary:hover,.ctas .kbtn-primary:focus-visible{background:#fffdf8;color:#5a1626}
@@ -127,7 +128,8 @@ a.fs:hover img{transform:scale(1.05)}
   .mh{position:relative;background:#5a1626;padding:max(16px,env(safe-area-inset-top)) 20px 0;overflow:hidden}
   .mh .back{position:static;display:inline-block;padding:10px 0}
   .mh h1{position:static;width:auto;margin:30px 0 0;font-size:36px;letter-spacing:.1em}
-  .mh .ctas{position:static;flex-wrap:wrap;margin:22px 0 54px}
+  .mh .ask{position:static;margin:18px 0 0;font-size:16px}
+  .mh .ctas{position:static;flex-wrap:wrap;margin:12px 0 54px}
   .mh .ctas .kbtn{min-height:44px;padding:10px 20px;font-size:16px}
   .mf{position:relative;display:block;width:calc(100% + 40px);margin:-15px -20px 0;padding:22px 20px 0;height:78px;border-radius:18px 18px 0 0;box-sizing:border-box;font-family:Cinzel,serif;font-weight:600;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--t,#3d1520);background:var(--c);text-align:left;cursor:pointer;border:0}
   .mf:first-of-type{margin-top:0}
@@ -164,11 +166,12 @@ a.fs:hover img{transform:scale(1.05)}
 <section class="fold" aria-label="Proof of work">
 <div class="stage" id="stage">
 <div class="L">
-<a class="back" href="/#desk">← Back</a>
+<a class="back" href="/home">← Back</a>
 <h1>Proof of work</h1>
+<p class="ask">Are you looking for a marketer?</p>
 <div class="ctas">
 <a class="kbtn kbtn-soft" href={RESUME.href} target="_blank" rel="noopener">{RESUME.label}</a>
-<a class="kbtn kbtn-primary" href="/contact">Let's talk →</a>
+<a class="kbtn kbtn-primary" href="/contact">Let’s talk →</a>
 </div>
 <div role="tablist" aria-label="Kinds of work" aria-orientation="vertical">
 {FOLDERS.map((f, i) => (
@@ -183,21 +186,21 @@ a.fs:hover img{transform:scale(1.05)}
     <div class="ph">
       <h2>{f.label}</h2>
       <p class="dek">{f.dek}</p>
-      <span class="cnt">{plural(f.cases.length)}</span>
+      {f.cases.length > 0 && <span class="cnt">{plural(f.cases.length)}</span>}
     </div>
     <div class="sc" tabindex="0" aria-label={`${f.label}: ${plural(f.cases.length)}`}>
       {f.cases.length === 0 && (
-        <div class="row soon none"><span class="fs" aria-hidden="true"><span></span><b>coming soon</b></span><div class="cd"><span class="ct">Event write-ups are on the way</span><span class="cl">Gatherings I have put together will live here.</span></div></div>
+        <div class="row soon none"><span class="fs" aria-hidden="true"><span></span><b>Coming soon</b></span><div class="cd"><span class="ct">What the Fork by Marmeto</span><span class="cl">Write-up coming soon.</span></div></div>
       )}
       {f.cases.map((k) => { const c = CASES[k]; return (
         <div class={`row${c.soon ? ' soon' : ''}`}>
           {c.soon
-            ? <span class="fs" aria-hidden="true"><span><img src={c.img} alt="" loading="lazy"></span><b>coming soon</b></span>
+            ? <span class="fs" aria-hidden="true"><span><img src={c.img} alt="" loading="lazy"></span><b>Coming soon</b></span>
             : <a class="fs" href={c.href} tabindex="-1" aria-hidden="true"><span><img src={c.img} alt="" loading="lazy"></span></a>}
           <div class="cd">
             <span class="ct">{c.title}</span>
             <span class="cl">{c.line}</span>
-            {!c.soon && <div class="cb"><a class="kbtn" href={c.href} aria-label={`Read: ${c.title}`}>Read →</a><span class="mn">{c.mins} min read</span></div>}
+            {!c.soon && <div class="cb"><a class="kbtn" href={c.href} aria-label={`Read: ${c.title}`}>See how it worked →</a><span class="mn">{c.mins} min read</span></div>}
           </div>
         </div>
       ); })}
@@ -211,11 +214,12 @@ a.fs:hover img{transform:scale(1.05)}
 
 <main class="m">
 <div class="mh">
-<a class="back" href="/#desk">← Back</a>
+<a class="back" href="/home">← Back</a>
 <h1>Proof of work</h1>
+<p class="ask">Are you looking for a marketer?</p>
 <div class="ctas">
 <a class="kbtn kbtn-soft" href={RESUME.href} target="_blank" rel="noopener">{RESUME.label}</a>
-<a class="kbtn kbtn-primary" href="/contact">Let's talk →</a>
+<a class="kbtn kbtn-primary" href="/contact">Let’s talk →</a>
 </div>
 <div role="tablist" aria-label="Kinds of work">
 {FOLDERS.map((f, i) => (
@@ -228,17 +232,17 @@ a.fs:hover img{transform:scale(1.05)}
   <div data-panel={f.id} id={`m-${f.id}`} hidden={i !== 0}>
     <h2>{f.label}</h2>
     <p class="dek">{f.dek}</p>
-    <p class="mc">{plural(f.cases.length)}</p>
+    {f.cases.length > 0 && <p class="mc">{plural(f.cases.length)}</p>}
     {f.cases.length === 0 && (
-      <div class="row soon none"><span class="fs" aria-hidden="true"><span></span><b>coming soon</b></span><div class="cd"><span class="ct">Event write-ups are on the way</span><span class="cl">Gatherings I have put together will live here.</span></div></div>
+      <div class="row soon none"><span class="fs" aria-hidden="true"><span></span><b>Coming soon</b></span><div class="cd"><span class="ct">What the Fork by Marmeto</span><span class="cl">Write-up coming soon.</span></div></div>
     )}
     {f.cases.map((k) => { const c = CASES[k]; return (
       <div class={`row${c.soon ? ' soon' : ''}`}>
-        <span class="fs" aria-hidden="true"><span><img src={c.img} alt="" loading="lazy"></span>{c.soon && <b>coming soon</b>}</span>
+        <span class="fs" aria-hidden="true"><span><img src={c.img} alt="" loading="lazy"></span>{c.soon && <b>Coming soon</b>}</span>
         <div class="cd">
           <span class="ct">{c.title}</span>
           <span class="cl">{c.line}</span>
-          {!c.soon && <div class="cb"><a class="kbtn" href={c.href} aria-label={`Read: ${c.title}`}>Read →</a><span class="mn">{c.mins} min read</span></div>}
+          {!c.soon && <div class="cb"><a class="kbtn" href={c.href} aria-label={`Read: ${c.title}`}>See how it worked →</a><span class="mn">{c.mins} min read</span></div>}
         </div>
       </div>
     ); })}
