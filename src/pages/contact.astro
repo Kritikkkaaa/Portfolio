@@ -87,7 +87,7 @@ a:focus-visible,button:focus-visible{outline:2px solid #6E1E2B;outline-offset:-4
 .chn{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;cursor:pointer}
 .chn .ov{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;background:rgba(90,22,38,.93);color:#f6f1e8;opacity:0;transition:opacity .25s ease}
 .chn:hover .ov,.chn:focus-visible .ov{opacity:1}
-.chn .btn{display:inline-flex;align-items:center;min-height:38px;padding:0 18px;border-radius:999px;background:#f6f1e8;color:#385888;font-family:Cinzel,serif;font-weight:600;font-size:13px;letter-spacing:.06em}
+.chn .btn{display:inline-flex;align-items:center;min-height:38px;padding:0 18px;border-radius:999px;background:#f6f1e8;color:#5a1626;font-family:Cinzel,serif;font-weight:600;font-size:13px;letter-spacing:.06em}
 .chn .btn::after{content:'\2192';margin-left:8px}
 .chn .ic{display:block;line-height:0}
 .chn .ic svg{display:block}
@@ -159,7 +159,7 @@ a:focus-visible,button:focus-visible{outline:2px solid #6E1E2B;outline-offset:-4
 <div class="grid">
 {tiles.map((t) => {
   const o = `transform-origin: ${origin(t)}; background: ${t.bg}`;
-  if (t.band === 'TALK') return <div class="tl bd talk"><span aria-hidden="true">TALK</span><p class="cover">pick your stage, darling!<svg viewBox="0 0 300 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 9c60-6 140-8 296-3" fill="none" stroke="#385888" stroke-width="2.4" stroke-linecap="round"/></svg></p></div>;
+  if (t.band === 'TALK') return <div class="tl bd talk"><span aria-hidden="true">TALK</span><p class="cover">pick your stage, darling!<svg viewBox="0 0 300 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 9c60-6 140-8 296-3" fill="none" stroke="#6E1E2B" stroke-width="2.4" stroke-linecap="round"/></svg></p></div>;
   if (t.band) return <div class="tl bd" aria-hidden="true">{t.band}</div>;
   if (t.art) { const a = ART[t.art]; return <div class="tl art" style="background: #f6f1e8" aria-hidden="true"><img src={a.src} alt="" loading="lazy" decoding="async"></div>; }
   if (t.ch) return <div class="tl"><a class="chn" href={t.ch.href} aria-label={`${t.ch.name}: ${t.ch.btn}`} style={`background: ${t.bg}`} {...ext(t.ch.href)}><span class="ic" aria-hidden="true"><Fragment set:html={big(t.ch.svg)} /></span><span class="tag">{t.ch.name}</span><span class="ov" aria-hidden="true"><span class="btn">{t.ch.btn}</span></span></a></div>;

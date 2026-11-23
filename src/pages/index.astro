@@ -45,11 +45,12 @@ const phoneItems = [
   { n: 4, label: 'Playground', href: PLAYGROUND, art: '<img src="/desk/traffic-pole.webp" alt="a New York street-sign pole with traffic lights, a stop sign and two pigeons fighting over a slice of pizza">' },
   { n: 5, label: 'Contact', href: LETSTALK, art: '<img src="/desk/rotary-phone.webp" alt="a black vintage rotary phone">' }
 ];
-const NOTE_HELLO = "hello, i am Kritika.\na creative marketer and a writer.";
+const NOTE_HELLO = "hello, i am Kritika.";
+const NOTE_ROLE = "\na creative marketer and a writer.";
 const NOTE_TOP = "\n\nyou probably have too many tabs open too. same-pinch!\ni connect small ideas into something meaningful and get people talking. when i log off, i write it all down and try to create more than i consume.\n\nclick whatever calls to you, or ";
 const NOTE_CTA = "start with my work \u2192";
-const NOTE_END = "\nlove, K";
-const NOTE = NOTE_HELLO + NOTE_TOP + NOTE_CTA + NOTE_END;
+const NOTE_SIGN = "love, K";
+const NOTE = NOTE_HELLO + NOTE_ROLE + NOTE_TOP + NOTE_CTA + "\n" + NOTE_SIGN;
 
 ---
 <!doctype html>
@@ -101,7 +102,8 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 .photo img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 30%}
 .note{position:absolute;left:44px;right:44px;top:286px;margin:0;font-family:'Courier Prime',ui-monospace,monospace;font-size:17px;line-height:1.6;color:#5a2a26}
 .note{white-space:pre-line}
-.note .hello{display:inline-block;font-size:1.45em;line-height:1.3}
+.note .hello{font-size:1.45em;line-height:1.3}
+.signoff{position:absolute;left:44px;bottom:40px;margin:0;font-family:'Courier Prime',ui-monospace,monospace;font-size:17px;line-height:1.6;color:#5a2a26}
 .note a{white-space:nowrap;font-weight:700;color:inherit;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px}
 .note a:hover,.note a:focus-visible{text-decoration-thickness:2px}
 .stamp{position:absolute;right:40px;bottom:40px;width:84px;height:100px}
@@ -192,6 +194,7 @@ html.kc-on.kc-plain a,html.kc-on.kc-plain a *{cursor:pointer !important}
   .ph-post .photo{position:relative;left:auto;right:auto;top:auto;height:auto;aspect-ratio:2/1}
   .ph-post .note{position:relative;left:auto;right:auto;top:auto;margin:18px 0 0;font-size:15px;line-height:1.6}
   .ph-post .foot{position:relative;height:96px;margin-top:6px}
+  .ph-post .signoff{left:0;bottom:0;font-size:15px}
   .ph-post .stamp{right:0;bottom:0;width:72px;height:86px}
   .ph-post .postmark{right:32px;bottom:22px;width:104px;height:60px}
   .ph-next{position:absolute;left:0;right:0;bottom:max(14px,env(safe-area-inset-bottom));justify-content:center;margin:0;padding:0;display:inline-flex;align-items:center;gap:8px;min-height:44px;font-family:'EB Garamond',serif;font-style:italic;font-size:18px;color:#f1e6dc}
@@ -340,7 +343,7 @@ html.intro-on .kc-lab{color:#e4e3dd !important}
 <div class="card-wrap"><div class="card">
 <div class="rule" aria-hidden="true"></div>
 <figure class="photo"><img src="/desk/postcard-me.jpg" alt="kritika smiling in glasses, in front of a maroon wall hung with old Bengaluru paintings"></figure>
-<p class="note" data-note aria-label={NOTE}><span class="hello">{NOTE_HELLO}</span>{NOTE_TOP}<a href={PROJECTS}>{NOTE_CTA}</a>{NOTE_END}</p>
+<p class="note" data-note aria-label={NOTE}><span class="hello">{NOTE_HELLO}</span>{NOTE_ROLE}{NOTE_TOP}<a href={PROJECTS}>{NOTE_CTA}</a></p>
 <svg class="postmark" viewBox="0 0 120 70" aria-hidden="true">
   <circle cx="84" cy="35" r="26"/><circle cx="84" cy="35" r="19"/>
   <path id="pm" d="M62 35 a22 22 0 0 1 44 0" />
@@ -349,6 +352,7 @@ html.intro-on .kc-lab{color:#e4e3dd !important}
   <path d="M0 24 q6 -4 12 0 t12 0 t12 0 t12 0 M0 35 q6 -4 12 0 t12 0 t12 0 t12 0 M0 46 q6 -4 12 0 t12 0 t12 0 t12 0"/>
 </svg>
 <div class="stamp" aria-hidden="true"><div class="pic"><span></span></div><span class="val">₹5</span></div>
+<p class="signoff">{NOTE_SIGN}</p>
 </div></div>
 
 <a href={COFFEE} data-cur="nav" class="cut tile" data-id="coffee" aria-label="Recommendations" style="left: 1194px; top: 646px">
@@ -386,7 +390,7 @@ html.intro-on .kc-lab{color:#e4e3dd !important}
 <div class="ph-post"><div class="card">
 <div class="rule" aria-hidden="true"></div>
 <figure class="photo"><img src="/desk/postcard-me.jpg" alt="kritika smiling in glasses, in front of a maroon wall hung with old Bengaluru paintings"></figure>
-<p class="note" data-note aria-label={NOTE}><span class="hello">{NOTE_HELLO}</span>{NOTE_TOP}<a href={PROJECTS}>{NOTE_CTA}</a>{NOTE_END}</p>
+<p class="note" data-note aria-label={NOTE}><span class="hello">{NOTE_HELLO}</span>{NOTE_ROLE}{NOTE_TOP}<a href={PROJECTS}>{NOTE_CTA}</a></p>
 <div class="foot" aria-hidden="true">
 <svg class="postmark" viewBox="0 0 120 70">
   <circle cx="84" cy="35" r="26"/><circle cx="84" cy="35" r="19"/>
@@ -396,6 +400,7 @@ html.intro-on .kc-lab{color:#e4e3dd !important}
   <path d="M0 24 q6 -4 12 0 t12 0 t12 0 t12 0 M0 35 q6 -4 12 0 t12 0 t12 0 t12 0 M0 46 q6 -4 12 0 t12 0 t12 0 t12 0"/>
 </svg>
 <div class="stamp"><div class="pic"><span></span></div><span class="val">₹5</span></div>
+<p class="signoff">{NOTE_SIGN}</p>
 </div>
 </div></div>
 <a class="ph-next" href="#contents">Contents <span aria-hidden="true">↓</span></a>
