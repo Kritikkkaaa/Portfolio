@@ -66,18 +66,18 @@ const cards = pages.map((p) => ({ id: p.id, title: p.title, date: p.date || '', 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&amp;family=Geist:wght@400;500;600&amp;family=Cinzel:wght@500;600&amp;family=Marcellus&amp;family=EB+Garamond:ital,wght@0,400;0,500;1,400&amp;display=swap" rel="stylesheet">
 <style is:inline>
-html,body{margin:0;background:#5a1626;color:#f6f1e8;font-family:'EB Garamond',serif}
+html,body{margin:0;background:#6e1a2e;color:#f6f1e8;font-family:'EB Garamond',serif}
 a{color:inherit;text-decoration:none}
 a:focus-visible,button:focus-visible{outline:2px solid #f6f1e8;outline-offset:4px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.matte{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:radial-gradient(ellipse at 50% 40%,rgba(255,255,255,.035),rgba(0,0,0,.35) 100%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.matte{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:radial-gradient(ellipse at 50% 38%,rgba(255,170,170,.14),rgba(20,0,6,.3) 100%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 .wall{position:relative;z-index:1}
 .back{position:fixed;left:24px;top:calc(var(--bar,0px) + 20px);z-index:5;padding:6px 0;font-family:'EB Garamond',serif;font-size:19px;color:#f6f1e8;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
 
-/* the alert: a saffron bar that stays at the top while the page scrolls */
-.alert{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:center;gap:12px 24px;flex-wrap:wrap;padding:12px 24px;box-sizing:border-box;background:#f0b94a;color:#5a1626;text-align:left;box-shadow:0 6px 18px rgba(30,6,12,.35)}
+/* the alert: a deep green bar that stays at the top while the page scrolls */
+.alert{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:center;gap:12px 24px;flex-wrap:wrap;padding:12px 24px;box-sizing:border-box;background:#244f3f;color:#f6f1e8;text-align:left;box-shadow:0 6px 18px rgba(10,24,18,.4)}
 .alert p{margin:0;max-width:760px;font-family:'EB Garamond',serif;font-size:18px;line-height:1.35}
-.alert b{margin-right:6px;font-family:Cinzel,serif;font-weight:600;font-size:14px;letter-spacing:.1em;text-transform:uppercase}
+.alert b{margin-right:6px;font-family:Cinzel,serif;font-weight:600;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:#bfe0cc}
 
 /* the wall: two spreads to a row; pages inside a spread touch */
 .wall{max-width:1000px;margin:0 auto;padding:72px 32px 56px;box-sizing:border-box;display:grid;grid-template-columns:repeat(2,1fr);gap:22px 30px}
@@ -85,6 +85,14 @@ a:focus-visible,button:focus-visible{outline:2px solid #f6f1e8;outline-offset:4p
 .slot{aspect-ratio:210/297}
 .slot.play{display:flex;align-items:center;justify-content:center;font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(34px,6vw,64px);letter-spacing:-.01em;color:#f6f1e8}
 
+/* the title sits in the empty pages of the first row, across the gap between the two spreads */
+.slot.title{position:relative;overflow:visible}
+.slot.title .t{position:absolute;left:0;top:0;width:calc(200% + 30px);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transform:rotate(-3deg);pointer-events:none}
+.t .k{margin:0 0 6px;font-family:Cinzel,serif;font-weight:500;font-size:clamp(10px,1.3vw,14px);letter-spacing:.32em;text-transform:uppercase;color:rgba(246,241,232,.75)}
+.t .m{margin:0;font-family:'EB Garamond',serif;font-style:italic;font-weight:400;font-size:clamp(34px,6.4vw,76px);line-height:.98;letter-spacing:-.01em;color:#f6f1e8;text-shadow:0 2px 24px rgba(30,0,8,.35)}
+.t .m em{font-style:italic;color:#bfe0cc}
+.t svg{display:block;width:min(70%,300px);height:auto;margin-top:10px;overflow:visible}
+.t .sp{position:absolute;color:#bfe0cc;font-size:clamp(16px,2.4vw,28px);line-height:1}
 /* a page: hover zooms it above its neighbours */
 .pg{position:relative;display:block;width:100%;aspect-ratio:210/297;padding:0;border:0;margin:0;cursor:pointer;overflow:hidden;font:inherit;color:inherit;text-align:left;transition:transform .45s cubic-bezier(.2,.7,.2,1),box-shadow .45s ease;transform-origin:center}
 .pg:hover,.pg:focus-visible{transform:scale(1.12);z-index:3;box-shadow:0 22px 50px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.06)}
@@ -144,6 +152,9 @@ dialog.card[open]{animation:cardin .35s cubic-bezier(.2,.7,.2,1)}
 
 /* phones: one spread per row; the card stacks */
 @media (max-width: 767px){
+  .slot.title .t{width:100%;transform:rotate(-3deg)}
+  .t .m{font-size:clamp(24px,8vw,34px)}
+  .t .k{letter-spacing:.2em;font-size:9px}
   .alert{flex-direction:column;align-items:flex-start;padding:12px 16px 14px}
   .alert p{font-size:17px}
   .back{position:absolute;left:16px;top:calc(var(--bar,0px) + 14px)}
@@ -164,16 +175,17 @@ dialog.card[open]{animation:cardin .35s cubic-bezier(.2,.7,.2,1)}
 <body>
 <aside class="alert" id="alert" role="note">
 <p><b>work in progress.</b> product management taught me to ship first, iterate, and keep talking to users through the product. so here i am, shipping. tell me what you’d change.</p>
-<a class="kbtn kbtn-primary kbtn-sm" href="/contact">Let’s talk &rarr;</a>
+<a class="kbtn kbtn-sm" href="/contact">Let’s talk &rarr;</a>
 </aside>
 <div class="matte" aria-hidden="true"></div>
 <a class="back" href="/home">Back</a>
 <h1 class="sr">things i do for fun.</h1>
 
 <main class="wall" aria-label="the zine">
-{spreads.map((sp) => (
+{spreads.map((sp, si) => (
 <div class="spread">
-{sp.map((p) => {
+{sp.map((p, pi) => {
+  if (!p && si === 0 && pi === 1) return <span class="slot title"><span class="t"><p class="k">things i do for fun</p><p class="m">my creative<br><em>safe space.</em></p><svg viewBox="0 0 300 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 9c60-6 140-8 296-3" fill="none" stroke="#bfe0cc" stroke-width="2.4" stroke-linecap="round"></path></svg><span class="sp" aria-hidden="true" style="left:12%;top:16%">✦</span><span class="sp" aria-hidden="true" style="right:10%;top:62%;font-size:.8em">✦</span><span class="sp" aria-hidden="true" style="right:22%;top:8%;font-size:.6em">✦</span></span></span>;
   if (!p) return <span class="slot" aria-hidden="true"></span>;
   if (p.look === 'play') return <span class="slot play"><span>Play</span></span>;
   const face = p.img
