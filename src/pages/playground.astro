@@ -87,12 +87,10 @@ a:focus-visible,button:focus-visible{outline:2px solid #f6f1e8;outline-offset:4p
 
 /* the title sits in the empty pages of the first row, across the gap between the two spreads */
 .slot.title{position:relative;overflow:visible}
-.slot.title .t{position:absolute;left:0;top:0;width:calc(200% + 30px);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transform:rotate(-3deg);pointer-events:none}
-.t .k{margin:0 0 6px;font-family:Cinzel,serif;font-weight:500;font-size:clamp(10px,1.3vw,14px);letter-spacing:.32em;text-transform:uppercase;color:rgba(246,241,232,.75)}
-.t .m{margin:0;font-family:'EB Garamond',serif;font-style:italic;font-weight:400;font-size:clamp(34px,6.4vw,76px);line-height:.98;letter-spacing:-.01em;color:#f6f1e8;text-shadow:0 2px 24px rgba(30,0,8,.35)}
-.t .m em{font-style:italic;color:#bfe0cc}
-.t svg{display:block;width:min(70%,300px);height:auto;margin-top:10px;overflow:visible}
-.t .sp{position:absolute;color:#bfe0cc;font-size:clamp(16px,2.4vw,28px);line-height:1}
+.slot.title .t{position:absolute;left:0;top:0;width:calc(200% + 30px);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
+.t .k{margin:0 0 14px;font-family:Cinzel,serif;font-weight:500;font-size:clamp(10px,1.3vw,14px);letter-spacing:.32em;text-transform:uppercase;color:rgba(246,241,232,.75)}
+.t .m{margin:0;font-family:Cinzel,serif;font-weight:500;font-size:clamp(24px,4.2vw,50px);line-height:1.15;letter-spacing:.02em;color:#f6f1e8}
+.t .m em{font-style:normal;color:#bfe0cc}
 /* a page: hover zooms it above its neighbours */
 .pg{position:relative;display:block;width:100%;aspect-ratio:210/297;padding:0;border:0;margin:0;cursor:pointer;overflow:hidden;font:inherit;color:inherit;text-align:left;transition:transform .45s cubic-bezier(.2,.7,.2,1),box-shadow .45s ease;transform-origin:center}
 .pg:hover,.pg:focus-visible{transform:scale(1.12);z-index:3;box-shadow:0 22px 50px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.06)}
@@ -152,9 +150,9 @@ dialog.card[open]{animation:cardin .35s cubic-bezier(.2,.7,.2,1)}
 
 /* phones: one spread per row; the card stacks */
 @media (max-width: 767px){
-  .slot.title .t{width:100%;transform:rotate(-3deg)}
-  .t .m{font-size:clamp(24px,8vw,34px)}
-  .t .k{letter-spacing:.2em;font-size:9px}
+  .slot.title .t{width:100%}
+  .t .m{font-size:clamp(17px,5.6vw,24px)}
+  .t .k{letter-spacing:.14em;font-size:8px;margin-bottom:8px}
   .alert{flex-direction:column;align-items:flex-start;padding:12px 16px 14px}
   .alert p{font-size:17px}
   .back{position:absolute;left:16px;top:calc(var(--bar,0px) + 14px)}
@@ -185,7 +183,7 @@ dialog.card[open]{animation:cardin .35s cubic-bezier(.2,.7,.2,1)}
 {spreads.map((sp, si) => (
 <div class="spread">
 {sp.map((p, pi) => {
-  if (!p && si === 0 && pi === 1) return <span class="slot title"><span class="t"><p class="k">things i do for fun</p><p class="m">my creative<br><em>safe space.</em></p><svg viewBox="0 0 300 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 9c60-6 140-8 296-3" fill="none" stroke="#bfe0cc" stroke-width="2.4" stroke-linecap="round"></path></svg><span class="sp" aria-hidden="true" style="left:12%;top:16%">✦</span><span class="sp" aria-hidden="true" style="right:10%;top:62%;font-size:.8em">✦</span><span class="sp" aria-hidden="true" style="right:22%;top:8%;font-size:.6em">✦</span></span></span>;
+  if (!p && si === 0 && pi === 1) return <span class="slot title"><span class="t"><p class="k">Whimsy · Creativity · Play</p><p class="m">My creative<br><em>safe space.</em></p></span></span>;
   if (!p) return <span class="slot" aria-hidden="true"></span>;
   if (p.look === 'play') return <span class="slot play"><span>Play</span></span>;
   const face = p.img
