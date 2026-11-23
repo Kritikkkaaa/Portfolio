@@ -45,7 +45,11 @@ const phoneItems = [
   { n: 4, label: 'Playground', href: PLAYGROUND, art: '<img src="/desk/traffic-pole.webp" alt="a New York street-sign pole with traffic lights, a stop sign and two pigeons fighting over a slice of pizza">' },
   { n: 5, label: 'Contact', href: LETSTALK, art: '<img src="/desk/rotary-phone.webp" alt="a black vintage rotary phone">' }
 ];
-const NOTE = "you probably have too many tabs open too. pull up a chair.\n\nby day, i'm a marketer and a writer. i connect small ideas into something meaningful, then put it on the internet to get people talking. when i log off, i feel deeply, write it all down and try to create more than i consume.\n\nclick whatever calls to you. love, K";
+const NOTE_HELLO = "hello, i'm Kritika. a creative marketer and a writer.";
+const NOTE_TOP = "\n\nyou probably have too many tabs open too. pull up a chair. i connect small ideas into something meaningful and get people talking. when i log off, i write it all down and try to create more than i consume.\n\nclick whatever calls to you, or ";
+const NOTE_CTA = "start with my work \u2192";
+const NOTE_END = "\n\nlove, K";
+const NOTE = NOTE_HELLO + NOTE_TOP + NOTE_CTA + NOTE_END;
 
 ---
 <!doctype html>
@@ -97,6 +101,9 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 .photo img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 30%}
 .note{position:absolute;left:44px;right:44px;top:286px;margin:0;font-family:'Courier Prime',ui-monospace,monospace;font-size:17px;line-height:1.6;color:#5a2a26}
 .note{white-space:pre-line}
+.note .hello{display:inline-block;font-size:1.45em;line-height:1.3}
+.note a{font-weight:700;color:inherit;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px}
+.note a:hover,.note a:focus-visible{text-decoration-thickness:2px}
 .stamp{position:absolute;right:40px;bottom:40px;width:84px;height:100px}
 .stamp .pic{position:absolute;inset:0;padding:5px;background:#fbf8f2;
   -webkit-mask:radial-gradient(circle 3px at 50% 50%,transparent 98%,#000) -3px -3px/8px 8px,linear-gradient(#000,#000) 4px 4px/calc(100% - 8px) calc(100% - 8px) no-repeat;
@@ -333,7 +340,7 @@ html.intro-on .kc-lab{color:#e4e3dd !important}
 <div class="card-wrap"><div class="card">
 <div class="rule" aria-hidden="true"></div>
 <figure class="photo"><img src="/desk/postcard-me.jpg" alt="kritika smiling in glasses, in front of a maroon wall hung with old Bengaluru paintings"></figure>
-<p class="note" data-note aria-label={NOTE}>{NOTE}</p>
+<p class="note" data-note aria-label={NOTE}><span class="hello">{NOTE_HELLO}</span>{NOTE_TOP}<a href={PROJECTS}>{NOTE_CTA}</a>{NOTE_END}</p>
 <svg class="postmark" viewBox="0 0 120 70" aria-hidden="true">
   <circle cx="84" cy="35" r="26"/><circle cx="84" cy="35" r="19"/>
   <path id="pm" d="M62 35 a22 22 0 0 1 44 0" />
@@ -379,7 +386,7 @@ html.intro-on .kc-lab{color:#e4e3dd !important}
 <div class="ph-post"><div class="card">
 <div class="rule" aria-hidden="true"></div>
 <figure class="photo"><img src="/desk/postcard-me.jpg" alt="kritika smiling in glasses, in front of a maroon wall hung with old Bengaluru paintings"></figure>
-<p class="note" data-note aria-label={NOTE}>{NOTE}</p>
+<p class="note" data-note aria-label={NOTE}><span class="hello">{NOTE_HELLO}</span>{NOTE_TOP}<a href={PROJECTS}>{NOTE_CTA}</a>{NOTE_END}</p>
 <div class="foot" aria-hidden="true">
 <svg class="postmark" viewBox="0 0 120 70">
   <circle cx="84" cy="35" r="26"/><circle cx="84" cy="35" r="19"/>
