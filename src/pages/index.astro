@@ -39,11 +39,11 @@ const crossword = (() => {
 // Placeholder note for the postcard (about 55 words) until Kritika writes hers.
 // Phone: the six as cards, in number order (same art, labels and links as the desktop oval).
 const phoneItems = [
-  { n: 1, label: 'Recommendations', href: COFFEE, art: '<img src="/desk/fries.png" alt="black-and-white collage hands holding a paper bag of golden fries">' },
-  { n: 2, label: 'Work', href: PROJECTS, art: '<img src="/desk/work-illustration.png" alt="an illustrated laptop with colour swatches, sticky notes and a mug that says Well Cast">' },
-  { n: 3, label: 'Substack', href: COVER, art: '<img src="/desk/typewriter.png" alt="a green typewriter with torn pages of Hamlet in its roller">' },
-  { n: 4, label: 'Playground', href: PLAYGROUND, art: '<img src="/desk/traffic-pole.png" alt="a New York street-sign pole with traffic lights, a stop sign and two pigeons fighting over a slice of pizza">' },
-  { n: 5, label: 'Contact', href: LETSTALK, art: '<img src="/desk/rotary-phone.png" alt="a black vintage rotary phone">' }
+  { n: 1, label: 'Recommendations', href: COFFEE, art: '<img src="/desk/fries.webp" alt="black-and-white collage hands holding a paper bag of golden fries">' },
+  { n: 2, label: 'Work', href: PROJECTS, art: '<img src="/desk/work-illustration.webp" alt="an illustrated laptop with colour swatches, sticky notes and a mug that says Well Cast">' },
+  { n: 3, label: 'Substack', href: COVER, art: '<img src="/desk/typewriter.webp" alt="a green typewriter with torn pages of Hamlet in its roller">' },
+  { n: 4, label: 'Playground', href: PLAYGROUND, art: '<img src="/desk/traffic-pole.webp" alt="a New York street-sign pole with traffic lights, a stop sign and two pigeons fighting over a slice of pizza">' },
+  { n: 5, label: 'Contact', href: LETSTALK, art: '<img src="/desk/rotary-phone.webp" alt="a black vintage rotary phone">' }
 ];
 const NOTE = "you probably have too many tabs open too. pull up a chair.\n\nby day, i'm a marketer and a writer. i connect small ideas into something meaningful, then put it on the internet to get people talking. when i log off, i feel deeply, write it all down and try to create more than i consume.\n\nclick whatever calls to you. love, K";
 
@@ -56,6 +56,14 @@ const NOTE = "you probably have too many tabs open too. pull up a chair.\n\nby d
 <title>kritika · contents</title>
 <link rel="icon" href="/mark.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="/desk/lotus-wall.jpg" fetchpriority="high">
+<link rel="preload" as="image" href="/desk/postcard-me.jpg">
+<link rel="preload" as="image" href="/desk/work-illustration.webp" type="image/webp">
+<link rel="preload" as="image" href="/desk/typewriter.webp" type="image/webp">
+<link rel="preload" as="image" href="/desk/rotary-phone.webp" type="image/webp">
+<link rel="preload" as="image" href="/desk/traffic-pole.webp" type="image/webp">
+<link rel="preload" as="image" href="/desk/fries.webp" type="image/webp">
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Hanken+Grotesk:ital,wght@0,400;0,500;1,400&amp;family=Caveat:wght@500&amp;family=Cinzel:wght@500;600&amp;family=Courier+Prime:wght@400;700&amp;family=EB+Garamond:ital,wght@0,400;1,400&amp;display=swap" rel="stylesheet">
 <script is:inline>if (location.hash !== '#desk') document.documentElement.classList.add('intro-on');</script>
 <style is:inline>
@@ -276,16 +284,16 @@ html.intro-on .kc-lab{color:#e4e3dd !important}
 .cb-yes{border:0;background:#E8EBF0;color:#0B0A0F;font-weight:600}
 .cb-no{background:none;border:1px solid #3A3842;color:#E8EBF0}
 
-/* the alert in the middle of the screen when someone tries to scroll the spread */
-.nudge-alert{position:fixed;left:50%;top:50%;z-index:70;display:flex;align-items:center;gap:12px;padding:14px 26px 15px 20px;border-radius:999px;background:#f4f0e9;color:#6E1E2B;font-family:'EB Garamond',serif;font-style:italic;font-size:21px;line-height:1;white-space:nowrap;box-shadow:0 0 0 1px rgba(110,30,43,.22),0 16px 34px rgba(40,8,14,.32);opacity:0;transform:translate(-50%,-50%) scale(.92);transition:opacity .25s ease,transform .45s cubic-bezier(.3,1.5,.5,1);pointer-events:none}
-.nudge-alert.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
-.nudge-alert svg{width:22px;height:22px;flex:none;fill:none;stroke:#6E1E2B;stroke-width:1.6}
-.nudge-alert svg circle:first-child{fill:#6E1E2B;stroke:none}
-.nudge-alert .ring{transform-origin:12px 12px;animation:tapring 1.4s ease-out infinite}
-@keyframes tapring{0%{transform:scale(.45);opacity:1}100%{transform:scale(1.15);opacity:0}}
+/* scrolling the spread pulses the five cutouts one by one (see nudge() in the script) */
+.cut.pulse .box{animation:pulse 1s ease-in-out}
+.cut.pulse .tag{opacity:1;animation:swing 1s cubic-bezier(.3,.6,.4,1) forwards}
+.cut.pulse .lbl{opacity:0}
+@keyframes pulse{0%,100%{scale:1}35%{scale:1.14}}
+.cut.pulse img{filter:saturate(1.1) contrast(1.04) drop-shadow(0 0 16px rgba(255,214,150,.95)) drop-shadow(0 8px 10px rgba(70,50,35,.24))}
+@media (prefers-reduced-motion: reduce){.cut.pulse .box{animation:none}.cut.pulse .tag{animation:none;transform:none}}
 #stage{transition:translate .5s cubic-bezier(.3,1.5,.5,1)}
 #stage.nudging{transition:translate .15s ease-out}
-@media (prefers-reduced-motion: reduce){.nudge-alert,.nudge-alert .ring,#stage{transition:none;animation:none}}
+@media (prefers-reduced-motion: reduce){#stage{transition:none;animation:none}}
 /* touch screens with the spread (iPad held sideways): no hover, so the tags simply hang there */
 @media (hover: none){.cut .tag{opacity:1 !important;transform:none !important;animation:none !important}}
 /* iPad held upright (pages stacked by /stack.js): the phone intro, which slides away on a tap */
@@ -337,34 +345,33 @@ html.intro-on .kc-lab{color:#e4e3dd !important}
 </div></div>
 
 <a href={COFFEE} data-cur="nav" class="cut tile" data-id="coffee" aria-label="Recommendations" style="left: 1194px; top: 646px">
-<div class="box" style="transform: rotate(2deg)"><img src="/desk/fries.png" alt="black-and-white collage hands holding a paper bag of golden fries"></div>
+<div class="box" style="transform: rotate(2deg)"><img src="/desk/fries.webp" alt="black-and-white collage hands holding a paper bag of golden fries"></div>
 <span class="lbl">Recommendations</span>
 <span class="tag" aria-hidden="true" style="left: 150px; top: 22px"><span class="str"></span><span class="tcard"><i class="hole"></i><b>5</b><span class="t">Recommendations</span></span></span></a>
 
 <a href={PROJECTS} data-cur="nav" class="cut tile" data-id="cover" aria-label="Work" style="left: 1044px; top: 116px">
-<div class="box"><img src="/desk/work-illustration.png" alt="an illustrated laptop with colour swatches, sticky notes and a mug that says Well Cast"></div>
+<div class="box"><img src="/desk/work-illustration.webp" alt="an illustrated laptop with colour swatches, sticky notes and a mug that says Well Cast"></div>
 <span class="lbl">Work</span>
 <span class="tag" aria-hidden="true" style="left: 148px; top: 26px"><span class="str"></span><span class="tcard"><i class="hole"></i><b>1</b><span class="t">Work</span></span></span></a>
 
 <a href={COVER} data-cur="nav" class="cut tile" data-id="tech" aria-label="Find me on substack" style="left: 894px; top: 381px">
-<div class="box" style="transform: rotate(-3deg)"><img src="/desk/typewriter.png" alt="a green typewriter with torn pages of Hamlet in its roller"></div>
+<div class="box" style="transform: rotate(-3deg)"><img src="/desk/typewriter.webp" alt="a green typewriter with torn pages of Hamlet in its roller"></div>
 <span class="lbl">Substack</span>
 <span class="tag" aria-hidden="true" style="left: 150px; top: 26px"><span class="str"></span><span class="tcard"><i class="hole"></i><b>2</b><span class="t">Find me on substack</span></span></span></a>
 
 <a href={PLAYGROUND} data-cur="nav" class="cut tile" data-id="tarot" aria-label="My playground" style="left: 894px; top: 646px">
-<div class="box" style="transform: rotate(3deg)"><img src="/desk/traffic-pole.png" alt="a New York street-sign pole with traffic lights, a stop sign and two pigeons fighting over a slice of pizza"></div>
+<div class="box" style="transform: rotate(3deg)"><img src="/desk/traffic-pole.webp" alt="a New York street-sign pole with traffic lights, a stop sign and two pigeons fighting over a slice of pizza"></div>
 <span class="lbl">Playground</span>
 <span class="tag" aria-hidden="true" style="left: 128px; top: 22px"><span class="str"></span><span class="tcard"><i class="hole"></i><b>4</b><span class="t">My playground</span></span></span></a>
 
 <a href={LETSTALK} data-cur="nav" class="cut tile" data-id="phone" aria-label="Let's talk" style="left: 1194px; top: 381px">
-<div class="box" style="transform: rotate(-4deg)"><img src="/desk/rotary-phone.png" alt=""></div>
+<div class="box" style="transform: rotate(-4deg)"><img src="/desk/rotary-phone.webp" alt=""></div>
 <span class="lbl" style="left: calc(50% + 18px)">Contact</span>
 <span class="tag" aria-hidden="true" style="left: 150px; top: 42px"><span class="str"></span><span class="tcard"><i class="hole"></i><b>3</b><span class="t">Let's talk</span></span></span></a>
 
 </div>
 </div>
 <div id="edge" aria-hidden="true"></div>
-<div id="nudge-alert" class="nudge-alert" role="status" aria-live="polite"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"></circle><circle class="ring" cx="12" cy="12" r="8"></circle></svg><span>Click on any content to continue</span></div>
 
 <main class="ph">
 <section class="ph-l">
@@ -528,19 +535,23 @@ function turnEase(x){
   }
   function finish(){ done = true; root.classList.remove('intro-on'); }
   function turn(){ if (done) return; clearTimeout(snap); start = 0; p = 1; render(true); clearTimeout(fin); fin = setTimeout(finish, reduce ? 0 : 1150); }
-  // On the spread nothing scrolls: any scroll (up, down, left, right) nudges the whole page that way and back,
-  // and an alert in the middle says to click something. It never goes back to the intro.
-  var stageEl = document.getElementById('stage'), alertEl = document.getElementById('nudge-alert'), nudgeT, alertT;
-  function nudge(dx, dy){
-    if (alertEl) { alertEl.classList.add('on'); clearTimeout(alertT); alertT = setTimeout(function(){ alertEl.classList.remove('on'); }, 2000); }
-    if (reduce) return;
-    var ax = Math.abs(dx) > Math.abs(dy), k = 22;
-    stageEl.classList.add('nudging');
-    stageEl.style.translate = ax ? ((dx > 0 ? -k : k) + 'px 0') : ('0 ' + (dy > 0 ? -k : k) + 'px');
-    clearTimeout(nudgeT); nudgeT = setTimeout(function(){ stageEl.classList.remove('nudging'); stageEl.style.translate = '0 0'; }, 150);
+  // On the spread nothing scrolls: any scroll (or arrow key) pulls attention to the five cutouts instead. Each one
+  // pulses for a second, one after another (Work 1, Substack 2, Contact 3, Playground 4, Recommendations 5).
+  // Scrolling again while it plays does nothing; once it has finished, the next scroll plays it again.
+  var ORDER = ['cover', 'tech', 'phone', 'tarot', 'coffee'], pulsing = false;
+  function nudge(){
+    if (pulsing) return;
+    pulsing = true;
+    var cuts = ORDER.map(function(id){ return document.querySelector('.spread .cut[data-id="' + id + '"]'); }).filter(Boolean), i = 0;
+    (function step(){
+      if (i > 0) cuts[i - 1].classList.remove('pulse');
+      if (i >= cuts.length) { pulsing = false; return; }
+      cuts[i++].classList.add('pulse');
+      setTimeout(step, 1000);
+    })();
   }
   function push(d, dx){
-    if (done) { if (!phone.matches && (d || dx)) nudge(dx || 0, d || 0); return; }
+    if (done) { if (!phone.matches && (d || dx)) nudge(); return; }
     if (p >= 1 && d >= 0) return;
     clearTimeout(fin);
     var now = Date.now();
@@ -571,7 +582,7 @@ function turnEase(x){
   addEventListener('keydown', function(e){
     if (!done && /^(ArrowDown|PageDown| |Spacebar)$/.test(e.key) && !(e.target.closest && e.target.closest('button,a'))) { e.preventDefault(); turn(); return; }
     var dirs = { ArrowDown: [0, 1], PageDown: [0, 1], ' ': [0, 1], ArrowUp: [0, -1], PageUp: [0, -1], ArrowLeft: [-1, 0], ArrowRight: [1, 0], Home: [0, -1], End: [0, 1] };
-    if (done && !phone.matches && dirs[e.key] && !(e.target.closest && e.target.closest('input,textarea'))) { e.preventDefault(); nudge(dirs[e.key][0], dirs[e.key][1]); }
+    if (done && !phone.matches && dirs[e.key] && !(e.target.closest && e.target.closest('input,textarea'))) { e.preventDefault(); nudge(); }
   });
   document.querySelectorAll('#intro [data-turn]').forEach(function(b){ b.addEventListener('click', turn); });
   // there is no way back to the intro from the spread; only a refresh shows it again
