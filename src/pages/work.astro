@@ -12,7 +12,8 @@ import Analytics from '../components/Analytics.astro';
 const CASES: Record<string, { title: string; line: string; img: string; href?: string; mins?: number; soon?: boolean }> = {
   twitter: { title: 'Growing Plane’s Twitter', line: '2.5k followers in 6 months. 500+ posts and 20+ release notes.', img: '/jobs/twitter-network.webp', href: '/work/grow-planes-twitter', mins: 3 },
   pricing: { title: 'Plane One launch', line: 'Launching Plane One on Twitter: the tease, the reveal and the letter.', img: '/jobs/pricing-invoice.webp', href: '/work/plane-one-campaign', mins: 3 },
-  nexus: { title: 'Who Nexus is for', line: 'How I shaped Nexus’s ICP and positioning.', img: '/jobs/chess-linocut.png', href: '/work/who-nexus-is-for', mins: 3 },
+  // nexus case study taken down (route /work/who-nexus-is-for), shown as coming soon. To bring it back, drop `soon: true` and restore href (see src/data/cases/index.ts).
+  nexus: { title: 'Who Nexus is for', line: 'How I shaped Nexus’s ICP and positioning.', img: '/jobs/chess-linocut.png', soon: true },
   paper: { title: 'Paper’s onboarding emails', line: 'A teardown of what the first emails say, what they should, and why.', img: '/jobs/paper-envelope.png', soon: true },
   ai: { title: 'AI in market research', line: 'The prompts, checks and workflow I use to understand a market fast.', img: '/jobs/ai-scribble.webp', soon: true }
 };
@@ -63,7 +64,7 @@ h1{position:absolute;left:56px;top:150px;width:644px;margin:0;font-family:Cinzel
 .tb{position:absolute;top:-53px;height:54px;padding:0 30px;display:flex;align-items:center;gap:10px;box-sizing:border-box;border-radius:16px 16px 0 0;background:var(--c);font-family:Cinzel,serif;font-weight:600;font-size:18px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;color:var(--t,#3d1520)}
 .fd::before{content:"";position:absolute;inset:0;border-radius:inherit;background-image:var(--deco);background-repeat:no-repeat;opacity:.6;pointer-events:none}
 .f1::before{background-size:820px auto;background-position:right -10px top -170px}
-.f2::before{background-image:url(/work-decor/lotus.png),url(/work-decor/motif.png);background-size:330px auto,470px auto;background-position:right 90px top -190px,left 620px top -110px}
+.f2::before{background-image:url(/work-decor/motif-v.png);background-size:auto 560px;background-position:left 624px top 10px}
 .f3::before{background-size:420px auto;background-position:left 0 top 0;transform:scaleX(-1)}
 .fd[aria-selected="true"]{transform:translateY(-18px);box-shadow:0 -8px 18px rgba(30,6,12,.28)}
 .fd[aria-selected="true"] .tb::before{content:"";width:9px;height:9px;border-radius:50%;background:currentColor}
@@ -71,7 +72,7 @@ h1{position:absolute;left:56px;top:150px;width:644px;margin:0;font-family:Cinzel
 .fd[aria-selected="true"] .cvt,.mf[aria-selected="true"] .cvt{display:inline}
 .fd:not([aria-selected="true"]):hover,.fd:not([aria-selected="true"]):focus-visible{transform:translateY(-6px)}
 .f1{--c:#d9cfc0;--ring:rgba(61,21,32,.4);--deco:url(/work-decor/vine.png);top:460px;z-index:1}.f1 .tb{left:656px}
-.f2{--c:#4a7568;--t:#f6f1e8;--ring:rgba(246,241,232,.45);--deco:url(/work-decor/lotus.png);top:580px;z-index:2}.f2 .tb{left:820px}
+.f2{--c:#4a7568;--t:#f6f1e8;--ring:rgba(246,241,232,.45);--deco:url(/work-decor/motif-v.png);top:580px;z-index:2}.f2 .tb{left:820px}
 .f3{--c:#2a2724;--t:#f6f1e8;--ring:rgba(246,241,232,.45);--deco:url(/work-decor/lace.png);top:700px;z-index:3}.f3 .tb{left:710px}
 .ask{position:absolute;left:56px;top:228px;margin:0;z-index:30;font-family:'Courier Prime',ui-monospace,monospace;font-size:18px;color:rgba(246,241,232,.9)}
 .ctas{position:absolute;left:56px;top:272px;z-index:30;display:flex;gap:14px;white-space:nowrap}
@@ -135,11 +136,11 @@ a.fs:hover img{transform:scale(1.05)}
   .mf:first-of-type{margin-top:0}
   .mf[aria-selected="true"]::after{content:"";display:inline-block;width:8px;height:8px;margin:0 0 0 9px;border-radius:50%;background:currentColor;vertical-align:1px}
   .mf .cvt{font-size:11px;padding-left:10px;margin-left:8px}
-  .mf.g1{z-index:1;--ring:rgba(61,21,32,.4);--deco:url(/work-decor/vine.png)}.mf.g2{z-index:2;--ring:rgba(246,241,232,.45);--deco:url(/work-decor/lotus.png)}.mf.g3{z-index:3;--ring:rgba(246,241,232,.45);--deco:url(/work-decor/lace.png)}
+  .mf.g1{z-index:1;--ring:rgba(61,21,32,.4);--deco:url(/work-decor/vine.png)}.mf.g2{z-index:2;--ring:rgba(246,241,232,.45);--deco:url(/work-decor/motif-v.png)}.mf.g3{z-index:3;--ring:rgba(246,241,232,.45);--deco:url(/work-decor/lace.png)}
   .mf{overflow:hidden;isolation:isolate}
   .mf::before{content:"";position:absolute;inset:0;z-index:-1;background-image:var(--deco);background-repeat:no-repeat;opacity:.6;pointer-events:none}
   .mf.g1::before{background-size:430px auto;background-position:right -10px top -90px}
-  .mf.g2::before{background-image:url(/work-decor/lotus.png),url(/work-decor/motif.png);background-size:190px auto,260px auto;background-position:right 40px top -110px,left 10px top -60px}
+  .mf.g2::before{background-image:url(/work-decor/motif-v.png);background-size:auto 240px;background-position:left 14px top -70px}
   .mf.g3::before{background-size:230px auto;background-position:left 0 top 0;transform:scaleX(-1)}
   .mp{padding:30px 20px 12px;background:linear-gradient(180deg,#f9f5ed 0%,#f3ede2 100%)}
   .mp h2{font-size:26px}

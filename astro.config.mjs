@@ -6,9 +6,10 @@ export default defineConfig({
   site: 'https://www.kritikal.work',
   output: 'static',
   redirects: {
-    // the first version of the Nexus case study was removed; its old addresses now open the current one
-    '/icp-nexus': '/work/who-nexus-is-for',
-    '/work/icp-positioning-messaging-nexus': '/work/who-nexus-is-for',
+    // Nexus case study taken down: its old addresses and /work/who-nexus-is-for now show the 404 page.
+    // To bring it back, uncomment these and the route in src/data/cases/index.ts.
+    // '/icp-nexus': '/work/who-nexus-is-for',
+    // '/work/icp-positioning-messaging-nexus': '/work/who-nexus-is-for',
     // the old projects page now opens the work page
     '/jobs': '/work',
     // the revamp's pages moved to their final routes

@@ -23,9 +23,9 @@ npm run build    # static site in dist/
 | `/roadmap` | The journey | `src/pages/roadmap.astro` |
 | anything else | The 404 page | `src/pages/404.astro` |
 
-Redirects (set in `astro.config.mjs`): `/jobs` → `/work`, `/journey` → `/roadmap`, `/coffee` → `/recommendations`, `/substacks` → `/substack`, and the old Nexus case study addresses → `/work/who-nexus-is-for`.
+Redirects (set in `astro.config.mjs`): `/jobs` → `/work`, `/journey` → `/roadmap`, `/coffee` → `/recommendations`, `/substacks` → `/substack`.
 
-Removed, now showing the 404 page: `/home-redo`, `/work-redo`, `/home-revamp`, `/lets-talk`.
+Removed, now showing the 404 page: `/work/who-nexus-is-for` (Nexus case study taken down, code commented out; see `src/data/cases/index.ts`, `src/pages/work.astro`, `astro.config.mjs`), `/icp-nexus`, `/work/icp-positioning-messaging-nexus`, `/home-redo`, `/work-redo`, `/home-revamp`, `/lets-talk`.
 
 To add a case study: add it to `src/data/cases/` and to `CASES` and `FOLDERS` at the top of `src/pages/work.astro`.
 
