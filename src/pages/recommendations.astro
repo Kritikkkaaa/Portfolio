@@ -31,6 +31,9 @@ a:focus-visible{outline:2px solid #6E1E2B;outline-offset:4px}
 .pageL::after{content:'';position:absolute;inset:0;background:#6E1E2B;mix-blend-mode:multiply;opacity:.5;pointer-events:none}
 .pageR{background:linear-gradient(80deg,#e6dccd 0%,#eee6d9 4%,#f6f1e8 20%,#f8f4ec 46%,#f6f1e8 100%)}
 .pageR::after{content:'';position:absolute;inset:0;background:url(/desk/paper.jpg);background-size:900px auto;mix-blend-mode:multiply;opacity:.18;pointer-events:none}
+.pins,#card-slot{pointer-events:auto}
+.cta{display:inline-flex;align-items:center;flex:none;min-height:40px;padding:0 20px;border-radius:999px;background:#6E1E2B;color:#f6f1e8;font-family:Cinzel,serif;font-weight:600;font-size:13px;letter-spacing:.06em;white-space:nowrap}
+.cta:hover{background:#4a1220;color:#f6f1e8}
 .chip{background:#f6f1e8;border:1.4px solid rgba(90,22,38,.55);box-shadow:0 10px 24px rgba(30,6,12,.3);box-sizing:border-box}
 .sheen{background:linear-gradient(115deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.28) 42%,rgba(255,255,255,0) 54%)}
 .spine{background:linear-gradient(90deg,rgba(0,0,0,0) 0%,rgba(60,30,20,.10) 42%,rgba(60,30,20,.20) 50%,rgba(255,255,255,.10) 54%,rgba(0,0,0,0) 100%)}
@@ -80,10 +83,17 @@ a:focus-visible{outline:2px solid #6E1E2B;outline-offset:4px}
 <div class="sheen" aria-hidden="true" style="position: absolute; inset: 0; opacity: .6"></div>
 <div class="spine" aria-hidden="true" style="position: absolute; left: 716px; top: 0; width: 80px; height: 982px; pointer-events: none"></div>
 
-<a class="chip" href="/home" style="position: absolute; left: 64px; top: 48px; padding: 5px 14px 6px; font-family: 'EB Garamond', serif; font-size: 19px; line-height: 1.2; color: #5a1626; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px">Back</a>
+<div class="chip" style="position: absolute; left: 64px; top: 36px; width: 628px; padding: 14px 24px 18px; z-index: 3">
+<a href="/home" style="display: inline-block; font-family: 'EB Garamond', serif; font-size: 19px; line-height: 1.2; color: #5a1626; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px">Back</a>
+<h1 style="margin: 6px 0 0; font-family: Cinzel, serif; font-weight: 500; font-size: 60px; line-height: 1.05; letter-spacing: .01em; color: #5a1626">Genuine reccos.</h1>
+<p style="margin: 6px 0 0; font-family: 'Courier Prime', monospace; font-size: 15px; line-height: 1.3; color: #5a1626">tap a place. i’ll tell you why.</p>
+<div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(90,22,38,.25); display: flex; align-items: center; justify-content: space-between; gap: 24px">
+<p style="margin: 0; font-family: 'Courier Prime', monospace; font-size: 13px; line-height: 1.5; color: #5a1626">if you liked how i described these places, imagine what i’d write about yours.</p>
+<a class="cta" href="/contact">let’s talk &rarr;</a>
+</div>
+</div>
 
-<h1 class="chip" style="position: absolute; left: 64px; top: 92px; margin: 0; padding: 8px 22px 12px; font-family: Cinzel, serif; font-weight: 500; font-size: 60px; line-height: 1.05; letter-spacing: .01em; color: #5a1626">Genuine reccos.</h1>
-
+<div style="position: absolute; left: 0; top: 0; width: 1512px; height: 982px; transform: translateY(40px); pointer-events: none">
 <div aria-hidden="true" style="position: absolute; left: 64px; top: 236px; width: 628px; height: 610px; box-sizing: border-box; border: 1.4px solid rgba(90,22,38,.55); background: #f6f1e8; box-shadow: 0 18px 40px rgba(30,6,12,.35)"></div>
 <svg width="628" height="610" viewBox="98 0 468.4 455" fill="none" role="img" aria-label="hand-drawn map of south india showing hyderabad, goa and bengaluru" style="position: absolute; left: 64px; top: 236px">
 <g stroke="#4a2a2a" stroke-linecap="round" stroke-linejoin="round">
@@ -99,10 +109,7 @@ a:focus-visible{outline:2px solid #6E1E2B;outline-offset:4px}
 
 <div id="pins" class="pins"></div>
 <div id="card-slot"></div>
-
-<p class="chip" style="position: absolute; left: 64px; top: 192px; margin: 0; padding: 5px 14px 6px; font-family: 'Courier Prime', monospace; font-size: 15px; line-height: 1.3; color: #5a1626">tap a place. i’ll tell you why.</p>
-
-<p class="chip" style="position: absolute; left: 64px; top: 862px; width: 628px; margin: 0; padding: 10px 16px; font-family: 'Courier Prime', monospace; font-size: 13px; line-height: 1.55; color: #5a1626">if you liked how i described these places, imagine what i’d write about yours. <a href="/contact" style="color: #5a1626; font-size: 13px; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap">let’s talk</a></p>
+</div>
 
 <article style="position: absolute; left: 820px; top: 64px; width: 628px; height: 854px; display: flex; flex-direction: column; font-family: 'EB Garamond', serif; font-size: 15.5px; line-height: 1.5; color: #3a1c20; text-align: justify; hyphens: auto">
 <img src="/coffee/cafe.jpg" alt="the coffee counter at a cafe, chalkboard menus and warm pendant lights" style="display: block; flex: none; width: 628px; height: 240px; object-fit: cover; object-position: center 40%">
