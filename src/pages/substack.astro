@@ -1,5 +1,5 @@
 ---
-// /substack (was /substacks, which redirects here), "i write on Substack." — opened from the typewriter on /home-redo.
+// /substack (was /substacks, which redirects here), "i write on Substack." — opened from the typewriter on the home page (/).
 // Desktop: one magazine spread (1512x982, scaled to fill the window), like /jobs.
 //  Right page: pink paper with a typewriter at its foot; her story types itself onto the sheet in the roller.
 //  Left page: her jasmine-tree photo, mirrored, with every post as a picture, three across.
@@ -11,7 +11,7 @@ import Analytics from '../components/Analytics.astro';
 const PUB = 'https://verykritikal.substack.com';
 // the call to action under the story
 const CTA = 'Let me write something for you →';
-const CTA_HREF = '/lets-talk';
+const CTA_HREF = '/contact';
 // the second button, under the first
 const WORK_CTA = 'See my work →';
 const WORK_HREF = '/work';
@@ -200,7 +200,7 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 <section class="fold" aria-label="i write on Substack">
 <div class="stage">
 <div class="tree" aria-hidden="true"><img class="still" src="/desk/jasmine.jpg" alt=""></div>
-<a class="back kbtn" href="/home-redo#desk">← Back</a>
+<a class="back kbtn" href="/#desk">← Back</a>
 <div class="rcol">
 <h1 class="rtitle"><span class="rt-a">i write on</span><span class="rt-b">Substack</span><span class="rt-line" aria-hidden="true"></span></h1>
 <div class="letter">
@@ -227,7 +227,7 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 
 <main class="m">
 <div class="mhero">
-<a class="back kbtn" href="/home-redo#desk">← Back</a>
+<a class="back kbtn" href="/#desk">← Back</a>
 <h1 class="rtitle"><span class="rt-a">i write on</span><span class="rt-b">Substack</span><span class="rt-line" aria-hidden="true"></span></h1>
 <div class="letter">
 {STORY.map((t) => <p>{t}</p>)}

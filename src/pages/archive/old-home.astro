@@ -1,0 +1,19 @@
+---
+import Base from '../../archive/Base.astro';
+import Doodles from '../../archive/components/Doodles.astro';
+import Nav from '../../archive/components/Nav.astro';
+import Hero from '../../archive/components/Hero.astro';
+import StoryThread from '../../archive/components/StoryThread.astro';
+import Footer from '../../archive/components/Footer.astro';
+---
+<Base>
+<Doodles />
+<Nav />
+<div class="main" style="position: relative; z-index: 1">
+<div style="max-width: 1180px; margin: 0 auto; padding: 24px 24px 0">
+<Hero />
+<StoryThread />
+</div>
+<Footer />
+</div>
+</Base>

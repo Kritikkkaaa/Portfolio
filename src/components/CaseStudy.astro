@@ -10,7 +10,7 @@ import CaseBlocks from './CaseBlocks.astro';
 import type { CaseStudy } from '../data/cases/types';
 interface Props { c: CaseStudy }
 const { c } = Astro.props as Props;
-const WORK = '/work-redo';
+const WORK = '/work';
 ---
 <!doctype html>
 <html lang="en">
@@ -188,7 +188,7 @@ h3{margin:0 0 16px;font-family:Marcellus,Georgia,serif;font-weight:700;font-size
   </div>
 ))}
 </div>
-<a class="kbtn kbtn-primary cta" href="/lets-talk">Let's work together →</a>
+<a class="kbtn kbtn-primary cta" href="/contact">Let's work together →</a>
 </div>
 </div>
 
@@ -221,7 +221,7 @@ h3{margin:0 0 16px;font-family:Marcellus,Georgia,serif;font-weight:700;font-size
 ['back','back2'].forEach(function(id){
   var a=document.getElementById(id);if(!a)return;
   a.addEventListener('click',function(e){
-    if(document.referrer.indexOf('/work-redo')>-1&&history.length>1&&!e.metaKey&&!e.ctrlKey&&!e.shiftKey){e.preventDefault();history.back();}
+    if(/^\/work\/?$/.test((function(){try{return new URL(document.referrer).pathname}catch(e){return ''}})())&&history.length>1&&!e.metaKey&&!e.ctrlKey&&!e.shiftKey){e.preventDefault();history.back();}
   });
 });
 var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;

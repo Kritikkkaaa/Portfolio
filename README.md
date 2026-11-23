@@ -1,23 +1,62 @@
 # Kritika Upadhyay · portfolio
 
-Built with [Astro](https://astro.build). Deployed on Vercel.
+Live at [kritikal.work](https://www.kritikal.work). Built with [Astro](https://astro.build), deployed on Vercel.
 
 ## Run it locally
 ```
 npm install
-npm run dev
+npm run dev      # http://localhost:4321
+npm run build    # static site in dist/
 ```
 
-## Structure
-- `src/pages/index.astro`: the home page, assembled from components
-- `src/components/`: Cursor, Starfield, Nav, Hero (first fold), Work (second fold), Footer (third fold)
-- `src/layouts/Base.astro`: shared page shell (fonts, meta, background)
-- `src/styles/global.css`: all styles
-- `public/`: static files (favicon, résumé PDF)
-- `astro.config.mjs`: add redirects for future landing pages here
+## Live routes
+| Route | What it is | File |
+|---|---|---|
+| `/` | Home: the desk, with the postcard and the Contents cutouts | `src/pages/index.astro` |
+| `/work` | Proof of work: folders and film-strip cards | `src/pages/work.astro` |
+| `/work/<slug>` | One page per case study | `src/pages/work/[slug].astro`, data in `src/data/cases/` |
+| `/substack` | She Substacks (typewriter) | `src/pages/substack.astro` |
+| `/contact` | Contact: where to find her, plus FAQs | `src/pages/contact.astro` |
+| `/playground` | Things I do for fun | `src/pages/playground.astro` |
+| `/recommendations` | Coffee recommendations (`/recommendations/list` is the plain list) | `src/pages/recommendations.astro` |
+| `/roadmap` | The journey | `src/pages/roadmap.astro` |
+| anything else | The 404 page | `src/pages/404.astro` |
 
-## Still to fill in
-- Dates on the work cards (`[MON YY]` in `src/components/Work.astro`)
-- What the Fork number ("partners" in `Work.astro`)
-- Instagram and Twitter links, résumé link (top of `src/components/Footer.astro`)
-- Résumé PDF: add `public/resume.pdf`, then set `RESUME = '/resume.pdf'`
+Redirects (set in `astro.config.mjs`): `/home` → `/`, `/jobs` → `/work`, `/journey` → `/roadmap`, `/coffee` → `/recommendations`, `/substacks` → `/substack`, and the old Nexus case study addresses → `/work/who-nexus-is-for`.
+
+Removed, now showing the 404 page: `/home-redo`, `/work-redo`, `/home-revamp`, `/lets-talk`.
+
+To add a case study: add it to `src/data/cases/` and to `CASES` and `FOLDERS` at the top of `src/pages/work.astro`.
+
+## The old website (archived, still deployed)
+The previous portfolio (dark starfield home, "See my work" hero, story thread, footer) was taken off the main routes when the new home went live. Its code is kept in the repo and it is still deployed under `/archive/`, hidden from search engines (`noindex`).
+
+| Archived page | Deployed at | Where the code is | Was live at |
+|---|---|---|---|
+| Old home | [`/archive/old-home`](https://www.kritikal.work/archive/old-home) | `src/pages/archive/old-home.astro` | `/` and `/home` |
+| Nexus case study (dummy draft) | [`/archive/nexus-draft`](https://www.kritikal.work/archive/nexus-draft) | `src/pages/archive/nexus-draft.astro` | `/nexus` |
+
+The old site's building blocks (layout, global styles, Nav, Footer, Hero, StoryThread, Doodles, Milestone, Board, and the unused Cursor, Starfield, Venn, Work) live in `src/archive/`.
+
+Note: links inside the archived home (Home, See my work) point at the new site's `/` and `/work`.
+
+### Run the old site for reference
+```
+npm install
+npm run dev
+```
+then open http://localhost:4321/archive/old-home
+
+### Get the exact pre-launch code
+Everything as it was before the switch (including the in-between `/home-revamp` desk, which was removed rather than archived) is saved in the git tag `archive/pre-go-live`:
+```
+git checkout archive/pre-go-live
+npm install && npm run dev      # old home at /, /home and /home-revamp
+```
+Switch back with `git checkout main`.
+
+## Structure
+- `src/pages/`: one file per route (each new page is self-contained: its own markup, styles and script)
+- `src/components/`: shared pieces used by the live site (`Analytics`, `CaseStudy`, `CaseBlocks`)
+- `src/archive/`: the old site's components, layout and styles
+- `public/`: images, fonts, résumé PDF, favicon, `sitemap.xml`
