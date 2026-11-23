@@ -253,8 +253,11 @@ html.kc-on.kc-plain a,html.kc-on.kc-plain a *{cursor:pointer !important}
 .intro .i-under,.intro .i-leftShade,.intro .i-faceShade,.intro .i-backShade{transition:opacity .06s linear}
 .intro.anim .i-leaf,.intro.anim .i-front{transition:transform 1.15s cubic-bezier(.62,.04,.22,1),box-shadow 1.15s cubic-bezier(.62,.04,.22,1)}
 .intro.anim .i-under,.intro.anim .i-leftShade,.intro.anim .i-faceShade,.intro.anim .i-backShade{transition:opacity 1.15s cubic-bezier(.62,.04,.22,1)}
-.turn{font-family:'EB Garamond',serif;font-style:italic;font-size:18px;color:#a9aba6;background:none;border:0;padding:12px 4px;cursor:pointer;transition:color .3s}
-.turn:hover{color:#e4e3dd}
+.turn{font-family:'EB Garamond',serif;font-style:italic;font-size:26px;color:#e4e3dd;background:none;border:0;border-bottom:1px solid rgba(228,227,221,.45);padding:6px 2px;cursor:pointer;transition:color .3s,border-color .3s}
+.turn .arr{display:inline-block;margin-left:6px;font-style:normal}
+@media (prefers-reduced-motion: no-preference){.turn .arr{animation:turnNudge 1.8s ease-in-out infinite}}
+@keyframes turnNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(7px)}}
+.turn:hover{color:#fff;border-bottom-color:#fff}
 .turn:focus-visible{outline:1px solid #a9aba6;outline-offset:4px}
 .m-intro{position:fixed;inset:0;z-index:30;perspective:1400px;touch-action:none;--p:0}
 /* phones: the black page slides off to the left (no page turn) */
@@ -330,7 +333,8 @@ html.intro-on .kc-lab{color:#e4e3dd !important}
 <div class="matte"></div>
 <div style="position: absolute; left: 0; top: 0; width: 60px; height: 982px; background: linear-gradient(90deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,0) 100%)"></div>
 <p style="position: absolute; left: 150px; top: 452px; margin: 0; font-family: 'EB Garamond', serif; font-style: italic; font-size: 34px; line-height: 1.35; letter-spacing: .005em; color: #d9d8d2">oh, you came! pull up a chair.<br>there’s tea, and stories.</p>
-<div style="position: absolute; right: 56px; bottom: 44px"><button class="turn" type="button" data-turn aria-label="Turn the page to the homepage">scroll to turn the page.</button></div>
+<p style="position: absolute; left: 150px; top: 574px; width: 440px; margin: 0; font-family: 'EB Garamond', serif; font-style: italic; font-size: 22px; line-height: 1.4; color: #a9aba6">I’ve been lucky to meet people who inspired me to become who I am today.</p>
+<div style="position: absolute; left: 150px; top: 690px"><button class="turn" type="button" data-turn aria-label="Turn the page to the homepage">Turn the page <span class="arr" aria-hidden="true">&rarr;</span></button></div>
 <div class="i-faceShade"></div>
 </div>
 <div class="i-face i-back" aria-hidden="true" inert><div class="i-backShade"></div></div>
@@ -424,6 +428,7 @@ html.intro-on .kc-lab{color:#e4e3dd !important}
 <div class="matte"></div>
 <div style="position: absolute; left: 0; top: 0; width: 26px; height: 100%; background: linear-gradient(90deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,0) 100%)"></div>
 <p style="position: absolute; left: 44px; right: 36px; top: 44%; margin: 0; font-family: 'EB Garamond', serif; font-style: italic; font-size: 30px; line-height: 1.3; color: #d9d8d2">oh, you came! pull up a chair. there’s tea, and stories.</p>
+<p style="position: absolute; left: 44px; right: 36px; top: calc(44% + 150px); margin: 0; font-family: 'EB Garamond', serif; font-style: italic; font-size: 18px; line-height: 1.4; color: #a9aba6">I’ve been lucky to meet people who inspired me to become who I am today.</p>
 <div style="position: absolute; left: 0; right: 0; bottom: 56px; display: flex; justify-content: center">
 <button class="nextbtn" type="button" data-turn>Tap to continue.</button>
 </div>
