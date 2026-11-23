@@ -1,6 +1,6 @@
 ---
 // /recommendations (was /coffee), "Genuine reccos." — layout and copy from Kritika's coffee design, in the home desk's look:
-// a floral arches wall on the left page, matching parchment on the right, maroon ink, Cinzel / EB Garamond / Courier Prime. Desktop: a fixed 1512x982 spread scaled to fill the window, with a hand-drawn map; every dot pulses softly, and hovering a
+// the arches wall (toned to maroon) on the left page, light cream on the right, maroon ink, Cinzel / EB Garamond / Courier Prime. Desktop: a fixed 1512x982 spread scaled to fill the window, with a hand-drawn map; every dot pulses softly, and hovering a
 // dot opens a card. Below 768px: heading and the article in one column, with links to the places list (/recommendations/list).
 // Photos and the video live in public/coffee/.
 import Analytics from '../components/Analytics.astro';
@@ -21,15 +21,16 @@ import { L } from '../data/places';
 <link rel="preload" as="image" href="/desk/recs-wall.webp" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&amp;family=Courier+Prime:wght@400;700&amp;family=EB+Garamond:ital,wght@0,400;0,500;1,400&amp;display=swap" rel="stylesheet">
 <style is:inline>
-html,body{margin:0;height:100%;background:#e3cfa8;overflow:hidden}
+html,body{margin:0;height:100%;background:#f6f1e8;overflow:hidden}
 #stage{position:absolute;left:0;top:0;transform-origin:0 0}
 a{color:#6E1E2B;text-decoration:none}a:hover{color:#4a1220}
 a:focus-visible{outline:2px solid #6E1E2B;outline-offset:4px}
 /* left page: the floral arches wall. right page: parchment taken from it. Text on the wall sits on cream chips, like the map. */
 .pageL{overflow:hidden;background:#3a1620}
-.pageL .img{position:absolute;inset:0;background:url(/desk/recs-wall.webp) center/cover no-repeat}
-.pageR{background:linear-gradient(80deg,#c9b085 0%,#d9c398 4%,#e3cfa8 20%,#e8d6b2 46%,#e3cfa8 100%)}
-.pageR::after{content:'';position:absolute;inset:0;background:url(/desk/paper.jpg);background-size:900px auto;mix-blend-mode:multiply;opacity:.3;pointer-events:none}
+.pageL .img{position:absolute;inset:0;background:url(/desk/recs-wall.webp) center/cover no-repeat;filter:saturate(.5) contrast(.95)}
+.pageL::after{content:'';position:absolute;inset:0;background:#6E1E2B;mix-blend-mode:multiply;opacity:.5;pointer-events:none}
+.pageR{background:linear-gradient(80deg,#e6dccd 0%,#eee6d9 4%,#f6f1e8 20%,#f8f4ec 46%,#f6f1e8 100%)}
+.pageR::after{content:'';position:absolute;inset:0;background:url(/desk/paper.jpg);background-size:900px auto;mix-blend-mode:multiply;opacity:.18;pointer-events:none}
 .chip{background:#f6f1e8;border:1.4px solid rgba(90,22,38,.55);box-shadow:0 10px 24px rgba(30,6,12,.3);box-sizing:border-box}
 .sheen{background:linear-gradient(115deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.28) 42%,rgba(255,255,255,0) 54%)}
 .spine{background:linear-gradient(90deg,rgba(0,0,0,0) 0%,rgba(60,30,20,.10) 42%,rgba(60,30,20,.20) 50%,rgba(255,255,255,.10) 54%,rgba(0,0,0,0) 100%)}
@@ -54,7 +55,7 @@ a:focus-visible{outline:2px solid #6E1E2B;outline-offset:4px}
 @media (max-width: 767px){
   html,body{height:auto;overflow:auto}
   #stage{display:none}
-  .m{display:block;box-sizing:border-box;padding:40px 16px 40px;font-family:'EB Garamond',serif;background:#e3cfa8;min-height:100vh;color:#3a1c20}
+  .m{display:block;box-sizing:border-box;padding:40px 16px 40px;font-family:'EB Garamond',serif;background:#f6f1e8;min-height:100vh;color:#3a1c20}
   .m-home{display:inline-flex;align-items:center;min-height:44px;font-family:'EB Garamond',serif;font-size:19px;color:#6E1E2B;text-decoration:underline;text-underline-offset:3px}
   .m h1{margin:4px 0 24px;font-family:Cinzel,serif;font-weight:500;font-size:40px;line-height:1.05;letter-spacing:.01em;color:#6E1E2B}
   .m article{font-family:'EB Garamond',serif;font-size:18px;line-height:1.5;color:#3a1c20}
