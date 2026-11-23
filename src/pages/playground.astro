@@ -85,6 +85,7 @@ a:focus-visible,button:focus-visible{outline:2px solid #f6f1e8;outline-offset:4p
 
 /* the title sits in the empty pages of the first row, across the gap between the two spreads */
 .slot.title{position:relative;overflow:visible}
+.mtitle{display:none}
 .slot.title .t{position:absolute;left:0;top:0;width:calc(300% + 10px);height:100%;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;text-align:left;pointer-events:none}
 .t .k{margin:0 0 14px;font-family:Cinzel,serif;font-weight:500;font-size:clamp(10px,1.3vw,14px);letter-spacing:.32em;text-transform:uppercase;color:rgba(246,241,232,.75)}
 .t .m{margin:0;white-space:nowrap;font-family:Cinzel,serif;font-weight:500;font-size:clamp(24px,4.2vw,50px);line-height:1.15;letter-spacing:.02em;color:#f6f1e8}
@@ -149,6 +150,9 @@ dialog.card[open]{animation:cardin .35s cubic-bezier(.2,.7,.2,1)}
 /* phones: one spread per row; the card stacks */
 @media (max-width: 767px){
   .slot.title .t{width:100%}
+  .wall .spread:first-child{display:none}
+  .mtitle{display:block}
+  .mtitle .t{padding:0 12px 0 0;justify-content:center}
   .t .m{white-space:normal}
   .t .m{font-size:clamp(17px,5.6vw,24px)}
   .t .k{letter-spacing:.14em;font-size:8px;margin-bottom:8px}
@@ -183,6 +187,7 @@ dialog.card[open]{animation:cardin .35s cubic-bezier(.2,.7,.2,1)}
 <div class="spread">
 {sp.map((p, pi) => {
   if (!p && si === 0 && pi === 0) return <span class="slot title"><span class="t"><p class="k">Whimsy · Creativity · Play</p><p class="m">My creative safe space</p></span></span>;
+  if (!p && si === 1 && pi === 0) return <span class="slot title mtitle"><span class="t"><p class="k">Whimsy · Creativity · Play</p><p class="m">My creative safe space</p></span></span>;
   if (!p) return <span class="slot" aria-hidden="true"></span>;
   const face = p.img
     ? <img src={p.img} alt="" loading="lazy" class={p.fit === 'contain' ? 'contain' : undefined}>
