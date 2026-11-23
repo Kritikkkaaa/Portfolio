@@ -2,11 +2,13 @@
    .kbtn          default: thin deep-plum outline on ivory; hover only brightens it (no plum fill)
    .kbtn-primary  the one main action on a page: solid deep plum, bright ivory text
    .kbtn-soft     a quiet default: hover only brightens it, no fill
+   .kbtn-sm       add to either kind for a smaller button (tight spots)
    Use <a class="kbtn kbtn-primary"> for the main action and <a class="kbtn"> for everything else.
    Pages using these load Marcellus from Google Fonts. */
 .kbtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:12px 28px;box-sizing:border-box;font-family:Marcellus,Georgia,serif;font-size:18px;font-weight:400;letter-spacing:.03em;line-height:1.3;text-align:center;text-decoration:none;color:#5a1626;background:rgba(250,246,238,.94);border:1px solid #5a1626;border-radius:0;cursor:pointer;transition:background .25s ease,color .25s ease}
 .kbtn:hover,.kbtn:focus-visible{background:#fffdf8;color:#5a1626}
 .kbtn:focus-visible{outline:2px solid #5B3FD9;outline-offset:3px}
+.kbtn-sm{min-height:38px;padding:8px 18px;font-size:15px}
 .kbtn-primary{background:#5a1626;color:#fffaf0}
 .kbtn-primary:hover,.kbtn-primary:focus-visible{background:#3f0f1a;color:#fffaf0}
 .kbtn-soft:hover,.kbtn-soft:focus-visible{background:#fffdf8;color:#5a1626;border-color:#5a1626}
