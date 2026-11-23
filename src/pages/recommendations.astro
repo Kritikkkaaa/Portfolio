@@ -1,6 +1,6 @@
 ---
 // /recommendations (was /coffee), "Genuine reccos." — layout and copy from Kritika's coffee design, in the home desk's look:
-// the arches wall (toned to maroon) on the left page, light cream on the right, maroon ink, Cinzel / EB Garamond / Courier Prime. Desktop: a fixed 1512x982 spread scaled to fill the window, with a hand-drawn map; every dot pulses softly, and hovering a
+// a floral border on the left page, light cream on the right, maroon ink, Cinzel / EB Garamond / Courier Prime. Desktop: a fixed 1512x982 spread scaled to fill the window, with a hand-drawn map; every dot pulses softly, and hovering a
 // dot opens a card. Below 768px: heading and the article in one column, with links to the places list (/recommendations/list).
 // Photos and the video live in public/coffee/.
 import Analytics from '../components/Analytics.astro';
@@ -16,24 +16,22 @@ import { L } from '../data/places';
 <link rel="icon" href="/mark.svg" type="image/svg+xml">
 <link rel="icon" href="/mark-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="/mark-180.png">
+<link rel="stylesheet" href="/buttons.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="image" href="/desk/recs-wall.webp" fetchpriority="high">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&amp;family=Courier+Prime:wght@400;700&amp;family=EB+Garamond:ital,wght@0,400;0,500;1,400&amp;display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="/desk/recs-floral.webp" fetchpriority="high">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&amp;family=Marcellus&amp;family=Courier+Prime:wght@400;700&amp;family=EB+Garamond:ital,wght@0,400;0,500;1,400&amp;display=swap" rel="stylesheet">
 <style is:inline>
 html,body{margin:0;height:100%;background:#f6f1e8;overflow:hidden}
 #stage{position:absolute;left:0;top:0;transform-origin:0 0}
 a{color:#6E1E2B;text-decoration:none}a:hover{color:#4a1220}
 a:focus-visible{outline:2px solid #6E1E2B;outline-offset:4px}
-/* left page: the floral arches wall. right page: parchment taken from it. Text on the wall sits on cream chips, like the map. */
-.pageL{overflow:hidden;background:#3a1620}
-.pageL .img{position:absolute;inset:0;background:url(/desk/recs-wall.webp) center/cover no-repeat;filter:saturate(.5) contrast(.95)}
-.pageL::after{content:'';position:absolute;inset:0;background:#6E1E2B;mix-blend-mode:multiply;opacity:.5;pointer-events:none}
+/* left page: a floral border. right page: light cream. Text on the left page sits on a cream box, like the map. */
+.pageL{overflow:hidden;background:#d3b99d}
+.pageL .img{position:absolute;inset:0;background:url(/desk/recs-floral.webp) left top/cover no-repeat}
 .pageR{background:linear-gradient(80deg,#e6dccd 0%,#eee6d9 4%,#f6f1e8 20%,#f8f4ec 46%,#f6f1e8 100%)}
 .pageR::after{content:'';position:absolute;inset:0;background:url(/desk/paper.jpg);background-size:900px auto;mix-blend-mode:multiply;opacity:.18;pointer-events:none}
 .pins,#card-slot{pointer-events:auto}
-.cta{display:inline-flex;align-items:center;flex:none;min-height:40px;padding:0 20px;border-radius:999px;background:#6E1E2B;color:#f6f1e8;font-family:Cinzel,serif;font-weight:600;font-size:13px;letter-spacing:.06em;white-space:nowrap}
-.cta:hover{background:#4a1220;color:#f6f1e8}
 .chip{background:#f6f1e8;border:1.4px solid rgba(90,22,38,.55);box-shadow:0 10px 24px rgba(30,6,12,.3);box-sizing:border-box}
 .sheen{background:linear-gradient(115deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.28) 42%,rgba(255,255,255,0) 54%)}
 .spine{background:linear-gradient(90deg,rgba(0,0,0,0) 0%,rgba(60,30,20,.10) 42%,rgba(60,30,20,.20) 50%,rgba(255,255,255,.10) 54%,rgba(0,0,0,0) 100%)}
@@ -83,17 +81,13 @@ a:focus-visible{outline:2px solid #6E1E2B;outline-offset:4px}
 <div class="sheen" aria-hidden="true" style="position: absolute; inset: 0; opacity: .6"></div>
 <div class="spine" aria-hidden="true" style="position: absolute; left: 716px; top: 0; width: 80px; height: 982px; pointer-events: none"></div>
 
-<div class="chip" style="position: absolute; left: 64px; top: 36px; width: 628px; padding: 14px 24px 18px; z-index: 3">
+<div class="chip" style="position: absolute; left: 64px; top: 36px; width: 628px; padding: 14px 24px 22px; z-index: 3">
 <a href="/home" style="display: inline-block; font-family: 'EB Garamond', serif; font-size: 19px; line-height: 1.2; color: #5a1626; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px">Back</a>
 <h1 style="margin: 6px 0 0; font-family: Cinzel, serif; font-weight: 500; font-size: 60px; line-height: 1.05; letter-spacing: .01em; color: #5a1626">Genuine reccos.</h1>
-<p style="margin: 6px 0 0; font-family: 'Courier Prime', monospace; font-size: 15px; line-height: 1.3; color: #5a1626">tap a place. i’ll tell you why.</p>
-<div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(90,22,38,.25); display: flex; align-items: center; justify-content: space-between; gap: 24px">
-<p style="margin: 0; font-family: 'Courier Prime', monospace; font-size: 13px; line-height: 1.5; color: #5a1626">if you liked how i described these places, imagine what i’d write about yours.</p>
-<a class="cta" href="/contact">let’s talk &rarr;</a>
-</div>
+<a class="kbtn kbtn-primary" href="/work" style="margin-top: 16px">See my work &rarr;</a>
 </div>
 
-<div style="position: absolute; left: 0; top: 0; width: 1512px; height: 982px; transform: translateY(40px); pointer-events: none">
+<div style="position: absolute; left: 0; top: 0; width: 1512px; height: 982px; transform: translateY(24px); pointer-events: none">
 <div aria-hidden="true" style="position: absolute; left: 64px; top: 236px; width: 628px; height: 610px; box-sizing: border-box; border: 1.4px solid rgba(90,22,38,.55); background: #f6f1e8; box-shadow: 0 18px 40px rgba(30,6,12,.35)"></div>
 <svg width="628" height="610" viewBox="98 0 468.4 455" fill="none" role="img" aria-label="hand-drawn map of south india showing hyderabad, goa and bengaluru" style="position: absolute; left: 64px; top: 236px">
 <g stroke="#4a2a2a" stroke-linecap="round" stroke-linejoin="round">
