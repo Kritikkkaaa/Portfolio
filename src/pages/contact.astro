@@ -142,12 +142,7 @@ a:focus-visible,button:focus-visible{outline:2px solid #6E1E2B;outline-offset:-4
   .m .sq   .m .sq .chn .btn{min-height:32px;padding:0 11px;font-size:11px;letter-spacing:.02em;white-space:nowrap}
   .m .sq .chn .btn::after{margin-left:6px}
   /* the desktop-mode note */
-  .m .dm{display:flex;align-items:center;gap:12px;margin:18px 0 4px;padding:14px 16px;border:1px solid rgba(110,30,43,.35);border-radius:14px;background:#f6f1e8;font-size:15px;line-height:1.4;color:#6E1E2B;animation:dmIn .7s cubic-bezier(.2,.7,.2,1) .3s both}
-  .m .dm svg{flex:none;animation:dmNod 1.6s ease-in-out 1.1s 2}
-  .m .dm a{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
   @keyframes dmIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
-  @keyframes dmNod{0%,100%{transform:none}30%{transform:rotate(-8deg)}60%{transform:rotate(6deg)}}
-  @media (prefers-reduced-motion: reduce){.m .dm,.m .dm svg{animation:none}}
   .m .qa{padding:20px 18px}
   .m .qa .q{font-size:26px}
   .m .qa .a{margin-left:36px}
@@ -187,7 +182,6 @@ a:focus-visible,button:focus-visible{outline:2px solid #6E1E2B;outline-offset:-4
 <main class="m">
 <a class="back" href="/home">Back</a>
 <h1 class="sr">Let's talk!</h1>
-<p class="dm"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6E1E2B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="11" rx="1.5"></rect><path d="M2 19h20"></path></svg><span>This page is best experienced in <a href="https://www.google.com/search?q=how+to+enable+desktop+mode" target="_blank" rel="noopener">desktop mode</a>.</span></p>
 <h2>Where to find me</h2>
 <p class="mail">kritikaupadhyay2001@gmail.com</p>
 <div class="list sq">
