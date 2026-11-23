@@ -12,16 +12,16 @@ import Analytics from '../components/Analytics.astro';
 const CASES: Record<string, { title: string; line: string; img: string; href?: string; mins?: number; soon?: boolean }> = {
   twitter: { title: 'Growing Plane’s Twitter', line: '2.5k followers in 6 months. 500+ posts and 20+ release notes.', img: '/jobs/twitter-network.webp', href: '/work/grow-planes-twitter', mins: 3 },
   pricing: { title: 'Plane One launch', line: 'Launching Plane One on Twitter: the tease, the reveal and the letter.', img: '/jobs/pricing-invoice.webp', href: '/work/plane-one-campaign', mins: 3 },
-  nexus: { title: 'Who Nexus is for', line: 'How I defined Nexus’s ideal customer profile (ICP) and sharpened its positioning.', img: '/jobs/chess-linocut.png', href: '/work/who-nexus-is-for', mins: 3 },
+  nexus: { title: 'Who Nexus is for', line: 'How I shaped Nexus’s ICP and positioning.', img: '/jobs/chess-linocut.png', href: '/work/who-nexus-is-for', mins: 3 },
   paper: { title: 'Paper’s onboarding emails', line: 'A teardown of what the first emails say, what they should, and why.', img: '/jobs/paper-envelope.png', soon: true },
   ai: { title: 'AI in market research', line: 'The prompts, checks and workflow I use to understand a market fast.', img: '/jobs/ai-scribble.webp', soon: true }
 };
 
 // the three folders, top to bottom.
 const FOLDERS = [
-  { id: 'grow', label: 'Grow an audience', dek: 'An audience built from zero.', cases: ['twitter'] },
-  { id: 'content', label: 'Create content', dek: 'Messaging, positioning and launch campaigns.', cases: ['pricing', 'nexus'] },
-  { id: 'events', label: 'Curate events', dek: 'Events people talk about afterwards.', cases: [] as string[] }
+  { id: 'launch', label: 'Launch and GTM', dek: 'Taking a product to market.', cases: ['pricing'] },
+  { id: 'audience', label: 'Audience and content', dek: 'An audience built from zero.', cases: ['twitter'] },
+  { id: 'positioning', label: 'Positioning and messaging', dek: 'Who it’s for and how we say it.', cases: ['nexus'] }
 ];
 const RESUME = { label: 'View resume', href: 'https://drive.google.com/file/d/1N3Y5Ox7I9qyHALM9LQUa7119Z-LBgCR6/view?usp=sharing&utm_source=portfolio&utm_medium=website&utm_campaign=hunt-2026&utm_id=kritikal-work-resume' };
 
@@ -33,7 +33,7 @@ const plural = (n: number) => `${n} piece${n === 1 ? '' : 's'}`;
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>kritika · proof of work</title>
-<meta name="description" content="Kritika's work: growing audiences, creating content and curating events. Pick a folder to see the case studies.">
+<meta name="description" content="Kritika's work: product launches, audience and content, positioning and messaging. Pick a folder to see the case studies.">
 <link rel="stylesheet" href="/buttons.css">
 <link rel="icon" href="/mark.svg" type="image/svg+xml">
 <link rel="icon" href="/mark-32.png" type="image/png" sizes="32x32">
@@ -71,7 +71,7 @@ h1{position:absolute;left:56px;top:150px;width:644px;margin:0;font-family:Cinzel
 .fd[aria-selected="true"] .cvt,.mf[aria-selected="true"] .cvt{display:inline}
 .fd:not([aria-selected="true"]):hover,.fd:not([aria-selected="true"]):focus-visible{transform:translateY(-6px)}
 .f1{--c:#d9cfc0;--ring:rgba(61,21,32,.4);--deco:url(/work-decor/vine.png);top:460px;z-index:1}.f1 .tb{left:656px}
-.f2{--c:#4a7568;--t:#f6f1e8;--ring:rgba(246,241,232,.45);--deco:url(/work-decor/lotus.png);top:580px;z-index:2}.f2 .tb{left:900px}
+.f2{--c:#4a7568;--t:#f6f1e8;--ring:rgba(246,241,232,.45);--deco:url(/work-decor/lotus.png);top:580px;z-index:2}.f2 .tb{left:820px}
 .f3{--c:#2a2724;--t:#f6f1e8;--ring:rgba(246,241,232,.45);--deco:url(/work-decor/lace.png);top:700px;z-index:3}.f3 .tb{left:710px}
 .ask{position:absolute;left:56px;top:228px;margin:0;z-index:30;font-family:'Courier Prime',ui-monospace,monospace;font-size:18px;color:rgba(246,241,232,.9)}
 .ctas{position:absolute;left:56px;top:272px;z-index:30;display:flex;gap:14px;white-space:nowrap}
@@ -87,7 +87,7 @@ h1{position:absolute;left:56px;top:150px;width:644px;margin:0;font-family:Cinzel
 .ph{position:absolute;left:56px;top:76px;width:644px}
 h2{margin:0;font-family:Cinzel,serif;font-weight:500;font-size:34px;letter-spacing:.12em;text-transform:uppercase;color:#5a1626;line-height:1.1}
 .dek{margin:12px 0 0;font-size:16px;color:#6b5a5a}
-.cnt{position:absolute;right:0;top:8px;font-size:14px;color:#6b5a5a}
+.cnt{position:absolute;right:0;bottom:2px;font-size:14px;color:#6b5a5a}
 .sc{position:absolute;left:56px;top:196px;width:644px;height:726px;overflow-y:auto;overflow-x:hidden;scroll-snap-type:y mandatory;scrollbar-width:thin;scrollbar-color:#5a1626 rgba(90,22,38,.14);outline-offset:4px}
 .sc.more{-webkit-mask-image:linear-gradient(180deg,#000 97%,transparent 100%);mask-image:linear-gradient(180deg,#000 97%,transparent 100%)}
 .sc::-webkit-scrollbar{width:6px}.sc::-webkit-scrollbar-thumb{background:#5a1626}.sc::-webkit-scrollbar-track{background:rgba(90,22,38,.14)}
@@ -136,8 +136,8 @@ a.fs:hover img{transform:scale(1.05)}
   .mf[aria-selected="true"]::after{content:"";display:inline-block;width:8px;height:8px;margin:0 0 0 9px;border-radius:50%;background:currentColor;vertical-align:1px}
   .mf .cvt{font-size:11px;padding-left:10px;margin-left:8px}
   .mf.g1{z-index:1;--ring:rgba(61,21,32,.4);--deco:url(/work-decor/vine.png)}.mf.g2{z-index:2;--ring:rgba(246,241,232,.45);--deco:url(/work-decor/lotus.png)}.mf.g3{z-index:3;--ring:rgba(246,241,232,.45);--deco:url(/work-decor/lace.png)}
-  .mf{overflow:hidden}
-  .mf::before{content:"";position:absolute;inset:0;background-image:var(--deco);background-repeat:no-repeat;opacity:.6;pointer-events:none}
+  .mf{overflow:hidden;isolation:isolate}
+  .mf::before{content:"";position:absolute;inset:0;z-index:-1;background-image:var(--deco);background-repeat:no-repeat;opacity:.6;pointer-events:none}
   .mf.g1::before{background-size:430px auto;background-position:right -10px top -90px}
   .mf.g2::before{background-image:url(/work-decor/lotus.png),url(/work-decor/motif.png);background-size:190px auto,260px auto;background-position:right 40px top -110px,left 10px top -60px}
   .mf.g3::before{background-size:230px auto;background-position:left 0 top 0;transform:scaleX(-1)}
@@ -154,6 +154,7 @@ a.fs:hover img{transform:scale(1.05)}
   .mp .cl{margin-top:5px;font-size:12.5px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .mp .cb .kbtn{min-height:36px;padding:6px 14px;font-size:15px}
   .mp .mn{font-size:12px}
+  .mp .cb .more{display:none}
 }
 .cb-yes,.cb-no{min-height:40px;padding:0 20px;border-radius:10px;font-family:inherit;font-size:14px;cursor:pointer}
 .cb-yes{border:0;background:#E8EBF0;color:#0B0A0F;font-weight:600}
@@ -200,7 +201,7 @@ a.fs:hover img{transform:scale(1.05)}
           <div class="cd">
             <span class="ct">{c.title}</span>
             <span class="cl">{c.line}</span>
-            {!c.soon && <div class="cb"><a class="kbtn" href={c.href} aria-label={`Read: ${c.title}`}>See how it worked →</a><span class="mn">{c.mins} min read</span></div>}
+            {!c.soon && <div class="cb"><a class="kbtn" href={c.href} aria-label={`Read: ${c.title}`}>See how<span class="more"> it worked</span> →</a><span class="mn">{c.mins} min read</span></div>}
           </div>
         </div>
       ); })}
@@ -242,7 +243,7 @@ a.fs:hover img{transform:scale(1.05)}
         <div class="cd">
           <span class="ct">{c.title}</span>
           <span class="cl">{c.line}</span>
-          {!c.soon && <div class="cb"><a class="kbtn" href={c.href} aria-label={`Read: ${c.title}`}>See how it worked →</a><span class="mn">{c.mins} min read</span></div>}
+          {!c.soon && <div class="cb"><a class="kbtn" href={c.href} aria-label={`Read: ${c.title}`}>See how<span class="more"> it worked</span> →</a><span class="mn">{c.mins} min read</span></div>}
         </div>
       </div>
     ); })}

@@ -20,7 +20,8 @@ const UTM = 'utm_source=Portfolio&utm_medium=Substacks+page&utm_campaign=Portfol
 // the letter on the typewriter: how she started, in a few short lines.
 const STORY = [
   'Writing on Substack started as a joke. I came back from Pondicherry with something too tender for an Instagram caption, so I wrote it down instead.',
-  'Some of it is funny, some of it is hard to read. All of it is the most honest version of me on the internet.'
+  'Some of it is funny, some of it is hard to read. All of it is the most honest version of me on the internet.',
+  'Writing like this is how I learn what to say, and how, in my marketing.'
 ];
 const INITIAL = STORY[0][0];
 
@@ -36,13 +37,18 @@ const HIDE = ['to-monish-aastha-tanay-krishna-and', 'on-being-watched-being-warn
 const posts = [
   { slug: 'a-house-by-the-beach-someday', desc: 'a post card from Goa', title: 'A house by the beach, someday', date: '2026-10-20T09:20:23.602Z', words: 821, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/22851840-4fb3-40a3-8e5c-47cdf4798ccb_736x736.jpeg' },
   { slug: 'on-being-watched-being-warned-and', desc: 'Small rules, quiet costs, and one uncomfortable morning', title: 'On being watched, being warned, and never being asked', date: '2026-10-10T10:59:03.893Z', words: 1274, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/43338fa9-9fb3-43a1-bb64-4c89ad6477cb_1080x1349.jpeg' },
-  { slug: 'love-is-usually-just-around-the-corner', pic: 'https://substack-post-media.s3.amazonaws.com/public/images/eac18482-2254-4a7d-b8ea-d8f9981510ea_914x775.jpeg', desc: 'but are you someone who won’t scare it away?', title: 'love is usually just around the corner', date: '2026-08-15T10:07:58.364Z', words: 731, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/5d2fa710-31d8-4d0c-91de-b5783773b674_736x538.jpeg' },
+  { slug: 'love-is-usually-just-around-the-corner', pic: 'https://substack-post-media.s3.amazonaws.com/public/images/eac18482-2254-4a7d-b8ea-d8f9981510ea_914x775.jpeg', desc: 'but are you someone who won’t scare it away?', title: 'Love is usually just around the corner', date: '2026-08-15T10:07:58.364Z', words: 731, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/5d2fa710-31d8-4d0c-91de-b5783773b674_736x538.jpeg' },
   { slug: 'unthought-known', pic: 'https://substack-post-media.s3.amazonaws.com/public/images/a1d05e2d-d487-4d76-9f57-bb085f0238e6_1200x1200.jpeg', desc: 'Some things are known before they are ever thought. This is one of those stories.', title: 'Unthought known', date: '2026-07-02T14:50:30.012Z', words: 1075, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/bb1646bf-5cdd-4839-8308-b33d54c4d672_1584x396.png' },
-  { slug: 'data-vs-instincts', desc: 'And why what you can see is not enough!', title: 'Data vs Instincts', date: '2026-06-15T10:31:17.888Z', words: 1329, cover: '', quote: 'I defended first and answered after.' },
+  { slug: 'data-vs-instincts', desc: 'And why what you can see is not enough!', title: 'Data vs instincts', date: '2026-06-15T10:31:17.888Z', words: 1329, cover: '', quote: 'I defended first and answered after.' },
   { slug: 'was-he-a-fckboy', pic: 'https://substack-post-media.s3.amazonaws.com/public/images/6b54bb5d-a4b8-4d0b-9afb-f008eb81706d_1509x1795.jpeg', desc: 'On charm, damage, and the art of finally seeing them clearly', title: 'Was he a F*ckboy?', date: '2026-05-28T12:41:35.055Z', words: 862, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/4775d1f2-7a05-47ce-b211-73d7730dc316_1602x1190.jpeg' },
   { slug: 'gunshot-diary', pic: 'https://substack-post-media.s3.amazonaws.com/public/images/910cc456-35a5-4ef2-a5ed-09b4ce85719c_1535x1833.jpeg', desc: 'A story about an elongated sleepover with a stranger', title: 'Gunshot diary', date: '2026-03-27T11:40:06.497Z', words: 1474, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/ebc3dc39-5c4d-46f8-afe2-ad528a0a3e18_1170x892.png' },
   { slug: 'to-monish-aastha-tanay-krishna-and', desc: 'a postcard from Pondicherry 💌', title: 'to Monish, Aastha, Tanay, Krishna and others', date: '2025-09-01T08:39:02.886Z', words: 1509, cover: 'https://substack-post-media.s3.amazonaws.com/public/images/f22b8cdd-bec9-4e95-a8ec-6ff0ab7f0a4f_3912x2373.jpeg' }
 ];
+
+// sentence-case titles for this page (the live Substack titles differ)
+const TITLES: Record<string, string> = { 'love-is-usually-just-around-the-corner': 'Love is usually just around the corner', 'data-vs-instincts': 'Data vs instincts' };
+// email open rate per post, from the Substack dashboard on 23 Nov 2026. Update by hand.
+const OPEN: Record<string, number> = { 'a-house-by-the-beach-someday': 65, 'gunshot-diary': 71, 'unthought-known': 60, 'data-vs-instincts': 60, 'was-he-a-fckboy': 44, 'love-is-usually-just-around-the-corner': 50 };
 
 // pull the live archive; if it fails, the list above is used
 let live: any[] = [];
@@ -55,7 +61,7 @@ const mine = new Map(posts.map((p) => [p.slug, p]));
 const all: any[] = live.length
   ? live.map((l) => {
       const p: any = mine.get(l.slug) || {};
-      return { ...p, slug: l.slug, title: l.title || p.title, desc: p.desc || l.subtitle || '', date: l.post_date || p.date, words: l.wordcount || p.words, cover: l.cover_image || p.cover || '' };
+      return { ...p, slug: l.slug, title: TITLES[l.slug] || l.title || p.title, desc: p.desc || l.subtitle || '', date: l.post_date || p.date, words: l.wordcount || p.words, cover: l.cover_image || p.cover || '' };
     })
   : posts;
 
@@ -63,8 +69,7 @@ const all: any[] = live.length
 const img = (url: string, w = 600) => !url ? '' : url.includes('substackcdn.com/image/fetch') ? url : `https://substackcdn.com/image/fetch/w_${w},c_limit,f_auto,q_auto:good,fl_progressive:steep/${encodeURIComponent(url)}`;
 const href = (slug: string) => `${PUB}/p/${slug}?${UTM}`;
 const mins = (w: number) => Math.max(1, Math.round(w / 215));
-
-const meta = (p: any) => p.words ? `${mins(p.words)} min read ↗` : 'read on Substack ↗';
+const meta = (p: any) => OPEN[p.slug] ? `Email open rate: ${OPEN[p.slug]}% ↗` : 'read on Substack ↗';
 const top = TOP.map((s) => all.find((p) => p.slug === s)).filter(Boolean);
 
 // three columns, filled top to bottom, newest first. pictures get uneven heights (weights) so the columns don't line up.
@@ -141,7 +146,7 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 .en .t{display:block;margin-top:9px;font-family:Marcellus,Georgia,serif;font-weight:400;font-size:17px;line-height:1.25;color:#3d2430;transition:color .25s}
 .en:hover .t,.en:focus-visible .t{color:#6E1E2B}
 .en .d{display:block;margin-top:3px;font-size:12.5px;line-height:1.38;color:#6f6862}
-.en .mt{display:block;margin-top:5px;font-size:13px;line-height:1.3;color:#5f4d4d}
+.en .mt{display:block;margin-top:auto;padding-top:8px;font-size:12px;line-height:1.3;color:#5f4d4d;opacity:.6}
 @media (prefers-reduced-motion: reduce){.en .pic img{transition:none}}
 
 
@@ -157,7 +162,7 @@ a:focus-visible{outline:2px solid #5B3FD9;outline-offset:4px}
 .leaf img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.92) contrast(.98);transition:transform .8s cubic-bezier(.2,.7,.2,1);clip-path:inset(0)}
 .leaf .pic.none{display:flex;align-items:center;padding:16px;box-sizing:border-box;background:#efe6da;font-family:'Courier Prime',ui-monospace,monospace;font-style:italic;font-size:17px;line-height:1.4;color:#6E1E2B}
 .leaf .lt{display:block;margin-top:10px;padding:0 4px;font-family:Marcellus,Georgia,serif;font-weight:400;font-size:17.5px;line-height:1.25;color:#3d2430;transition:color .25s}
-.leaf .lm{display:block;margin-top:6px;padding:0 4px;font-size:13.5px;line-height:1.3;color:#5f4d4d}
+.leaf .lm{display:block;margin-top:auto;padding:12px 4px 0;font-size:12.5px;line-height:1.3;color:#5f4d4d;opacity:.6}
 .leaf:hover img,.leaf:focus-visible img{transform:scale(1.03)}
 .leaf:hover .lt,.leaf:focus-visible .lt{color:#6E1E2B}
 @media (prefers-reduced-motion: reduce){.leaf img{transition:none}}

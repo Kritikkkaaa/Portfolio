@@ -14,37 +14,37 @@ const icon = (inner: string, extra = '') => `<svg width="16" height="16" viewBox
 
 // the channels. `btn` is the button shown on hover.
 const ch = {
-  linkedin: { btn: 'me too!', name: 'LinkedIn', href: `https://www.linkedin.com/in/kritika-upadhyay-2001/?${UTM}`, svg: icon('<rect x="3.5" y="3.5" width="17" height="17" rx="3"></rect><path d="M8 10.5v6M8 7.5v.1M12 16.5v-6M12 13c0-1.6 1-2.6 2.3-2.6S16.5 11.3 16.5 13v3.5"></path>', 'stroke-linecap="round"') },
-  x: { btn: 'yes', name: 'X', href: `https://x.com/verykritikal?${UTM}`, svg: icon('<path d="M4 4l11.7 16H20L8.3 4z"></path><path d="M4.4 20l6.4-7.1M13.2 10.2L19.6 4"></path>', 'stroke-linecap="round" stroke-linejoin="round"') },
-  instagram: { btn: 'ooooh! interesting.', name: 'Instagram', href: `https://www.instagram.com/verykritikal/?${UTM}`, svg: icon(`<rect x="3.5" y="3.5" width="17" height="17" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.2" cy="6.8" r=".8" fill="${INK}"></circle>`) },
-  email: { btn: 'Yes.', name: 'Email', href: 'mailto:kritikaupadhyay2001@gmail.com', svg: icon('<rect x="3" y="5.5" width="18" height="13" rx="2"></rect><path d="M3.5 6.5l8.5 6.5 8.5-6.5"></path>', 'stroke-linejoin="round"') },
+  linkedin: { btn: 'Message me', name: 'LinkedIn', href: `https://www.linkedin.com/in/kritika-upadhyay-2001/?${UTM}`, svg: icon('<rect x="3.5" y="3.5" width="17" height="17" rx="3"></rect><path d="M8 10.5v6M8 7.5v.1M12 16.5v-6M12 13c0-1.6 1-2.6 2.3-2.6S16.5 11.3 16.5 13v3.5"></path>', 'stroke-linecap="round"') },
+  x: { btn: 'Read my takes', name: 'X', href: `https://x.com/verykritikal?${UTM}`, svg: icon('<path d="M4 4l11.7 16H20L8.3 4z"></path><path d="M4.4 20l6.4-7.1M13.2 10.2L19.6 4"></path>', 'stroke-linecap="round" stroke-linejoin="round"') },
+  instagram: { btn: 'Follow along', name: 'Instagram', href: `https://www.instagram.com/verykritikal/?${UTM}`, svg: icon(`<rect x="3.5" y="3.5" width="17" height="17" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.2" cy="6.8" r=".8" fill="${INK}"></circle>`) },
+  email: { btn: 'Copy email', name: 'Email', copy: 'kritikaupadhyay2001@gmail.com', href: 'mailto:kritikaupadhyay2001@gmail.com?subject=Intro%20chat', svg: icon('<rect x="3" y="5.5" width="18" height="13" rx="2"></rect><path d="M3.5 6.5l8.5 6.5 8.5-6.5"></path>', 'stroke-linejoin="round"') },
 };
-const channels = [ch.x, ch.email, ch.linkedin, ch.instagram];
+const channels = [ch.linkedin, ch.email, ch.x, ch.instagram];
 // the same icon, drawn big and thin for the tiles
 const big = (svg: string) => svg.replace('width="16" height="16"', 'width="84" height="84"').replace('stroke-width="1.8"', 'stroke-width="1.05"');
 
 // the FAQs, in her words.
 const faqs = [
-  { q: 'are you open to freelance projects?', a: 'depends on the project. tell me what it is and we’ll see.' },
-  { q: 'what can you do?', a: 'marketer, writer, creative. ex product manager. stories, films, campaigns, landing pages and a grown Twitter.' },
-  { q: 'how do i know you are good?', a: 'you don’t. check the site, trust your gut, call me.' },
-  { q: 'when can you join us?', a: 'the moment you say “welcome aboard!”' },
-  { q: 'what kind of teams do you work best with?', a: 'small product teams that ship fast and let people try things. startups, mostly. i grew up in them.' }
+  { q: 'What can you do?', a: 'I’m a marketer and a writer. I help you plan your go-to-market and automate content, always with our audience in mind.' },
+  { q: 'How do I know you are good?', a: 'Look around. I designed, built and released this website in 5 days. If you trust your judgement, give me a call.' },
+  { q: 'When can you join us?', a: 'The moment you say “welcome aboard!”' },
+  { q: 'Do you freelance?', a: 'Yes. I take on writing, designing landing pages and planning content. I’d also love to represent your brand at events.' },
+  { q: 'What’s one con of working with you?', a: 'I have trouble meeting deadlines. I am working on it. 🤞🏻' }
 ];
 
 // the spread: 6 tiles across (3 per page), 3 rows. A band (TALK, FAQs) spans its page's 3 tiles and doesn't zoom.
 // `col`/`row` place each tile so the zoom grows inward from its spot on the page.
-type Tile = { band?: string; art?: string; ch?: typeof ch.x; faq?: number; bg: string; col: number; row: number };
+type Tile = { band?: string; blank?: boolean; art?: string; ch?: typeof ch.x; faq?: number; bg: string; col: number; row: number };
 const W = '#f6f1e8', T = '#6E1E2B';
 // the three pictures (public/contact/): `art` tiles. White-background drawings, so they blend into the cream tile.
-const ART: Record<string, { src: string }> = {
-  laptop: { src: '/contact/laptop.webp' },
-  conversation: { src: '/contact/conversation.webp' },
+const ART: Record<string, { src: string; dark?: boolean }> = {
+  laptop: { src: '/contact/heads.jpg', dark: true },
+  conversation: { src: '/contact/conversation.webp', dark: true },
   phone: { src: '/contact/phone.webp' }
 };
 const tiles: Tile[] = [
   { band: 'TALK', bg: W, col: 0, row: 0 }, { faq: 0, bg: T, col: 3, row: 0 }, { faq: 1, bg: T, col: 4, row: 0 }, { faq: 2, bg: T, col: 5, row: 0 },
-  { ch: ch.x, bg: W, col: 0, row: 1 }, { ch: ch.email, bg: W, col: 1, row: 1 }, { ch: ch.linkedin, bg: W, col: 2, row: 1 }, { faq: 3, bg: T, col: 3, row: 1 }, { art: 'phone', bg: W, col: 4, row: 1 }, { faq: 4, bg: T, col: 5, row: 1 },
+  { ch: ch.linkedin, bg: W, col: 0, row: 1 }, { ch: ch.email, bg: W, col: 1, row: 1 }, { ch: ch.x, bg: W, col: 2, row: 1 }, { faq: 3, bg: T, col: 3, row: 1 }, { art: 'phone', bg: W, col: 4, row: 1 }, { faq: 4, bg: T, col: 5, row: 1 },
   { art: 'laptop', bg: W, col: 0, row: 2 }, { ch: ch.instagram, bg: W, col: 1, row: 2 }, { art: 'conversation', bg: W, col: 2, row: 2 }, { band: 'FAQs', bg: W, col: 3, row: 2 }
 ];
 const origin = (t: Tile) => `${['left', 'center', 'right'][t.col % 3]} ${['top', 'center', 'bottom'][t.row]}`;
@@ -56,7 +56,7 @@ const ext = (href: string) => href.startsWith('http') ? { target: '_blank', rel:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>kritika · Let's talk!</title>
-<meta name="description" content="Where to find Kritika (X, Instagram, LinkedIn and email), and a few FAQs.">
+<meta name="description" content="Hiring a marketer? Book an intro chat with Kritika by email or LinkedIn, and read a few FAQs.">
 <link rel="icon" href="/mark.svg" type="image/svg+xml">
 <link rel="icon" href="/mark-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="/mark-180.png">
@@ -75,11 +75,16 @@ a:focus-visible,button:focus-visible{outline:2px solid #6E1E2B;outline-offset:-4
 .tl{position:relative;box-shadow:inset -1px -1px 0 rgba(90,22,38,.12)}
 .tl.bd{grid-column:span 3;display:flex;align-items:center;justify-content:center;font-family:Cinzel,serif;font-weight:500;font-size:200px;line-height:1;letter-spacing:.02em;color:#6E1E2B;align-items:center;justify-content:center}
 /* TALK carries a cover line */
-.talk .cover{position:absolute;right:96px;bottom:44px;margin:0;font-family:'EB Garamond',serif;font-style:italic;font-weight:400;font-size:30px;line-height:1;letter-spacing:.01em;color:rgba(110,30,43,.78);transform:rotate(-3deg)}
-.talk .cover svg{display:block;width:100%;height:8px;margin-top:3px}
+.tl.bd.talk{flex-direction:column}
+.talk .cover{position:static;margin:-26px 0 0;text-align:center;font-family:'Courier Prime',monospace;font-style:normal;font-weight:400;font-size:15px;line-height:1;letter-spacing:0;color:rgba(110,30,43,.72)}
+.tl.bd.faqs{font-size:150px}
+.faqs .cover{position:absolute;left:0;right:0;top:58px;width:max-content;margin:0 auto;font-family:'Courier Prime',monospace;font-style:normal;font-weight:400;font-size:15px;line-height:1;letter-spacing:0;color:rgba(110,30,43,.72)}
 /* picture tiles */
 .tl.art{box-shadow:none;overflow:hidden}
+.tl.art.dk img,.m .strip .art.dk img{filter:invert(1);mix-blend-mode:screen}
 .tl.art img,.m .strip .art img{position:absolute;inset:9%;width:82%;height:82%;object-fit:contain;display:block;mix-blend-mode:multiply}
+/* the two-heads drawing has wide white margins, so it is drawn a little larger */
+.tl.art img[src$="heads.jpg"],.m .strip .art img[src$="heads.jpg"]{transform:scale(1.45)}
 /* every interactive tile zooms in place */
 .z{position:absolute;inset:0;display:flex;flex-direction:column;box-sizing:border-box;border:0;margin:0;padding:0;font:inherit;color:inherit;text-align:left;cursor:pointer;z-index:1;transition:transform .5s cubic-bezier(.2,.7,.2,1),box-shadow .4s ease}
 .z:hover,.z:focus-visible,.z.open{transform:scale(1.5);z-index:5;box-shadow:0 18px 40px rgba(50,12,22,.3)}
@@ -89,8 +94,13 @@ a:focus-visible,button:focus-visible{outline:2px solid #6E1E2B;outline-offset:-4
 .chn:hover .ov,.chn:focus-visible .ov{opacity:1}
 .chn .btn{display:inline-flex;align-items:center;min-height:38px;padding:0 18px;border-radius:999px;background:#f6f1e8;color:#5a1626;font-family:Cinzel,serif;font-weight:600;font-size:13px;letter-spacing:.06em}
 .chn .btn::after{content:'\2192';margin-left:8px}
+.chn.copied .btn::after{content:'\2713'}
 .chn .ic{display:block;line-height:0}
 .chn .ic svg{display:block}
+.chn .em{display:block;margin:0 0 14px;font-family:'Courier Prime',monospace;font-size:11.5px;letter-spacing:0;white-space:nowrap;color:#f6f1e8}
+.m .chn .em{display:none}
+.m .sub{margin:-6px 0 14px;font-family:'Courier Prime',monospace;font-size:13px;color:rgba(110,30,43,.72)}
+.m .mail{margin:0 0 14px;font-family:'Courier Prime',monospace;font-size:14px;color:#6E1E2B;user-select:all;-webkit-user-select:all;word-break:break-all}
 .chn .tag{font-family:'Courier Prime',monospace;font-weight:700;font-size:16px;letter-spacing:.2em;text-transform:uppercase;color:#6E1E2B}
 /* question tiles: a checkbox, the question, and the answer once the tile is open */
 .qa{padding:28px 24px;color:#f6f1e8}
@@ -159,10 +169,11 @@ a:focus-visible,button:focus-visible{outline:2px solid #6E1E2B;outline-offset:-4
 <div class="grid">
 {tiles.map((t) => {
   const o = `transform-origin: ${origin(t)}; background: ${t.bg}`;
-  if (t.band === 'TALK') return <div class="tl bd talk"><span aria-hidden="true">TALK</span><p class="cover">pick your stage, darling!<svg viewBox="0 0 300 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 9c60-6 140-8 296-3" fill="none" stroke="#6E1E2B" stroke-width="2.4" stroke-linecap="round"/></svg></p></div>;
-  if (t.band) return <div class="tl bd" aria-hidden="true">{t.band}</div>;
-  if (t.art) { const a = ART[t.art]; return <div class="tl art" style="background: #f6f1e8" aria-hidden="true"><img src={a.src} alt="" loading="lazy" decoding="async"></div>; }
-  if (t.ch) return <div class="tl"><a class="chn" href={t.ch.href} aria-label={`${t.ch.name}: ${t.ch.btn}`} style={`background: ${t.bg}`} {...ext(t.ch.href)}><span class="ic" aria-hidden="true"><Fragment set:html={big(t.ch.svg)} /></span><span class="tag">{t.ch.name}</span><span class="ov" aria-hidden="true"><span class="btn">{t.ch.btn}</span></span></a></div>;
+  if (t.blank) return <div class="tl" style="background: #f6f1e8" aria-hidden="true"></div>;
+  if (t.band === 'TALK') return <div class="tl bd talk"><span aria-hidden="true">TALK</span><p class="cover">Message me on LinkedIn, I reply fastest there</p></div>;
+  if (t.band) return <div class="tl bd faqs"><span aria-hidden="true">{t.band}</span><p class="cover">What people usually ask me on our first call</p></div>;
+  if (t.art) { const a = ART[t.art]; return <div class={a.dark ? 'tl art dk' : 'tl art'} style={`background: ${a.dark ? '#6E1E2B' : '#f6f1e8'}`} aria-hidden="true"><img src={a.src} alt="" loading="lazy" decoding="async"></div>; }
+  if (t.ch) return <div class="tl"><a class="chn" data-cur="nav" data-copy={t.ch.copy} href={t.ch.href} aria-label={`${t.ch.name}: ${t.ch.btn}`} style={`background: ${t.bg}`} {...ext(t.ch.href)}><span class="ic" aria-hidden="true"><Fragment set:html={big(t.ch.svg)} /></span><span class="tag">{t.ch.name}</span><span class="ov" aria-hidden="true">{t.ch.name === 'Email' && <span class="em">kritikaupadhyay2001@gmail.com</span>}<span class="btn">{t.ch.btn}</span></span></a></div>;
   const f = faqs[t.faq!];
   return <div class="tl"><button class="z qa" type="button" aria-expanded="false" style={o}><span class="qh"><i class="cb" aria-hidden="true"></i><span class="q">{f.q}</span></span><span class="a">{f.a}</span></button></div>;
 })}
@@ -178,15 +189,17 @@ a:focus-visible,button:focus-visible{outline:2px solid #6E1E2B;outline-offset:-4
 <a class="back" href="/home">Back</a>
 <h1 class="sr">Let's talk!</h1>
 <p class="dm"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6E1E2B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="11" rx="1.5"></rect><path d="M2 19h20"></path></svg><span>This page is best experienced in <a href="https://www.google.com/search?q=how+to+enable+desktop+mode" target="_blank" rel="noopener">desktop mode</a>.</span></p>
-<h2>i can be found on...</h2>
+<h2>Where to find me</h2>
+<p class="mail">kritikaupadhyay2001@gmail.com</p>
 <div class="list sq">
-{channels.map((c) => <a class="z chn" href={c.href} aria-label={`${c.name}: ${c.btn}`} style="background: #f6f1e8" {...ext(c.href)}><span class="ov" aria-hidden="true"><span class="btn">{c.btn}</span></span><span class="ic" aria-hidden="true"><Fragment set:html={big(c.svg)} /></span><span class="tag">{c.name}</span></a>)}
+{channels.map((c) => <a class="z chn" data-cur="nav" data-copy={c.copy} href={c.href} aria-label={`${c.name}: ${c.btn}`} style="background: #f6f1e8" {...ext(c.href)}><span class="ov" aria-hidden="true"><span class="btn">{c.btn}</span></span><span class="ic" aria-hidden="true"><Fragment set:html={big(c.svg)} /></span><span class="tag">{c.name}</span></a>)}
 </div>
 <h2>FAQs</h2>
+<p class="sub">What people usually ask me on our first call</p>
 <div class="list">
 {faqs.map((f) => <button class="z qa" type="button" aria-expanded="false" style={`background: ${T}`}><span class="qh"><i class="cb" aria-hidden="true"></i><span class="q">{f.q}</span></span><span class="a">{f.a}</span></button>)}
 </div>
-<div class="strip" aria-hidden="true">{['laptop', 'phone', 'conversation'].map((k) => <span class="art" style="background: #f6f1e8"><img src={ART[k].src} alt="" loading="lazy" decoding="async"></span>)}</div>
+<div class="strip" aria-hidden="true">{['laptop', 'phone', 'conversation'].map((k) => <span class={ART[k].dark ? 'art dk' : 'art'} style={`background: ${ART[k].dark ? '#6E1E2B' : '#f6f1e8'}`}><img src={ART[k].src} alt="" loading="lazy" decoding="async"></span>)}</div>
 </main>
 
 <div id="consent" role="dialog" aria-label="Cookie choice" hidden style="position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 55; max-width: 360px; box-sizing: border-box; padding: 18px 20px; border-radius: 16px; background: #141319; border: 1px solid #3A3842; box-shadow: 0 20px 50px rgba(0,0,0,0.6); font-family: 'Hanken Grotesk', system-ui, sans-serif; font-size: 14px; line-height: 1.5; color: #C9CDD5">
@@ -198,6 +211,16 @@ a:focus-visible,button:focus-visible{outline:2px solid #6E1E2B;outline-offset:-4
 </div>
 
 <script is:inline>
+// the email tile copies the address instead of opening a mail app (phones: after the first tap)
+document.querySelectorAll('a[data-copy]').forEach(function(a){a.addEventListener('click',function(e){
+  var txt=a.getAttribute('data-copy');if(!txt||!navigator.clipboard)return;
+  e.preventDefault();
+  navigator.clipboard.writeText(txt).then(function(){
+    var b=a.querySelector('.btn');if(!b)return;var old=b.getAttribute('data-old')||b.textContent;b.setAttribute('data-old',old);
+    b.textContent='Copied';a.classList.add('copied');if(a.closest('.m'))a.classList.add('on');
+    clearTimeout(a._t);a._t=setTimeout(function(){b.textContent=old;a.classList.remove('copied')},1600);
+  },function(){window.location.href=a.href});
+},true)});
 // phones: the first tap on a channel shows its note and button; a second tap opens it
 document.querySelectorAll('.m .sq .chn').forEach(function(a){a.addEventListener('click',function(e){if(a.classList.contains('on'))return;e.preventDefault();document.querySelectorAll('.m .sq .chn.on').forEach(function(o){o.classList.remove('on')});a.classList.add('on')})});
 document.addEventListener('click',function(e){if(!(e.target.closest&&e.target.closest('.m .sq .chn')))document.querySelectorAll('.m .sq .chn.on').forEach(function(o){o.classList.remove('on')})});

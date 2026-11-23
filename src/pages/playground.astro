@@ -16,9 +16,8 @@ type Page = { id: string; title: string; look: string; words?: string[]; img?: s
 // her pages, in spread order (pairs sit side by side). `fit: 'contain'` keeps a wide picture whole on a white page.
 // notes are still to come.
 const pages: Page[] = [
-  { id: 'moon', title: 'the moon', look: 'image', img: '/playground/moon.jpg' },
   { id: 'golden-circle', title: 'the golden circle', look: 'image', img: '/playground/golden-circle.webp' },
-  { id: 'overthinker', title: 'the overthinker', look: 'image', img: '/playground/overthinker.webp' },
+  { id: 'overthinker', title: 'What is Playground?', look: 'image', img: '/playground/overthinker.webp', notes: ['Playground is where I keep the things I can’t stop thinking about: posters, sketches, diagrams and small ideas I collect and make.', 'Nothing here is due and nobody briefed me. It’s where I practise noticing what moves people, and I take that back into my marketing work.', 'Poke around. Tell me which one you’d keep.'] },
   { id: 'creative-process', title: 'the creative process is not linear', look: 'image', img: '/playground/creative-process.webp' },
   { id: 'heart', title: 'a heart full of small things', look: 'image', img: '/playground/heart.webp' },
   { id: 'everyone', title: 'everyone', look: 'image', img: '/playground/everyone.png' },
@@ -30,17 +29,16 @@ const pages: Page[] = [
 
 // the booklet, spread by spread: [left page, right page]. null leaves that page empty on purpose (negative space).
 const SPREADS: (string | null)[][] = [
-  ['moon', null],
+  [null, null],
   [null, 'overthinker'],
-  ['golden-circle', 'play'],
+  ['golden-circle', null],
   ['creative-process', 'heart'],
   ['everyone', 'roses'],
   ['time-travel', null],
   [null, 'reading'],
   ['laptop-tears', null]
 ];
-const play: Page = { id: 'play', title: 'Play', look: 'play' };
-const byId = new Map([play, ...pages].map((p) => [p.id, p]));
+const byId = new Map(pages.map((p) => [p.id, p]));
 const placed = new Set(SPREADS.flat());
 // any page not placed above gets its own spread at the end, so nothing goes missing
 const extra = pages.filter((p) => !placed.has(p.id));
@@ -74,11 +72,11 @@ a:focus-visible,button:focus-visible{outline:2px solid #f6f1e8;outline-offset:4p
 .wall{position:relative;z-index:1}
 .back{position:fixed;left:24px;top:calc(var(--bar,0px) + 20px);z-index:5;padding:6px 0;font-family:'EB Garamond',serif;font-size:19px;color:#f6f1e8;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
 
-/* the alert: a deep green bar that stays at the top while the page scrolls */
-.alert{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:center;gap:12px 24px;flex-wrap:wrap;padding:12px 24px;box-sizing:border-box;background:#244f3f;color:#f6f1e8;text-align:left;box-shadow:0 6px 18px rgba(10,24,18,.4)}
-.alert p{margin:0;max-width:760px;font-family:'EB Garamond',serif;font-size:18px;line-height:1.35}
-.alert b{margin-right:6px;font-family:Cinzel,serif;font-weight:600;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:#bfe0cc}
-
+/* the alert: a paper note set above the heading, tilted a little, in the flow of the page */
+.alert{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px 24px;box-sizing:border-box;width:min(860px,calc(100% - 64px));margin:64px 0 -36px max(32px,calc(50% - 468px));padding:16px 20px;background:#f6f1e8;color:#5a1626;text-align:left;box-shadow:0 12px 28px rgba(10,0,4,.45)}
+.alert p{margin:0;font-family:'EB Garamond',serif;font-size:18px;line-height:1.35}
+.alert b{margin-right:6px;font-family:Cinzel,serif;font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#a33a3a}
+.alert .kbtn{flex:none;background:#5a1626;color:#f6f1e8;border-color:#5a1626}
 /* the wall: two spreads to a row; pages inside a spread touch */
 .wall{max-width:1000px;margin:0 auto;padding:72px 32px 56px;box-sizing:border-box;display:grid;grid-template-columns:repeat(2,1fr);gap:22px 30px}
 .spread{display:grid;grid-template-columns:1fr 1fr}
@@ -87,10 +85,9 @@ a:focus-visible,button:focus-visible{outline:2px solid #f6f1e8;outline-offset:4p
 
 /* the title sits in the empty pages of the first row, across the gap between the two spreads */
 .slot.title{position:relative;overflow:visible}
-.slot.title .t{position:absolute;left:0;top:0;width:calc(200% + 30px);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
+.slot.title .t{position:absolute;left:0;top:0;width:calc(300% + 10px);height:100%;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;text-align:left;pointer-events:none}
 .t .k{margin:0 0 14px;font-family:Cinzel,serif;font-weight:500;font-size:clamp(10px,1.3vw,14px);letter-spacing:.32em;text-transform:uppercase;color:rgba(246,241,232,.75)}
-.t .m{margin:0;font-family:Cinzel,serif;font-weight:500;font-size:clamp(24px,4.2vw,50px);line-height:1.15;letter-spacing:.02em;color:#f6f1e8}
-.t .m em{font-style:normal;color:#bfe0cc}
+.t .m{margin:0;white-space:nowrap;font-family:Cinzel,serif;font-weight:500;font-size:clamp(24px,4.2vw,50px);line-height:1.15;letter-spacing:.02em;color:#f6f1e8}
 /* a page: hover zooms it above its neighbours */
 .pg{position:relative;display:block;width:100%;aspect-ratio:210/297;padding:0;border:0;margin:0;cursor:pointer;overflow:hidden;font:inherit;color:inherit;text-align:left;transition:transform .45s cubic-bezier(.2,.7,.2,1),box-shadow .45s ease;transform-origin:center}
 .pg:hover,.pg:focus-visible{transform:scale(1.12);z-index:3;box-shadow:0 22px 50px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.06)}
@@ -129,19 +126,20 @@ a:focus-visible,button:focus-visible{outline:2px solid #f6f1e8;outline-offset:4p
 .mustard-plain{background:#E8A33C;color:#3A1F0E;font-family:Geist,sans-serif;font-weight:600;font-size:clamp(11px,1.9vw,20px);line-height:1.05;justify-content:center;text-align:right}
 
 /* the card: pictures left, notes right */
-dialog.card{width:min(980px,calc(100vw - 32px));max-height:calc(100vh - 48px);padding:0;border:0;border-radius:0;background:#f6f1e8;color:#3a1c20;overflow:hidden}
+dialog.card{width:min(700px,calc(100vw - 32px));max-height:calc(100vh - 48px);padding:0;border:0;border-radius:0;background:#f6f1e8;color:#3a1c20;overflow:hidden}
 html.kc-on dialog.card,html.kc-on dialog.card *{cursor:auto !important}
 html.kc-on dialog.card .x{cursor:pointer !important}
 dialog.card::backdrop{background:rgba(40,8,16,.82)}
 dialog.card[open]{animation:cardin .35s cubic-bezier(.2,.7,.2,1)}
 @keyframes cardin{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion: reduce){dialog.card[open]{animation:none}}
-.cw{display:grid;grid-template-columns:1.1fr 1fr;max-height:calc(100vh - 48px)}
+.cw{display:grid;grid-template-columns:auto 1fr;max-height:calc(100vh - 48px)}
 .pics{display:grid;gap:8px;padding:18px;background:#5a1626;overflow:auto;align-content:start}
-.pics .pg{pointer-events:none;width:auto;height:min(640px,calc(100vh - 84px));margin:0 auto;transform:none;box-shadow:none}
-.pics img{width:100%;display:block}
+.pics .pg{pointer-events:none;width:auto;height:min(340px,calc(100vh - 84px));margin:0 auto;transform:none;box-shadow:none}
+.pics img{width:auto;max-width:100%;height:min(340px,calc(100vh - 84px));margin:0 auto;display:block}
 .notes{position:relative;padding:44px 40px 40px;overflow:auto}
 .notes .k{margin:0;font-family:Cinzel,serif;font-weight:500;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#7a5558}
+.notes .k:empty{display:none}
 .notes h2{margin:10px 0 18px;font-family:Cinzel,serif;font-weight:500;font-size:30px;line-height:1.1;letter-spacing:.01em;color:#5a1626}
 .notes p.n{margin:0 0 14px;font-family:'EB Garamond',serif;font-size:19px;line-height:1.45}
 .notes p.ph{color:#8a6a6c;font-style:italic}
@@ -151,9 +149,10 @@ dialog.card[open]{animation:cardin .35s cubic-bezier(.2,.7,.2,1)}
 /* phones: one spread per row; the card stacks */
 @media (max-width: 767px){
   .slot.title .t{width:100%}
+  .t .m{white-space:normal}
   .t .m{font-size:clamp(17px,5.6vw,24px)}
   .t .k{letter-spacing:.14em;font-size:8px;margin-bottom:8px}
-  .alert{flex-direction:column;align-items:flex-start;padding:12px 16px 14px}
+  .alert{flex-direction:column;align-items:flex-start;width:calc(100% - 32px);margin:56px 0 -28px 16px;padding:14px 16px 16px}
   .alert p{font-size:17px}
   .back{position:absolute;left:16px;top:calc(var(--bar,0px) + 14px)}
   .wall{grid-template-columns:1fr;gap:14px;padding:56px 16px 20px}
@@ -172,7 +171,7 @@ dialog.card[open]{animation:cardin .35s cubic-bezier(.2,.7,.2,1)}
 </head>
 <body>
 <aside class="alert" id="alert" role="note">
-<p><b>work in progress.</b> product management taught me to ship first, iterate, and keep talking to users through the product. so here i am, shipping. tell me what you’d change.</p>
+<p><b>Work in progress.</b> I ship first, then listen. Tell me what you’d change.</p>
 <a class="kbtn kbtn-sm" href="/contact">Let’s talk &rarr;</a>
 </aside>
 <div class="matte" aria-hidden="true"></div>
@@ -183,9 +182,8 @@ dialog.card[open]{animation:cardin .35s cubic-bezier(.2,.7,.2,1)}
 {spreads.map((sp, si) => (
 <div class="spread">
 {sp.map((p, pi) => {
-  if (!p && si === 0 && pi === 1) return <span class="slot title"><span class="t"><p class="k">Whimsy · Creativity · Play</p><p class="m">My creative<br><em>safe space.</em></p></span></span>;
+  if (!p && si === 0 && pi === 0) return <span class="slot title"><span class="t"><p class="k">Whimsy · Creativity · Play</p><p class="m">My creative safe space</p></span></span>;
   if (!p) return <span class="slot" aria-hidden="true"></span>;
-  if (p.look === 'play') return <span class="slot play"><span>Play</span></span>;
   const face = p.img
     ? <img src={p.img} alt="" loading="lazy" class={p.fit === 'contain' ? 'contain' : undefined}>
     : <span class={`p ${p.look}`}>{(p.words || []).map((w) => <span>{w}</span>)}</span>;
@@ -200,7 +198,7 @@ dialog.card[open]{animation:cardin .35s cubic-bezier(.2,.7,.2,1)}
 <div class="pics" id="card-pics"></div>
 <div class="notes">
 <button class="x" type="button" aria-label="Close">×</button>
-<p class="k" id="card-date">from the playground</p>
+<p class="k" id="card-date"></p>
 <h2 id="card-title"></h2>
 <div id="card-notes"></div>
 </div>
@@ -209,7 +207,7 @@ dialog.card[open]{animation:cardin .35s cubic-bezier(.2,.7,.2,1)}
 
 <script is:inline>
 // the Back link sits just under the alert bar, whatever height the bar takes on this screen
-(function(){var a=document.getElementById('alert');if(!a)return;function m(){document.documentElement.style.setProperty('--bar',a.offsetHeight+'px');}m();addEventListener('resize',m);if(window.ResizeObserver)new ResizeObserver(m).observe(a);})();
+(function(){var a=document.getElementById('alert');if(!a)return;function m(){document.documentElement.style.setProperty('--bar',(getComputedStyle(a).position==='sticky'?a.offsetHeight:0)+'px');}m();addEventListener('resize',m);if(window.ResizeObserver)new ResizeObserver(m).observe(a);})();
 </script>
 <script is:inline define:vars={{ cards }}>
 var dlg = document.querySelector('dialog.card');
@@ -219,7 +217,7 @@ function open(id, btn) {
   var c = cards.find(function (x) { return x.id === id; }); if (!c) return;
   lastBtn = btn;
   titleEl.textContent = c.title;
-  dateEl.textContent = c.date || 'from the playground';
+  dateEl.textContent = c.date || '';
   picsEl.innerHTML = '';
   if (c.pics.length) {
     c.pics.forEach(function (src) { var i = document.createElement('img'); i.src = src; i.alt = ''; picsEl.appendChild(i); });
